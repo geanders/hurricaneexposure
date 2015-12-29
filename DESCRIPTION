@@ -1,10 +1,13 @@
 Package: hurricaneexposure
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1
+Title: Functions to Create County-level Time Series of Hurricane Exposure
+Version: 0.0.0.9000
 Date: 2015-12-28
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
+Authors@R: person("Brooke", "Anderson",
+    email = "brooke.anderson@colostate.edu", role = c("aut", "cre"))
 Description: More about what it does (maybe more than one line)
-License: What license is it under?
+URL: https://github.com/geanders/hurricaneexposure
+BugReports: https://github.com/geanders/hurricaneexposure/issues
+License: MIT + file LICENSE
 LazyData: TRUE
 RoxygenNote: 5.0.1
