@@ -7,7 +7,8 @@
 \format{A data frame with 3221 rows and 7 variables:
 \describe{
   \item{state_fips}{state FIPS code}
-  \item{county_fips}{county FIPS code}
+  \item{county_fips}{county 3-digit FIPS code}
+  \item{fips}{county 5-digit FIPS code}
   \item{count_name}{county name}
   \item{state_name}{state name}
   \item{population}{population}
