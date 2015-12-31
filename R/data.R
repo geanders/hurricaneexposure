@@ -23,3 +23,18 @@
 #' States 1950-2010, U.S. Department of Commerce, Bureau of the Census,
 #'   Washington, DC, issued 2011. \url{http://www2.census.gov/geo/pdfs/reference/cenpop2010/COP2010_documentation.pdf}
 "county_centers"
+
+#' Weekly rainfall totals for tropical storms
+#'
+#' A list that gives the total rainfall in US counties for a one-week
+#' window centered at the date on which the tropical storm was closest
+#' to the county.
+#'
+#' @format A list with 991,530 rows and 3 variables:
+#' \describe{
+#'   \item{storm_id}{unique identifier for each tropical storm}
+#'   \item{fips}{county 5-digit FIPS code}
+#'   \item{tot_precip}{Total precipitation, in [unit], for a one-week
+#'       window centered at the date the storm was closest to the county}
+#' }
+"storm_rains"
