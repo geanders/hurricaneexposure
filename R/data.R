@@ -28,7 +28,7 @@
 #'
 #' A list that gives the total rainfall in US counties for a one-week
 #' window centered at the date on which the tropical storm was closest
-#' to the county.
+#' to the county for all Atlantic basin storms between 1987 and 2012.
 #'
 #' @format A list with 991,530 rows and 3 variables:
 #' \describe{
@@ -38,4 +38,7 @@
 #'       one-week window centered at the date the storm was closest to
 #'       the county}
 #' }
+#'
+#' @references
+#'    [Get proper reference from Bill and Mohammad]
 "storm_rains"
