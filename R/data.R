@@ -24,6 +24,25 @@
 #'   Washington, DC, issued 2011. \url{http://www2.census.gov/geo/pdfs/reference/cenpop2010/COP2010_documentation.pdf}
 "county_centers"
 
+#' Storm tracks for Atlantic basin storms
+#'
+#' A dataset containing the storm tracks for all Atlantic basin tropical
+#' storms between 1987 and 2012.
+#'
+#' @format A data frame with 12,206 rows and 6 variables:
+#' \describe{
+#'   \item{date}{Date and time of storm track recording}
+#'   \item{status}{Storm status}
+#'   \item{latitude}{Latitude of storm center}
+#'   \item{longitude}{Longitude of storm center}
+#'   \item{wind}{[what is this measuring?]}
+#'   \item{storm_id}{Unique storm identifier}
+#' }
+#'
+#' @references
+#'    [Determine correct refenence]
+"hurr_tracks"
+
 #' Weekly rainfall totals for tropical storms
 #'
 #' A list that gives the total rainfall in US counties for a one-week

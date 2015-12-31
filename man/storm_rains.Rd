@@ -8,8 +8,9 @@
 \describe{
   \item{storm_id}{unique identifier for each tropical storm}
   \item{fips}{county 5-digit FIPS code}
-  \item{tot_precip}{Total precipitation, in [unit], for a one-week
-      window centered at the date the storm was closest to the county}
+  \item{tot_precip}{Total precipitation, in millimeters [?], for a
+      one-week window centered at the date the storm was closest to
+      the county}
 }}
 \usage{
 storm_rains
@@ -17,7 +18,10 @@ storm_rains
 \description{
 A list that gives the total rainfall in US counties for a one-week
 window centered at the date on which the tropical storm was closest
-to the county.
+to the county for all Atlantic basin storms between 1987 and 2012.
+}
+\references{
+[Get proper reference from Bill and Mohammad]
 }
 \keyword{datasets}
 
