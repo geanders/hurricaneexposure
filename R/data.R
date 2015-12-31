@@ -34,7 +34,8 @@
 #' \describe{
 #'   \item{storm_id}{unique identifier for each tropical storm}
 #'   \item{fips}{county 5-digit FIPS code}
-#'   \item{tot_precip}{Total precipitation, in [unit], for a one-week
-#'       window centered at the date the storm was closest to the county}
+#'   \item{tot_precip}{Total precipitation, in millimeters [?], for a
+#'       one-week window centered at the date the storm was closest to
+#'       the county}
 #' }
 "storm_rains"
