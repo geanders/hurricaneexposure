@@ -31,6 +31,41 @@ default_map <- function(){
         return(out)
 }
 
+#' Plot Atlantic basin hurricane tracks
+#'
+#' Plot the tracks of any selected storms in the hurricane tracking
+#'    dataset for the Atlantic basin. This function allows you to
+#'    plot a new map or add the tracks to an existing ggplot object.
+#'
+#' @param storms Character vector with the names of all storms to plot.
+#'    This parameter must use the unique storm identifiers from the
+#'    `storm_id` column of the `hurr_tracks` dataframe.
+#' @param plot_object NULL or the name of a ggplot object to use as the
+#'    underlying plot object. If NULL, the function will generate a new
+#'    map of the eastern US states using `default_map`.
+#' @param storm_status TRUE / FALSE indicator of whether to use colors to
+#'    indicate storm status (Hurricane, Tropical Storm, Tropical Depression,
+#'    or Other) at each time point.
+#' @param padding Numerical value giving the number of degrees to add to the
+#'    outer limits of the plot object (or default map if `plot_object` is
+#'    left as NULL) when cropping hurricane tracks.
+#' @param plot_points TRUE / FALSE indicator of whether to include points,
+#'    as well as lines, when plotting the hurricane tracks.
+#' @param alpha Numerical value designating the amount of transparency to
+#'    use for plotting tracks.
+#'
+#' @return Returns a ggplot object with plotting data for the storm tracks
+#'    of the selected storms. This object can be printed directly or added
+#'    on to with other ggplot commands.
+#'
+#' @examples
+#' map_tracks(storms = "Sandy-2012")
+#' map_tracks(storms = "Floyd-1999", storm_status = FALSE,
+#'    plot_points = FALSE)
+#' a <- map_tracks(storms = "Sandy-2012")
+#' b <- map_tracks(storms = "Floyd-1999", storm_status = FALSE,
+#'                 plot_object = a, plot_points = FALSE)
+#' b
 map_tracks <- function(storms, plot_object = NULL,
                       storm_status = TRUE,
                       padding = 2,
