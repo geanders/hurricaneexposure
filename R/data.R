@@ -39,6 +39,14 @@
 #'   \item{storm_id}{Unique storm identifier}
 #' }
 #'
+#' @note The original dataset included more separate `status` categories
+#'    than this version. Here, I have pooled together into "Other" the
+#'    following categories: extratropical cyclones (of any intensity),
+#'    subtropical cycles of both subtropical depression and subtropical
+#'    storm intensity, tropical waves of any intensity, disturbances of
+#'    any intensity, and lows that do not fall under any of these
+#'    categories.
+#'
 #' @references
 #'    [Determine correct refenence]
 "hurr_tracks"
