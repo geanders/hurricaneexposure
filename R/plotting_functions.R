@@ -73,6 +73,8 @@ map_tracks <- function(storms, plot_object = NULL,
                       alpha = 1){
         if(is.null(plot_object)){
                 plot_object <- default_map()
+        } else {
+                map_data <- plot_object$data
         }
         map_dim <- apply(map_data[ , c("long", "lat")],
                          MARGIN = 2,
@@ -116,4 +118,34 @@ map_tracks <- function(storms, plot_object = NULL,
                 }
         }
         return(out)
+}
+
+map_counties <-function(storm, metric = "closest distance"){
+        if(metric == "closest distance"){
+                metric_df <- closest_dist
+                metric_df$value <- metric_df$storm_dist
+        } else if(metric == "weekly rainfall"){
+                metric_df <- storm_rains
+                metric_df$value <- metric_df$tot_precip
+        } else{
+                stop("`metric` must be either `closest distance` or `weekly rainfall`")
+        }
+        map_data <- dplyr::filter(metric_df,
+                                  storm_id == storm) %>%
+                mutate(region = as.numeric(fips)) %>%
+                select(region, value)
+        out <- choroplethr::county_choropleth(map_data,
+                                              zoom = c("alabama", "arkansas",
+                                                       "connecticut", "delaware",
+                                                       "district of columbia", "florida",
+                                                       "georgia", "illinois", "indiana",
+                                                       "iowa", "kansas", "kentucky", "louisiana",
+                                                       "maine", "maryland", "massachusetts",
+                                                       "michigan", "mississippi",
+                                                       "missouri", "new hampshire", "new jersey",
+                                                       "new york", "north carolina", "ohio",
+                                                       "oklahoma", "pennsylvania", "rhode island",
+                                                       "south carolina", "tennessee", "texas",
+                                                       "vermont", "virginia", "west virginia",
+                                                       "wisconsin"))
 }
