@@ -1,3 +1,14 @@
+#' Create a default map with eastern US states
+#'
+#' Creates a ggplot object with the underlying map of all states in the
+#' eastern section of the US that might be prone to hurricane-related
+#' exposure. Other lines and points can be added to the output using
+#' `ggplot2` plotting functions.
+#'
+#' @return A ggplot object that maps the states of the Eastern United States
+#'
+#' @examples
+#' default_map()
 default_map <- function(){
         map_data <- ggplot2::map_data("state")
         map_data <- dplyr::filter(map_data,
