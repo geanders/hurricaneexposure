@@ -3,11 +3,22 @@ Type: Package
 Title: Functions to Create County-level Time Series of Hurricane Exposure
 Version: 0.0.0.9000
 Date: 2015-12-28
-Authors@R: person("Brooke", "Anderson",
-    email = "brooke.anderson@colostate.edu", role = c("aut", "cre"))
-Description: More about what it does (maybe more than one line)
+Authors@R: c(person("Brooke", "Anderson",
+    email = "brooke.anderson@colostate.edu", role = c("aut", "cre")),
+    person("Meilin", "Yan",
+    email = "meilin.yan@colostate.edu", role = "aut")
+    )
+Description: Allows users to create time series of daily binary hurricane
+    exposure histories for chosen counties based on specified thresholds
+    of distance to storm track and rainfall during a week-long window
+    centered on the storm date.
 URL: https://github.com/geanders/hurricaneexposure
 BugReports: https://github.com/geanders/hurricaneexposure/issues
 License: MIT + file LICENSE
 LazyData: TRUE
+Imports:
+    choroplethr,
+    dplyr,
+    ggmap,
+    ggplot2
 RoxygenNote: 5.0.1
