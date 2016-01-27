@@ -7,6 +7,8 @@
 #'
 #' @return A ggplot object that maps the states of the Eastern United States
 #'
+#' @export
+#'
 #' @examples
 #' default_map()
 default_map <- function(){
@@ -57,6 +59,8 @@ default_map <- function(){
 #' @return Returns a ggplot object with plotting data for the storm tracks
 #'    of the selected storms. This object can be printed directly or added
 #'    on to with other ggplot commands.
+#'
+#' @export
 #'
 #' @examples
 #' map_tracks(storms = "Sandy-2012")
@@ -120,6 +124,9 @@ map_tracks <- function(storms, plot_object = NULL,
         return(out)
 }
 
+#' Map counties
+#'
+#' @export
 map_counties <-function(storm, metric = "closest distance"){
         if(metric == "closest distance"){
                 metric_df <- closest_dist

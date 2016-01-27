@@ -23,6 +23,8 @@
 #'    distance between the county center and the storm track on
 #'    that date and time, and cumulative rainfall for the week-long
 #'    period centered at the date of closest approach to the county.
+#'
+#' @export
 rain_storms <- function(counties, start_year, end_year,
                            rain_limit, dist_limit){
         rain_storm_df <- dplyr::filter(closest_dist,
@@ -54,6 +56,8 @@ rain_storms <- function(counties, start_year, end_year,
 #' @return Returns the same type dataframe as \code{rain_storms},
 #'    but with storms listed by community instead of county.
 #'
+#' @export
+#'
 #' @examples
 #' communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
 #'                          fips = c("36005", "36047", "36061",
@@ -68,6 +72,11 @@ multi_county <- function(rain_storm_df, communities){
 
 }
 
+#' Create storm exposure time series files
+#'
+#'This function ...
+#'
+#' @export
 rain_exposure <- function(counties, start_year, end_year,
                           rain_limit, dist_limit,
                           out_dir){

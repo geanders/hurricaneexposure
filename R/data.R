@@ -22,6 +22,8 @@
 #' Bureau of the Census, Centers of Population Computation for the United
 #' States 1950-2010, U.S. Department of Commerce, Bureau of the Census,
 #'   Washington, DC, issued 2011. \url{http://www2.census.gov/geo/pdfs/reference/cenpop2010/COP2010_documentation.pdf}
+#'
+#' @export
 "county_centers"
 
 #' Storm tracks for Atlantic basin storms
@@ -49,6 +51,8 @@
 #'
 #' @references
 #'    [Determine correct refenence]
+#'
+#' @export
 "hurr_tracks"
 
 #' Weekly rainfall totals for tropical storms
@@ -68,4 +72,6 @@
 #'
 #' @references
 #'    [Get proper reference from Bill and Mohammad]
+#'
+#' @export
 "storm_rains"
