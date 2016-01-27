@@ -1,0 +1,77 @@
+library(dplyr)
+
+# Read in and clean up `county_centers`
+county_centers <-
+        read.csv("/Users/brookeanderson/Documents/Hopkins\ Postdoc/hurricanes/DetermineCountyStormDates/CenPop2010_Mean_CO.txt", header = TRUE, skip = 2)
+
+colnames(county_centers) <- c("state_fips", "county_fips", "county_name",
+                              "state_name", "population", "latitude",
+                              "longitude")
+county_centers$fips <- paste0(sprintf("%02d",county_centers$state_fips),
+                              sprintf("%03d",county_centers$county_fips))
+county_centers <- county_centers[ , c(1:2, 8, 3:7)]
+save(county_centers, file = "data/county_centers.Rdata")
+
+# Load and clean up hurricane tracking data, `hurr.tracks`
+load("/Users/brookeanderson/Documents/Hopkins\ Postdoc/hurricanes/HurricaneTracks.r")
+hurr_tracks <- do.call("rbind", hurr.tracks)
+hurr_tracks$storm_id <- rownames(hurr_tracks)
+hurr_tracks$storm_id <- sub("\\..*" ,"", hurr_tracks$storm_id)
+rownames(hurr_tracks) <- NULL
+hurr_tracks <- mutate(hurr_tracks,
+                      status = ifelse(status %in% c("TD", "TS", "HU"),
+                                      status, "OT"),
+                      status = factor(status,
+                                      levels = c("OT",
+                                                 "TD",
+                                                 "TS",
+                                                 "HU"),
+                                      labels = c("Other",
+                                                 "Tropical depression",
+                                                 "Tropical storm",
+                                                 "Hurricane")),
+                      latitude = as.numeric(latitude),
+                      longitude = -1 * as.numeric(longitude),
+                      wind = as.numeric(wind),
+                      storm_id = factor(storm_id))
+save(hurr_tracks, file = "data/hurr_tracks.Rdata")
+
+# Bring in latest version of extended hurricane tracks
+ext_tracks <- read.fwf("http://rammb.cira.colostate.edu/research/tropical_cyclones/tc_extended_best_track_dataset/ebtrk_atlc_1988_2014.txt",
+                       widths = c(7, 10, 2, 2, 3, 5, 5, 7, 3, 5,
+                                  4, 4, 5, 3, 4, 3, 3, 3,
+                                  4, 3, 3, 3, 4, 3, 3, 3, 2, 6, 1),
+                       na.strings = "-99")
+colnames(ext_tracks) <- c("storm_id", "storm_name", "month", "day",
+                          "hour", "year", "latitude", "longitude",
+                          "max_wind", "min_pressure", "rad_max_wind",
+                          "eye_diameter", "pressure_1", "pressure_2",
+                          paste("radius_34", c("ne", "se", "sw", "nw"), sep = "_"),
+                          paste("radius_50", c("ne", "se", "sw", "nw"), sep = "_"),
+                          paste("radius_64", c("ne", "se", "sw", "nw"), sep = "_"),
+                          "storm_type", "distance_to_land", "final")
+save(ext_tracks, file = "data/hurr_tracks.Rdata")
+
+# Bring in closest distance data
+load("/Users/brookeanderson/Documents/Hopkins\ Postdoc/hurricanes/DetermineCountyStormDates/ClosestStormDates.Rdata")
+closest_dist <- do.call("rbind", closest.storm.dates)
+closest_dist <- closest_dist[ , c("fips", "closest.date", "storm.dist")]
+closest_dist$storm_id <- rep(names(closest.storm.dates),
+                            each = nrow(closest.storm.dates[[1]]))
+rownames(closest_dist) <- NULL
+closest_dist <- closest_dist[ , c("storm_id", "fips",
+                                  "closest.date", "storm.dist")]
+colnames(closest_dist)[3:4] <- c("closest_date", "storm_dist")
+closest_dist$closest_date <- ymd_hm(closest_dist$closest_date)
+save(closest_dist, file = "data/closest_dist.Rdata")
+
+# Bring in rain exposure data
+load("/Users/brookeanderson/Documents/Hopkins\ Postdoc/hurricanes/DetermineCountyStormDates/StormRainTots.Rdata")
+storm_rains <- do.call("rbind", storm.rain.tots)
+storm_rains$storm_id <- rep(names(storm.rain.tots),
+                            each = nrow(storm.rain.tots[[1]]))
+rownames(storm_rains) <- NULL
+storm_rains <- storm_rains[ , c("storm_id", "fips", "tot.precip")]
+colnames(storm_rains) <- c("storm_id", "fips", "tot_precip")
+save(storm_rains, file = "data/storm_rains.Rdata")
+
