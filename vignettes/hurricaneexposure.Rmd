@@ -66,7 +66,27 @@ map_2
 
 The `map_tracks` function will map the hurricane tracks for one or more storms. For example, to plot the tracks of Hurricane Floyd in 1999 (the ID for this storm is "Floyd-2012"):
 
+```{r fig.width = 6.5, fig.height = 4}
+map_3 <- map_tracks(storms = "Floyd-1999")
+map_3
+```
+
+There are some different options you can use for the tracks' appearance. For example, if you wanted to plot the tracks of several storms, not show storm status with color, not plot each point when the track locations were measured (typically every six hours), and use some transparency so you can see all the lines, you can use: 
+
+```{r fig.width = 5.5, fig.height = 4}
+map_4 <- map_tracks(storms = c("Floyd-1999", "Sandy-2012",
+                               "Katrina-2005"),
+                    storm_status = FALSE,
+                    plot_points = FALSE,
+                    alpha = 0.5)
+map_4
+```
+
+You can also add these tracks to an existing `ggplot`-created US map. You do this through the `plot_object` argument. For example, to add the storm track to the plot of rain exposure for Floyd, you could run:
+
 ```{r fig.width = 7, fig.height = 4}
-map_tracks(storms = "Floyd-1999")
+map_5 <- map_tracks(storms = "Floyd-1999", plot_object = map_1,
+                    storm_status = FALSE, plot_points = FALSE)
+map_5
 ```
 
