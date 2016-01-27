@@ -1,10 +1,3 @@
-# counties <- c("12011", "12025", "12033", "12097")
-# start_year <- 1995
-# end_year <- 2005
-# rain_limit <- 20
-# dist_limit <- 100
-# out_dir <- "~/tmp/hurr_rain"
-
 #' Create subset of storms for FIPS
 #'
 #' This function takes a list of county FIPS, boundaries on
@@ -87,7 +80,7 @@ rain_exposure <- function(counties, start_year, end_year,
 
         start_date <- as.Date(paste0(start_year, "0101"),
                               format = "%Y%m%d")
-        end_date <- as.Date(paste0(end_year, "0101"),
+        end_date <- as.Date(paste0(end_year, "1231"),
                               format = "%Y%m%d")
         for(i in 1:length(df$fips)){
                 fips_df <- filter(df, fips == fips[i]) %>%
