@@ -142,7 +142,7 @@ map_counties <-function(storm, metric = "closest distance"){
                 mutate(region = as.numeric(fips)) %>%
                 select(region, value)
         out <- choroplethr::county_choropleth(map_data,
-                                              zoom = c("alabama", "arkansas",
+                                              state_zoom = c("alabama", "arkansas",
                                                        "connecticut", "delaware",
                                                        "district of columbia", "florida",
                                                        "georgia", "illinois", "indiana",
