@@ -16,10 +16,13 @@ URL: https://github.com/geanders/hurricaneexposure
 BugReports: https://github.com/geanders/hurricaneexposure/issues
 License: MIT + file LICENSE
 LazyData: TRUE
-Imports:
+Imports: 
     choroplethr,
     dplyr,
     ggmap,
     ggplot2,
     lubridate
 RoxygenNote: 5.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

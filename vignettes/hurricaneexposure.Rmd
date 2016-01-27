@@ -1,0 +1,72 @@
+---
+title: "Using the `hurricaneexposure` package"
+author: "Brooke Anderson"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r echo = FALSE}
+library(hurricaneexposure)
+```
+
+## Loading the package
+
+The package currently exists in [a development version](https://github.com/geanders/hurricaneexposure) on GitHub. You can use the following code to load it:
+
+```{r eval = FALSE}
+library(devtools)
+install_github("geanders/hurricaneexposure", 
+               build_vignettes = TRUE)
+library(hurricaneexposure)
+```
+
+Once you've loaded the dataframe, you can load the included data using the `data` function. For example:
+
+```{r}
+data("hurr_tracks")
+head(hurr_tracks)
+```
+
+The following datasets are included with the package: 
+
+- `closest_dist`
+- `county_centers`
+- `hurr_tracks`
+- `storm_rains`
+
+For each, you can see the helpfiles for the data for more information about the data included in each. 
+
+## Mapping hurricane exposure
+
+This package allows you to create some different maps of hurricane exposures. 
+
+### Plotting county-level exposure variables
+
+The `map_counties` function creates county choropleths of different storm exposure variables (right now, rainfall and distance from the storm tracks). For example, to plot rain exposure for Hurricane Floyd in 1999 (the ID for this storm is "Floyd-2012"):
+
+```{r fig.width = 7, fig.height = 4}
+map_1 <- map_counties(storm = "Floyd-1999", metric = "weekly rainfall")
+map_1
+```
+
+You may notice that this function gives a warning listing the FIPS of any counties for which this exposure information was missing.
+
+You can also use this function to plot the closest distance between the storm and each county. For this, you use the argument `metric = "closest distance"`.
+
+```{r fig.width = 7, fig.height = 4}
+map_2 <- map_counties(storm = "Floyd-1999", metric = "closest distance")
+map_2
+```
+
+### Plotting storm tracks 
+
+The `map_tracks` function will map the hurricane tracks for one or more storms. For example, to plot the tracks of Hurricane Floyd in 1999 (the ID for this storm is "Floyd-2012"):
+
+```{r fig.width = 7, fig.height = 4}
+map_tracks(storms = "Floyd-1999")
+```
+
