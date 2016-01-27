@@ -79,9 +79,9 @@ map_tracks <- function(storms, plot_object = NULL,
                       alpha = 1){
         if(is.null(plot_object)){
                 plot_object <- default_map()
-        } else {
-                map_data <- plot_object$data
+
         }
+        map_data <- plot_object$data
         map_dim <- apply(map_data[ , c("long", "lat")],
                          MARGIN = 2,
                          function(x) range(x) + c(-1, 1) * padding)
@@ -133,9 +133,11 @@ map_tracks <- function(storms, plot_object = NULL,
 #' @importFrom dplyr %>%
 map_counties <-function(storm, metric = "closest distance"){
         if(metric == "closest distance"){
+                data("closest_dist")
                 metric_df <- closest_dist
                 metric_df$value <- metric_df$storm_dist
         } else if(metric == "weekly rainfall"){
+                data("storm_rains")
                 metric_df <- storm_rains
                 metric_df$value <- metric_df$tot_precip
         } else{
@@ -143,8 +145,8 @@ map_counties <-function(storm, metric = "closest distance"){
         }
         map_data <- dplyr::filter(metric_df,
                                   storm_id == storm) %>%
-                mutate(region = as.numeric(fips)) %>%
-                select(region, value)
+                dplyr::mutate(region = as.numeric(fips)) %>%
+                dplyr::select(region, value)
         out <- choroplethr::county_choropleth(map_data,
                                               state_zoom = c("alabama", "arkansas",
                                                        "connecticut", "delaware",
