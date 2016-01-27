@@ -37,4 +37,10 @@ This function takes a list of county FIPS, boundaries on
    with the subset of storms meeting those criteria for
    each of the listed counties.
 }
+\examples{
+rain_storms(counties = c("22071", "51700"),
+            start_year = 1995, end_year = 2005,
+            rain_limit = 20, dist_limit = 100)
+
+}
 

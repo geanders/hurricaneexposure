@@ -24,6 +24,11 @@
 #'    that date and time, and cumulative rainfall for the week-long
 #'    period centered at the date of closest approach to the county.
 #'
+#' @examples
+#' rain_storms(counties = c("22071", "51700"),
+#'             start_year = 1995, end_year = 2005,
+#'             rain_limit = 100, dist_limit = 100)
+#'
 #' @export
 #'
 #' @importFrom dplyr %>%
@@ -31,8 +36,8 @@ rain_storms <- function(counties, start_year, end_year,
                            rain_limit, dist_limit){
         rain_storm_df <- dplyr::filter(closest_dist,
                             fips %in% counties &
-                                    year(closest_date) >= start_year &
-                                    year(closest_date) <= end_year &
+                                    lubridate::year(closest_date) >= start_year &
+                                    lubridate::year(closest_date) <= end_year &
                                     storm_dist <= dist_limit) %>%
                 dplyr::left_join(storm_rains,
                                  by = c("storm_id", "fips")) %>%
