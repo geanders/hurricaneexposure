@@ -20,5 +20,6 @@ Imports:
     choroplethr,
     dplyr,
     ggmap,
-    ggplot2
+    ggplot2,
+    lubridate
 RoxygenNote: 5.0.1
