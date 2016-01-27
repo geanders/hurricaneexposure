@@ -34,5 +34,6 @@ communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
 rain_storm_df <- rain_storms(counties = communities$fips,
                              start_year = 1995, end_year = 2005,
                              rain_limit = 20, dist_limit = 100)
+
 }
 

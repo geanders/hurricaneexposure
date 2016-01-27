@@ -48,5 +48,6 @@ a <- map_tracks(storms = "Sandy-2012")
 b <- map_tracks(storms = "Floyd-1999", storm_status = FALSE,
                 plot_object = a, plot_points = FALSE)
 b
+
 }
 

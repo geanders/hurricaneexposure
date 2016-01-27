@@ -70,6 +70,8 @@ default_map <- function(){
 #' b <- map_tracks(storms = "Floyd-1999", storm_status = FALSE,
 #'                 plot_object = a, plot_points = FALSE)
 #' b
+#'
+#' @importFrom dplyr %>%
 map_tracks <- function(storms, plot_object = NULL,
                       storm_status = TRUE,
                       padding = 2,
@@ -127,6 +129,8 @@ map_tracks <- function(storms, plot_object = NULL,
 #' Map counties
 #'
 #' @export
+#'
+#' @importFrom dplyr %>%
 map_counties <-function(storm, metric = "closest distance"){
         if(metric == "closest distance"){
                 metric_df <- closest_dist

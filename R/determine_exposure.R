@@ -25,6 +25,8 @@
 #'    period centered at the date of closest approach to the county.
 #'
 #' @export
+#'
+#' @importFrom dplyr %>%
 rain_storms <- function(counties, start_year, end_year,
                            rain_limit, dist_limit){
         rain_storm_df <- dplyr::filter(closest_dist,
@@ -66,6 +68,8 @@ rain_storms <- function(counties, start_year, end_year,
 #' rain_storm_df <- rain_storms(counties = communities$fips,
 #'                              start_year = 1995, end_year = 2005,
 #'                              rain_limit = 20, dist_limit = 100)
+#'
+#' @importFrom dplyr %>%
 multi_county <- function(rain_storm_df, communities){
         multi_df <- left_join(rain_storm_df, communities,
                               by = "fips")
@@ -77,6 +81,8 @@ multi_county <- function(rain_storm_df, communities){
 #'This function ...
 #'
 #' @export
+#'
+#' @importFrom dplyr %>%
 rain_exposure <- function(counties, start_year, end_year,
                           rain_limit, dist_limit,
                           out_dir){
