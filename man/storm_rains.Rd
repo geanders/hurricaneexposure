@@ -16,7 +16,7 @@
 storm_rains
 }
 \description{
-A list that gives the total rainfall in US counties for a one-week
+A dataframe that gives the total rainfall in US counties for a one-week
 window centered at the date on which the tropical storm was closest
 to the county for all Atlantic basin storms between 1987 and 2012.
 }

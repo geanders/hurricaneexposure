@@ -25,14 +25,14 @@
 #'    period centered at the date of closest approach to the county.
 #'
 #' @examples
-#' rain_storms(counties = c("22071", "51700"),
+#' county_rain(counties = c("22071", "51700"),
 #'             start_year = 1995, end_year = 2005,
 #'             rain_limit = 100, dist_limit = 100)
 #'
 #' @export
 #'
 #' @importFrom dplyr %>%
-rain_storms <- function(counties, start_year, end_year,
+county_rain <- function(counties, start_year, end_year,
                            rain_limit, dist_limit){
         rain_storm_df <- dplyr::filter(closest_dist,
                             fips %in% counties &
@@ -70,53 +70,100 @@ rain_storms <- function(counties, start_year, end_year,
 #'                          fips = c("36005", "36047", "36061",
 #'                                   "36085", "36081", "36119",
 #'                                   "22071", "51700"))
-#' rain_storm_df <- rain_storms(counties = communities$fips,
-#'                              start_year = 1995, end_year = 2005,
-#'                              rain_limit = 20, dist_limit = 100)
+#' rain_storm_df <- multi_county_rain(communities = communities,
+#'                                    start_year = 1995, end_year = 2005,
+#'                                    rain_limit = 100, dist_limit = 100)
 #'
 #' @importFrom dplyr %>%
-multi_county <- function(rain_storm_df, communities){
-        multi_df <- left_join(rain_storm_df, communities,
-                              by = "fips")
+multi_county_rain <- function(communities, start_year, end_year,
+                         rain_limit, dist_limit){
+        rain_storm_df <- dplyr::filter(closest_dist,
+                                       fips %in% communities$fips &
+                                       lubridate::year(closest_date) >= start_year &
+                                       lubridate::year(closest_date) <= end_year) %>%
+                dplyr::left_join(communities, by = "fips") %>%
+                dplyr::left_join(storm_rains,
+                                 by = c("storm_id", "fips")) %>%
+                dplyr::group_by(commun, storm_id) %>%
+                dplyr::mutate(max_rain = max(tot_precip),
+                              min_dist = min(storm_dist)) %>%
+                dplyr::filter(max_rain >= rain_limit &
+                                      min_dist <= dist_limit) %>%
+                dplyr::summarize(closest_date = first(closest_date),
+                                 mean_dist = mean(storm_dist),
+                                 mean_precip = mean(tot_precip),
+                                 max_rain = first(max_rain),
+                                 min_dist = first(min_dist))
+        return(rain_storm_df)
 
 }
 
 #' Create storm exposure time series files
 #'
-#'This function ...
+#' This function takes an input of locations (either a vector of county FIPS
+#' or a dataframe of multi-county FIPS, with all FIPS listed for each county)
+#' and creates time series dataframes that can be merged with health time series,
+#' giving the dates and exposures for all storms meeting the given rainfall and
+#' storm distance criteria.
+#'
+#' @examples
+#' # By county
+#' rain_exposure(locations = c("22071", "51700"),
+#'               start_year = 1995, end_year = 2005,
+#'               rain_limit = 100, dist_limit = 100, out_dir = "~/tmp/storms")
+#'
+#' # For multi-county communities
+#' communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
+#'                           fips = c("36005", "36047", "36061",
+#'                           "36085", "36081", "36119",
+#'                           "22071", "51700"))
+#' rain_exposure(locations = communities,
+#'               start_year = 1995, end_year = 2005,
+#'               rain_limit = 100, dist_limit = 100, out_dir = "~/tmp/storms")
 #'
 #' @export
 #'
 #' @importFrom dplyr %>%
-rain_exposure <- function(counties, start_year, end_year,
+rain_exposure <- function(locations, start_year, end_year,
                           rain_limit, dist_limit,
                           out_dir){
 
-        df <- rain_storms(counties = counties,
-                             start_year = start_year,
-                             end_year = end_year,
-                             rain_limit = rain_limit,
-                             dist_limit = dist_limit)
+        if("commun" %in% colnames(locations)){
+                df <- multi_county_rain(communities = locations,
+                                  start_year = start_year,
+                                  end_year = end_year,
+                                  rain_limit = rain_limit,
+                                  dist_limit = dist_limit) %>%
+                        dplyr::rename(loc = commun)
+        } else {
+                df <- county_rain(counties = locations,
+                                  start_year = start_year,
+                                  end_year = end_year,
+                                  rain_limit = rain_limit,
+                                  dist_limit = dist_limit) %>%
+                        dplyr::rename(loc = fips)
+        }
+        locs <- as.character(unique(df$loc))
 
         start_date <- as.Date(paste0(start_year, "0101"),
                               format = "%Y%m%d")
         end_date <- as.Date(paste0(end_year, "1231"),
                               format = "%Y%m%d")
-        for(i in 1:length(df$fips)){
-                fips_df <- filter(df, fips == fips[i]) %>%
-                        mutate(date = format(closest_date,
+        for(i in 1:length(locs)){
+                locs_df <- dplyr::filter(df, loc == locs[i]) %>%
+                        dplyr::mutate(date = format(closest_date,
                                              "%Y%m%d")) %>%
-                        mutate(date = as.Date(date, "%Y%m%d"))
+                        dplyr::mutate(date = as.Date(date, "%Y%m%d"))
 
                 out_df <- data.frame(date = seq(start_date,
                                                 end_date,
                                                 by = "days")) %>%
-                        dplyr::full_join(fips_df, by = c("date")) %>%
-                        dplyr::select(-fips, -closest_date) %>%
+                        dplyr::full_join(locs_df, by = c("date")) %>%
+                        dplyr::select(-loc, -closest_date) %>%
                         dplyr::mutate(storm = as.numeric(!is.na(storm_id)))
                 out_df$storm_id[is.na(out_df$storm_id)] <- "none"
 
-                out_file <- paste0(out_dir, "/", df$fips[i], ".rds")
+                out_file <- paste0(out_dir, "/", locs[i], ".rds")
                 saveRDS(out_df, out_file)
         }
 }
