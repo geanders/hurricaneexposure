@@ -54,11 +54,9 @@ county_rain <- function(counties, start_year, end_year,
 #'    "exposed" storms, based on the rainfall and distance
 #'    thresholds used to create the rain-exposure dataframe.
 #'
-#' @param rain_storm_df A dataframe of county-level "exposed"
-#'    storms, as created by \code{rain_storms}.
-#' @param community_list A list object with an element for each
-#'    community and a vector of FIPS codes for all counties within
+#' @param communities A dataframe with the FIPS codes for all counties within
 #'    each community
+#' @inheritParams county_rain
 #'
 #' @return Returns the same type dataframe as \code{rain_storms},
 #'    but with storms listed by community instead of county.
@@ -105,6 +103,13 @@ multi_county_rain <- function(communities, start_year, end_year,
 #' and creates time series dataframes that can be merged with health time series,
 #' giving the dates and exposures for all storms meeting the given rainfall and
 #' storm distance criteria.
+#'
+#' @param locations Either a vector of FIPS county codes, for county-level
+#'    output, or a dataframe with columns for community identifier (\code{commun})
+#'    and associated FIPS codes (\code{fips}), for multi-county community output
+#' @param out_dir Character string giving the pathname of the directory in which
+#'    to write output. This directory should already exist on your computer.
+#' @inheritParams county_rain
 #'
 #' @examples
 #' # By county

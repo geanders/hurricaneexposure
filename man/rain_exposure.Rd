@@ -6,6 +6,26 @@
 \usage{
 rain_exposure(locations, start_year, end_year, rain_limit, dist_limit, out_dir)
 }
+\arguments{
+\item{locations}{Either a vector of FIPS county codes, for county-level
+output, or a dataframe with columns for community identifier (\code{commun})
+and associated FIPS codes (\code{fips}), for multi-county community output}
+
+\item{start_year}{Four-digit integer with first year to consider.}
+
+\item{end_year}{Four-digit integer with last year to consider.}
+
+\item{rain_limit}{Minimum of rainfall for the week-long period
+centered at the storm's closest date to consider county
+"exposed" to the storm.}
+
+\item{dist_limit}{Maximum distance for the closest distance
+between the county center and the storm track to consider
+the county "exposed" to the storm.}
+
+\item{out_dir}{Character string giving the pathname of the directory in which
+to write output. This directory should already exist on your computer.}
+}
 \description{
 This function takes an input of locations (either a vector of county FIPS
 or a dataframe of multi-county FIPS, with all FIPS listed for each county)

@@ -7,12 +7,20 @@
 multi_county_rain(communities, start_year, end_year, rain_limit, dist_limit)
 }
 \arguments{
-\item{rain_storm_df}{A dataframe of county-level "exposed"
-storms, as created by \code{rain_storms}.}
-
-\item{community_list}{A list object with an element for each
-community and a vector of FIPS codes for all counties within
+\item{communities}{A dataframe with the FIPS codes for all counties within
 each community}
+
+\item{start_year}{Four-digit integer with first year to consider.}
+
+\item{end_year}{Four-digit integer with last year to consider.}
+
+\item{rain_limit}{Minimum of rainfall for the week-long period
+centered at the storm's closest date to consider county
+"exposed" to the storm.}
+
+\item{dist_limit}{Maximum distance for the closest distance
+between the county center and the storm track to consider
+the county "exposed" to the storm.}
 }
 \value{
 Returns the same type dataframe as \code{rain_storms},
