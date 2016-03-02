@@ -11,6 +11,7 @@ vignette: >
 
 ```{r echo = FALSE}
 library(hurricaneexposure)
+library(lubridate)
 ```
 
 ## Loading the package
@@ -49,12 +50,61 @@ First, the `rain_storms` function takes a list of county FIPS codes, bounds on t
 For example, to get a dataset of all the storms to which Orleans Parish (FIPS 22071), and Newport News, Virginia (FIPS 51700), were exposed between 1995 and 2005, where "exposed" means that the storm passed within 100 [units] of the county center and the weekly rainfall was 100 [units] or higher, you could run:
 
 ```{r}
-rain_storms(counties = c("22071", "51700"),
+county_rain(counties = c("22071", "51700"),
             start_year = 1995, end_year = 2005,
             rain_limit = 100, dist_limit = 100)
 ```
 
 In addition to giving you the names and closest dates of each storm for each county (`closest_date`), this function also gives you the distance between the county and the storm's track at time when the storm was closest to the county center (`storm_dist`) and the total precipitation for the week-long window centered on that closest date (`tot_precip`).
+
+To get "exposure" storms for multi-county communities, you can use the `multi_county_rain` function:
+
+```{r warning = FALSE}
+communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
+                         fips = c("36005", "36047", "36061",
+                                  "36085", "36081", "36119",
+                                  "22071", "51700"))
+rain_storm_df <- multi_county_rain(communities = communities,
+                                   start_year = 1995, end_year = 2005,
+                                   rain_limit = 100, dist_limit = 100)
+```
+
+**Note:** You currently will get the following warning when you run this function: 
+
+```
+Warning message:
+In left_join_impl(x, y, by$x, by$y) :
+  joining factor and character vector, coercing into character vector
+```
+
+That's not a problem, and I'll change the code later so you don't get this warning.
+
+This output includes columns for the average closest distance for any of the counties in the communities (`mean_dist`), the average of the weekly precipitation for all the counties (`mean_precip`), the highest weekly rain for any of the counties (`max_rain`), and the smallest distance between the storm track and any of the county centers (`min_dist`).
+
+## Creating and writing time series of exposure
+
+To create time series of hurricane exposure for all of the storms that meet the exposure definition for study communities, you can use the function `rain_exposure`. If you have counties for your study, you can run this with a vector of the county FIPS as the `locations` argument (specify the directory path to write the files with `out_dir`):
+
+```{r}
+rain_exposure(locations = c("22071", "51700"),
+              start_year = 1995, end_year = 2005,
+              rain_limit = 100, dist_limit = 100,
+              out_dir = "~/tmp/storms")
+```
+
+If you have multi-county communities, set `locations` instead to be a dataframe with community names (`commun` column) and FIPS codes (`fips` column):
+
+```{r message = FALSE, warning = FALSE}
+communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
+                          fips = c("36005", "36047", "36061",
+                          "36085", "36081", "36119",
+                          "22071", "51700"))
+rain_exposure(locations = communities,
+              start_year = 1995, end_year = 2005,
+              rain_limit = 100, dist_limit = 100, out_dir = "~/tmp/storms")
+```
+
+**Note:** You'll get the same message here as you do when running `multi_county_rain`, because this function is running that one. Again, it's not a problem.
 
 ## Mapping hurricane exposure
 
