@@ -60,7 +60,7 @@ county_rain <- function(counties, start_year, end_year,
                 dplyr::summarize(closest_date = first(closest_date),
                                  storm_dist = first(storm_dist),
                                  tot_precip = sum(value)) %>%
-                ungroup() %>%
+                dplyr::ungroup() %>%
                 dplyr::filter(tot_precip >= rain_limit)
         return(rain_storm_df)
 }
@@ -118,7 +118,7 @@ multi_county_rain <- function(communities, start_year, end_year,
                                  storm_dist = first(storm_dist),
                                  commun = first(commun),
                                  tot_precip = sum(value)) %>%
-                ungroup() %>%
+                dplyr::ungroup() %>%
                 dplyr::group_by(commun, storm_id) %>%
                 dplyr::mutate(max_rain = max(tot_precip),
                               min_dist = min(storm_dist)) %>%

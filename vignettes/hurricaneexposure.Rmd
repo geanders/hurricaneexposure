@@ -38,7 +38,7 @@ The following datasets are included with the package:
 - `closest_dist`
 - `county_centers`
 - `hurr_tracks`
-- `storm_rains`
+- `precip_file`
 
 For each, you can see the helpfiles for the data for more information about the data included in each. 
 
@@ -53,7 +53,8 @@ For example, to get a dataset of all the storms to which Orleans Parish (FIPS 22
 ```{r}
 county_rain(counties = c("22071", "51700"),
             start_year = 1995, end_year = 2005,
-            rain_limit = 100, dist_limit = 100)
+            rain_limit = 100, dist_limit = 100,
+            days_included = c(-1, 0, 1))
 ```
 
 In addition to giving you the names and closest dates of each storm for each county (`closest_date`), this function also gives you the distance between the county and the storm's track at time when the storm was closest to the county center (`storm_dist`) and the total precipitation for the week-long window centered on that closest date (`tot_precip`).
@@ -67,7 +68,8 @@ communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
                                   "22071", "51700"))
 rain_storm_df <- multi_county_rain(communities = communities,
                                    start_year = 1995, end_year = 2005,
-                                   rain_limit = 100, dist_limit = 100)
+                                   rain_limit = 100, dist_limit = 100,
+                                   days_included = c(-1, 0, 1))
 ```
 
 **Note:** You currently will get the following warning when you run this function: 
@@ -116,7 +118,7 @@ This package allows you to create some different maps of hurricane exposures.
 The `map_counties` function creates county choropleths of different storm exposure variables (right now, rainfall and distance from the storm tracks). For example, to plot rain exposure for Hurricane Floyd in 1999 (the ID for this storm is "Floyd-2012"):
 
 ```{r fig.width = 7, fig.height = 4}
-map_1 <- map_counties(storm = "Floyd-1999", metric = "weekly rainfall")
+map_1 <- map_counties(storm = "Floyd-1999", metric = "rainfall")
 map_1
 ```
 
@@ -129,31 +131,48 @@ map_2 <- map_counties(storm = "Floyd-1999", metric = "closest distance")
 map_2
 ```
 
+You can also map a binary variable of exposure for the communities that were exposed, based on a certain rainfall limit and distance limit:
+
+```{r fig.width = 7, fig.height = 4}
+map_3 <- map_rain_exposure(storm = "Floyd-1999", rain_limit = 50,
+                           dist_limit = 100, 
+                           days_included = c(-1, 0, 1))
+plot(map_3)
+```
+
+
 ### Plotting storm tracks 
 
 The `map_tracks` function will map the hurricane tracks for one or more storms. For example, to plot the tracks of Hurricane Floyd in 1999 (the ID for this storm is "Floyd-2012"):
 
 ```{r fig.width = 6.5, fig.height = 4}
-map_3 <- map_tracks(storms = "Floyd-1999")
-map_3
+map_4 <- map_tracks(storms = "Floyd-1999")
+map_4
 ```
 
 There are some different options you can use for the tracks' appearance. For example, if you wanted to plot the tracks of several storms, not show storm status with color, not plot each point when the track locations were measured (typically every six hours), and use some transparency so you can see all the lines, you can use: 
 
 ```{r fig.width = 5.5, fig.height = 4}
-map_4 <- map_tracks(storms = c("Floyd-1999", "Sandy-2012",
+map_5 <- map_tracks(storms = c("Floyd-1999", "Sandy-2012",
                                "Katrina-2005"),
                     storm_status = FALSE,
                     plot_points = FALSE,
                     alpha = 0.5)
-map_4
+map_5
 ```
 
 You can also add these tracks to an existing `ggplot`-created US map. You do this through the `plot_object` argument. For example, to add the storm track to the plot of rain exposure for Floyd, you could run:
 
 ```{r fig.width = 7, fig.height = 4}
-map_5 <- map_tracks(storms = "Floyd-1999", plot_object = map_1,
+map_6 <- map_tracks(storms = "Floyd-1999", plot_object = map_1,
                     storm_status = FALSE, plot_points = FALSE)
-map_5
+map_6
 ```
+
+```{r fig.width = 7, fig.height = 4}
+map_7 <- map_tracks(storms = "Floyd-1999", plot_object = map_3,
+                    storm_status = FALSE, plot_points = FALSE)
+map_7
+```
+
 

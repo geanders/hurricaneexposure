@@ -159,7 +159,7 @@ map_counties <-function(storm, metric = "closest distance",
                         dplyr::summarize(tot_precip = sum(value))
 
                 metric_df <- rain_storm_df %>%
-                        rename(value = tot_precip)
+                        dplyr::rename(value = tot_precip)
         } else{
                 stop("`metric` must be either `closest distance` or `rainfall`")
         }
