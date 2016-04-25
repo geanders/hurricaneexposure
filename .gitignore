@@ -2,5 +2,4 @@
 .Rhistory
 .RData
 inst/doc
-windmodel_R-2/*
 data-raw/nasa_precip_export_2.txt
