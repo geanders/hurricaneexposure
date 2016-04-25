@@ -4,7 +4,8 @@
 \alias{county_rain}
 \title{Create subset of storms for FIPS}
 \usage{
-county_rain(counties, start_year, end_year, rain_limit, dist_limit)
+county_rain(counties, start_year, end_year, rain_limit, dist_limit,
+  days_included = c("day_b1", "day_0", "day_a1"))
 }
 \arguments{
 \item{counties}{Character string of the FIPS codes for
@@ -21,6 +22,8 @@ centered at the storm's closest date to consider county
 \item{dist_limit}{Maximum distance for the closest distance
 between the county center and the storm track to consider
 the county "exposed" to the storm.}
+
+\item{days_included}{A character vector listing the days to include.}
 }
 \value{
 Returns a dataframe with a row for each county-storm

@@ -13,6 +13,12 @@
 #' @param rain_limit Minimum of rainfall for the week-long period
 #'    centered at the storm's closest date to consider county
 #'    "exposed" to the storm.
+#' @param days_included A numeric vector listing the days to include when
+#'    calculating total precipitation. Negative numbers are days before the
+#'    closest date of the storm to a county. For example,
+#'    \code{c(-1, 0, 1)} would calculate rain for a county as the sum of the
+#'    rainfall for the day before, the day of, and the day after the date when
+#'    the storm center was closest to the county center.
 #' @param dist_limit Maximum distance for the closest distance
 #'    between the county center and the storm track to consider
 #'    the county "exposed" to the storm.
@@ -33,14 +39,28 @@
 #'
 #' @importFrom dplyr %>%
 county_rain <- function(counties, start_year, end_year,
-                           rain_limit, dist_limit){
+                           rain_limit, dist_limit,
+                        days_included = c(-1, 0, 1)){
+
+        all_days <- c("b3", "b2", "b1", "0", "a1", "a2", "a3")
+        days_included <- all_days[(days_included + 4)]
+        days_included <- paste("day", days_included, sep = "_")
+
         rain_storm_df <- dplyr::filter(closest_dist,
                             fips %in% counties &
                                     lubridate::year(closest_date) >= start_year &
                                     lubridate::year(closest_date) <= end_year &
                                     storm_dist <= dist_limit) %>%
-                dplyr::left_join(storm_rains,
+                dplyr::left_join(precip_file,
                                  by = c("storm_id", "fips")) %>%
+                tidyr::gather(key, value, -storm_id, -fips,
+                              -closest_date, -storm_dist) %>%
+                dplyr::filter(key %in% days_included) %>%
+                dplyr::group_by(storm_id, fips) %>%
+                dplyr::summarize(closest_date = first(closest_date),
+                                 storm_dist = first(storm_dist),
+                                 tot_precip = sum(value)) %>%
+                dplyr::ungroup() %>%
                 dplyr::filter(tot_precip >= rain_limit)
         return(rain_storm_df)
 }
@@ -74,14 +94,31 @@ county_rain <- function(counties, start_year, end_year,
 #'
 #' @importFrom dplyr %>%
 multi_county_rain <- function(communities, start_year, end_year,
-                         rain_limit, dist_limit){
+                         rain_limit, dist_limit,
+                         days_included = c(-1, 0, 1)){
+
+        communities <- dplyr::mutate(communities, fips = as.character(fips))
+
+        all_days <- c("b3", "b2", "b1", "0", "a1", "a2", "a3")
+        days_included <- all_days[(days_included + 4)]
+        days_included <- paste("day", days_included, sep = "_")
+
         rain_storm_df <- dplyr::filter(closest_dist,
                                        fips %in% communities$fips &
                                        lubridate::year(closest_date) >= start_year &
                                        lubridate::year(closest_date) <= end_year) %>%
                 dplyr::left_join(communities, by = "fips") %>%
-                dplyr::left_join(storm_rains,
+                dplyr::left_join(precip_file,
                                  by = c("storm_id", "fips")) %>%
+                tidyr::gather(key, value, -storm_id, -fips,
+                              -closest_date, -storm_dist, -commun) %>%
+                dplyr::filter(key %in% days_included) %>%
+                dplyr::group_by(storm_id, fips) %>%
+                dplyr::summarize(closest_date = first(closest_date),
+                                 storm_dist = first(storm_dist),
+                                 commun = first(commun),
+                                 tot_precip = sum(value)) %>%
+                dplyr::ungroup() %>%
                 dplyr::group_by(commun, storm_id) %>%
                 dplyr::mutate(max_rain = max(tot_precip),
                               min_dist = min(storm_dist)) %>%
@@ -89,7 +126,7 @@ multi_county_rain <- function(communities, start_year, end_year,
                                       min_dist <= dist_limit) %>%
                 dplyr::summarize(closest_date = first(closest_date),
                                  mean_dist = mean(storm_dist),
-                                 mean_precip = mean(tot_precip),
+                                 mean_rain = mean(tot_precip),
                                  max_rain = first(max_rain),
                                  min_dist = first(min_dist))
         return(rain_storm_df)

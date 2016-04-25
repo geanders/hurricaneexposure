@@ -128,20 +128,40 @@ map_tracks <- function(storms, plot_object = NULL,
 
 #' Map counties
 #'
+#' @param storm Character vector giving the name of the storm to plot (e.g.,
+#'    "Floyd-1999")
+#'
+#' @examples
+#' floyd_map <- map_counties("Floyd-1999", metric = "rainfall",
+#'                            days_included = c(-1, 0, 1))
+#' plot(floyd_map)
+#'
 #' @export
 #'
 #' @importFrom dplyr %>%
-map_counties <-function(storm, metric = "closest distance"){
+map_counties <-function(storm, metric = "closest distance",
+                        days_included = c(-1, 0, 1)){
         if(metric == "closest distance"){
                 data("closest_dist")
                 metric_df <- closest_dist
                 metric_df$value <- metric_df$storm_dist
-        } else if(metric == "weekly rainfall"){
-                data("storm_rains")
-                metric_df <- storm_rains
-                metric_df$value <- metric_df$tot_precip
+        } else if(metric == "rainfall"){
+                data("precip_file")
+
+                all_days <- c("b3", "b2", "b1", "0", "a1", "a2", "a3")
+                days_included <- all_days[(days_included + 4)]
+                days_included <- paste("day", days_included, sep = "_")
+
+                rain_storm_df <- dplyr::filter(precip_file, storm_id == storm) %>%
+                        tidyr::gather(key, value, -storm_id, -fips) %>%
+                        dplyr::filter(key %in% days_included) %>%
+                        dplyr::group_by(storm_id, fips) %>%
+                        dplyr::summarize(tot_precip = sum(value))
+
+                metric_df <- rain_storm_df %>%
+                        dplyr::rename(value = tot_precip)
         } else{
-                stop("`metric` must be either `closest distance` or `weekly rainfall`")
+                stop("`metric` must be either `closest distance` or `rainfall`")
         }
         map_data <- dplyr::filter(metric_df,
                                   storm_id == storm) %>%
@@ -161,4 +181,68 @@ map_counties <-function(storm, metric = "closest distance"){
                                                        "south carolina", "tennessee", "texas",
                                                        "vermont", "virginia", "west virginia",
                                                        "wisconsin"))
+        return(out)
+}
+
+#' Map counties with rain exposure
+#'
+#' @inheritParams county_rain
+#'
+#' @examples
+#'
+#' floyd_map <- map_rain_exposure(storm = "Floyd-1999", rain_limit = 50,
+#'                                dist_limit = 100)
+#' plot(floyd_map)
+#'
+#' allison_map <- map_rain_exposure(storm = "Allison-2001", rain_limit = 20,
+#'                                  dist_limit = 100, days_included = 0)
+#' map_tracks("Allison-2001", plot_points = FALSE, plot_object = floyd_map,
+#'            storm_status = FALSE)
+#'
+#' @importFrom dplyr %>%
+#'
+#' @export
+map_rain_exposure <- function(storm, rain_limit, dist_limit,
+                              days_included = c(-1, 0, 1)){
+        data("precip_file")
+        data("closest_dist")
+
+        all_days <- c("b3", "b2", "b1", "0", "a1", "a2", "a3")
+        days_included <- all_days[(days_included + 4)]
+        days_included <- paste("day", days_included, sep = "_")
+
+        rain_storm_df <- dplyr::filter(precip_file, storm_id == storm) %>%
+                tidyr::gather(key, value, -storm_id, -fips) %>%
+                dplyr::filter(key %in% days_included) %>%
+                dplyr::group_by(storm_id, fips) %>%
+                dplyr::summarize(tot_precip = sum(value)) %>%
+                dplyr::left_join(closest_dist, by = c("storm_id" = "storm_id",
+                                                      "fips" = "fips")) %>%
+                dplyr::mutate(exposed = tot_precip >= rain_limit &
+                                      storm_dist <= dist_limit)
+
+        metric_df <- rain_storm_df %>%
+                dplyr::mutate(value = factor(exposed, levels = c("FALSE", "TRUE")))
+
+        map_data <- dplyr::filter(metric_df,
+                                  storm_id == storm) %>%
+                dplyr::mutate(region = as.numeric(fips)) %>%
+                dplyr::select(region, value)
+        out <- choroplethr::county_choropleth(map_data,
+                                              state_zoom = c("alabama", "arkansas",
+                                                             "connecticut", "delaware",
+                                                             "district of columbia", "florida",
+                                                             "georgia", "illinois", "indiana",
+                                                             "iowa", "kansas", "kentucky", "louisiana",
+                                                             "maine", "maryland", "massachusetts",
+                                                             "michigan", "mississippi",
+                                                             "missouri", "new hampshire", "new jersey",
+                                                             "new york", "north carolina", "ohio",
+                                                             "oklahoma", "pennsylvania", "rhode island",
+                                                             "south carolina", "tennessee", "texas",
+                                                             "vermont", "virginia", "west virginia",
+                                                             "wisconsin"))
+        out <- out + ggplot2::scale_fill_manual(values = c("white", "blue"),
+                                                labels = c("unexposed", "exposed"))
+        return(out)
 }
