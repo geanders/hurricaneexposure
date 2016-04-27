@@ -4,9 +4,20 @@
 \alias{map_counties}
 \title{Map counties}
 \usage{
-map_counties(storm, metric = "closest distance")
+map_counties(storm, metric = "closest distance", days_included = c(-1, 0,
+  1))
+}
+\arguments{
+\item{storm}{Character vector giving the name of the storm to plot (e.g.,
+"Floyd-1999")}
 }
 \description{
 Map counties
+}
+\examples{
+floyd_map <- map_counties("Floyd-1999", metric = "rainfall",
+                           days_included = c(-1, 0, 1))
+plot(floyd_map)
+
 }
 

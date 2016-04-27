@@ -3,6 +3,7 @@
 export(county_rain)
 export(default_map)
 export(map_counties)
+export(map_rain_exposure)
 export(map_tracks)
 export(multi_county_rain)
 export(rain_exposure)
