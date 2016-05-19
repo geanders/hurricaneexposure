@@ -34,7 +34,7 @@ for each of the listed counties.
 \examples{
 county_distance(counties = c("22071", "51700"),
             start_year = 1995, end_year = 2005,
-            dist_limit = 50)
+            dist_limit = 75)
 
 }
 

@@ -11,8 +11,8 @@ vignette: >
 
 ```{r echo = FALSE}
 library(hurricaneexposure)
-library(lubridate)
-library(ggplot2)
+# library(lubridate)
+# library(ggplot2)
 ```
 
 ## Loading the package
@@ -113,7 +113,7 @@ rain_exposure(locations = communities,
 
 This package allows you to create some different maps of hurricane exposures. 
 
-### Plotting county-level exposure variables
+### Plotting county-level exposure 
 
 The `map_counties` function creates county choropleths of different storm exposure variables (right now, rainfall and distance from the storm tracks). For example, to plot rain exposure for Hurricane Floyd in 1999 (the ID for this storm is "Floyd-2012"):
 
@@ -131,11 +131,20 @@ map_2 <- map_counties(storm = "Floyd-1999", metric = "closest distance")
 map_2
 ```
 
-You can also map a binary variable of exposure for the communities that were exposed, based on a certain rainfall limit and distance limit:
+You can map a binary variable of distance-based exposure using `map_distance_exposure`: 
 
 ```{r fig.width = 7, fig.height = 4}
-map_3 <- map_rain_exposure(storm = "Floyd-1999", rain_limit = 50,
-                           dist_limit = 100, 
+allison_map <- map_distance_exposure(storm = "Allison-2001",
+                                     dist_limit = 75)
+plot(allison_map)
+```
+
+
+You can also map a binary variable of rain exposure for the communities that were exposed, based on a certain rainfall limit and distance limit:
+
+```{r fig.width = 7, fig.height = 4}
+map_3 <- map_rain_exposure(storm = "Floyd-1999", rain_limit = 125,
+                           dist_limit = 500, 
                            days_included = c(-1, 0, 1))
 plot(map_3)
 ```

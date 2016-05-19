@@ -196,7 +196,7 @@ map_counties <-function(storm, metric = "closest distance",
 #'
 #' allison_map <- map_rain_exposure(storm = "Allison-2001", rain_limit = 20,
 #'                                  dist_limit = 100, days_included = 0)
-#' map_tracks("Allison-2001", plot_points = FALSE, plot_object = floyd_map,
+#' map_tracks("Allison-2001", plot_points = FALSE, plot_object = allison_map,
 #'            storm_status = FALSE)
 #'
 #' @importFrom dplyr %>%
@@ -246,3 +246,55 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
                                                 labels = c("unexposed", "exposed"))
         return(out)
 }
+
+#' Map counties with distance exposure
+#'
+#' @inheritParams county_rain
+#'
+#' @examples
+#'
+#' floyd_map <- map_distance_exposure(storm = "Floyd-1999", dist_limit = 75)
+#' plot(floyd_map)
+#'
+#' allison_map <- map_distance_exposure(storm = "Allison-2001",
+#'                                      dist_limit = 75)
+#' map_tracks("Allison-2001", plot_points = FALSE, plot_object = allison_map,
+#'            storm_status = FALSE)
+#'
+#' @importFrom dplyr %>%
+#'
+#' @export
+map_distance_exposure <- function(storm,dist_limit){
+
+        data("closest_dist")
+
+        distance_df <- dplyr::filter(closest_dist, storm_id == storm) %>%
+                dplyr::mutate(exposed = storm_dist <= dist_limit)
+
+        metric_df <- distance_df %>%
+                dplyr::mutate(value = factor(exposed,
+                                             levels = c("FALSE", "TRUE")))
+
+        map_data <- dplyr::filter(metric_df,
+                                  storm_id == storm) %>%
+                dplyr::mutate(region = as.numeric(fips)) %>%
+                dplyr::select(region, value)
+        out <- choroplethr::county_choropleth(map_data,
+                                              state_zoom = c("alabama", "arkansas",
+                                                             "connecticut", "delaware",
+                                                             "district of columbia", "florida",
+                                                             "georgia", "illinois", "indiana",
+                                                             "iowa", "kansas", "kentucky", "louisiana",
+                                                             "maine", "maryland", "massachusetts",
+                                                             "michigan", "mississippi",
+                                                             "missouri", "new hampshire", "new jersey",
+                                                             "new york", "north carolina", "ohio",
+                                                             "oklahoma", "pennsylvania", "rhode island",
+                                                             "south carolina", "tennessee", "texas",
+                                                             "vermont", "virginia", "west virginia",
+                                                             "wisconsin"))
+        out <- out + ggplot2::scale_fill_manual(values = c("white", "blue"),
+                                                labels = c("unexposed", "exposed"))
+        return(out)
+}
+
