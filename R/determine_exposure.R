@@ -168,6 +168,7 @@ multi_county_rain <- function(communities, start_year, end_year,
 #' @importFrom dplyr %>%
 rain_exposure <- function(locations, start_year, end_year,
                           rain_limit, dist_limit,
+                          days_included = c(-1, 0, 1),
                           out_dir){
 
         if("commun" %in% colnames(locations)){
@@ -175,14 +176,16 @@ rain_exposure <- function(locations, start_year, end_year,
                                   start_year = start_year,
                                   end_year = end_year,
                                   rain_limit = rain_limit,
-                                  dist_limit = dist_limit) %>%
+                                  dist_limit = dist_limit,
+                                  days_included = c(-1, 0, 1)) %>%
                         dplyr::rename(loc = commun)
         } else {
                 df <- county_rain(counties = locations,
                                   start_year = start_year,
                                   end_year = end_year,
                                   rain_limit = rain_limit,
-                                  dist_limit = dist_limit) %>%
+                                  dist_limit = dist_limit,
+                                  days_included = c(-1, 0, 1)) %>%
                         dplyr::rename(loc = fips)
         }
         locs <- as.character(unique(df$loc))
