@@ -8,18 +8,18 @@ county_rain(counties, start_year, end_year, rain_limit, dist_limit,
   days_included = c(-1, 0, 1))
 }
 \arguments{
-\item{counties}{Character string of the FIPS codes for
-counties to create data for}
+\item{counties}{Character string of the five-digit FIPS codes for
+counties for which the user wants to create data}
 
 \item{start_year}{Four-digit integer with first year to consider.}
 
 \item{end_year}{Four-digit integer with last year to consider.}
 
-\item{rain_limit}{Minimum of rainfall for the week-long period
-centered at the storm's closest date to consider county
+\item{rain_limit}{Minimum of rainfall, in millimeters, summed across the days
+selected to be included, that must be met to consider county
 "exposed" to the storm.}
 
-\item{dist_limit}{Maximum distance for the closest distance
+\item{dist_limit}{Maximum distance, in kilometers, for the closest distance
 between the county center and the storm track to consider
 the county "exposed" to the storm.}
 

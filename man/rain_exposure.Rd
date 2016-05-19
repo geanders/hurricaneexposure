@@ -4,7 +4,8 @@
 \alias{rain_exposure}
 \title{Create storm exposure time series files}
 \usage{
-rain_exposure(locations, start_year, end_year, rain_limit, dist_limit, out_dir)
+rain_exposure(locations, start_year, end_year, rain_limit, dist_limit,
+  days_included = c(-1, 0, 1), out_dir, out_type = "csv")
 }
 \arguments{
 \item{locations}{Either a vector of FIPS county codes, for county-level
@@ -15,16 +16,32 @@ and associated FIPS codes (\code{fips}), for multi-county community output}
 
 \item{end_year}{Four-digit integer with last year to consider.}
 
-\item{rain_limit}{Minimum of rainfall for the week-long period
-centered at the storm's closest date to consider county
+\item{rain_limit}{Minimum of rainfall, in millimeters, summed across the days
+selected to be included, that must be met to consider county
 "exposed" to the storm.}
 
-\item{dist_limit}{Maximum distance for the closest distance
+\item{dist_limit}{Maximum distance, in kilometers, for the closest distance
 between the county center and the storm track to consider
 the county "exposed" to the storm.}
 
+\item{days_included}{A numeric vector listing the days to include when
+calculating total precipitation. Negative numbers are days before the
+closest date of the storm to a county. For example,
+\code{c(-1, 0, 1)} would calculate rain for a county as the sum of the
+rainfall for the day before, the day of, and the day after the date when
+the storm center was closest to the county center.}
+
 \item{out_dir}{Character string giving the pathname of the directory in which
 to write output. This directory should already exist on your computer.}
+
+\item{out_type}{Character string giving the type of output files you'd like.
+Options are \code{"csv"} (default) and \code{"rds"}.}
+}
+\value{
+Writes out a directory with rain exposure files for each county or
+   community indicated. For more on the columns in this output, see the
+   documentation for \code{\link{county_rain}} and
+   \code{\link{multi_county_rain}}.
 }
 \description{
 This function takes an input of locations (either a vector of county FIPS
@@ -37,7 +54,8 @@ storm distance criteria.
 # By county
 rain_exposure(locations = c("22071", "51700"),
               start_year = 1995, end_year = 2005,
-              rain_limit = 100, dist_limit = 100, out_dir = "~/tmp/storms")
+              rain_limit = 100, dist_limit = 100,
+              out_dir = "~/tmp/storms")
 
 # For multi-county communities
 communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
@@ -46,7 +64,8 @@ communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
                           "22071", "51700"))
 rain_exposure(locations = communities,
               start_year = 1995, end_year = 2005,
-              rain_limit = 100, dist_limit = 100, out_dir = "~/tmp/storms")
+              rain_limit = 100, dist_limit = 100,
+              out_dir = "~/tmp/storms")
 
 }
 
