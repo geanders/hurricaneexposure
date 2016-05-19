@@ -11,8 +11,6 @@ vignette: >
 
 ```{r echo = FALSE}
 library(hurricaneexposure)
-# library(lubridate)
-# library(ggplot2)
 ```
 
 ## Loading the package

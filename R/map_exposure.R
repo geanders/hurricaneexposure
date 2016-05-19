@@ -142,12 +142,9 @@ map_tracks <- function(storms, plot_object = NULL,
 map_counties <-function(storm, metric = "closest distance",
                         days_included = c(-1, 0, 1)){
         if(metric == "closest distance"){
-                data("closest_dist")
                 metric_df <- closest_dist
                 metric_df$value <- metric_df$storm_dist
         } else if(metric == "rainfall"){
-                data("precip_file")
-
                 all_days <- c("b3", "b2", "b1", "0", "a1", "a2", "a3")
                 days_included <- all_days[(days_included + 4)]
                 days_included <- paste("day", days_included, sep = "_")
@@ -204,8 +201,6 @@ map_counties <-function(storm, metric = "closest distance",
 #' @export
 map_rain_exposure <- function(storm, rain_limit, dist_limit,
                               days_included = c(-1, 0, 1)){
-        data("precip_file")
-        data("closest_dist")
 
         all_days <- c("b3", "b2", "b1", "0", "a1", "a2", "a3")
         days_included <- all_days[(days_included + 4)]
@@ -265,8 +260,6 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
 #'
 #' @export
 map_distance_exposure <- function(storm,dist_limit){
-
-        data("closest_dist")
 
         distance_df <- dplyr::filter(closest_dist, storm_id == storm) %>%
                 dplyr::mutate(exposed = storm_dist <= dist_limit)
