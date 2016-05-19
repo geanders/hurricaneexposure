@@ -2,7 +2,7 @@
 % Please edit documentation in R/rain_exposure.R
 \name{rain_exposure}
 \alias{rain_exposure}
-\title{Create storm exposure time series files}
+\title{Write storm rain exposure files}
 \usage{
 rain_exposure(locations, start_year, end_year, rain_limit, dist_limit,
   days_included = c(-1, 0, 1), out_dir, out_type = "csv")

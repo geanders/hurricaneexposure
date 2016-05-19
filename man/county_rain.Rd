@@ -2,7 +2,7 @@
 % Please edit documentation in R/rain_exposure.R
 \name{county_rain}
 \alias{county_rain}
-\title{Create subset of storms for FIPS}
+\title{Hurricane exposure by rain for counties}
 \usage{
 county_rain(counties, start_year, end_year, rain_limit, dist_limit,
   days_included = c(-1, 0, 1))
@@ -40,10 +40,10 @@ Returns a dataframe with a row for each county-storm
 }
 \description{
 This function takes a list of county FIPS, boundaries on
-   starting and ending years, and thresholds for distance
-   and the week-window rainfall and returns a dataframe
-   with the subset of storms meeting those criteria for
-   each of the listed counties.
+starting and ending years, and thresholds for distance
+and rainfall over the days included and returns a dataframe
+with the subset of storms meeting those criteria for
+each of the listed counties.
 }
 \examples{
 county_rain(counties = c("22071", "51700"),

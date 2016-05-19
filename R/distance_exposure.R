@@ -1,39 +1,24 @@
-#' Create subset of storms for FIPS
+#' Hurricane exposure by distance for counties
 #'
 #' This function takes a list of county FIPS, boundaries on
-#'    starting and ending years, and thresholds for distance
-#'    and the week-window rainfall and returns a dataframe
-#'    with the subset of storms meeting those criteria for
-#'    each of the listed counties.
+#' starting and ending years, and thresholds for distance
+#' and returns a dataframe with the subset of storms meeting those criteria
+#' for each of the listed counties.
 #'
 #' @param counties Character string of the five-digit FIPS codes for
 #'    counties for which the user wants to create data
-#' @param start_year Four-digit integer with first year to consider.
-#' @param end_year Four-digit integer with last year to consider.
-#' @param rain_limit Minimum of rainfall, in millimeters, summed across the days
-#'    selected to be included, that must be met to consider county
-#'    "exposed" to the storm.
-#' @param days_included A numeric vector listing the days to include when
-#'    calculating total precipitation. Negative numbers are days before the
-#'    closest date of the storm to a county. For example,
-#'    \code{c(-1, 0, 1)} would calculate rain for a county as the sum of the
-#'    rainfall for the day before, the day of, and the day after the date when
-#'    the storm center was closest to the county center.
-#' @param dist_limit Maximum distance, in kilometers, for the closest distance
-#'    between the county center and the storm track to consider
-#'    the county "exposed" to the storm.
+#' @inheritParams county_rain
 #'
 #' @return Returns a dataframe with a row for each county-storm
 #'    pair and with columns giving the storm's ID, county FIPS,
-#'    date and time of closest approach of that storm to that county,
+#'    date and time of closest approach of that storm to that county, and
 #'    distance between the county center and the storm track on
-#'    that date and time, and cumulative rainfall for the week-long
-#'    period centered at the date of closest approach to the county.
+#'    that date and time.
 #'
 #' @examples
 #' county_distance(counties = c("22071", "51700"),
 #'             start_year = 1995, end_year = 2005,
-#'             dist_limit = 100)
+#'             dist_limit = 50)
 #'
 #' @export
 #'
@@ -49,22 +34,17 @@ county_distance <- function(counties, start_year, end_year,
         return(distance_df)
 }
 
-#' Create multi-county community exposures
+#' Hurricane exposure by distance for communities
 #'
-#' This function takes a rain-exposure dataframe for counties,
-#'    as created by the \code{rain_storms} function, as well as
-#'    a list object with the counties in each multi-county
-#'    community, and returns a community-level dataframe of
-#'    "exposed" storms, based on the rainfall and distance
-#'    thresholds used to create the rain-exposure dataframe.
+#' This function takes a dataframe with multi-county communities and returns a
+#' community-level dataframe of "exposed" storms, based on the average distance
+#' between the storm's track and the population-based centers of each county
+#' in the community.
 #'
-#' @param communities A dataframe with the FIPS codes for all counties within
-#'    each community. It must include columns with a column identifier
-#'    (\code{commun}) and with the FIPS codes of counties included in each
-#'    community (\code{fips}). See the example code.
 #' @inheritParams county_rain
+#' @inheritParams multi_county_rain
 #'
-#' @return Returns the same type dataframe as \code{rain_storms},
+#' @return Returns the same type dataframe as \code{county_distance},
 #'    but with storms listed by community instead of county.
 #'
 #' @export
@@ -76,7 +56,7 @@ county_distance <- function(counties, start_year, end_year,
 #'                                   "22071", "51700"))
 #' distance_df <- multi_county_distance(communities = communities,
 #'                                      start_year = 1995, end_year = 2005,
-#'                                      dist_limit = 100)
+#'                                      dist_limit = 75)
 #'
 #' @importFrom dplyr %>%
 multi_county_distance <- function(communities, start_year, end_year,
@@ -99,22 +79,16 @@ multi_county_distance <- function(communities, start_year, end_year,
 
 }
 
-#' Create storm exposure time series files
+#' Write storm distance exposure files
 #'
 #' This function takes an input of locations (either a vector of county FIPS
 #' or a dataframe of multi-county FIPS, with all FIPS listed for each county)
 #' and creates time series dataframes that can be merged with health time series,
-#' giving the dates and exposures for all storms meeting the given rainfall and
+#' giving the dates and exposures for all storms meeting the given
 #' storm distance criteria.
 #'
-#' @param locations Either a vector of FIPS county codes, for county-level
-#'    output, or a dataframe with columns for community identifier (\code{commun})
-#'    and associated FIPS codes (\code{fips}), for multi-county community output
-#' @param out_dir Character string giving the pathname of the directory in which
-#'    to write output. This directory should already exist on your computer.
-#' @param out_type Character string giving the type of output files you'd like.
-#'    Options are \code{"csv"} (default) and \code{"rds"}.
 #' @inheritParams county_rain
+#' @inheritParams rain_exposure
 #'
 #' @return Writes out a directory with rain exposure files for each county or
 #'    community indicated. For more on the columns in this output, see the
@@ -125,7 +99,7 @@ multi_county_distance <- function(communities, start_year, end_year,
 #' # By county
 #' distance_exposure(locations = c("22071", "51700"),
 #'               start_year = 1995, end_year = 2005,
-#'               dist_limit = 25,
+#'               dist_limit = 75,
 #'               out_dir = "~/tmp/storms")
 #'
 #' # For multi-county communities
@@ -135,7 +109,7 @@ multi_county_distance <- function(communities, start_year, end_year,
 #'                           "22071", "51700"))
 #' distance_exposure(locations = communities,
 #'               start_year = 1995, end_year = 2005,
-#'               dist_limit = 25,
+#'               dist_limit = 75,
 #'               out_dir = "~/tmp/storms")
 #'
 #' @export
@@ -155,7 +129,7 @@ distance_exposure <- function(locations, start_year, end_year,
                                   dist_limit = dist_limit) %>%
                         dplyr::rename(loc = commun)
         } else {
-                df <- county_rain(counties = locations,
+                df <- county_distance(counties = locations,
                                   start_year = start_year,
                                   end_year = end_year,
                                   dist_limit = dist_limit) %>%

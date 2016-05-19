@@ -1,10 +1,10 @@
-#' Create subset of storms for FIPS
+#' Hurricane exposure by rain for counties
 #'
 #' This function takes a list of county FIPS, boundaries on
-#'    starting and ending years, and thresholds for distance
-#'    and the week-window rainfall and returns a dataframe
-#'    with the subset of storms meeting those criteria for
-#'    each of the listed counties.
+#' starting and ending years, and thresholds for distance
+#' and rainfall over the days included and returns a dataframe
+#' with the subset of storms meeting those criteria for
+#' each of the listed counties.
 #'
 #' @param counties Character string of the five-digit FIPS codes for
 #'    counties for which the user wants to create data
@@ -65,14 +65,13 @@ county_rain <- function(counties, start_year, end_year,
         return(rain_storm_df)
 }
 
-#' Create multi-county community exposures
+#' Hurricane exposure by rain for communities
 #'
-#' This function takes a rain-exposure dataframe for counties,
-#'    as created by the \code{rain_storms} function, as well as
-#'    a list object with the counties in each multi-county
-#'    community, and returns a community-level dataframe of
-#'    "exposed" storms, based on the rainfall and distance
-#'    thresholds used to create the rain-exposure dataframe.
+#' This function takes a dataframe with multi-county communities and returns a
+#' community-level dataframe of "exposed" storms, based on the average distance
+#' between the storm's track and the population-based centers of each county
+#' in the community and the given threshold of rainfall, summed over the days
+#' included in the rainfall measurement.
 #'
 #' @param communities A dataframe with the FIPS codes for all counties within
 #'    each community. It must include columns with a column identifier
@@ -80,7 +79,7 @@ county_rain <- function(counties, start_year, end_year,
 #'    community (\code{fips}). See the example code.
 #' @inheritParams county_rain
 #'
-#' @return Returns the same type dataframe as \code{rain_storms},
+#' @return Returns the same type dataframe as \code{county_rain},
 #'    but with storms listed by community instead of county.
 #'
 #' @export
@@ -135,7 +134,7 @@ multi_county_rain <- function(communities, start_year, end_year,
 
 }
 
-#' Create storm exposure time series files
+#' Write storm rain exposure files
 #'
 #' This function takes an input of locations (either a vector of county FIPS
 #' or a dataframe of multi-county FIPS, with all FIPS listed for each county)

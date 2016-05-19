@@ -2,7 +2,7 @@
 % Please edit documentation in R/distance_exposure.R
 \name{distance_exposure}
 \alias{distance_exposure}
-\title{Create storm exposure time series files}
+\title{Write storm distance exposure files}
 \usage{
 distance_exposure(locations, start_year, end_year, dist_limit, out_dir,
   out_type = "csv")
@@ -36,14 +36,14 @@ Writes out a directory with rain exposure files for each county or
 This function takes an input of locations (either a vector of county FIPS
 or a dataframe of multi-county FIPS, with all FIPS listed for each county)
 and creates time series dataframes that can be merged with health time series,
-giving the dates and exposures for all storms meeting the given rainfall and
+giving the dates and exposures for all storms meeting the given
 storm distance criteria.
 }
 \examples{
 # By county
 distance_exposure(locations = c("22071", "51700"),
               start_year = 1995, end_year = 2005,
-              dist_limit = 25,
+              dist_limit = 75,
               out_dir = "~/tmp/storms")
 
 # For multi-county communities
@@ -53,7 +53,7 @@ communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
                           "22071", "51700"))
 distance_exposure(locations = communities,
               start_year = 1995, end_year = 2005,
-              dist_limit = 25,
+              dist_limit = 75,
               out_dir = "~/tmp/storms")
 
 }

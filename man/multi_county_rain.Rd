@@ -2,7 +2,7 @@
 % Please edit documentation in R/rain_exposure.R
 \name{multi_county_rain}
 \alias{multi_county_rain}
-\title{Create multi-county community exposures}
+\title{Hurricane exposure by rain for communities}
 \usage{
 multi_county_rain(communities, start_year, end_year, rain_limit, dist_limit,
   days_included = c(-1, 0, 1))
@@ -33,16 +33,15 @@ rainfall for the day before, the day of, and the day after the date when
 the storm center was closest to the county center.}
 }
 \value{
-Returns the same type dataframe as \code{rain_storms},
+Returns the same type dataframe as \code{county_rain},
    but with storms listed by community instead of county.
 }
 \description{
-This function takes a rain-exposure dataframe for counties,
-   as created by the \code{rain_storms} function, as well as
-   a list object with the counties in each multi-county
-   community, and returns a community-level dataframe of
-   "exposed" storms, based on the rainfall and distance
-   thresholds used to create the rain-exposure dataframe.
+This function takes a dataframe with multi-county communities and returns a
+community-level dataframe of "exposed" storms, based on the average distance
+between the storm's track and the population-based centers of each county
+in the community and the given threshold of rainfall, summed over the days
+included in the rainfall measurement.
 }
 \examples{
 communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),

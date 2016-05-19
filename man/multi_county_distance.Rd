@@ -2,7 +2,7 @@
 % Please edit documentation in R/distance_exposure.R
 \name{multi_county_distance}
 \alias{multi_county_distance}
-\title{Create multi-county community exposures}
+\title{Hurricane exposure by distance for communities}
 \usage{
 multi_county_distance(communities, start_year, end_year, dist_limit)
 }
@@ -21,16 +21,14 @@ between the county center and the storm track to consider
 the county "exposed" to the storm.}
 }
 \value{
-Returns the same type dataframe as \code{rain_storms},
+Returns the same type dataframe as \code{county_distance},
    but with storms listed by community instead of county.
 }
 \description{
-This function takes a rain-exposure dataframe for counties,
-   as created by the \code{rain_storms} function, as well as
-   a list object with the counties in each multi-county
-   community, and returns a community-level dataframe of
-   "exposed" storms, based on the rainfall and distance
-   thresholds used to create the rain-exposure dataframe.
+This function takes a dataframe with multi-county communities and returns a
+community-level dataframe of "exposed" storms, based on the average distance
+between the storm's track and the population-based centers of each county
+in the community.
 }
 \examples{
 communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
@@ -39,7 +37,7 @@ communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
                                   "22071", "51700"))
 distance_df <- multi_county_distance(communities = communities,
                                      start_year = 1995, end_year = 2005,
-                                     dist_limit = 100)
+                                     dist_limit = 75)
 
 }
 

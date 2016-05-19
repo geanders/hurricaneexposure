@@ -2,7 +2,7 @@
 % Please edit documentation in R/distance_exposure.R
 \name{county_distance}
 \alias{county_distance}
-\title{Create subset of storms for FIPS}
+\title{Hurricane exposure by distance for counties}
 \usage{
 county_distance(counties, start_year, end_year, dist_limit)
 }
@@ -17,37 +17,24 @@ counties for which the user wants to create data}
 \item{dist_limit}{Maximum distance, in kilometers, for the closest distance
 between the county center and the storm track to consider
 the county "exposed" to the storm.}
-
-\item{rain_limit}{Minimum of rainfall, in millimeters, summed across the days
-selected to be included, that must be met to consider county
-"exposed" to the storm.}
-
-\item{days_included}{A numeric vector listing the days to include when
-calculating total precipitation. Negative numbers are days before the
-closest date of the storm to a county. For example,
-\code{c(-1, 0, 1)} would calculate rain for a county as the sum of the
-rainfall for the day before, the day of, and the day after the date when
-the storm center was closest to the county center.}
 }
 \value{
 Returns a dataframe with a row for each county-storm
    pair and with columns giving the storm's ID, county FIPS,
-   date and time of closest approach of that storm to that county,
+   date and time of closest approach of that storm to that county, and
    distance between the county center and the storm track on
-   that date and time, and cumulative rainfall for the week-long
-   period centered at the date of closest approach to the county.
+   that date and time.
 }
 \description{
 This function takes a list of county FIPS, boundaries on
-   starting and ending years, and thresholds for distance
-   and the week-window rainfall and returns a dataframe
-   with the subset of storms meeting those criteria for
-   each of the listed counties.
+starting and ending years, and thresholds for distance
+and returns a dataframe with the subset of storms meeting those criteria
+for each of the listed counties.
 }
 \examples{
 county_distance(counties = c("22071", "51700"),
             start_year = 1995, end_year = 2005,
-            dist_limit = 100)
+            dist_limit = 50)
 
 }
 
