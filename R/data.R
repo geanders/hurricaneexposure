@@ -24,6 +24,9 @@
 #'   Washington, DC, issued 2011. \url{http://www2.census.gov/geo/pdfs/reference/cenpop2010/COP2010_documentation.pdf}
 "county_centers"
 
+#' Closest distances between counties and a storm track
+"closest_dist"
+
 #' Storm tracks for Atlantic basin storms
 #'
 #' A dataset containing the storm tracks for all Atlantic basin tropical

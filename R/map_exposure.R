@@ -128,8 +128,11 @@ map_tracks <- function(storms, plot_object = NULL,
 
 #' Map counties
 #'
-#' @param storm Character vector giving the name of the storm to plot (e.g.,
+#' @param storm Character string giving the name of the storm to plot (e.g.,
 #'    "Floyd-1999")
+#' @param metric Character string giving the metric to plot. Current options are
+#'    \code{"closest distance"} (default) and \code{"rainfall"}.
+#' @inheritParams county_rain
 #'
 #' @examples
 #' floyd_map <- map_counties("Floyd-1999", metric = "rainfall",
@@ -184,6 +187,7 @@ map_counties <-function(storm, metric = "closest distance",
 #' Map counties with rain exposure
 #'
 #' @inheritParams county_rain
+#' @inheritParams map_counties
 #'
 #' @examples
 #'
@@ -245,6 +249,7 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
 #' Map counties with distance exposure
 #'
 #' @inheritParams county_rain
+#' @inheritParams map_counties
 #'
 #' @examples
 #'
@@ -259,7 +264,7 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
 #' @importFrom dplyr %>%
 #'
 #' @export
-map_distance_exposure <- function(storm,dist_limit){
+map_distance_exposure <- function(storm, dist_limit){
 
         distance_df <- dplyr::filter(closest_dist, storm_id == storm) %>%
                 dplyr::mutate(exposed = storm_dist <= dist_limit)

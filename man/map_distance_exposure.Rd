@@ -7,6 +7,9 @@
 map_distance_exposure(storm, dist_limit)
 }
 \arguments{
+\item{storm}{Character string giving the name of the storm to plot (e.g.,
+"Floyd-1999")}
+
 \item{dist_limit}{Maximum distance, in kilometers, for the closest distance
 between the county center and the storm track to consider
 the county "exposed" to the storm.}

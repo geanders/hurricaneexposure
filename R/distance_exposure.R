@@ -146,7 +146,7 @@ distance_exposure <- function(locations, start_year, end_year,
                 if(out_type == "rds"){
                         saveRDS(out_df, file = out_file)
                 } else if (out_type == "csv"){
-                        write.csv(out_df, file = out_file, row.names = FALSE)
+                        utils::write.csv(out_df, file = out_file, row.names = FALSE)
                 }
 
         }
