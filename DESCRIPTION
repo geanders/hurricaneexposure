@@ -13,7 +13,9 @@ Authors@R: c(person("Brooke", "Anderson",
 Description: Allows users to create time series of daily binary hurricane
     exposure histories for chosen counties based on specified thresholds
     of distance to storm track and rainfall during a the week
-    centered on the storm date.
+    centered on the storm date. This work was supported in part by grants from
+    the National Institute of Environmental Health Sciences (R00ES022631) and
+    the National Science Foundation (1331399).
 URL: https://github.com/geanders/hurricaneexposure
 BugReports: https://github.com/geanders/hurricaneexposure/issues
 License: GPL-2
