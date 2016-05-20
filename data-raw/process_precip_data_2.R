@@ -1,4 +1,4 @@
-load("data/closest_distance.rda")
+load("data/closest_distance.Rdata")
 library(dplyr)
 library(tidyr)
 library(lubridate)
@@ -36,8 +36,7 @@ precipitation_file <- fread("data-raw/nasa_precip_export_2.txt",
         select(-day) %>%
         #spread(key = lag, value = precip) %>%
         arrange(storm_id, fips) %>%
-        #select(fips, storm_id, day_b3, day_b2, day_b1, day_0,
-        #day_a1, day_a2, day_a3) %>%
+        select(fips, storm_id, lag, precip) %>%
         mutate(fips = sprintf("%05d", fips))
 precipitation_file[precipitation_file$fips == 12025, "fips"] <- 12086
 save(precipitation_file, file = "data/precipitation_file.rda")
