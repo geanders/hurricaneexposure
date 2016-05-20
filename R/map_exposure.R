@@ -128,8 +128,11 @@ map_tracks <- function(storms, plot_object = NULL,
 
 #' Map counties
 #'
-#' @param storm Character vector giving the name of the storm to plot (e.g.,
+#' @param storm Character string giving the name of the storm to plot (e.g.,
 #'    "Floyd-1999")
+#' @param metric Character string giving the metric to plot. Current options are
+#'    \code{"closest distance"} (default) and \code{"rainfall"}.
+#' @inheritParams county_rain
 #'
 #' @examples
 #' floyd_map <- map_counties("Floyd-1999", metric = "rainfall",
@@ -142,12 +145,9 @@ map_tracks <- function(storms, plot_object = NULL,
 map_counties <-function(storm, metric = "closest distance",
                         days_included = c(-1, 0, 1)){
         if(metric == "closest distance"){
-                data("closest_dist")
                 metric_df <- closest_dist
                 metric_df$value <- metric_df$storm_dist
         } else if(metric == "rainfall"){
-                data("precip_file")
-
                 all_days <- c("b3", "b2", "b1", "0", "a1", "a2", "a3")
                 days_included <- all_days[(days_included + 4)]
                 days_included <- paste("day", days_included, sep = "_")
@@ -187,6 +187,7 @@ map_counties <-function(storm, metric = "closest distance",
 #' Map counties with rain exposure
 #'
 #' @inheritParams county_rain
+#' @inheritParams map_counties
 #'
 #' @examples
 #'
@@ -196,7 +197,7 @@ map_counties <-function(storm, metric = "closest distance",
 #'
 #' allison_map <- map_rain_exposure(storm = "Allison-2001", rain_limit = 20,
 #'                                  dist_limit = 100, days_included = 0)
-#' map_tracks("Allison-2001", plot_points = FALSE, plot_object = floyd_map,
+#' map_tracks("Allison-2001", plot_points = FALSE, plot_object = allison_map,
 #'            storm_status = FALSE)
 #'
 #' @importFrom dplyr %>%
@@ -204,8 +205,6 @@ map_counties <-function(storm, metric = "closest distance",
 #' @export
 map_rain_exposure <- function(storm, rain_limit, dist_limit,
                               days_included = c(-1, 0, 1)){
-        data("precip_file")
-        data("closest_dist")
 
         all_days <- c("b3", "b2", "b1", "0", "a1", "a2", "a3")
         days_included <- all_days[(days_included + 4)]
@@ -246,3 +245,54 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
                                                 labels = c("unexposed", "exposed"))
         return(out)
 }
+
+#' Map counties with distance exposure
+#'
+#' @inheritParams county_rain
+#' @inheritParams map_counties
+#'
+#' @examples
+#'
+#' floyd_map <- map_distance_exposure(storm = "Floyd-1999", dist_limit = 75)
+#' plot(floyd_map)
+#'
+#' allison_map <- map_distance_exposure(storm = "Allison-2001",
+#'                                      dist_limit = 75)
+#' map_tracks("Allison-2001", plot_points = FALSE, plot_object = allison_map,
+#'            storm_status = FALSE)
+#'
+#' @importFrom dplyr %>%
+#'
+#' @export
+map_distance_exposure <- function(storm, dist_limit){
+
+        distance_df <- dplyr::filter(closest_dist, storm_id == storm) %>%
+                dplyr::mutate(exposed = storm_dist <= dist_limit)
+
+        metric_df <- distance_df %>%
+                dplyr::mutate(value = factor(exposed,
+                                             levels = c("FALSE", "TRUE")))
+
+        map_data <- dplyr::filter(metric_df,
+                                  storm_id == storm) %>%
+                dplyr::mutate(region = as.numeric(fips)) %>%
+                dplyr::select(region, value)
+        out <- choroplethr::county_choropleth(map_data,
+                                              state_zoom = c("alabama", "arkansas",
+                                                             "connecticut", "delaware",
+                                                             "district of columbia", "florida",
+                                                             "georgia", "illinois", "indiana",
+                                                             "iowa", "kansas", "kentucky", "louisiana",
+                                                             "maine", "maryland", "massachusetts",
+                                                             "michigan", "mississippi",
+                                                             "missouri", "new hampshire", "new jersey",
+                                                             "new york", "north carolina", "ohio",
+                                                             "oklahoma", "pennsylvania", "rhode island",
+                                                             "south carolina", "tennessee", "texas",
+                                                             "vermont", "virginia", "west virginia",
+                                                             "wisconsin"))
+        out <- out + ggplot2::scale_fill_manual(values = c("white", "blue"),
+                                                labels = c("unexposed", "exposed"))
+        return(out)
+}
+
