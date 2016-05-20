@@ -142,9 +142,9 @@ map_tracks <- function(storms, plot_object = NULL,
 #' @export
 #'
 #' @importFrom dplyr %>%
-map_counties <-function(storm, metric = "closest distance",
+map_counties <-function(storm, metric = "distance",
                         days_included = c(-1, 0, 1)){
-        if(metric == "closest distance"){
+        if(metric == "distance"){
                 metric_df <- closest_dist
                 metric_df$value <- metric_df$storm_dist
         } else if(metric == "rainfall"){
@@ -161,27 +161,15 @@ map_counties <-function(storm, metric = "closest distance",
                 metric_df <- rain_storm_df %>%
                         dplyr::rename(value = tot_precip)
         } else{
-                stop("`metric` must be either `closest distance` or `rainfall`")
+                stop("`metric` must be either `distance` or `rainfall`")
         }
         map_data <- dplyr::filter(metric_df,
                                   storm_id == storm) %>%
                 dplyr::mutate(region = as.numeric(fips)) %>%
+                dplyr::ungroup() %>%
                 dplyr::select(region, value)
-        out <- choroplethr::county_choropleth(map_data,
-                                              state_zoom = c("alabama", "arkansas",
-                                                       "connecticut", "delaware",
-                                                       "district of columbia", "florida",
-                                                       "georgia", "illinois", "indiana",
-                                                       "iowa", "kansas", "kentucky", "louisiana",
-                                                       "maine", "maryland", "massachusetts",
-                                                       "michigan", "mississippi",
-                                                       "missouri", "new hampshire", "new jersey",
-                                                       "new york", "north carolina", "ohio",
-                                                       "oklahoma", "pennsylvania", "rhode island",
-                                                       "south carolina", "tennessee", "texas",
-                                                       "vermont", "virginia", "west virginia",
-                                                       "wisconsin"))
-        return(out)
+        out <- hurr_choroplethr(map_data, metric = metric)
+        return(out$render())
 }
 
 #' Map counties with rain exposure
@@ -295,4 +283,70 @@ map_distance_exposure <- function(storm, dist_limit){
                                                 labels = c("unexposed", "exposed"))
         return(out)
 }
+
+#' Create a map customized for this package
+#'
+#' @param map_data A dataframe with columns with FIPS numbers (\code{region})
+#'    and the exposure value (\code{value})
+#' @inheritParams map_counties
+#'
+#' @return A \code{choroplethr} object. To plot the map, use the \code{render}
+#'    method.
+hurr_choroplethr <- function(map_data, metric = "distance"){
+
+        if(metric == "rainfall"){
+                breaks <- seq(0, 200, by = 25)
+                palette_name <- "Blues"
+                exposure_legend <- "Rainfall (mm)"
+        } else if(metric == "distance"){
+                breaks <- seq(0, 200, by = 25)
+                palette_name <- "Greens"
+                exposure_legend <- "Distance (km)"
+        }
+
+        exposure_palette <- RColorBrewer::brewer.pal(length(breaks) - 2,
+                                                     name = palette_name)
+        # Adjust for right outliers
+        if(max(map_data$value) > max(breaks)){
+                breaks <- c(breaks, max(map_data$value))
+        }
+
+        exposure_palette <- c("#f7f7f7", exposure_palette, "#1a1a1a")
+        if(metric == "distance"){
+                exposure_palette <- rev(exposure_palette)
+        }
+
+        map_data <- dplyr::mutate(map_data,
+                                  value = cut(value, breaks = breaks,
+                                              include.lowest = TRUE))
+
+        if(metric == "distance"){
+                level_names <- levels(map_data$value)
+                level_names[length(level_names)] <- ">200"
+                map_data$value <- factor(map_data$value,
+                                         levels = levels(map_data$value),
+                                         labels = level_names)
+        }
+
+        eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
+                            "district of columbia", "florida", "georgia", "illinois",
+                            "indiana", "iowa", "kansas", "kentucky", "louisiana",
+                            "maine", "maryland", "massachusetts", "michigan",
+                            "mississippi", "missouri", "new hampshire", "new jersey",
+                            "new york", "north carolina", "ohio", "oklahoma",
+                            "pennsylvania", "rhode island", "south carolina",
+                            "tennessee", "texas", "vermont", "virginia",
+                            "west virginia", "wisconsin")
+
+        out <- choroplethr::CountyChoropleth$new(map_data)
+        out$set_zoom(eastern_states)
+        out$ggplot_scale <- ggplot2::scale_fill_manual(name = exposure_legend,
+                                                       values = exposure_palette)
+        return(out)
+}
+
+
+
+
+
 
