@@ -110,17 +110,17 @@ closest_dist$closest_date <- ymd_hm(closest_dist$closest_date)
 save(closest_dist, file = "data/closest_distance.Rdata")
 
 # Bring in closest distance data
-load("/Users/brookeanderson/Documents/Hopkins\ Postdoc/hurricanes/DetermineCountyStormDates/ClosestStormDates.Rdata")
-closest_dist <- do.call("rbind", closest.storm.dates)
-closest_dist <- closest_dist[ , c("fips", "closest.date", "storm.dist")]
-closest_dist$storm_id <- rep(names(closest.storm.dates),
-                            each = nrow(closest.storm.dates[[1]]))
-rownames(closest_dist) <- NULL
-closest_dist <- closest_dist[ , c("storm_id", "fips",
-                                  "closest.date", "storm.dist")]
-colnames(closest_dist)[3:4] <- c("closest_date", "storm_dist")
-closest_dist$closest_date <- ymd_hm(closest_dist$closest_date)
-save(closest_dist, file = "data/closest_dist.Rdata")
+#load("/Users/brookeanderson/Documents/Hopkins\ Postdoc/hurricanes/DetermineCountyStormDates/ClosestStormDates.Rdata")
+#closest_dist <- do.call("rbind", closest.storm.dates)
+#closest_dist <- closest_dist[ , c("fips", "closest.date", "storm.dist")]
+#closest_dist$storm_id <- rep(names(closest.storm.dates),
+ #                           each = nrow(closest.storm.dates[[1]]))
+#rownames(closest_dist) <- NULL
+#closest_dist <- closest_dist[ , c("storm_id", "fips",
+ #                                 "closest.date", "storm.dist")]
+#colnames(closest_dist)[3:4] <- c("closest_date", "storm_dist")
+#closest_dist$closest_date <- ymd_hm(closest_dist$closest_date)
+#save(closest_dist, file = "data/closest_dist.Rdata")
 
 # Bring in rain exposure data
 load("/Users/brookeanderson/Documents/Hopkins\ Postdoc/hurricanes/DetermineCountyStormDates/StormRainTots.Rdata")
