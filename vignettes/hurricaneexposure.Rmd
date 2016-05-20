@@ -125,7 +125,7 @@ You may notice that this function gives a warning listing the FIPS of any counti
 You can also use this function to plot the closest distance between the storm and each county. For this, you use the argument `metric = "closest distance"`.
 
 ```{r fig.width = 7, fig.height = 4}
-map_2 <- map_counties(storm = "Floyd-1999", metric = "closest distance")
+map_2 <- map_counties(storm = "Floyd-1999", metric = "distance")
 map_2
 ```
 
