@@ -4,8 +4,7 @@
 \alias{map_counties}
 \title{Map counties}
 \usage{
-map_counties(storm, metric = "closest distance", days_included = c(-1, 0,
-  1))
+map_counties(storm, metric = "distance", days_included = c(-1, 0, 1))
 }
 \arguments{
 \item{storm}{Character string giving the name of the storm to plot (e.g.,
