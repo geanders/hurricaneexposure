@@ -26,17 +26,17 @@ check_dates[check_dates$fips == 12086, "fips"] <- 12025
 precipitation_file <- fread("data-raw/nasa_precip_export_2.txt",
                       #nrows = 500000,
                       header = TRUE,
-                      select = c("county", "year_month_day", "precip")) %>%
+                      select = c("county", "year_month_day", "precip", "precip_max")) %>%
         filter(county %in% all_fips,
                year_month_day %in% all_dates) %>%
         rename(fips = county, day = year_month_day) %>%
         right_join(data.table(check_dates),
                    by = c("fips" = "fips", "day" = "day")) %>%
-        filter(!is.na(precip)) %>%
+        filter(!is.na(precip) & !is.na(precip_max)) %>%
         select(-day) %>%
         #spread(key = lag, value = precip) %>%
         arrange(storm_id, fips) %>%
-        select(fips, storm_id, lag, precip) %>%
+        select(fips, storm_id, lag, precip, precip_max) %>%
         mutate(fips = sprintf("%05d", fips))
 precipitation_file[precipitation_file$fips == 12025, "fips"] <- 12086
 save(precipitation_file, file = "data/precipitation_file.rda")
