@@ -23,7 +23,7 @@ all_fips <- unique(check_dates$fips) #has Miami as "12086", and is still in chec
 all_fips <- c(all_fips, as.integer(12025))
 check_dates[check_dates$fips == 12086, "fips"] <- 12025
 ## Read and process precipitation data
-precip_file1 <- fread("data-raw/nasa_precip_export_2.txt",
+precipitation_file <- fread("data-raw/nasa_precip_export_2.txt",
                       #nrows = 500000,
                       header = TRUE,
                       select = c("county", "year_month_day", "precip")) %>%
@@ -39,4 +39,5 @@ precip_file1 <- fread("data-raw/nasa_precip_export_2.txt",
         #select(fips, storm_id, day_b3, day_b2, day_b1, day_0,
         #day_a1, day_a2, day_a3) %>%
         mutate(fips = sprintf("%05d", fips))
-precip_file1[precip_file1$fips == 12025, "fips"] <- 12086
+precipitation_file[precipitation_file$fips == 12025, "fips"] <- 12086
+save(precipitation_file, file = "data/precipitation_file.rda")
