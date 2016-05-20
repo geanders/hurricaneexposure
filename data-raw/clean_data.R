@@ -1,5 +1,7 @@
 library(dplyr)
-
+library(sp)
+library(maps)
+library(lubridate)
 # Read in and clean up `county_centers`
 county_centers <-
         read.csv("/Users/brookeanderson/Documents/Hopkins\ Postdoc/hurricanes/DetermineCountyStormDates/CenPop2010_Mean_CO.txt", header = TRUE, skip = 2)
@@ -59,6 +61,7 @@ study.states <- c('maine', 'new hampshire', 'vermont',                'massachus
                   'new jersey', 'delaware', 'pennsylvania', 'maryland',                'virginia', 'north carolina', 'south carolina', 'georgia',          'florida', 'alabama', 'mississippi', 'louisiana', 'texas',            'west virginia', 'arkansas', 'tennessee', 'kentucky',
                   'oklahoma', 'missouri', 'illinois', 'kentucky', 'indiana',
                   'michigan', 'ohio', 'wisconsin', 'kansas', 'iowa', 'district of columbia')
+data(state.fips)
 study.state.fips <- state.fips$fips[state.fips$polyname %in%
                                             study.states]
 study.state.fips <- c(study.state.fips, 25, 26, 36, 37, 51)
@@ -98,16 +101,16 @@ for(hurr in names(hurr.tracks)){
 save(closest.storm.dates,
      file = "/Users/joshuaferreri/Documents/ClosestStormDates.Rdata")
 load("/Users/joshuaferreri/Documents/ClosestStormDates.Rdata")
-closest_dist <- do.call("rbind", closest.storm.dates)
-closest_dist <- closest_dist[ , c("fips", "closest.date", "storm.dist")]
-closest_dist$storm_id <- rep(names(closest.storm.dates),
+closest_distance <- do.call("rbind", closest.storm.dates)
+closest_distance <- closest_distance[ , c("fips", "closest.date", "storm.dist")]
+closest_distance$storm_id <- rep(names(closest.storm.dates),
                              each = nrow(closest.storm.dates[[1]]))
-rownames(closest_dist) <- NULL
-closest_dist <- closest_dist[ , c("storm_id", "fips",
+rownames(closest_distance) <- NULL
+closest_distance <- closest_distance[ , c("storm_id", "fips",
                                   "closest.date", "storm.dist")]
-colnames(closest_dist)[3:4] <- c("closest_date", "storm_dist")
-closest_dist$closest_date <- ymd_hm(closest_dist$closest_date)
-save(closest_dist, file = "data/closest_distance.Rdata")
+colnames(closest_distance)[3:4] <- c("closest_date", "storm_dist")
+closest_distance$closest_date <- ymd_hm(closest_distance$closest_date)
+save(closest_distance, file = "data/closest_distance.Rdata")
 
 # Bring in closest distance data
 #load("/Users/brookeanderson/Documents/Hopkins\ Postdoc/hurricanes/DetermineCountyStormDates/ClosestStormDates.Rdata")
