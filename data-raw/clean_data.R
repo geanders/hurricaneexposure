@@ -52,6 +52,63 @@ colnames(ext_tracks) <- c("storm_id", "storm_name", "month", "day",
                           "storm_type", "distance_to_land", "final")
 save(ext_tracks, file = "data/hurr_tracks.Rdata")
 
+#Bring in closest distance data with Miami and DC Fips
+
+load("/Users/joshuaferreri/Documents/HurricaneTracks.r")
+study.states <- c('maine', 'new hampshire', 'vermont',                'massachusetts', 'connecticut', 'new york', 'rhode island',
+                  'new jersey', 'delaware', 'pennsylvania', 'maryland',                'virginia', 'north carolina', 'south carolina', 'georgia',          'florida', 'alabama', 'mississippi', 'louisiana', 'texas',            'west virginia', 'arkansas', 'tennessee', 'kentucky',
+                  'oklahoma', 'missouri', 'illinois', 'kentucky', 'indiana',
+                  'michigan', 'ohio', 'wisconsin', 'kansas', 'iowa', 'district of columbia')
+study.state.fips <- state.fips$fips[state.fips$polyname %in%
+                                            study.states]
+study.state.fips <- c(study.state.fips, 25, 26, 36, 37, 51)
+county.centers <-
+        read.csv("/Users/joshuaferreri/Documents/CenPop2010_Mean_CO.txt", header = TRUE, skip = 2)
+county.centers <- subset(county.centers,
+                         STATEFP %in% study.state.fips)
+closest.storm.dates <- vector("list", length(hurr.tracks))
+names(closest.storm.dates) <- names(hurr.tracks)
+
+for(hurr in names(hurr.tracks)){
+        print(hurr)
+        ex <- hurr.tracks[[hurr]]
+        ex$latitude <- as.numeric(ex$latitude)
+        ex$longitude <- -1 * as.numeric(ex$longitude)
+        county.dists <- spDists(as.matrix(county.centers[,c("LONGITUDE", "LATITUDE")]),
+                                as.matrix(ex[,c("longitude", "latitude")]),
+                                longlat = TRUE)
+        min.locs <- apply(county.dists, 1, which.min)
+        min.dists <- apply(county.dists, 1, min)
+        closest.storm.dates[[hurr]] <- data.frame(
+                county.fips = county.centers$COUNTYFP,
+                state.fips = county.centers$STATEFP,
+                county.lat = county.centers$LATITUDE,
+                county.long = county.centers$LONGITUDE,
+                closest.date = ex$date[min.locs],
+                storm.lat = ex$latitude[min.locs],
+                storm.long = ex$longitude[min.locs],
+                storm.dist = min.dists,
+                strength = ex$status[min.locs])
+        closest.storm.dates[[hurr]]$fips <- paste0(
+                formatC(closest.storm.dates[[hurr]]$state.fips, width = 2,
+                        format = "d", flag = "0"),
+                formatC(closest.storm.dates[[hurr]]$county.fips, width = 3,
+                        format = "d", flag = "0"))
+}
+save(closest.storm.dates,
+     file = "/Users/joshuaferreri/Documents/ClosestStormDates.Rdata")
+load("/Users/joshuaferreri/Documents/ClosestStormDates.Rdata")
+closest_dist <- do.call("rbind", closest.storm.dates)
+closest_dist <- closest_dist[ , c("fips", "closest.date", "storm.dist")]
+closest_dist$storm_id <- rep(names(closest.storm.dates),
+                             each = nrow(closest.storm.dates[[1]]))
+rownames(closest_dist) <- NULL
+closest_dist <- closest_dist[ , c("storm_id", "fips",
+                                  "closest.date", "storm.dist")]
+colnames(closest_dist)[3:4] <- c("closest_date", "storm_dist")
+closest_dist$closest_date <- ymd_hm(closest_dist$closest_date)
+save(closest_dist, file = "data/closest_distance.Rdata")
+
 # Bring in closest distance data
 load("/Users/brookeanderson/Documents/Hopkins\ Postdoc/hurricanes/DetermineCountyStormDates/ClosestStormDates.Rdata")
 closest_dist <- do.call("rbind", closest.storm.dates)
