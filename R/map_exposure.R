@@ -131,7 +131,7 @@ map_tracks <- function(storms, plot_object = NULL,
 #' @param storm Character string giving the name of the storm to plot (e.g.,
 #'    "Floyd-1999")
 #' @param metric Character string giving the metric to plot. Current options are
-#'    \code{"closest distance"} (default) and \code{"rainfall"}.
+#'    \code{"distance"} (default) and \code{"rainfall"}.
 #' @inheritParams county_rain
 #'
 #' @examples
