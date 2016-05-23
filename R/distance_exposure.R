@@ -26,8 +26,9 @@
 county_distance <- function(counties, start_year, end_year,
                            dist_limit){
 
-        distance_df <- dplyr::filter(closest_dist,
-                            fips %in% counties &
+        distance_df <- dplyr::mutate(closest_dist,
+                                     closest_date = lubridate::ymd_hm(closest_date)) %>%
+                dplyr::filter(fips %in% counties &
                                     lubridate::year(closest_date) >= start_year &
                                     lubridate::year(closest_date) <= end_year &
                                     storm_dist <= dist_limit)
@@ -64,10 +65,11 @@ multi_county_distance <- function(communities, start_year, end_year,
 
         communities <- dplyr::mutate(communities, fips = as.character(fips))
 
-        distance_df <- dplyr::filter(closest_dist,
-                                       fips %in% communities$fips &
-                                       lubridate::year(closest_date) >= start_year &
-                                       lubridate::year(closest_date) <= end_year) %>%
+        distance_df <- dplyr::mutate(closest_dist,
+                                     closest_date = lubridate::ymd_hm(closest_date)) %>%
+                dplyr::filter(fips %in% communities$fips &
+                                      lubridate::year(closest_date) >= start_year &
+                                      lubridate::year(closest_date) <= end_year) %>%
                 dplyr::left_join(communities, by = "fips") %>%
                 dplyr::group_by(commun, storm_id) %>%
                 dplyr::mutate(min_dist = min(storm_dist)) %>%

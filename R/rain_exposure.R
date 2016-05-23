@@ -46,8 +46,9 @@ county_rain <- function(counties, start_year, end_year,
         days_included <- all_days[(days_included + 4)]
         days_included <- paste("day", days_included, sep = "_")
 
-        rain_storm_df <- dplyr::filter(closest_dist,
-                            fips %in% counties &
+        rain_storm_df <- dplyr::mutate(closest_dist,
+                                       closest_date = lubridate::ymd_hm(closest_date)) %>%
+                dplyr::filter(fips %in% counties &
                                     lubridate::year(closest_date) >= start_year &
                                     lubridate::year(closest_date) <= end_year &
                                     storm_dist <= dist_limit) %>%
@@ -104,10 +105,11 @@ multi_county_rain <- function(communities, start_year, end_year,
         days_included <- all_days[(days_included + 4)]
         days_included <- paste("day", days_included, sep = "_")
 
-        rain_storm_df <- dplyr::filter(closest_dist,
-                                       fips %in% communities$fips &
-                                       lubridate::year(closest_date) >= start_year &
-                                       lubridate::year(closest_date) <= end_year) %>%
+        rain_storm_df <- dplyr::mutate(closest_dist,
+                                       closest_date = lubridate::ymd_hm(closest_date)) %>%
+                dplyr::filter(fips %in% communities$fips &
+                                      lubridate::year(closest_date) >= start_year &
+                                      lubridate::year(closest_date) <= end_year) %>%
                 dplyr::left_join(communities, by = "fips") %>%
                 dplyr::left_join(precip_file,
                                  by = c("storm_id", "fips")) %>%
