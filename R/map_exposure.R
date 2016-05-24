@@ -71,7 +71,7 @@ map_tracks <- function(storms, plot_object = NULL,
                       padding = 2,
                       plot_points = TRUE,
                       alpha = 1,
-                      color = "red"){
+                      color = "firebrick"){
         if(is.null(plot_object)){
                 plot_object <- default_map()
 
