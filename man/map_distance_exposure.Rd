@@ -20,7 +20,7 @@ Map counties with distance exposure
 \examples{
 
 floyd_map <- map_distance_exposure(storm = "Floyd-1999", dist_limit = 75)
-plot(floyd_map)
+floyd_map
 
 allison_map <- map_distance_exposure(storm = "Allison-2001",
                                      dist_limit = 75)
