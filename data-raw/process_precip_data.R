@@ -1,10 +1,10 @@
-load("data/closest_dist.rda")
+data("closest_dist")
 library(dplyr)
 library(tidyr)
 library(lubridate)
 library(data.table)
 
-check_dates <- select(closest_distance, -storm_dist) %>%
+check_dates <- select(closest_dist, -storm_dist) %>%
         mutate(closest_date = ymd(substr(closest_date, 1, 8))) %>%
         rename(day_0 = closest_date) %>%
         mutate(fips = as.integer(fips),
@@ -26,7 +26,7 @@ all_fips <- c(all_fips, as.integer(12025))
 check_dates[check_dates$fips == 12086, "fips"] <- 12025
 
 ## Read and process precipitation data
-precip_file <- fread("data-raw/nasa_precip_export_2.txt",
+rain <- fread("data-raw/nasa_precip_export_2.txt",
                       # nrows = 500000,
                       header = TRUE,
                       select = c("county", "year_month_day", "precip", "precip_max")) %>%
@@ -37,16 +37,12 @@ precip_file <- fread("data-raw/nasa_precip_export_2.txt",
                    by = c("fips" = "fips", "day" = "day")) %>%
         filter(!is.na(precip) & !is.na(precip_max)) %>%
         select(-day) %>%
-        # spread(key = lag, value = precip) %>%
         arrange(storm_id, fips) %>%
         select(fips, storm_id, lag, precip, precip_max) %>%
-        mutate(fips = sprintf("%05d", fips))
-precip_file[precip_file$fips == 12025, "fips"] <- 12086
-precip_file <- mutate(precip_file,
-                      lag = gsub("day_", "", lag),
-                      lag = gsub("b", "-", lag),
-                      lag = gsub("a", "", lag),
-                      lag = as.numeric(lag))
-rain <- precip_file
+        mutate(fips = sprintf("%05d", fips),
+               lag = gsub("day_", "", lag),
+               lag = gsub("b", "-", lag),
+               lag = gsub("a", "", lag),
+               lag = as.numeric(lag))
+rain[rain$fips == 12025, "fips"] <- 12086
 use_data(rain, overwrite = TRUE)
-# save(precip_file, file = "data/rain.rda")

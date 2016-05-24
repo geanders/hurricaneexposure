@@ -42,25 +42,19 @@ county_rain <- function(counties, start_year, end_year,
                            rain_limit, dist_limit,
                         days_included = c(-1, 0, 1)){
 
-        all_days <- c("b3", "b2", "b1", "0", "a1", "a2", "a3")
-        days_included <- all_days[(days_included + 4)]
-        days_included <- paste("day", days_included, sep = "_")
-
         rain_storm_df <- dplyr::mutate(closest_dist,
                                        closest_date = lubridate::ymd_hm(closest_date)) %>%
                 dplyr::filter(fips %in% counties &
                                     lubridate::year(closest_date) >= start_year &
                                     lubridate::year(closest_date) <= end_year &
                                     storm_dist <= dist_limit) %>%
-                dplyr::left_join(precip_file,
+                dplyr::left_join(rain,
                                  by = c("storm_id", "fips")) %>%
-                tidyr::gather(key, value, -storm_id, -fips,
-                              -closest_date, -storm_dist) %>%
-                dplyr::filter(key %in% days_included) %>%
+                dplyr::filter(lag %in% days_included) %>%
                 dplyr::group_by(storm_id, fips) %>%
                 dplyr::summarize(closest_date = first(closest_date),
                                  storm_dist = first(storm_dist),
-                                 tot_precip = sum(value)) %>%
+                                 tot_precip = sum(precip)) %>%
                 dplyr::ungroup() %>%
                 dplyr::filter(tot_precip >= rain_limit)
         return(rain_storm_df)
@@ -111,16 +105,14 @@ multi_county_rain <- function(communities, start_year, end_year,
                                       lubridate::year(closest_date) >= start_year &
                                       lubridate::year(closest_date) <= end_year) %>%
                 dplyr::left_join(communities, by = "fips") %>%
-                dplyr::left_join(precip_file,
+                dplyr::left_join(rain,
                                  by = c("storm_id", "fips")) %>%
-                tidyr::gather(key, value, -storm_id, -fips,
-                              -closest_date, -storm_dist, -commun) %>%
-                dplyr::filter(key %in% days_included) %>%
+                dplyr::filter(lag %in% days_included) %>%
                 dplyr::group_by(storm_id, fips) %>%
                 dplyr::summarize(closest_date = first(closest_date),
                                  storm_dist = first(storm_dist),
                                  commun = first(commun),
-                                 tot_precip = sum(value)) %>%
+                                 tot_precip = sum(precip)) %>%
                 dplyr::ungroup() %>%
                 dplyr::group_by(commun, storm_id) %>%
                 dplyr::mutate(max_rain = max(tot_precip),

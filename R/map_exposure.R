@@ -126,15 +126,10 @@ map_counties <-function(storm, metric = "distance",
                 metric_df <- closest_dist
                 metric_df$value <- metric_df$storm_dist
         } else if(metric == "rainfall"){
-                all_days <- c("b3", "b2", "b1", "0", "a1", "a2", "a3")
-                days_included <- all_days[(days_included + 4)]
-                days_included <- paste("day", days_included, sep = "_")
-
-                rain_storm_df <- dplyr::filter(precip_file, storm_id == storm) %>%
-                        tidyr::gather(key, value, -storm_id, -fips) %>%
-                        dplyr::filter(key %in% days_included) %>%
+                rain_storm_df <- dplyr::filter(rain, storm_id == storm) %>%
+                        dplyr::filter(lag %in% days_included) %>%
                         dplyr::group_by(storm_id, fips) %>%
-                        dplyr::summarize(tot_precip = sum(value))
+                        dplyr::summarize(tot_precip = sum(precip))
 
                 metric_df <- rain_storm_df %>%
                         dplyr::rename(value = tot_precip)
@@ -171,15 +166,10 @@ map_counties <-function(storm, metric = "distance",
 map_rain_exposure <- function(storm, rain_limit, dist_limit,
                               days_included = c(-1, 0, 1)){
 
-        all_days <- c("b3", "b2", "b1", "0", "a1", "a2", "a3")
-        days_included <- all_days[(days_included + 4)]
-        days_included <- paste("day", days_included, sep = "_")
-
-        rain_storm_df <- dplyr::filter(precip_file, storm_id == storm) %>%
-                tidyr::gather(key, value, -storm_id, -fips) %>%
-                dplyr::filter(key %in% days_included) %>%
+        rain_storm_df <- dplyr::filter(rain, storm_id == storm) %>%
+                dplyr::filter(lag %in% days_included) %>%
                 dplyr::group_by(storm_id, fips) %>%
-                dplyr::summarize(tot_precip = sum(value)) %>%
+                dplyr::summarize(tot_precip = sum(precip)) %>%
                 dplyr::left_join(closest_dist, by = c("storm_id" = "storm_id",
                                                       "fips" = "fips")) %>%
                 dplyr::mutate(exposed = tot_precip >= rain_limit &
