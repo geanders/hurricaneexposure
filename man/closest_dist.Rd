@@ -4,7 +4,7 @@
 \name{closest_dist}
 \alias{closest_dist}
 \title{Closest distances between counties and a storm track}
-\format{An object of class \code{data.frame} with 991530 rows and 4 columns.}
+\format{An object of class \code{data.frame} with 876936 rows and 4 columns.}
 \usage{
 closest_dist
 }

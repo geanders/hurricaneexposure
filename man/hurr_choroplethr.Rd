@@ -11,7 +11,7 @@ hurr_choroplethr(map_data, metric = "distance")
 and the exposure value (\code{value})}
 
 \item{metric}{Character string giving the metric to plot. Current options are
-\code{"closest distance"} (default) and \code{"rainfall"}.}
+\code{"distance"} (default) and \code{"rainfall"}.}
 }
 \value{
 A \code{choroplethr} object. To plot the map, use the \code{render}

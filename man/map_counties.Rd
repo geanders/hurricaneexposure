@@ -11,7 +11,7 @@ map_counties(storm, metric = "distance", days_included = c(-1, 0, 1))
 "Floyd-1999")}
 
 \item{metric}{Character string giving the metric to plot. Current options are
-\code{"closest distance"} (default) and \code{"rainfall"}.}
+\code{"distance"} (default) and \code{"rainfall"}.}
 
 \item{days_included}{A numeric vector listing the days to include when
 calculating total precipitation. Negative numbers are days before the

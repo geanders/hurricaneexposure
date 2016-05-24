@@ -4,8 +4,8 @@
 \alias{map_tracks}
 \title{Plot Atlantic basin hurricane tracks}
 \usage{
-map_tracks(storms, plot_object = NULL, storm_status = TRUE, padding = 2,
-  plot_points = TRUE, alpha = 1)
+map_tracks(storms, plot_object = NULL, padding = 2, plot_points = TRUE,
+  alpha = 1, color = "firebrick")
 }
 \arguments{
 \item{storms}{Character vector with the names of all storms to plot.
@@ -15,10 +15,6 @@ This parameter must use the unique storm identifiers from the
 \item{plot_object}{NULL or the name of a ggplot object to use as the
 underlying plot object. If NULL, the function will generate a new
 map of the eastern US states using `default_map`.}
-
-\item{storm_status}{TRUE / FALSE indicator of whether to use colors to
-indicate storm status (Hurricane, Tropical Storm, Tropical Depression,
-or Other) at each time point.}
 
 \item{padding}{Numerical value giving the number of degrees to add to the
 outer limits of the plot object (or default map if `plot_object` is
@@ -42,11 +38,9 @@ Plot the tracks of any selected storms in the hurricane tracking
 }
 \examples{
 map_tracks(storms = "Sandy-2012")
-map_tracks(storms = "Floyd-1999", storm_status = FALSE,
-   plot_points = FALSE)
+map_tracks(storms = "Floyd-1999", plot_points = FALSE)
 a <- map_tracks(storms = "Sandy-2012")
-b <- map_tracks(storms = "Floyd-1999", storm_status = FALSE,
-                plot_object = a, plot_points = FALSE)
+b <- map_tracks(storms = "Floyd-1999", plot_object = a, plot_points = FALSE)
 b
 
 }

@@ -54,7 +54,7 @@
 #'    [Determine correct refenence]
 "hurr_tracks"
 
-#' Weekly rainfall totals for tropical storms
+#' Rainfall for a week-long window for tropical storms
 #'
 #' A dataframe that gives the total rainfall in US counties for a one-week
 #' window centered at the date on which the tropical storm was closest
@@ -71,4 +71,4 @@
 #'
 #' @references
 #'    [Get proper reference from Bill and Mohammad]
-"precip_file"
+"rain"
