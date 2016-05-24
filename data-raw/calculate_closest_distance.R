@@ -9,6 +9,7 @@ data(hurr_tracks, package = "hurricaneexposure")
 library(stormwindmodel)
 
 calc_closest_dist <- function(this_storm = "Floyd-1999"){
+        print(this_storm)
         storm_tracks <- subset(hurr_tracks, storm_id == this_storm)
         # Linearly impute tracks to every 15 minutes
         storm_tracks <- create_full_track(hurr_track = storm_tracks,
@@ -52,7 +53,7 @@ hurrs <- as.character(unique(hurr_tracks$storm_id))
 
 closest_dist <- lapply(hurrs, calc_closest_dist)
 closest_dist <- do.call("rbind", closest_dist)
-use_data(closest_dist)
+use_data(closest_dist, overwrite = TRUE)
 
 
 # # Plotting
