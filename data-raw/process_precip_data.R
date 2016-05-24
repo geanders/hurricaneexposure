@@ -47,4 +47,6 @@ precip_file <- mutate(precip_file,
                       lag = gsub("b", "-", lag),
                       lag = gsub("a", "", lag),
                       lag = as.numeric(lag))
-save(precipitation_file, file = "data/rain.rda")
+rain <- precip_file
+use_data(rain, overwrite = TRUE)
+# save(precip_file, file = "data/rain.rda")
