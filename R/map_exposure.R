@@ -156,7 +156,7 @@ map_counties <-function(storm, metric = "distance",
 #'
 #' floyd_map <- map_rain_exposure(storm = "Floyd-1999", rain_limit = 50,
 #'                                dist_limit = 100)
-#' plot(floyd_map)
+#' floyd_map
 #'
 #' allison_map <- map_rain_exposure(storm = "Allison-2001", rain_limit = 20,
 #'                                  dist_limit = 100, days_included = 0)
@@ -184,23 +184,22 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
                                   storm_id == storm) %>%
                 dplyr::mutate(region = as.numeric(fips)) %>%
                 dplyr::select(region, value)
-        out <- choroplethr::county_choropleth(map_data,
-                                              state_zoom = c("alabama", "arkansas",
-                                                             "connecticut", "delaware",
-                                                             "district of columbia", "florida",
-                                                             "georgia", "illinois", "indiana",
-                                                             "iowa", "kansas", "kentucky", "louisiana",
-                                                             "maine", "maryland", "massachusetts",
-                                                             "michigan", "mississippi",
-                                                             "missouri", "new hampshire", "new jersey",
-                                                             "new york", "north carolina", "ohio",
-                                                             "oklahoma", "pennsylvania", "rhode island",
-                                                             "south carolina", "tennessee", "texas",
-                                                             "vermont", "virginia", "west virginia",
-                                                             "wisconsin"))
-        out <- out + ggplot2::scale_fill_manual(values = c("white", "blue"),
-                                                labels = c("unexposed", "exposed"))
-        return(out)
+        eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
+                            "district of columbia", "florida", "georgia", "illinois",
+                            "indiana", "iowa", "kansas", "kentucky", "louisiana",
+                            "maine", "maryland", "massachusetts", "michigan",
+                            "mississippi", "missouri", "new hampshire", "new jersey",
+                            "new york", "north carolina", "ohio", "oklahoma",
+                            "pennsylvania", "rhode island", "south carolina",
+                            "tennessee", "texas", "vermont", "virginia",
+                            "west virginia", "wisconsin")
+
+        out <- choroplethr::CountyChoropleth$new(map_data)
+        out$set_zoom(eastern_states)
+        out$ggplot_scale <- ggplot2::scale_fill_manual(name = "",
+                                                       values = c("white", "blue"),
+                                                       labels = c("Unexposed", "Exposed"))
+        return(out$render())
 }
 
 #' Map counties with distance exposure
