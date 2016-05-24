@@ -89,7 +89,8 @@ map_tracks <- function(storms, plot_object = NULL,
                               latitude < map_dim[2, 2])
         out <- plot_object +
                         ggplot2::geom_path(data = tracks,
-                                           ggplot2::aes(x = longitude, y = latitude,
+                                           ggplot2::aes(x = longitude,
+                                                        y = latitude,
                                                         group = storm_id),
                                            alpha = alpha,
                                            color = color)
@@ -97,7 +98,8 @@ map_tracks <- function(storms, plot_object = NULL,
         if(plot_points){
                 out <- out +
                                 ggplot2::geom_point(data = tracks,
-                                                    ggplot2::aes(x = longitude, y = latitude,
+                                                    ggplot2::aes(x = longitude,
+                                                                 y = latitude,
                                                                  group = storm_id),
                                                     alpha = alpha)
         }
@@ -209,7 +211,7 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
 #' @examples
 #'
 #' floyd_map <- map_distance_exposure(storm = "Floyd-1999", dist_limit = 75)
-#' plot(floyd_map)
+#' floyd_map
 #'
 #' allison_map <- map_distance_exposure(storm = "Allison-2001",
 #'                                      dist_limit = 75)
@@ -231,23 +233,23 @@ map_distance_exposure <- function(storm, dist_limit){
                                   storm_id == storm) %>%
                 dplyr::mutate(region = as.numeric(fips)) %>%
                 dplyr::select(region, value)
-        out <- choroplethr::county_choropleth(map_data,
-                                              state_zoom = c("alabama", "arkansas",
-                                                             "connecticut", "delaware",
-                                                             "district of columbia", "florida",
-                                                             "georgia", "illinois", "indiana",
-                                                             "iowa", "kansas", "kentucky", "louisiana",
-                                                             "maine", "maryland", "massachusetts",
-                                                             "michigan", "mississippi",
-                                                             "missouri", "new hampshire", "new jersey",
-                                                             "new york", "north carolina", "ohio",
-                                                             "oklahoma", "pennsylvania", "rhode island",
-                                                             "south carolina", "tennessee", "texas",
-                                                             "vermont", "virginia", "west virginia",
-                                                             "wisconsin"))
-        out <- out + ggplot2::scale_fill_manual(values = c("white", "blue"),
-                                                labels = c("unexposed", "exposed"))
-        return(out)
+
+        eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
+                            "district of columbia", "florida", "georgia", "illinois",
+                            "indiana", "iowa", "kansas", "kentucky", "louisiana",
+                            "maine", "maryland", "massachusetts", "michigan",
+                            "mississippi", "missouri", "new hampshire", "new jersey",
+                            "new york", "north carolina", "ohio", "oklahoma",
+                            "pennsylvania", "rhode island", "south carolina",
+                            "tennessee", "texas", "vermont", "virginia",
+                            "west virginia", "wisconsin")
+
+        out <- choroplethr::CountyChoropleth$new(map_data)
+        out$set_zoom(eastern_states)
+        out$ggplot_scale <- ggplot2::scale_fill_manual(name = "",
+                                                       values = c("white", "blue"),
+                                                       labels = c("Unexposed", "Exposed"))
+        return(out$render())
 }
 
 #' Create a map customized for this package
