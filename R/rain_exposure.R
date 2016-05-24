@@ -95,10 +95,6 @@ multi_county_rain <- function(communities, start_year, end_year,
 
         communities <- dplyr::mutate(communities, fips = as.character(fips))
 
-        all_days <- c("b3", "b2", "b1", "0", "a1", "a2", "a3")
-        days_included <- all_days[(days_included + 4)]
-        days_included <- paste("day", days_included, sep = "_")
-
         rain_storm_df <- dplyr::mutate(closest_dist,
                                        closest_date = lubridate::ymd_hm(closest_date)) %>%
                 dplyr::filter(fips %in% communities$fips &
