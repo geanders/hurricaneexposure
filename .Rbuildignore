@@ -2,3 +2,6 @@
 ^\.Rproj\.user$
 ^data-raw$
 ^writing$
+^README\.Rmd$
+^README-.*\.png$
+^README\.md$
