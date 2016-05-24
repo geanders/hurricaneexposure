@@ -134,8 +134,6 @@ You can map a binary variable of distance-based exposure using `map_distance_exp
 ``` r
 allison_map <- map_distance_exposure(storm = "Allison-2001",
                                      dist_limit = 75)
-#> Scale for 'fill' is already present. Adding another scale for 'fill',
-#> which will replace the existing scale.
 plot(allison_map)
 ```
 
@@ -147,8 +145,6 @@ You can also map a binary variable of rain exposure for the communities that wer
 map_3 <- map_rain_exposure(storm = "Floyd-1999", rain_limit = 125,
                            dist_limit = 500, 
                            days_included = c(-1, 0, 1))
-#> Scale for 'fill' is already present. Adding another scale for 'fill',
-#> which will replace the existing scale.
 plot(map_3)
 ```
 
