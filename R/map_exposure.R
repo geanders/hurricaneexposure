@@ -45,9 +45,6 @@ default_map <- function(){
 #' @param plot_object NULL or the name of a ggplot object to use as the
 #'    underlying plot object. If NULL, the function will generate a new
 #'    map of the eastern US states using `default_map`.
-#' @param storm_status TRUE / FALSE indicator of whether to use colors to
-#'    indicate storm status (Hurricane, Tropical Storm, Tropical Depression,
-#'    or Other) at each time point.
 #' @param padding Numerical value giving the number of degrees to add to the
 #'    outer limits of the plot object (or default map if `plot_object` is
 #'    left as NULL) when cropping hurricane tracks.
@@ -64,19 +61,17 @@ default_map <- function(){
 #'
 #' @examples
 #' map_tracks(storms = "Sandy-2012")
-#' map_tracks(storms = "Floyd-1999", storm_status = FALSE,
-#'    plot_points = FALSE)
+#' map_tracks(storms = "Floyd-1999", plot_points = FALSE)
 #' a <- map_tracks(storms = "Sandy-2012")
-#' b <- map_tracks(storms = "Floyd-1999", storm_status = FALSE,
-#'                 plot_object = a, plot_points = FALSE)
+#' b <- map_tracks(storms = "Floyd-1999", plot_object = a, plot_points = FALSE)
 #' b
 #'
 #' @importFrom dplyr %>%
 map_tracks <- function(storms, plot_object = NULL,
-                      storm_status = TRUE,
                       padding = 2,
                       plot_points = TRUE,
-                      alpha = 1){
+                      alpha = 1,
+                      color = "red"){
         if(is.null(plot_object)){
                 plot_object <- default_map()
 
@@ -85,43 +80,26 @@ map_tracks <- function(storms, plot_object = NULL,
         map_dim <- apply(map_data[ , c("long", "lat")],
                          MARGIN = 2,
                          function(x) range(x) + c(-1, 1) * padding)
-        tracks <- dplyr::select(hurr_tracks, date, status,
+        tracks <- dplyr::select(hurr_tracks, date,
                                 latitude, longitude, storm_id) %>%
                 dplyr::filter(as.character(storm_id) %in% storms &
                               longitude > map_dim[1, 1] &
                               longitude < map_dim[2, 1] &
                               latitude > map_dim[1, 2] &
                               latitude < map_dim[2, 2])
-        if(storm_status){
-                out <- plot_object +
-                        ggplot2::geom_path(data = tracks,
-                                           ggplot2::aes(x = longitude, y = latitude,
-                                                        group = storm_id,
-                                                        color = status),
-                                           alpha = alpha)
-        } else {
-                out <- plot_object +
+        out <- plot_object +
                         ggplot2::geom_path(data = tracks,
                                            ggplot2::aes(x = longitude, y = latitude,
                                                         group = storm_id),
-                                           alpha = alpha)
-        }
+                                           alpha = alpha,
+                                           color = color)
 
         if(plot_points){
-                if(storm_status){
-                        out <- out +
-                                ggplot2::geom_point(data = tracks,
-                                                    ggplot2::aes(x = longitude, y = latitude,
-                                                                 group = storm_id,
-                                                                 color = status),
-                                                    alpha = alpha)
-                } else {
-                        out <- out +
+                out <- out +
                                 ggplot2::geom_point(data = tracks,
                                                     ggplot2::aes(x = longitude, y = latitude,
                                                                  group = storm_id),
                                                     alpha = alpha)
-                }
         }
         return(out)
 }
@@ -185,8 +163,7 @@ map_counties <-function(storm, metric = "distance",
 #'
 #' allison_map <- map_rain_exposure(storm = "Allison-2001", rain_limit = 20,
 #'                                  dist_limit = 100, days_included = 0)
-#' map_tracks("Allison-2001", plot_points = FALSE, plot_object = allison_map,
-#'            storm_status = FALSE)
+#' map_tracks("Allison-2001", plot_points = FALSE, plot_object = allison_map)
 #'
 #' @importFrom dplyr %>%
 #'
@@ -246,8 +223,7 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
 #'
 #' allison_map <- map_distance_exposure(storm = "Allison-2001",
 #'                                      dist_limit = 75)
-#' map_tracks("Allison-2001", plot_points = FALSE, plot_object = allison_map,
-#'            storm_status = FALSE)
+#' map_tracks("Allison-2001", plot_points = FALSE, plot_object = allison_map)
 #'
 #' @importFrom dplyr %>%
 #'

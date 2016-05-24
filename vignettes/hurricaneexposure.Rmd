@@ -125,7 +125,7 @@ You may notice that this function gives a warning listing the FIPS of any counti
 You can also use this function to plot the closest distance between the storm and each county. For this, you use the argument `metric = "closest distance"`.
 
 ```{r fig.width = 7, fig.height = 4}
-map_2 <- map_counties(storm = "Floyd-1999", metric = "distance")
+map_2 <- map_counties(storm = "Sandy-2012", metric = "distance")
 map_2
 ```
 
@@ -162,7 +162,6 @@ There are some different options you can use for the tracks' appearance. For exa
 ```{r fig.width = 5.5, fig.height = 4}
 map_5 <- map_tracks(storms = c("Floyd-1999", "Sandy-2012",
                                "Katrina-2005"),
-                    storm_status = FALSE,
                     plot_points = FALSE,
                     alpha = 0.5)
 map_5
@@ -171,14 +170,14 @@ map_5
 You can also add these tracks to an existing `ggplot`-created US map. You do this through the `plot_object` argument. For example, to add the storm track to the plot of rain exposure for Floyd, you could run:
 
 ```{r fig.width = 7, fig.height = 4}
-map_6 <- map_tracks(storms = "Floyd-1999", plot_object = map_1,
-                    storm_status = FALSE, plot_points = FALSE)
+map_6 <- map_tracks(storms = "Sandy-2012", plot_object = map_2,
+                    plot_points = FALSE)
 map_6
 ```
 
 ```{r fig.width = 7, fig.height = 4}
 map_7 <- map_tracks(storms = "Floyd-1999", plot_object = map_3,
-                    storm_status = FALSE, plot_points = FALSE)
+                    plot_points = FALSE)
 map_7
 ```
 
