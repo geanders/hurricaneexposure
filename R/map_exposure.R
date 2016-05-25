@@ -293,6 +293,8 @@ hurr_choroplethr <- function(map_data, metric = "distance"){
                 map_data$value <- factor(map_data$value,
                                          levels = levels(map_data$value),
                                          labels = level_names)
+                exposure_palette <- tail(exposure_palette,
+                                         length(unique(map_data$value)))
         }
 
         eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
