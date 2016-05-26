@@ -31,32 +31,38 @@
 #'    period centered at the date of closest approach to the county.
 #'
 #' @examples
+#' \dontrun{
 #' county_rain(counties = c("22071", "51700"),
 #'             start_year = 1995, end_year = 2005,
 #'             rain_limit = 100, dist_limit = 100)
-#'
-#' @export
+#'}
 #'
 #' @importFrom dplyr %>%
+#'
+#' @export
 county_rain <- function(counties, start_year, end_year,
                            rain_limit, dist_limit,
                         days_included = c(-1, 0, 1)){
 
-        rain_storm_df <- dplyr::mutate(closest_dist,
-                                       closest_date = lubridate::ymd_hm(closest_date)) %>%
-                dplyr::filter(fips %in% counties &
+        dots <- stats::setNames(list(lazyeval::interp(~ lubridate::ymd_hm(x),
+                                                      x = quote(closest_date))),
+                                "closest_date")
+
+        rain_storm_df <- hurricaneexposure::closest_dist %>%
+                dplyr::mutate_(.dots = dots) %>%
+                dplyr::filter_(~ fips %in% counties &
                                     lubridate::year(closest_date) >= start_year &
                                     lubridate::year(closest_date) <= end_year &
                                     storm_dist <= dist_limit) %>%
-                dplyr::left_join(rain,
+                dplyr::left_join(hurricaneexposure::rain,
                                  by = c("storm_id", "fips")) %>%
-                dplyr::filter(lag %in% days_included) %>%
-                dplyr::group_by(storm_id, fips) %>%
-                dplyr::summarize(closest_date = first(closest_date),
-                                 storm_dist = first(storm_dist),
-                                 tot_precip = sum(precip)) %>%
+                dplyr::filter_(~ lag %in% days_included) %>%
+                dplyr::group_by_(~ storm_id, ~ fips) %>%
+                dplyr::summarize_(closest_date = ~ dplyr::first(closest_date),
+                                 storm_dist = ~ dplyr::first(storm_dist),
+                                 tot_precip = ~ sum(precip)) %>%
                 dplyr::ungroup() %>%
-                dplyr::filter(tot_precip >= rain_limit)
+                dplyr::filter_(~ tot_precip >= rain_limit)
         return(rain_storm_df)
 }
 
@@ -93,33 +99,36 @@ multi_county_rain <- function(communities, start_year, end_year,
                          rain_limit, dist_limit,
                          days_included = c(-1, 0, 1)){
 
-        communities <- dplyr::mutate(communities, fips = as.character(fips))
+        communities <- dplyr::mutate_(communities, fips = ~ as.character(fips))
 
-        rain_storm_df <- dplyr::mutate(closest_dist,
-                                       closest_date = lubridate::ymd_hm(closest_date)) %>%
-                dplyr::filter(fips %in% communities$fips &
+        dots <- stats::setNames(list(lazyeval::interp(~ lubridate::ymd_hm(x),
+                                                      x = quote(closest_date))),
+                                "closest_date")
+        rain_storm_df <- hurricaneexposure::closest_dist %>%
+                dplyr::mutate_(.dots = dots) %>%
+                dplyr::filter_(~ fips %in% communities$fips &
                                       lubridate::year(closest_date) >= start_year &
                                       lubridate::year(closest_date) <= end_year) %>%
                 dplyr::left_join(communities, by = "fips") %>%
-                dplyr::left_join(rain,
+                dplyr::left_join(hurricaneexposure::rain,
                                  by = c("storm_id", "fips")) %>%
-                dplyr::filter(lag %in% days_included) %>%
-                dplyr::group_by(storm_id, fips) %>%
-                dplyr::summarize(closest_date = first(closest_date),
-                                 storm_dist = first(storm_dist),
-                                 commun = first(commun),
-                                 tot_precip = sum(precip)) %>%
+                dplyr::filter_(~ lag %in% days_included) %>%
+                dplyr::group_by_(~ storm_id, ~ fips) %>%
+                dplyr::summarize_(closest_date = ~ dplyr::first(closest_date),
+                                 storm_dist = ~ dplyr::first(storm_dist),
+                                 commun = ~ dplyr::first(commun),
+                                 tot_precip = ~ sum(precip)) %>%
                 dplyr::ungroup() %>%
-                dplyr::group_by(commun, storm_id) %>%
-                dplyr::mutate(max_rain = max(tot_precip),
-                              min_dist = min(storm_dist)) %>%
-                dplyr::filter(max_rain >= rain_limit &
+                dplyr::group_by_(~ commun, ~ storm_id) %>%
+                dplyr::mutate_(max_rain = ~ max(tot_precip),
+                              min_dist = ~ min(storm_dist)) %>%
+                dplyr::filter_(~ max_rain >= rain_limit &
                                       min_dist <= dist_limit) %>%
-                dplyr::summarize(closest_date = first(closest_date),
-                                 mean_dist = mean(storm_dist),
-                                 mean_rain = mean(tot_precip),
-                                 max_rain = first(max_rain),
-                                 min_dist = first(min_dist))
+                dplyr::summarize_(closest_date = ~ dplyr::first(closest_date),
+                                 mean_dist = ~ mean(storm_dist),
+                                 mean_rain = ~ mean(tot_precip),
+                                 max_rain = ~ dplyr::first(max_rain),
+                                 min_dist = ~ dplyr::first(min_dist))
         return(rain_storm_df)
 
 }
@@ -147,7 +156,8 @@ multi_county_rain <- function(communities, start_year, end_year,
 #'    \code{\link{multi_county_rain}}.
 #'
 #' @examples
-#' # By county
+#' \dontrun{
+#' #' # By county
 #' rain_exposure(locations = c("22071", "51700"),
 #'               start_year = 1995, end_year = 2005,
 #'               rain_limit = 100, dist_limit = 100,
@@ -162,10 +172,11 @@ multi_county_rain <- function(communities, start_year, end_year,
 #'               start_year = 1995, end_year = 2005,
 #'               rain_limit = 100, dist_limit = 100,
 #'               out_dir = "~/tmp/storms")
-#'
-#' @export
+#' }
 #'
 #' @importFrom dplyr %>%
+#'
+#' @export
 rain_exposure <- function(locations, start_year, end_year,
                           rain_limit, dist_limit,
                           days_included = c(-1, 0, 1),
@@ -182,7 +193,7 @@ rain_exposure <- function(locations, start_year, end_year,
                                   rain_limit = rain_limit,
                                   dist_limit = dist_limit,
                                   days_included = days_included) %>%
-                        dplyr::rename(loc = commun)
+                        dplyr::rename_(loc = ~ commun)
         } else {
                 df <- county_rain(counties = locations,
                                   start_year = start_year,
@@ -190,15 +201,16 @@ rain_exposure <- function(locations, start_year, end_year,
                                   rain_limit = rain_limit,
                                   dist_limit = dist_limit,
                                   days_included = days_included) %>%
-                        dplyr::rename(loc = fips)
+                        dplyr::rename_(loc = ~ fips)
         }
         locs <- as.character(unique(df$loc))
 
         for(i in 1:length(locs)){
-                out_df <- dplyr::filter(df, loc == locs[i]) %>%
-                        dplyr::mutate(date = format(closest_date,
+                out_df <- df %>%
+                        dplyr::filter_(~ loc == locs[i]) %>%
+                        dplyr::mutate_(date = ~ format(closest_date,
                                              "%Y%m%d")) %>%
-                        dplyr::select(-closest_date, -loc)
+                        dplyr::select_('-closest_date', '-loc')
                 out_file <- paste0(out_dir, "/", locs[i], ".", out_type)
                 if(out_type == "rds"){
                         saveRDS(out_df, file = out_file)

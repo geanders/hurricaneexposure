@@ -23,12 +23,15 @@
 #' @export
 #'
 #' @importFrom dplyr %>%
-county_distance <- function(counties, start_year, end_year,
-                           dist_limit){
+county_distance <- function(counties, start_year, end_year, dist_limit){
 
-        distance_df <- dplyr::mutate(closest_dist,
-                                     closest_date = lubridate::ymd_hm(closest_date)) %>%
-                dplyr::filter(fips %in% counties &
+        dots <- stats::setNames(list(lazyeval::interp(~ lubridate::ymd_hm(x),
+                                                      x = quote(closest_date))),
+                                    "closest_date")
+
+        distance_df <- hurricaneexposure::closest_dist %>%
+                dplyr::mutate_(.dots = dots) %>%
+                dplyr::filter_(~ fips %in% counties &
                                     lubridate::year(closest_date) >= start_year &
                                     lubridate::year(closest_date) <= end_year &
                                     storm_dist <= dist_limit)
@@ -63,20 +66,23 @@ county_distance <- function(counties, start_year, end_year,
 multi_county_distance <- function(communities, start_year, end_year,
                          dist_limit){
 
-        communities <- dplyr::mutate(communities, fips = as.character(fips))
+        communities <- dplyr::mutate_(communities, fips = ~ as.character(fips))
 
-        distance_df <- dplyr::mutate(closest_dist,
-                                     closest_date = lubridate::ymd_hm(closest_date)) %>%
-                dplyr::filter(fips %in% communities$fips &
-                                      lubridate::year(closest_date) >= start_year &
-                                      lubridate::year(closest_date) <= end_year) %>%
+        distance_df <- hurricaneexposure::closest_dist %>%
+                dplyr::mutate_(closest_date =
+                                       ~ lubridate::ymd_hm(closest_date)) %>%
+                dplyr::filter_(~ fips %in% communities$fips &
+                                      lubridate::year(closest_date) >=
+                                       start_year &
+                                      lubridate::year(closest_date) <=
+                                       end_year) %>%
                 dplyr::left_join(communities, by = "fips") %>%
-                dplyr::group_by(commun, storm_id) %>%
-                dplyr::mutate(min_dist = min(storm_dist)) %>%
-                dplyr::filter(min_dist <= dist_limit) %>%
-                dplyr::summarize(closest_date = first(closest_date),
-                                 mean_dist = mean(storm_dist),
-                                 min_dist = first(min_dist))
+                dplyr::group_by_(~ commun, ~ storm_id) %>%
+                dplyr::mutate_(min_dist = ~ min(storm_dist)) %>%
+                dplyr::filter_(~ min_dist <= dist_limit) %>%
+                dplyr::summarize_(closest_date = ~ dplyr::first(closest_date),
+                                 mean_dist = ~ mean(storm_dist),
+                                 min_dist = ~ dplyr::first(min_dist))
         return(distance_df)
 
 }
@@ -129,26 +135,27 @@ distance_exposure <- function(locations, start_year, end_year,
                                   start_year = start_year,
                                   end_year = end_year,
                                   dist_limit = dist_limit) %>%
-                        dplyr::rename(loc = commun)
+                        dplyr::rename_(loc = ~ commun)
         } else {
                 df <- county_distance(counties = locations,
                                   start_year = start_year,
                                   end_year = end_year,
                                   dist_limit = dist_limit) %>%
-                        dplyr::rename(loc = fips)
+                        dplyr::rename_(loc = ~ fips)
         }
         locs <- as.character(unique(df$loc))
 
         for(i in 1:length(locs)){
-                out_df <- dplyr::filter(df, loc == locs[i]) %>%
-                        dplyr::mutate(date = format(closest_date,
-                                             "%Y%m%d")) %>%
-                        dplyr::select(-closest_date, -loc)
+                out_df <- dplyr::filter_(df, ~ loc == locs[i]) %>%
+                        dplyr::mutate_(date = ~ format(closest_date,
+                                                       "%Y%m%d")) %>%
+                        dplyr::select_('-closest_date', '-loc')
                 out_file <- paste0(out_dir, "/", locs[i], ".", out_type)
                 if(out_type == "rds"){
                         saveRDS(out_df, file = out_file)
                 } else if (out_type == "csv"){
-                        utils::write.csv(out_df, file = out_file, row.names = FALSE)
+                        utils::write.csv(out_df, file = out_file,
+                                         row.names = FALSE)
                 }
 
         }

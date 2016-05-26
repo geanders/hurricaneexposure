@@ -143,7 +143,7 @@ plot(map_3)
 
 The `map_tracks` function will map the hurricane tracks for one or more storms. For example, to plot the tracks of Hurricane Floyd in 1999 (the ID for this storm is "Floyd-2012"):
 
-```{r fig.width = 6.5, fig.height = 4}
+```{r fig.width = 5.5, fig.height = 4}
 map_4 <- map_tracks(storms = "Floyd-1999")
 map_4
 ```

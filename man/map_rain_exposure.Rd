@@ -29,7 +29,7 @@ the storm center was closest to the county center.}
 Map counties with rain exposure
 }
 \examples{
-
+\dontrun{
 floyd_map <- map_rain_exposure(storm = "Floyd-1999", rain_limit = 50,
                                dist_limit = 100)
 floyd_map
@@ -37,6 +37,6 @@ floyd_map
 allison_map <- map_rain_exposure(storm = "Allison-2001", rain_limit = 20,
                                  dist_limit = 100, days_included = 0)
 map_tracks("Allison-2001", plot_points = FALSE, plot_object = allison_map)
-
+}
 }
 

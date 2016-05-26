@@ -9,7 +9,7 @@
 #'   \item{state_fips}{state FIPS code}
 #'   \item{county_fips}{county 3-digit FIPS code}
 #'   \item{fips}{county 5-digit FIPS code}
-#'   \item{count_name}{county name}
+#'   \item{county_name}{county name}
 #'   \item{state_name}{state name}
 #'   \item{population}{population}
 #'   \item{latitude}{latitude of county's center of population}
@@ -34,12 +34,11 @@
 #'
 #' @format A data frame with 12,206 rows and 6 variables:
 #' \describe{
+#'   \item{storm_id}{Unique storm identifier}
 #'   \item{date}{Date and time of storm track recording}
-#'   \item{status}{Storm status}
 #'   \item{latitude}{Latitude of storm center}
 #'   \item{longitude}{Longitude of storm center}
-#'   \item{wind}{[what is this measuring?]}
-#'   \item{storm_id}{Unique storm identifier}
+#'   \item{wind}{Maximum storm wind speed}
 #' }
 #'
 #' @note The original dataset included more separate `status` categories
@@ -62,11 +61,13 @@
 #'
 #' @format A list with 991,530 rows and 3 variables:
 #' \describe{
-#'   \item{storm_id}{unique identifier for each tropical storm}
 #'   \item{fips}{county 5-digit FIPS code}
-#'   \item{tot_precip}{Total precipitation, in millimeters [?], for a
-#'       one-week window centered at the date the storm was closest to
-#'       the county}
+#'   \item{storm_id}{unique identifier for each tropical storm}
+#'   \item{lag}{Number of days from date when storm was closest to the county}
+#'   \item{precip}{Average daily precipitation, in millimeters, for NLDAS grid
+#'    points with the county for the given lag day}
+#'   \item{precip_max}{Maximum daily precipitation, in millimeters, for NLDAS grid
+#'    points with the county for the given lag day}
 #' }
 #'
 #' @references

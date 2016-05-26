@@ -6,12 +6,11 @@
 \title{Storm tracks for Atlantic basin storms}
 \format{A data frame with 12,206 rows and 6 variables:
 \describe{
+  \item{storm_id}{Unique storm identifier}
   \item{date}{Date and time of storm track recording}
-  \item{status}{Storm status}
   \item{latitude}{Latitude of storm center}
   \item{longitude}{Longitude of storm center}
-  \item{wind}{[what is this measuring?]}
-  \item{storm_id}{Unique storm identifier}
+  \item{wind}{Maximum storm wind speed}
 }}
 \usage{
 hurr_tracks

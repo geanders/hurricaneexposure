@@ -25,6 +25,8 @@ as well as lines, when plotting the hurricane tracks.}
 
 \item{alpha}{Numerical value designating the amount of transparency to
 use for plotting tracks.}
+
+\item{color}{Character string giving the color to use to plot the tracks.}
 }
 \value{
 Returns a ggplot object with plotting data for the storm tracks

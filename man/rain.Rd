@@ -6,11 +6,13 @@
 \title{Rainfall for a week-long window for tropical storms}
 \format{A list with 991,530 rows and 3 variables:
 \describe{
-  \item{storm_id}{unique identifier for each tropical storm}
   \item{fips}{county 5-digit FIPS code}
-  \item{tot_precip}{Total precipitation, in millimeters [?], for a
-      one-week window centered at the date the storm was closest to
-      the county}
+  \item{storm_id}{unique identifier for each tropical storm}
+  \item{lag}{Number of days from date when storm was closest to the county}
+  \item{precip}{Average daily precipitation, in millimeters, for NLDAS grid
+   points with the county for the given lag day}
+  \item{precip_max}{Maximum daily precipitation, in millimeters, for NLDAS grid
+   points with the county for the given lag day}
 }}
 \usage{
 rain

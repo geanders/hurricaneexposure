@@ -26,7 +26,7 @@ Map counties
 \examples{
 floyd_map <- map_counties("Floyd-1999", metric = "rainfall",
                            days_included = c(-1, 0, 1))
-plot(floyd_map)
+floyd_map
 
 }
 
