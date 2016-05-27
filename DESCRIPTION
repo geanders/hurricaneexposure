@@ -22,6 +22,7 @@ License: GPL-2
 LazyData: TRUE
 Imports:
     choroplethr (>= 3.5.2),
+    data.table (>= 1.9.6),
     dplyr (>= 0.4.3),
     ggmap (>= 2.6.1),
     ggplot2 (>= 2.1.0),
