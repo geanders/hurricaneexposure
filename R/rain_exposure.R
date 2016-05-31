@@ -44,25 +44,16 @@ county_rain <- function(counties, start_year, end_year,
                            rain_limit, dist_limit,
                         days_included = c(-1, 0, 1)){
 
-        dots <- stats::setNames(list(lazyeval::interp(~ lubridate::ymd_hm(x),
-                                                      x = quote(closest_date))),
-                                "closest_date")
-
-        rain_storm_df <- hurricaneexposure::closest_dist %>%
-                dplyr::mutate_(.dots = dots) %>%
-                dplyr::filter_(~ fips %in% counties &
-                                    lubridate::year(closest_date) >= start_year &
-                                    lubridate::year(closest_date) <= end_year &
-                                    storm_dist <= dist_limit) %>%
-                dplyr::left_join(hurricaneexposure::rain,
-                                 by = c("storm_id", "fips")) %>%
-                dplyr::filter_(~ lag %in% days_included) %>%
-                dplyr::group_by_(~ storm_id, ~ fips) %>%
-                dplyr::summarize_(closest_date = ~ dplyr::first(closest_date),
-                                 storm_dist = ~ dplyr::first(storm_dist),
-                                 tot_precip = ~ sum(precip)) %>%
-                dplyr::ungroup() %>%
-                dplyr::filter_(~ tot_precip >= rain_limit)
+        rain_storm_df <- filter_storm_data(counties = counties,
+                                           year_range = c(start_year, end_year),
+                                           distance_limit = dist_limit,
+                                           rain_limit = rain_limit,
+                                           include_rain = TRUE,
+                                           days_included = days_included,
+                                           output_vars = c("storm_id", "fips",
+                                                           "closest_date",
+                                                           "storm_dist",
+                                                           "tot_precip"))
         return(rain_storm_df)
 }
 
