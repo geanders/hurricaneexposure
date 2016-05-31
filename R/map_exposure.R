@@ -126,25 +126,22 @@ map_tracks <- function(storms, plot_object = NULL,
 map_counties <-function(storm, metric = "distance",
                         days_included = c(-1, 0, 1)){
         if(metric == "distance"){
-                metric_df <- hurricaneexposure::closest_dist
-                metric_df$value <- metric_df$storm_dist
+                map_data <- filter_storm_data(storm = storm,
+                                              output_vars = c("fips",
+                                                              "storm_dist")) %>%
+                        dplyr::rename(region = fips, value = storm_dist)
         } else if(metric == "rainfall"){
-                rain_storm_df <- hurricaneexposure::rain %>%
-                        dplyr::filter_(~ storm_id == storm) %>%
-                        dplyr::filter_(~ lag %in% days_included) %>%
-                        dplyr::group_by_(~ storm_id, ~ fips) %>%
-                        dplyr::summarize_(tot_precip = ~ sum(precip))
-
-                metric_df <- rain_storm_df %>%
-                        dplyr::rename_(value = ~ tot_precip)
+                map_data <- filter_storm_data(storm = storm, include_rain = TRUE,
+                                              days_included = days_included,
+                                              output_vars = c("fips",
+                                                              "tot_precip")) %>%
+                        dplyr::rename(region = fips, value = tot_precip)
         } else{
                 stop("`metric` must be either `distance` or `rainfall`")
         }
-        map_data <- metric_df %>%
-                dplyr::filter_(~ storm_id == storm) %>%
-                dplyr::mutate_(region = ~ as.numeric(fips)) %>%
-                dplyr::ungroup() %>%
-                dplyr::select_(~ region, ~ value)
+        map_data <- map_data %>%
+                dplyr::mutate_(region = ~ as.numeric(region)) %>%
+                dplyr::tbl_df()
         out <- hurr_choroplethr(map_data, metric = metric)
         return(out$render())
 }
