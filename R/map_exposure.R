@@ -219,18 +219,14 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
 #' @export
 map_distance_exposure <- function(storm, dist_limit){
 
-        distance_df <- hurricaneexposure::closest_dist %>%
-                dplyr::filter_(~ storm_id == storm) %>%
-                dplyr::mutate_(exposed = ~ storm_dist <= dist_limit)
-
-        metric_df <- distance_df %>%
+        map_data <- filter_storm_data(storm = storm,
+                                      output_vars = c("fips", "storm_dist")) %>%
+                dplyr::mutate_(exposed = ~ storm_dist <= dist_limit) %>%
                 dplyr::mutate_(value = ~ factor(exposed,
-                                             levels = c("FALSE", "TRUE")))
-
-        map_data <- metric_df %>%
-                dplyr::filter_(~ storm_id == storm) %>%
+                                                levels = c("FALSE", "TRUE"))) %>%
                 dplyr::mutate_(region = ~ as.numeric(fips)) %>%
-                dplyr::select_(~ region, ~ value)
+                dplyr::select_(~ region, ~ value) %>%
+                dplyr::tbl_df()
 
         eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
                             "district of columbia", "florida", "georgia", "illinois",
