@@ -167,25 +167,19 @@ map_counties <-function(storm, metric = "distance",
 map_rain_exposure <- function(storm, rain_limit, dist_limit,
                               days_included = c(-1, 0, 1)){
 
-        rain_storm_df <- hurricaneexposure::rain %>%
-                dplyr::filter_(~ storm_id == storm) %>%
-                dplyr::filter_(~ lag %in% days_included) %>%
-                dplyr::group_by_(~ storm_id, ~ fips) %>%
-                dplyr::summarize_(tot_precip = ~ sum(precip)) %>%
-                dplyr::left_join(hurricaneexposure::closest_dist,
-                                 by = c("storm_id" = "storm_id",
-                                                      "fips" = "fips")) %>%
+        map_data <- filter_storm_data(storm = storm,
+                                           days_included = days_included,
+                                           include_rain = TRUE,
+                                           output_vars = c("fips", "tot_precip",
+                                                           "storm_dist")) %>%
                 dplyr::mutate_(exposed = ~ tot_precip >= rain_limit &
-                                      storm_dist <= dist_limit)
-
-        metric_df <- rain_storm_df %>%
+                                       storm_dist <= dist_limit) %>%
                 dplyr::mutate_(value = ~ factor(exposed,
-                                                levels = c("FALSE", "TRUE")))
-
-        map_data <- metric_df %>%
-                dplyr::filter_(~ storm_id == storm) %>%
+                                                levels = c("FALSE", "TRUE"))) %>%
                 dplyr::mutate_(region = ~ as.numeric(fips)) %>%
-                dplyr::select_(~ region, ~ value)
+                dplyr::select_(~ region, ~ value) %>%
+                dplyr::tbl_df()
+
         eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
                             "district of columbia", "florida", "georgia", "illinois",
                             "indiana", "iowa", "kansas", "kentucky", "louisiana",
