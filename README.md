@@ -48,17 +48,14 @@ county_rain(counties = c("22071", "51700"),
             start_year = 1995, end_year = 2005,
             rain_limit = 100, dist_limit = 100,
             days_included = c(-1, 0, 1))
-#> Source: local data frame [7 x 5]
-#> 
-#>       storm_id  fips        closest_date storm_dist tot_precip
-#>          (chr) (chr)              (time)      (dbl)      (dbl)
-#> 1    Bill-2003 22071 2003-06-30 16:45:00   41.67038      141.1
-#> 2 Charley-2004 51700 2004-08-14 17:45:00   55.21439      136.2
-#> 3   Cindy-2005 22071 2005-07-06 01:00:00   29.76580      113.2
-#> 4   Floyd-1999 51700 1999-09-16 09:00:00   47.77641      207.5
-#> 5 Isidore-2002 22071 2002-09-26 05:30:00   12.68783      249.0
-#> 6 Katrina-2005 22071 2005-08-29 07:45:00   43.71121      196.2
-#> 7 Matthew-2004 22071 2004-10-10 09:30:00   81.76565      123.2
+#>        storm_id  fips closest_date storm_dist tot_precip
+#> 1:    Bill-2003 22071 200306301645   41.67038      141.1
+#> 2: Charley-2004 51700 200408141745   55.21439      136.2
+#> 3:   Cindy-2005 22071 200507060100   29.76580      113.2
+#> 4:   Floyd-1999 51700 199909160900   47.77641      207.5
+#> 5: Isidore-2002 22071 200209260530   12.68783      249.0
+#> 6: Katrina-2005 22071 200508290745   43.71121      196.2
+#> 7: Matthew-2004 22071 200410100930   81.76565      123.2
 ```
 
 In addition to giving you the names and closest dates of each storm for each county (`closest_date`-- note, this is given using the UTC timezone), this function also gives you the distance between the county and the storm's track at the time when the storm was closest to the county's population weighted center (`storm_dist`, in kilometers) and the total precipitation over the included days (`tot_precip`).
