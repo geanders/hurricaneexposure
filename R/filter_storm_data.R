@@ -37,6 +37,7 @@ filter_storm_data <- function(counties = NULL, storm = NULL, year_range = NULL,
                               output_vars = c("fips")){
 
         closest_dist <- data.table::data.table(hurricaneexposure::closest_dist)
+        #closest_dist <- dplyr::tbl_dt(hurricaneexposure::closest_dist)
 
         if(!is.null(counties)){
                 closest_dist <- closest_dist[fips %in% counties]

@@ -82,7 +82,9 @@ multi_county_distance <- function(communities, start_year, end_year,
                 dplyr::filter_(~ min_dist <= dist_limit) %>%
                 dplyr::summarize_(closest_date = ~ dplyr::first(closest_date),
                                  mean_dist = ~ mean(storm_dist),
-                                 min_dist = ~ dplyr::first(min_dist))
+                                 min_dist = ~ dplyr::first(min_dist)) %>%
+                dplyr::mutate_(closest_date = ~ format(closest_date,
+                                                       "%Y%m%d%H%M"))
         return(distance_df)
 
 }
@@ -147,8 +149,7 @@ distance_exposure <- function(locations, start_year, end_year,
 
         for(i in 1:length(locs)){
                 out_df <- dplyr::filter_(df, ~ loc == locs[i]) %>%
-                        dplyr::mutate_(date = ~ format(closest_date,
-                                                       "%Y%m%d")) %>%
+                        dplyr::mutate_(date = ~ substring(closest_date, 1, 8)) %>%
                         dplyr::select_('-closest_date', '-loc')
                 out_file <- paste0(out_dir, "/", locs[i], ".", out_type)
                 if(out_type == "rds"){

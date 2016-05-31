@@ -119,7 +119,9 @@ multi_county_rain <- function(communities, start_year, end_year,
                                  mean_dist = ~ mean(storm_dist),
                                  mean_rain = ~ mean(tot_precip),
                                  max_rain = ~ dplyr::first(max_rain),
-                                 min_dist = ~ dplyr::first(min_dist))
+                                 min_dist = ~ dplyr::first(min_dist)) %>%
+                dplyr::mutate_(closest_date = ~ format(closest_date,
+                                                       "%Y%m%d%H%M"))
         return(rain_storm_df)
 
 }
@@ -199,8 +201,7 @@ rain_exposure <- function(locations, start_year, end_year,
         for(i in 1:length(locs)){
                 out_df <- df %>%
                         dplyr::filter_(~ loc == locs[i]) %>%
-                        dplyr::mutate_(date = ~ format(closest_date,
-                                             "%Y%m%d")) %>%
+                        dplyr::mutate_(date = ~ substring(closest_date, 1, 8)) %>%
                         dplyr::select_('-closest_date', '-loc')
                 out_file <- paste0(out_dir, "/", locs[i], ".", out_type)
                 if(out_type == "rds"){
