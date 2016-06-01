@@ -13,6 +13,8 @@ vignette: >
 library(hurricaneexposure)
 ```
 
+test
+
 ## Loading the package
 
 The package currently exists in [a development version](https://github.com/geanders/hurricaneexposure) on GitHub. You can use the following code to load it:
