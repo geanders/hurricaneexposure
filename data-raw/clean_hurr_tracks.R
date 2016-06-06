@@ -2,17 +2,6 @@ library(dplyr)
 library(sp)
 library(maps)
 library(lubridate)
-# Read in and clean up `county_centers`
-county_centers <-
-        read.csv("/Users/brookeanderson/Documents/Hopkins\ Postdoc/hurricanes/DetermineCountyStormDates/CenPop2010_Mean_CO.txt", header = TRUE, skip = 2)
-
-colnames(county_centers) <- c("state_fips", "county_fips", "county_name",
-                              "state_name", "population", "latitude",
-                              "longitude")
-county_centers$fips <- paste0(sprintf("%02d",county_centers$state_fips),
-                              sprintf("%03d",county_centers$county_fips))
-county_centers <- county_centers[ , c(1:2, 8, 3:7)]
-save(county_centers, file = "data/county_centers.Rdata")
 
 # Bring in latest version of extended hurricane tracks
 hurr_tracks <- read.fwf("http://rammb.cira.colostate.edu/research/tropical_cyclones/tc_extended_best_track_dataset/ebtrk_atlc_1988_2014.txt",

@@ -4,16 +4,22 @@
 #' center of population of every United State county,
 #' based on population as of the 2010 US Census.
 #'
-#' @format A data frame with 3221 rows and 7 variables:
+#' @details The latitude and longitude of each county are the county's
+#' population-weighted mean center of population, based on population as of the
+#' 2010 US Census. For more details on the calculation of these mean centers of
+#' population, see the reference below.
+#'
+#' @format A data frame with 3221 rows and 8 variables:
 #' \describe{
-#'   \item{state_fips}{state FIPS code}
-#'   \item{county_fips}{county 3-digit FIPS code}
-#'   \item{fips}{county 5-digit FIPS code}
-#'   \item{county_name}{county name}
-#'   \item{state_name}{state name}
-#'   \item{population}{population}
-#'   \item{latitude}{latitude of county's center of population}
-#'   \item{longitude}{longitude of county's center of population}
+#'   \item{fips}{County's 5-digit FIPS code}
+#'   \item{county_name}{County name}
+#'   \item{state_name}{State name}
+#'   \item{population}{Population of the county as of the 2010 US Census}
+#'   \item{latitude}{Latitude of county's center of population, in decimal
+#'   degrees}
+#'   \item{longitude}{Longitude of county's center of population, in decimal
+#'   degrees (note: longitudes are given as negative values for western
+#'   longitudes)}
 #' }
 #'
 #' @source \url{https://www.census.gov/geo/reference/centersofpop.html}
