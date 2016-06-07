@@ -4,12 +4,29 @@
 \name{closest_dist}
 \alias{closest_dist}
 \title{Closest distances between counties and a storm track}
-\format{An object of class \code{data.frame} with 876936 rows and 4 columns.}
+\format{A dataframe with 876,936 rows and 4 variables:
+\describe{
+  \item{storm_id}{Unique storm identifier with the storm name and year,
+                 separated by a hyphen(e.g., "Alberto-1988",
+                 "Katrina-2005")}
+  \item{fips}{County's 5-digit Federal Information Processing Standard (FIPS)
+             code}
+  \item{closest_date}{Date and time (in UTC) of the closest approach of the
+                      storm to the county's population mean center.}
+  \item{storm_dist}{Minimum distance (in kilometers) between the storm's
+                    track and the county's population mean center.}
+}}
 \usage{
 closest_dist
 }
 \description{
-Closest distances between counties and a storm track
+A dataframe that gives the distance and date-time for the closest
+approach of each tropical storm to the mean population center of each
+US county in states in the eastern half of the United States.
+}
+\details{
+The minimum distance was calculated using the Great Circle method,
+using the \code{spDist} function from the \code{\link{sp}} package.
 }
 \keyword{datasets}
 

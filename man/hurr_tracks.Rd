@@ -4,32 +4,27 @@
 \name{hurr_tracks}
 \alias{hurr_tracks}
 \title{Storm tracks for Atlantic basin storms}
-\format{A data frame with 12,206 rows and 6 variables:
-\describe{
-  \item{storm_id}{Unique storm identifier}
-  \item{date}{Date and time of storm track recording}
-  \item{latitude}{Latitude of storm center}
-  \item{longitude}{Longitude of storm center}
-  \item{wind}{Maximum storm wind speed}
-}}
+\format{An object of class \code{data.frame} with 11829 rows and 5 columns.}
+\source{
+\url{http://rammb.cira.colostate.edu/research/tropical_cyclones/tc_extended_best_track_dataset}
+}
 \usage{
 hurr_tracks
 }
 \description{
-A dataset containing the storm tracks for all Atlantic basin tropical
-storms between 1987 and 2012.
+A dataset containing the storm tracks for Atlantic basin tropical
+storms between 1988 and 2012, from the Extended Best Track Dataset for
+the Atlantic basin.
 }
-\note{
-The original dataset included more separate `status` categories
-   than this version. Here, I have pooled together into "Other" the
-   following categories: extratropical cyclones (of any intensity),
-   subtropical cycles of both subtropical depression and subtropical
-   storm intensity, tropical waves of any intensity, disturbances of
-   any intensity, and lows that do not fall under any of these
-   categories.
+\details{
+This extended best tracks dataset is currently available for
+1988 to 2014. This dataset is based on the HURDAT best tracks dataset.
+For more details, see the source and reference given below.
 }
 \references{
-[Determine correct refenence]
+Demuth J, DeMaria M, Knaff JA, 2006. Improvement of advanced microwave
+sounder unit tropical cyclone intensity and size estimation algorithms.
+Journal of Applied Meteorology 45:1573-1581
 }
 \keyword{datasets}
 

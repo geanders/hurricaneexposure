@@ -4,11 +4,16 @@
 \name{rain}
 \alias{rain}
 \title{Rainfall for a week-long window for tropical storms}
-\format{A list with 991,530 rows and 3 variables:
+\format{A dataframe with 5,417,356 rows and 5 variables:
 \describe{
-  \item{fips}{county 5-digit FIPS code}
-  \item{storm_id}{unique identifier for each tropical storm}
-  \item{lag}{Number of days from date when storm was closest to the county}
+  \item{fips}{County's 5-digit Federal Information Processing Standard (FIPS)
+             code}
+  \item{storm_id}{Unique storm identifier with the storm name and year,
+                 separated by a hyphen(e.g., "Alberto-1988",
+                 "Katrina-2005")}
+  \item{lag}{Number of days from date when storm was closest to the county
+             (e.g., \code{-2} indicates two days before the date when the
+             storm was closest to the county)}
   \item{precip}{Average daily precipitation, in millimeters, for NLDAS grid
    points with the county for the given lag day}
   \item{precip_max}{Maximum daily precipitation, in millimeters, for NLDAS grid
@@ -20,10 +25,13 @@ rain
 \description{
 A dataframe that gives the total rainfall in US counties for a one-week
 window centered at the date on which the tropical storm was closest
-to the county for all Atlantic basin storms between 1987 and 2012.
+to the county for Atlantic basin storms between 1988 and 2011.
 }
 \references{
-[Get proper reference from Bill and Mohammad]
+Al-Hamdan MZ, Crosson WL, Economou SA, Estes MG, Estes SM, Hemmings SN,
+Kent ST, Puckette M, Quattrochi DA, Rickman DL, Wade GM, McClure LA, 2014.
+Environmental public health applications using remotely sensed data.
+Geocarto International 29(1):85-98.
 }
 \keyword{datasets}
 

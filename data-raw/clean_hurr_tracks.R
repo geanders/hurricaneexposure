@@ -40,7 +40,7 @@ hurr_tracks <- select(hurr_tracks, -storm_id) %>%
         rename(wind = max_wind) %>%
         select(storm_id, year, month, day, hour, minute, latitude, longitude,
                wind)
-hurr_tracks <- unite_(hurr_tracks, "date",
+hurr_tracks <- tidyr::unite_(hurr_tracks, "date",
                       c("year", "month", "day", "hour", "minute"),
                       sep = "")
 use_data(hurr_tracks, overwrite = TRUE)

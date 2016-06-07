@@ -11,15 +11,16 @@
 #'
 #' @format A data frame with 3221 rows and 8 variables:
 #' \describe{
-#'   \item{fips}{County's 5-digit FIPS code}
+#'   \item{fips}{County's 5-digit Federal Information Processing Standard (FIPS)
+#'              code}
 #'   \item{county_name}{County name}
 #'   \item{state_name}{State name}
 #'   \item{population}{Population of the county as of the 2010 US Census}
 #'   \item{latitude}{Latitude of county's center of population, in decimal
-#'   degrees}
+#'                  degrees}
 #'   \item{longitude}{Longitude of county's center of population, in decimal
-#'   degrees (note: longitudes are given as negative values for western
-#'   longitudes)}
+#'                   degrees (note: longitudes are given as negative values for
+#'                   longitudes west of the prime meridian)}
 #' }
 #'
 #' @source \url{https://www.census.gov/geo/reference/centersofpop.html}
@@ -30,46 +31,81 @@
 #'   Washington, DC, issued 2011. \url{http://www2.census.gov/geo/pdfs/reference/cenpop2010/COP2010_documentation.pdf}
 "county_centers"
 
-#' Closest distances between counties and a storm track
-"closest_dist"
-
 #' Storm tracks for Atlantic basin storms
 #'
-#' A dataset containing the storm tracks for all Atlantic basin tropical
-#' storms between 1987 and 2012.
+#' A dataset containing the storm tracks for Atlantic basin tropical
+#' storms between 1988 and 2012, from the Extended Best Track Dataset for
+#' the Atlantic basin.
 #'
-#' @format A data frame with 12,206 rows and 6 variables:
+#' @details This extended best tracks dataset is currently available for
+#' 1988 to 2014. This dataset is based on the HURDAT best tracks dataset.
+#' For more details, see the source and reference given below.
+#'
+#' @format A data frame with 11,829 rows and 5 variables:
 #' \describe{
-#'   \item{storm_id}{Unique storm identifier}
-#'   \item{date}{Date and time of storm track recording}
-#'   \item{latitude}{Latitude of storm center}
-#'   \item{longitude}{Longitude of storm center}
-#'   \item{wind}{Maximum storm wind speed}
+#'   \item{storm_id}{Unique storm identifier with the storm name and year,
+#'                  separated by a hyphen(e.g., "Alberto-1988",
+#'                  "Katrina-2005")}
+#'   \item{date}{Date and time of storm track recording, in Universal Time
+#'               Coordinate (UTC). This date is formated as
+#'               "%Y%m%d%H%M".}
+#'   \item{latitude}{Latitude of storm center, in decimal degrees}
+#'   \item{longitude}{Longitude of storm center, in decimal degrees (note:
+#'                    longitudes are given as negative values for
+#'                    longitudes west of the prime meridian)}
+#'   \item{wind}{1-minute maximum sustained surface wind speed, measured at
+#'              10 meters above the ground, in knots (values are rounded to
+#'              the nearest 5-knot value)}
 #' }
 #'
-#' @note The original dataset included more separate `status` categories
-#'    than this version. Here, I have pooled together into "Other" the
-#'    following categories: extratropical cyclones (of any intensity),
-#'    subtropical cycles of both subtropical depression and subtropical
-#'    storm intensity, tropical waves of any intensity, disturbances of
-#'    any intensity, and lows that do not fall under any of these
-#'    categories.
+#' @source \url{http://rammb.cira.colostate.edu/research/tropical_cyclones/tc_extended_best_track_dataset}
 #'
 #' @references
-#'    [Determine correct refenence]
+#' Demuth J, DeMaria M, Knaff JA, 2006. Improvement of advanced microwave
+#' sounder unit tropical cyclone intensity and size estimation algorithms.
+#' Journal of Applied Meteorology 45:1573-1581
+#'
 "hurr_tracks"
+
+#' Closest distances between counties and a storm track
+#'
+#' A dataframe that gives the distance and date-time for the closest
+#' approach of each tropical storm to the mean population center of each
+#' US county in states in the eastern half of the United States.
+#'
+#' @details The minimum distance was calculated using the Great Circle method,
+#' using the \code{spDist} function from the \code{\link{sp}} package.
+#'
+#' @format A dataframe with 876,936 rows and 4 variables:
+#' \describe{
+#'   \item{storm_id}{Unique storm identifier with the storm name and year,
+#'                  separated by a hyphen(e.g., "Alberto-1988",
+#'                  "Katrina-2005")}
+#'   \item{fips}{County's 5-digit Federal Information Processing Standard (FIPS)
+#'              code}
+#'   \item{closest_date}{Date and time (in UTC) of the closest approach of the
+#'                       storm to the county's population mean center.}
+#'   \item{storm_dist}{Minimum distance (in kilometers) between the storm's
+#'                     track and the county's population mean center.}
+#' }
+"closest_dist"
 
 #' Rainfall for a week-long window for tropical storms
 #'
 #' A dataframe that gives the total rainfall in US counties for a one-week
 #' window centered at the date on which the tropical storm was closest
-#' to the county for all Atlantic basin storms between 1987 and 2012.
+#' to the county for Atlantic basin storms between 1988 and 2011.
 #'
-#' @format A list with 991,530 rows and 3 variables:
+#' @format A dataframe with 5,417,356 rows and 5 variables:
 #' \describe{
-#'   \item{fips}{county 5-digit FIPS code}
-#'   \item{storm_id}{unique identifier for each tropical storm}
-#'   \item{lag}{Number of days from date when storm was closest to the county}
+#'   \item{fips}{County's 5-digit Federal Information Processing Standard (FIPS)
+#'              code}
+#'   \item{storm_id}{Unique storm identifier with the storm name and year,
+#'                  separated by a hyphen(e.g., "Alberto-1988",
+#'                  "Katrina-2005")}
+#'   \item{lag}{Number of days from date when storm was closest to the county
+#'              (e.g., \code{-2} indicates two days before the date when the
+#'              storm was closest to the county)}
 #'   \item{precip}{Average daily precipitation, in millimeters, for NLDAS grid
 #'    points with the county for the given lag day}
 #'   \item{precip_max}{Maximum daily precipitation, in millimeters, for NLDAS grid
@@ -77,5 +113,8 @@
 #' }
 #'
 #' @references
-#'    [Get proper reference from Bill and Mohammad]
+#' Al-Hamdan MZ, Crosson WL, Economou SA, Estes MG, Estes SM, Hemmings SN,
+#' Kent ST, Puckette M, Quattrochi DA, Rickman DL, Wade GM, McClure LA, 2014.
+#' Environmental public health applications using remotely sensed data.
+#' Geocarto International 29(1):85-98.
 "rain"
