@@ -4,7 +4,22 @@
 \name{hurr_tracks}
 \alias{hurr_tracks}
 \title{Storm tracks for Atlantic basin storms}
-\format{An object of class \code{data.frame} with 11829 rows and 5 columns.}
+\format{A data frame with 11,829 rows and 5 variables:
+\describe{
+  \item{storm_id}{Unique storm identifier with the storm name and year,
+                 separated by a hyphen(e.g., "Alberto-1988",
+                 "Katrina-2005")}
+  \item{date}{Date and time of storm track recording, in Universal Time
+              Coordinate (UTC). This date is formated as
+              "\%Y\%m\%d\%H\%M".}
+  \item{latitude}{Latitude of storm center, in decimal degrees}
+  \item{longitude}{Longitude of storm center, in decimal degrees (note:
+                   longitudes are given as negative values for
+                   longitudes west of the prime meridian)}
+  \item{wind}{1-minute maximum sustained surface wind speed, measured at
+             10 meters above the ground, in knots (values are rounded to
+             the nearest 5-knot value)}
+}}
 \source{
 \url{http://rammb.cira.colostate.edu/research/tropical_cyclones/tc_extended_best_track_dataset}
 }
