@@ -30,6 +30,8 @@
 #'                  days_included = c(-1, 0, 1),
 #'                  output_vars = c("fips", "tot_precip"))
 #'
+#' @import data.table
+#'
 #' @export
 filter_storm_data <- function(counties = NULL, storm = NULL, year_range = NULL,
                               distance_limit = NULL, rain_limit = NULL,
@@ -37,7 +39,6 @@ filter_storm_data <- function(counties = NULL, storm = NULL, year_range = NULL,
                               output_vars = c("fips")){
 
         closest_dist <- data.table::data.table(hurricaneexposure::closest_dist)
-        #closest_dist <- dplyr::tbl_dt(hurricaneexposure::closest_dist)
 
         if(!is.null(counties)){
                 closest_dist <- closest_dist[fips %in% counties]
@@ -50,6 +51,8 @@ filter_storm_data <- function(counties = NULL, storm = NULL, year_range = NULL,
         if(!is.null(year_range)){
                 closest_dist <- closest_dist[ , .(storm_id, fips,
                                                   closest_date, storm_dist,
+                                                  local_time,
+                                                  closest_time_utc,
                                                 year = substring(closest_date,
                                                                  1, 4)), ][
                                          year %in% year_range[1]:year_range[2]

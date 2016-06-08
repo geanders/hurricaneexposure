@@ -53,7 +53,9 @@ county_rain <- function(counties, start_year, end_year,
                                            output_vars = c("storm_id", "fips",
                                                            "closest_date",
                                                            "storm_dist",
-                                                           "tot_precip"))
+                                                           "tot_precip",
+                                                           "local_time",
+                                                           "closest_time_utc"))
         return(rain_storm_df)
 }
 
@@ -92,7 +94,7 @@ multi_county_rain <- function(communities, start_year, end_year,
 
         communities <- dplyr::mutate_(communities, fips = ~ as.character(fips))
 
-        dots <- stats::setNames(list(lazyeval::interp(~ lubridate::ymd_hm(x),
+        dots <- stats::setNames(list(lazyeval::interp(~ lubridate::ymd(x),
                                                       x = quote(closest_date))),
                                 "closest_date")
         rain_storm_df <- hurricaneexposure::closest_dist %>%
@@ -106,6 +108,8 @@ multi_county_rain <- function(communities, start_year, end_year,
                 dplyr::filter_(~ lag %in% days_included) %>%
                 dplyr::group_by_(~ storm_id, ~ fips) %>%
                 dplyr::summarize_(closest_date = ~ dplyr::first(closest_date),
+                                  local_time = ~ dplyr::first(local_time),
+                                  closest_time_utc = ~ dplyr::first(closest_time_utc),
                                  storm_dist = ~ dplyr::first(storm_dist),
                                  commun = ~ dplyr::first(commun),
                                  tot_precip = ~ sum(precip)) %>%
@@ -116,12 +120,12 @@ multi_county_rain <- function(communities, start_year, end_year,
                 dplyr::filter_(~ max_rain >= rain_limit &
                                       min_dist <= dist_limit) %>%
                 dplyr::summarize_(closest_date = ~ dplyr::first(closest_date),
+                                  local_time = ~ dplyr::first(local_time),
+                                  closest_time_utc = ~ dplyr::first(closest_time_utc),
                                  mean_dist = ~ mean(storm_dist),
                                  mean_rain = ~ mean(tot_precip),
                                  max_rain = ~ dplyr::first(max_rain),
-                                 min_dist = ~ dplyr::first(min_dist)) %>%
-                dplyr::mutate_(closest_date = ~ format(closest_date,
-                                                       "%Y%m%d%H%M"))
+                                 min_dist = ~ dplyr::first(min_dist))
         return(rain_storm_df)
 
 }

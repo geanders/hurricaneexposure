@@ -25,16 +25,15 @@
 #' @importFrom dplyr %>%
 county_distance <- function(counties, start_year, end_year, dist_limit){
 
-        dots <- stats::setNames(list(lazyeval::interp(~ lubridate::ymd_hm(x),
-                                                      x = quote(closest_date))),
-                                    "closest_date")
+        distance_df <- filter_storm_data(counties = counties,
+                                         year_range = c(start_year, end_year),
+                                         distance_limit = dist_limit,
+                                         output_vars = c("storm_id", "fips",
+                                                         "closest_date",
+                                                         "storm_dist",
+                                                         "local_time",
+                                                         "closest_time_utc"))
 
-        distance_df <- hurricaneexposure::closest_dist %>%
-                dplyr::mutate_(.dots = dots) %>%
-                dplyr::filter_(~ fips %in% counties &
-                                    lubridate::year(closest_date) >= start_year &
-                                    lubridate::year(closest_date) <= end_year &
-                                    storm_dist <= dist_limit)
         return(distance_df)
 }
 
@@ -70,7 +69,7 @@ multi_county_distance <- function(communities, start_year, end_year,
 
         distance_df <- hurricaneexposure::closest_dist %>%
                 dplyr::mutate_(closest_date =
-                                       ~ lubridate::ymd_hm(closest_date)) %>%
+                                       ~ lubridate::ymd(closest_date)) %>%
                 dplyr::filter_(~ fips %in% communities$fips &
                                       lubridate::year(closest_date) >=
                                        start_year &
@@ -81,10 +80,10 @@ multi_county_distance <- function(communities, start_year, end_year,
                 dplyr::mutate_(min_dist = ~ min(storm_dist)) %>%
                 dplyr::filter_(~ min_dist <= dist_limit) %>%
                 dplyr::summarize_(closest_date = ~ dplyr::first(closest_date),
+                                  local_time = ~ dplyr::first(local_time),
+                                  closest_time_utc = ~ dplyr::first(closest_time_utc),
                                  mean_dist = ~ mean(storm_dist),
-                                 min_dist = ~ dplyr::first(min_dist)) %>%
-                dplyr::mutate_(closest_date = ~ format(closest_date,
-                                                       "%Y%m%d%H%M"))
+                                 min_dist = ~ dplyr::first(min_dist))
         return(distance_df)
 
 }
