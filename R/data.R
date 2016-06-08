@@ -48,7 +48,7 @@
 #'                  "Katrina-2005")}
 #'   \item{date}{Date and time of storm track recording, in Universal Time
 #'               Coordinate (UTC). This date is formated as
-#'               "%Y%m%d%H%M".}
+#'               "\%Y\%m\%d\%H\%M".}
 #'   \item{latitude}{Latitude of storm center, in decimal degrees}
 #'   \item{longitude}{Longitude of storm center, in decimal degrees (note:
 #'                    longitudes are given as negative values for
