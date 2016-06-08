@@ -19,6 +19,8 @@
 #'    \code{c(-1, 0, 1, 2)} would calculate the rain from the day before the
 #'    storm until two days after the storm). Values in this vector cannot be
 #'    lower than -3 or higher than 3.
+#' @param output_vars A character vector listing all the columns to include
+#'    in the output.
 #'
 #' @examples
 #' filter_storm_data(counties = c("22071", "51700"), year_range = c(1988, 2011),
