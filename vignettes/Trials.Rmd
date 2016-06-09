@@ -21,6 +21,7 @@ library(weathermetrics)
 
 ```{r}
 #Max rain for Katrina
+data(rain)
 katrina <- rain[rain$storm_id == "Katrina-2005",]
 katrina_max <- max(katrina$precip)
 k_max_val <- katrina[katrina$precip == katrina_max, ] #maximum for one day
@@ -37,7 +38,6 @@ for(hurricane in my_hurricanes){
         hurricane_map <- map_counties(storm = hurricane, 
                                       metric = "rainfall")
         hurricane_track <- map_tracks(storm = hurricane, 
-                                      storm_status = TRUE, 
                                       plot_object = hurricane_map)
         print(hurricane_track)
 }
@@ -73,6 +73,28 @@ for(hurricane in my_hurricanes){
                           rain_limit = 144,
                           dist_limit = 500,
                           days_included = c(-1, 0, 1))
+        tracks <- map_tracks(storm = hurricane, 
+                             plot_object = exposed)
+        print(tracks)
+}
+```
+
+#Distance
+
+```{r}
+#Based on county and state PH department criteria
+for(hurricane in my_hurricanes){
+        exposed <- map_distance_exposure(storm = hurricane,
+                                         dist_limit = 100)
+        tracks <- map_tracks(storm = hurricane, 
+                             plot_object = exposed)
+        print(tracks)
+}
+
+#Based on Czajkowski et al. criteria
+for(hurricane in my_hurricanes){
+        exposed <- map_distance_exposure(storm = hurricane,
+                                         dist_limit = 120)
         tracks <- map_tracks(storm = hurricane, 
                              plot_object = exposed)
         print(tracks)
