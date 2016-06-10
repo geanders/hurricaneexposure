@@ -1,0 +1,349 @@
+\documentclass[]{elsarticle} %review=doublespace preprint=single 5p=2 column
+%%% Begin My package additions %%%%%%%%%%%%%%%%%%%
+\usepackage[hyphens]{url}
+\usepackage{lineno} % add
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\bibliographystyle{elsarticle-harv}
+\biboptions{sort&compress} % For natbib
+\usepackage{graphicx}
+\usepackage{booktabs} % book-quality tables
+%% Redefines the elsarticle footer
+%\makeatletter
+%\def\ps@pprintTitle{%
+% \let\@oddhead\@empty
+% \let\@evenhead\@empty
+% \def\@oddfoot{\it \hfill\today}%
+% \let\@evenfoot\@oddfoot}
+%\makeatother
+
+% A modified page layout
+\textwidth 6.75in
+\oddsidemargin -0.15in
+\evensidemargin -0.15in
+\textheight 9in
+\topmargin -0.5in
+%%%%%%%%%%%%%%%% end my additions to header
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \usepackage{fontspec}
+  \ifxetex
+    \usepackage{xltxtra,xunicode}
+  \fi
+  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+  \newcommand{\euro}{€}
+\fi
+% use microtype if available
+\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{{#1}}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{{#1}}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
+\newcommand{\ImportTok}[1]{{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{{#1}}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{{#1}}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{{#1}}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{{#1}}}}
+\newcommand{\BuiltInTok}[1]{{#1}}
+\newcommand{\ExtensionTok}[1]{{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{{#1}}}
+\newcommand{\RegionMarkerTok}[1]{{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{{#1}}}}
+\newcommand{\NormalTok}[1]{{#1}}
+\usepackage{graphicx}
+% We will generate all images so they have a width \maxwidth. This means
+% that they will get their normal width if they fit onto the page, but
+% are scaled down if they would overflow the margins.
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+\else\Gin@nat@width\fi}
+\makeatother
+\let\Oldincludegraphics\includegraphics
+\renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=\maxwidth]{#1}}
+\ifxetex
+  \usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex]{hyperref}
+\else
+  \usepackage[unicode=true]{hyperref}
+\fi
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            pdfauthor={},
+            pdftitle={Assessing exposure to Atlantic Basin tropical storms in United States counties},
+            colorlinks=true,
+            urlcolor=blue,
+            linkcolor=magenta,
+            pdfborder={0 0 0}}
+\urlstyle{same}  % don't use monospace font for urls
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\setcounter{secnumdepth}{0}
+% Pandoc toggle for numbering sections (defaults to be off)
+\setcounter{secnumdepth}{0}
+% Pandoc header
+
+
+\usepackage[nomarkers]{endfloat}
+
+\begin{document}
+\begin{frontmatter}
+
+  \title{Assessing exposure to Atlantic Basin tropical storms in United States
+counties}
+    \author[Colorado State University]{Joshua Ferreri}
+   \ead{alice@example.com} 
+  
+    \author[Colorado State University]{Meilin Yan}
+   \ead{alice@example.com} 
+  
+    \author[NASA Marshall Space Flight Center]{Mohammad Z. Al-Hamdan}
+   \ead{alice@example.com} 
+  
+    \author[NASA Marshall Space Flight Center]{William L. Crosson}
+   \ead{alice@example.com} 
+  
+    \author[University of Michigan]{Seth Guikema}
+   \ead{alice@example.com} 
+  
+    \author[Johns Hopkins Bloomberg School of Public Health]{Roger D. Peng}
+   \ead{alice@example.com} 
+  
+    \author[Colorado State University]{G. Brooke Anderson\corref{c1}}
+   \ead{brooke.anderson@colostate.edu} 
+   \cortext[c1]{Corresponding Author}
+      \address[Colorado State University]{Department of Environmental and Radiological Health Sciences, Lake
+Street, Fort Collins, CO, Zip}
+    \address[NASA Marshall Space Flight Center]{Universities Space Research Association, Street, Huntsville, AL, Zip}
+    \address[University of Michigan]{Department, Street, City, State, Zip}
+    \address[Johns Hopkins Bloomberg School of Public Health]{Department of Biostatistics, Street, Baltimore, MD, Zip}
+  
+  \begin{abstract}
+  There are many important applications for having county-level estimates
+  of exposure to tropical storms over many years. For example, \ldots{} .
+  Current approaches include \ldots{} but have the following limitations
+  \ldots{} .
+  
+  Here, we present open source software we have developed to explore
+  county-level exposure to tropical storms in United States counties
+  between 1988 and 2011. Further, we explore the differences in exposure
+  classification when using different metrics (e.g., wind speed, rainfall,
+  distance).
+  \end{abstract}
+  
+ \end{frontmatter}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(hurricaneexposure)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Introduction}\label{introduction}
+
+\paragraph{What it means to assess county-level tropical storm
+exposure}\label{what-it-means-to-assess-county-level-tropical-storm-exposure}
+
+\paragraph{Why it's important to measure TS exposure for
+counties}\label{why-its-important-to-measure-ts-exposure-for-counties}
+
+\paragraph{Examples of using TS exposure estimates for multiple
+storms}\label{examples-of-using-ts-exposure-estimates-for-multiple-storms}
+
+\paragraph{Examples of other datasets at the county
+level}\label{examples-of-other-datasets-at-the-county-level}
+
+If exposure to tropical storms over multiple storms and years can be
+assessed, these exposure datasets can be joined with other time series
+to explore the impacts of tropical storms. For example, daily counts of
+human health outcomes in environmental epidemiology studies are often
+available aggregated at the county level, and such data has often been
+paired with time series of environmental exposures (e.g., air pollution,
+temperature) to determine associated risks.
+
+\section{Data and Methods}\label{data-and-methods}
+
+\paragraph{Distance-based exposure}\label{distance-based-exposure}
+
+We collected ``best tracks'' data on hurricane tracks for Atlantic basin
+storms between 1988 and 2014 from the extended best tracks database.
+\ldots{} This data gives time stamps for each observation in UTC.
+
+These data typically give measurements of storm center location at
+6-hour intervals. We interpolated these location values to every 15
+minutes during the period when the storm was active, using a linear
+interpolation between each measured point.
+
+We calculated the distance between each county's center and each of the
+15-minute-interval estimates of a storm's location. To do this, we used
+the Great Circle method to calculate the distance between pairs of
+latitude and longitude coordinates, using the R package \texttt{sp}. For
+each county, we used the population mean center, based on the U.S.
+Census's 2010 Decennial Census, as the center location of the county.
+From these distance calculations, we identified the date-time and
+distance between the storm track and the county center at the 15-minute
+interval when the storm was closest to the county center. We used the
+\texttt{countytimezones} R package to convert each date-time of the
+closest storm approach for a county to the county's local time zone and
+identified the local date when the storm was closest to the county. This
+``closest date'' was used to pair the distance estimates with rainfall
+estimates.
+
+\paragraph{Rain-based exposure}\label{rain-based-exposure}
+
+\paragraph{Wind-based exposure}\label{wind-based-exposure}
+
+\section{Results}\label{results}
+
+\includegraphics{DraftExposurePaper_files/figure-latex/unnamed-chunk-2-1.pdf}
+
+\section{Discussion}\label{discussion}
+
+\paragraph{Distance-based exposure}\label{distance-based-exposure-1}
+
+There are some sources of uncertainty for storm locations from the best
+track hurricane data. These include \ldots{}
+
+However, these best tracks should be fairly reliable for more recent
+years of storms, as we use here. Many of the uncertainties related to
+storm positions in best track data are more of a concern for the years
+before \ldots{} (e.g., pre-19{[}xx{]}).
+
+While there are often several different ``best tracks'' datasets, from
+different sources {[}?-- weather services?{]} for other ocean basins,
+the ``best tracks'' data from \ldots{}, which is the basis of the tracks
+we use here, are the undisputed primary source of tropical storm track
+data for the Atlantic basin.
+
+There are a number of limitations to using distance to assess exposure
+to tropical storms. Tropical storms vary in size and intensity, and a
+measure of distance from the storm track will not incorporate these
+differences and so could mis-classify exposure both in terms of
+generating false positives (counties close to the storm track of very
+mild or small-radius storms) and false negatives (e.g., during very
+large or intense storms).
+
+\paragraph{Rain-based exposure}\label{rain-based-exposure-1}
+
+It can be very difficult to reliabily measure rain during extreme rain
+events, including tropical storms. For example, a heavy rain can wash
+away {[}?{]} rain monitors {[}?{]}. It can also be very hard to measure
+rain during heavy wind, as the rain does not fall straight into the
+monitor {[}?{]}.
+
+Some of the other possible sources for estimating rain during tropical
+storms include \ldots{}
+
+The estimated rainfall amounts from our data are likely underestimates.
+This data source, however, should be internally consistent and so useful
+for comparing across different storms when all exposure estimates are
+based on this rain data.
+
+Rainfall estimates are likely underestimates for a few reasons. First,
+they are based on averaging hourly measurements to a daily mean
+estimate. This averaging would smooth over shorter periods of very
+extreme rainfall. Further, this data is averaged over multiple grid
+points within each county and so would not fully reflect very extreme
+local precipitation (although this might be less of a concern for
+classifying exposure to a large-scale storm system, like a tropical
+storm, compared to more fine-scale storms). Finally, this NLDAS data
+provides a re-analysis that incorporates measured rainfall, using
+models, etc., to incorporate that observed data into a spatially and
+temporally continuous dataset of rainfall. However, during extreme
+storms, the problems with measuring rainfall using {[}rain monitors{]}
+would propogate into the NLDAS data, so although NLDAS would prevent
+missing values during the storm if monitors are not able to provide
+data, if monitors are out, rainfall estimates from NLDAS will be based
+more on models than on observations.
+
+Exposure classification based on rainfall has some advantages. For
+example, it allows the identification of exposed counties that are
+inland, rather than coastal, but that were affected by heavy rainfall
+during the storm. Often, storm-related deaths are associated with inland
+flooding. Storms can produce a lot of rain especially in certain
+topographies, like near mountains, so counties that are well inland can
+sometimes experience more extreme rain that other counties at similar
+distances from the storm's track.
+
+In comparison to the storm track, the areas of extreme rain and extreme
+wind can vary. For example, storms undergoing an extratropical
+transition can bring heavy rains to the left of the storm's center
+track, while extreme winds are more common to the right of the track
+(Halverson 2015).
+
+Some storms can be of lower intensity (i.e., on the Saffir-Simpson
+scale) yet bring dangerous rainfall, including well inland of the
+storm's landfall. For example, storms including Floyd in 1999, Gaston in
+2004, Irene in 2011, and Lee in 2011, have had severe inland impacts,
+often through extreme rainfall, as post-tropical storms
+{[}Halverson2015{]}. This rainfall can be particularly severe in the
+Appalachians {[}Halverson2015{]}.
+
+For example,
+
+\includegraphics{DraftExposurePaper_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\paragraph{Wind-based exposure}\label{wind-based-exposure-1}
+
+Wind suffers from similar challenges for measuring during tropical
+storms. In particular, the strong winds of tropical storms can break or
+blow away the anemometers used to measure wind speed.
+
+Here, we used wind speed models, rather than observed wind speed, to
+estimate exposure to tropical storms based on winds.
+
+A variety of other wind speed models exist besides the one used here. In
+particular, there are options for wind speed models as far as \ldots{}
+
+\paragraph{Example uses of exposure
+datasets}\label{example-uses-of-exposure-datasets}
+
+\section*{References}\label{references}
+\addcontentsline{toc}{section}{References}
+
+\hypertarget{refs}{}
+\hypertarget{ref-Halverson2015}{}
+Halverson, Jeffrey B. 2015. ``Second Wind: The Dealdy and Destructive
+Inland Phase of East Coast Hurricanes.'' \emph{Weatherwise} 68 (2):
+20--27.
+doi:\href{https://doi.org/10.1080/00431672.2015.997562}{10.1080/00431672.2015.997562}.
+
+\end{document}
+
+
