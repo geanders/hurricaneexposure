@@ -31,6 +31,9 @@ include when calculating the total rain over the storm period (e.g.,
 \code{c(-1, 0, 1, 2)} would calculate the rain from the day before the
 storm until two days after the storm). Values in this vector cannot be
 lower than -3 or higher than 3.}
+
+\item{output_vars}{A character vector listing all the columns to include
+in the output.}
 }
 \description{
 This function is a helper function for many of the the other functions in

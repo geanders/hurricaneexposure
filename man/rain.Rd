@@ -12,7 +12,8 @@
                  separated by a hyphen(e.g., "Alberto-1988",
                  "Katrina-2005")}
   \item{lag}{Number of days from date when storm was closest to the county
-             (e.g., \code{-2} indicates two days before the date when the
+             (e.g., \code{0} indicates the date the storm was closest to the
+             county, \code{-2} indicates two days before the date when the
              storm was closest to the county)}
   \item{precip}{Average daily precipitation, in millimeters, for NLDAS grid
    points with the county for the given lag day}
@@ -27,11 +28,43 @@ A dataframe that gives the total rainfall in US counties for a one-week
 window centered at the date on which the tropical storm was closest
 to the county for Atlantic basin storms between 1988 and 2011.
 }
+\details{
+This dataset was aggregated from hourly, 1/8 degree gridded data
+   from North America Land Data Assimilation System Phase 2 (NLDAS-2)
+   precipitation data files to generate daily, county-level precipitation
+   measures. The NLDAS-2 data integrates satellite-based and land-based
+   monitoring and applies a land-surface model to create a reanalysis
+   dataset that is spatially and temporally complete across the continental
+   United States. To aggregate to a daily county-level value, we averaged
+   the data at each grid point to generate a daily averaged and then
+   averaged this value across all grid points within a county's boundaries.
+   We used county boundaries based on [boundaries at the time of the 2010
+   US Census ?]. The date-time for each observation at each grid point was
+   converted to local time (not considering Daylight Savings Time) before
+   daily averages were generated for the grid point.
+}
+\note{
+This data set is based on data acquired as part of the mission of
+   NASA-s Earth Science Division and archived and distributed by the
+   Goddard Earth Sciences (GES) Data and Information Services Center (DISC).
+   The county-aggregated daily precipitation values used for this data set
+   are available for download through the Center for Disease Control's
+   Wide-ranging Online Data for Epidemiological Research (WONDER) system
+   (see references).
+}
 \references{
 Al-Hamdan MZ, Crosson WL, Economou SA, Estes MG, Estes SM, Hemmings SN,
 Kent ST, Puckette M, Quattrochi DA, Rickman DL, Wade GM, McClure LA, 2014.
 Environmental public health applications using remotely sensed data.
 Geocarto International 29(1):85-98.
+
+North America Land Data Assimilation System (NLDAS) Daily Precipitation
+years 1979-2011 on CDC WONDER Online Database, released 2012.
+\url{http://wonder.cdc.gov/wonder/help/Precipitation.html}
+
+Rui H, Mocko D, 2014. README Document for North America Land Data
+Assimilation System Phase 2 (NLDAS-2) Products. Goddard Earth Sciences
+Data and Information Services Center.
 }
 \keyword{datasets}
 
