@@ -11,8 +11,6 @@ output: html_document
 library(lubridate)
 library(ggplot2)
 library(devtools)
-install_github("geanders/hurricaneexposure", 
-               build_vignettes = TRUE)
 library(hurricaneexposure)
 library(weathermetrics)
 ```
