@@ -19,9 +19,9 @@
 #'    \code{c(-1, 0, 1)} would calculate rain for a county as the sum of the
 #'    rainfall for the day before, the day of, and the day after the date when
 #'    the storm center was closest to the county center.
-#' @param dist_limit Maximum distance, in kilometers, for the closest distance
-#'    between the county center and the storm track to consider
-#'    the county "exposed" to the storm.
+#' @param dist_limit Maximum distance, in kilometers, of how close the storm
+#'    track must come to the county's population mean center to classify
+#'    the county as "exposed" to the storm.
 #'
 #' @return Returns a dataframe with a row for each county-storm
 #'    pair and with columns giving the storm's ID, county FIPS,

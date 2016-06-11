@@ -7,8 +7,9 @@
 county_distance(counties, start_year, end_year, dist_limit)
 }
 \arguments{
-\item{counties}{Character string of the five-digit FIPS codes for
-counties for which the user wants to create data}
+\item{counties}{Character vector of the five-digit Federal Information
+Processing Standard (FIPS) codes for counties for which the user wants to
+determine storm exposure.}
 
 \item{start_year}{Four-digit integer with first year to consider.}
 
@@ -20,16 +21,44 @@ the county "exposed" to the storm.}
 }
 \value{
 Returns a dataframe with a row for each county-storm
-   pair and with columns giving the storm's ID, county FIPS,
-   date and time of closest approach of that storm to that county, and
-   distance between the county center and the storm track on
-   that date and time.
+   pair and with columns for:
+   \itemize{
+     \item{\code{storm_id}: }{Unique storm identifier with the storm name and year,
+                 separated by a hyphen(e.g., "Alberto-1988",
+                 "Katrina-2005")}
+     \item{\code{fips}: }{County's 5-digit Federal Information Processing Standard
+                 (FIPS) code}
+     \item{\code{closest_date}: }{Date (based on local time) of the closest
+                         approach of the storm to the county's population
+                         mean center.}
+     \item{\code{storm_dist}: }{Minimum distance (in kilometers) between the storm's
+                    track and the county's population mean center.}
+     \item{\code{local_time}: }{Local time of the closest approach of the storm to the
+                       county's population mean center, based on storm tracks
+                       linearly interpolated to 15-minute increments.}
+    \item{\code{closest_time_utc}: }{Time, in UTC, of the closest approach of the
+                            storm to the county's population mean center,
+                            based on storm tracks linearly interpolated to
+                            15-minute increments.}
+   }
 }
 \description{
-This function takes a list of county FIPS, boundaries on
-starting and ending years, and thresholds for distance
-and returns a dataframe with the subset of storms meeting those criteria
-for each of the listed counties.
+This function takes a list of US counties,based on their 5-digit Federal
+Information Processing Standard (FIPS) codes, boundaries on
+the range of years to be considered, and thresholds for distance between each
+county and the storm track for the county to be considered "exposed" to the
+storm. Based on these inputs, the function returns a dataframe with the
+subset of Atlantic basin storms meeting those criteria for each of the listed
+counties.
+}
+\details{
+For more information on how distances between counties and storm
+   tracks are calculated for this function, see the documentation for the
+   \code{closest_dist} dataset that comes with this package.
+}
+\note{
+Only counties in states in the eastern half of the United States can
+   be processed by this function.
 }
 \examples{
 county_distance(counties = c("22071", "51700"),
