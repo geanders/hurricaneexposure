@@ -5,7 +5,7 @@ library(lubridate)
 library(data.table)
 
 check_dates <- select(closest_dist, -storm_dist) %>%
-        mutate(closest_date = ymd(substr(closest_date, 1, 8))) %>%
+        mutate(closest_date = ymd(closest_date)) %>%
         rename(day_0 = closest_date) %>%
         mutate(fips = as.integer(fips),
                day_0 = day_0 + days(0),
