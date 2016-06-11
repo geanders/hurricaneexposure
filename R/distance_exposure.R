@@ -11,7 +11,11 @@
 #' @param counties Character vector of the five-digit Federal Information
 #'    Processing Standard (FIPS) codes for counties for which the user wants to
 #'    determine storm exposure.
-#' @inheritParams county_rain
+#' @param start_year Four-digit integer with first year to consider.
+#' @param end_year Four-digit integer with last year to consider.
+#' @param dist_limit Maximum distance, in kilometers, of how close the storm
+#'    track must come to the county's population mean center to classify
+#'    the county as "exposed" to the storm.
 #'
 #' @return Returns a dataframe with a row for each county-storm
 #'    pair and with columns for:

@@ -12,14 +12,6 @@ distance_exposure(locations, start_year, end_year, dist_limit, out_dir,
 output, or a dataframe with columns for community identifier (\code{commun})
 and associated FIPS codes (\code{fips}), for multi-county community output}
 
-\item{start_year}{Four-digit integer with first year to consider.}
-
-\item{end_year}{Four-digit integer with last year to consider.}
-
-\item{dist_limit}{Maximum distance, in kilometers, for the closest distance
-between the county center and the storm track to consider
-the county "exposed" to the storm.}
-
 \item{out_dir}{Character string giving the pathname of the directory in which
 to write output. This directory should already exist on your computer.}
 

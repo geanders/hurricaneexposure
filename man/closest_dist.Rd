@@ -11,11 +11,18 @@
                  "Katrina-2005")}
   \item{fips}{County's 5-digit Federal Information Processing Standard (FIPS)
              code}
-  \item{closest_date}{Date and time (based on local time) of the closest
-                      approach of the storm to the county's population mean
-                      center.}
+  \item{closest_date}{Date (based on local time) of the closest
+                         approach of the storm to the county's population
+                         mean center.}
   \item{storm_dist}{Minimum distance (in kilometers) between the storm's
                     track and the county's population mean center.}
+  \item{local_time}{Local time of the closest approach of the storm to the
+                       county's population mean center, based on storm tracks
+                       linearly interpolated to 15-minute increments.}
+ \item{closest_time_utc}{Time, in UTC, of the closest approach of the
+                            storm to the county's population mean center,
+                            based on storm tracks linearly interpolated to
+                            15-minute increments.}
 }}
 \usage{
 closest_dist

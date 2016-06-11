@@ -8,49 +8,86 @@ county_rain(counties, start_year, end_year, rain_limit, dist_limit,
   days_included = c(-1, 0, 1))
 }
 \arguments{
-\item{counties}{Character string of the five-digit FIPS codes for
-counties for which the user wants to create data}
+\item{counties}{Character vector of the five-digit Federal Information
+Processing Standard (FIPS) codes for counties for which the user wants to
+determine storm exposure.}
 
 \item{start_year}{Four-digit integer with first year to consider.}
 
 \item{end_year}{Four-digit integer with last year to consider.}
 
 \item{rain_limit}{Minimum of rainfall, in millimeters, summed across the days
-selected to be included, that must be met to consider county
-"exposed" to the storm.}
+selected to be included (\code{days_included}), that must fall in a
+county for the county to be classified as "exposed" to the storm.}
 
-\item{dist_limit}{Maximum distance, in kilometers, for the closest distance
-between the county center and the storm track to consider
-the county "exposed" to the storm.}
+\item{dist_limit}{Maximum distance, in kilometers, of how close the storm
+track must come to the county's population mean center to classify
+the county as "exposed" to the storm.}
 
 \item{days_included}{A numeric vector listing the days to include when
 calculating total precipitation. Negative numbers are days before the
 closest date of the storm to a county. For example,
 \code{c(-1, 0, 1)} would calculate rain for a county as the sum of the
 rainfall for the day before, the day of, and the day after the date when
-the storm center was closest to the county center.}
+the storm center was closest to the county center. Values can range from
+-3 to 3 (i.e., at most, you can calculate the total rainfall for the
+seven-day window centered on the day when the storm is closest to the
+county).}
 }
 \value{
-Returns a dataframe with a row for each county-storm
-   pair and with columns giving the storm's ID, county FIPS,
-   date and time of closest approach of that storm to that county,
-   distance between the county center and the storm track on
-   that date and time, and cumulative rainfall for the week-long
-   period centered at the date of closest approach to the county.
+Returns a dataframe with a row for each county-storm pair and with
+   columns for:
+   \itemize{
+     \item{\code{storm_id}: }{Unique storm identifier with the storm name and year,
+                 separated by a hyphen(e.g., "Alberto-1988",
+                 "Katrina-2005")}
+     \item{\code{fips}: }{County's 5-digit Federal Information Processing Standard
+                 (FIPS) code}
+     \item{\code{closest_date}: }{Date (based on local time) of the closest
+                         approach of the storm to the county's population
+                         mean center.}
+     \item{\code{storm_dist}: }{Minimum distance (in kilometers) between the storm's
+                    track and the county's population mean center.}
+     \item{\code{tot_precip}: }{Cumulative rainfall, in millimeters, in the
+                                county for the days selected using the
+                                \code{days_included} option.}
+     \item{\code{local_time}: }{Local time of the closest approach of the storm to the
+                       county's population mean center, based on storm tracks
+                       linearly interpolated to 15-minute increments.}
+    \item{\code{closest_time_utc}: }{Time, in UTC, of the closest approach of the
+                            storm to the county's population mean center,
+                            based on storm tracks linearly interpolated to
+                            15-minute increments.}
+   }
 }
 \description{
-This function takes a list of county FIPS, boundaries on
-starting and ending years, and thresholds for distance
-and rainfall over the days included and returns a dataframe
-with the subset of storms meeting those criteria for
-each of the listed counties.
+#' This function takes a list of US counties,based on their 5-digit Federal
+Information Processing Standard (FIPS) codes, boundaries on
+the range of years to be considered, thresholds for distance between each
+county and the storm track as well as minimum rainfall over a certain time
+window for the county to be considered "exposed" to the
+storm. Based on these inputs, the function returns a dataframe with the
+subset of Atlantic basin storms meeting those criteria for each of the listed
+counties.
 }
 \examples{
-\dontrun{
 county_rain(counties = c("22071", "51700"),
             start_year = 1995, end_year = 2005,
             rain_limit = 100, dist_limit = 100)
-}
 
+}
+\references{
+Al-Hamdan MZ, Crosson WL, Economou SA, Estes MG, Estes SM, Hemmings SN,
+Kent ST, Puckette M, Quattrochi DA, Rickman DL, Wade GM, McClure LA, 2014.
+Environmental public health applications using remotely sensed data.
+Geocarto International 29(1):85-98.
+
+North America Land Data Assimilation System (NLDAS) Daily Precipitation
+years 1979-2011 on CDC WONDER Online Database, released 2012.
+\url{http://wonder.cdc.gov/wonder/help/Precipitation.html}
+
+Rui H, Mocko D, 2014. README Document for North America Land Data
+Assimilation System Phase 2 (NLDAS-2) Products. Goddard Earth Sciences
+Data and Information Services Center.
 }
 

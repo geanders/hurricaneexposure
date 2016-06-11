@@ -11,14 +11,6 @@ multi_county_distance(communities, start_year, end_year, dist_limit)
 each community. It must include columns with a column identifier
 (\code{commun}) and with the FIPS codes of counties included in each
 community (\code{fips}). See the example code.}
-
-\item{start_year}{Four-digit integer with first year to consider.}
-
-\item{end_year}{Four-digit integer with last year to consider.}
-
-\item{dist_limit}{Maximum distance, in kilometers, for the closest distance
-between the county center and the storm track to consider
-the county "exposed" to the storm.}
 }
 \value{
 Returns the same type dataframe as \code{county_distance},
