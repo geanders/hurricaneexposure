@@ -64,15 +64,17 @@ Data and Methods
 
 #### Distance-based exposure
 
-We collected "best tracks" data on hurricane tracks for Atlantic basin storms between 1988 and 2014 from the extended best tracks database. ... This data gives time stamps for each observation in UTC. 
+We collected "best tracks" data on hurricane tracks for Atlantic basin storms between 1988 and 2014 from the extended best tracks database. This dataset is based on a poststorm assessment of each storm conducted by the United States National Hurricane Center (NHC) and incorporates data from a variety of sources, including satellite data and, when available, aircraft reconnaisance data [@Landsea2013]. This data gives time stamps for each observation in Coordinated Universal Time (UTC; also known as Zulu Time, sometimes indicated by "Z"). 
 
-These data typically give measurements of storm center location at 6-hour intervals. We interpolated these location values to every 15 minutes during the period when the storm was active, using a linear interpolation between each measured point. 
+These data typically give measurements of storm center location at 6-hour intervals, at synoptic times (i.e., 6:00 am, 12:00 pm, 6:00 pm, and 12:00 am UTC); some landfalling storms have an additional observation at the time of landfall [@Landsea2013]. These positions are given to within 0.1 degrees latitude / longitude at these synoptic times [@Landsea2013]. We interpolated these location values to every 15 minutes during the period when the storm was active, using a linear interpolation between each measured point. 
 
 We calculated the distance between each county's center and each of the 15-minute-interval estimates of a storm's location. To do this, we used the Great Circle method to calculate the distance between pairs of latitude and longitude coordinates, using the R package `sp`. For each county, we used the population mean center, based on the U.S. Census's 2010 Decennial Census, as the center location of the county. From these distance calculations, we identified the date-time and distance between the storm track and the county center at the 15-minute interval when the storm was closest to the county center. We used the `countytimezones` R package to convert each date-time of the closest storm approach for a county to the county's local time zone and identified the local date when the storm was closest to the county. This "closest date" was used to pair the distance estimates with rainfall estimates.
 
 #### Rain-based exposure
 
 #### Wind-based exposure
+
+These wind models use estimates of maximum wind speed from the best tracks dataset. These maximum wind speed estimates in the best tracks dataset are rounded to 5-knot intervals and is the maximum 1-minute-average windspeed at 10 meters above the ground [@Landsea2013]. This windspeed is typically determined using the Dvorak technique to estimate windspeed from satellite measurements, although data from aircraft reconnaisance in also sometimes incorporated in the estimate [@Levinson2010].
 
 Results
 ============
@@ -95,6 +97,8 @@ However, these best tracks should be fairly reliable for more recent years of st
 While there are often several different "best tracks" datasets, from different sources [?-- weather services?] for other ocean basins, the "best tracks" data from ..., which is the basis of the tracks we use here, are the undisputed primary source of tropical storm track data for the Atlantic basin. 
 
 There are a number of limitations to using distance to assess exposure to tropical storms. Tropical storms vary in size and intensity, and a measure of distance from the storm track will not incorporate these differences and so could mis-classify exposure both in terms of generating false positives (counties close to the storm track of very mild or small-radius storms) and false negatives (e.g., during very large or intense storms).
+
+There is some uncertainty in the position estimates from the best tracks hurricane dataset, since the estimation of storm position for best tracks data involes a poststorm subjective smoothing and integration of many different types of data [@Landsea2013]. In a survey of researchers who perform the poststorm data aggregation to create the best tracks datasets, uncertainty in the center position of a US landfalling storm in the "best tracks" dataset was estimated at approximately 8 nautical miles for major hurricanes, 11 nautical miles for Category 1 and 2 hurricanes, and 15 nautical miles for tropical storms [@Landsea2013]. Uncertainty in estimates of a storm's position also varies by time of day, with more certain estimates during daylight than during the night [@Landsea2013].
 
 #### Rain-based exposure
 
@@ -126,6 +130,8 @@ Wind suffers from similar challenges for measuring during tropical storms. In pa
 Here, we used wind speed models, rather than observed wind speed, to estimate exposure to tropical storms based on winds. 
 
 A variety of other wind speed models exist besides the one used here. In particular, there are options for wind speed models as far as ...
+
+There is some uncertainty in the maximum wind speed values estimated at each synoptic time for each storm. For US landfalling storms, the estimate of storm intensity in the best tracks dataset is estimated to have an uncertainty of around 8 knots for tropical storms, 10 knots for Category 1 and 2 hurricanes, and 13 knots for major hurricanes [@Landsea2013]. Since the wind model used here uses these best tracks maximum wind speeds as an input, this uncertaintly would propogate into our estimates of windspeed within each county for each storm. 
 
 #### Example uses of exposure datasets
 

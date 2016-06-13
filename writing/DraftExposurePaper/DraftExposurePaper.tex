@@ -203,12 +203,21 @@ temperature) to determine associated risks.
 
 We collected ``best tracks'' data on hurricane tracks for Atlantic basin
 storms between 1988 and 2014 from the extended best tracks database.
-\ldots{} This data gives time stamps for each observation in UTC.
+This dataset is based on a poststorm assessment of each storm conducted
+by the United States National Hurricane Center (NHC) and incorporates
+data from a variety of sources, including satellite data and, when
+available, aircraft reconnaisance data (Landsea and Franklin 2013). This
+data gives time stamps for each observation in Coordinated Universal
+Time (UTC; also known as Zulu Time, sometimes indicated by ``Z'').
 
 These data typically give measurements of storm center location at
-6-hour intervals. We interpolated these location values to every 15
-minutes during the period when the storm was active, using a linear
-interpolation between each measured point.
+6-hour intervals, at synoptic times (i.e., 6:00 am, 12:00 pm, 6:00 pm,
+and 12:00 am UTC); some landfalling storms have an additional
+observation at the time of landfall (Landsea and Franklin 2013). These
+positions are given to within 0.1 degrees latitude / longitude at these
+synoptic times (Landsea and Franklin 2013). We interpolated these
+location values to every 15 minutes during the period when the storm was
+active, using a linear interpolation between each measured point.
 
 We calculated the distance between each county's center and each of the
 15-minute-interval estimates of a storm's location. To do this, we used
@@ -228,6 +237,15 @@ estimates.
 \paragraph{Rain-based exposure}\label{rain-based-exposure}
 
 \paragraph{Wind-based exposure}\label{wind-based-exposure}
+
+These wind models use estimates of maximum wind speed from the best
+tracks dataset. These maximum wind speed estimates in the best tracks
+dataset are rounded to 5-knot intervals and is the maximum
+1-minute-average windspeed at 10 meters above the ground (Landsea and
+Franklin 2013). This windspeed is typically determined using the Dvorak
+technique to estimate windspeed from satellite measurements, although
+data from aircraft reconnaisance in also sometimes incorporated in the
+estimate (Levinson et al. 2010).
 
 \section{Results}\label{results}
 
@@ -258,6 +276,19 @@ differences and so could mis-classify exposure both in terms of
 generating false positives (counties close to the storm track of very
 mild or small-radius storms) and false negatives (e.g., during very
 large or intense storms).
+
+There is some uncertainty in the position estimates from the best tracks
+hurricane dataset, since the estimation of storm position for best
+tracks data involes a poststorm subjective smoothing and integration of
+many different types of data (Landsea and Franklin 2013). In a survey of
+researchers who perform the poststorm data aggregation to create the
+best tracks datasets, uncertainty in the center position of a US
+landfalling storm in the ``best tracks'' dataset was estimated at
+approximately 8 nautical miles for major hurricanes, 11 nautical miles
+for Category 1 and 2 hurricanes, and 15 nautical miles for tropical
+storms (Landsea and Franklin 2013). Uncertainty in estimates of a
+storm's position also varies by time of day, with more certain estimates
+during daylight than during the night (Landsea and Franklin 2013).
 
 \paragraph{Rain-based exposure}\label{rain-based-exposure-1}
 
@@ -331,6 +362,16 @@ estimate exposure to tropical storms based on winds.
 A variety of other wind speed models exist besides the one used here. In
 particular, there are options for wind speed models as far as \ldots{}
 
+There is some uncertainty in the maximum wind speed values estimated at
+each synoptic time for each storm. For US landfalling storms, the
+estimate of storm intensity in the best tracks dataset is estimated to
+have an uncertainty of around 8 knots for tropical storms, 10 knots for
+Category 1 and 2 hurricanes, and 13 knots for major hurricanes (Landsea
+and Franklin 2013). Since the wind model used here uses these best
+tracks maximum wind speeds as an input, this uncertaintly would
+propogate into our estimates of windspeed within each county for each
+storm.
+
 \paragraph{Example uses of exposure
 datasets}\label{example-uses-of-exposure-datasets}
 
@@ -343,6 +384,18 @@ Halverson, Jeffrey B. 2015. ``Second Wind: The Dealdy and Destructive
 Inland Phase of East Coast Hurricanes.'' \emph{Weatherwise} 68 (2):
 20--27.
 doi:\href{https://doi.org/10.1080/00431672.2015.997562}{10.1080/00431672.2015.997562}.
+
+\hypertarget{ref-Landsea2013}{}
+Landsea, Christopher W., and James L. Franklin. 2013. ``Atlantic
+Hurricane Database Uncertainty and Presentation of a New Database
+Format.'' \emph{Monthly Weather Review} 141: 3576--92.
+
+\hypertarget{ref-Levinson2010}{}
+Levinson, David H., Howard J. Diamond, Kenneth R. Knapp, Michael C.
+Kruk, and Ethan J. Gibney. 2010. ``Toward a Homogenous Global Tropical
+Cyclone Best-Track Dataset.'' \emph{American Meteorological Society} x:
+377--80.
+doi:\href{https://doi.org/10.1175/2010BAMS2930.1}{10.1175/2010BAMS2930.1}.
 
 \end{document}
 
