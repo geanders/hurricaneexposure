@@ -2,7 +2,7 @@
 title: Assessing exposure to Atlantic Basin tropical storms in United States counties
 author:
   - name: Joshua Ferreri
-    email: alice@example.com
+    email: joshua.m.ferreri@gmail.com
     affiliation: Colorado State University
   - name: Meilin Yan
     email: alice@example.com
@@ -102,7 +102,7 @@ There is some uncertainty in the position estimates from the best tracks hurrica
 
 #### Rain-based exposure
 
-It can be very difficult to reliabily measure rain during extreme rain events, including tropical storms. For example, a heavy rain can wash away [?] rain monitors [?]. It can also be very hard to measure rain during heavy wind, as the rain does not fall straight into the monitor [?].
+It can be very difficult to reliably measure rain during extreme rain events, including tropical storms. For example, a heavy rain can wash away [?] rain monitors [?]. It can also be very hard to measure rain during heavy wind, as the rain does not fall straight into the monitor [?].
 
 Some of the other possible sources for estimating rain during tropical storms include ...
 
