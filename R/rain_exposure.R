@@ -236,8 +236,7 @@ rain_exposure <- function(locations, start_year, end_year,
         for(i in 1:length(locs)){
                 out_df <- df %>%
                         dplyr::filter_(~ loc == locs[i]) %>%
-                        dplyr::mutate_(date = closest_date) %>%
-                        dplyr::select_('-closest_date', '-loc')
+                        dplyr::select_('-loc')
                 out_file <- paste0(out_dir, "/", locs[i], ".", out_type)
                 if(out_type == "rds"){
                         saveRDS(out_df, file = out_file)
