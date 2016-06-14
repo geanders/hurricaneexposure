@@ -22,6 +22,10 @@
 #' @param output_vars A character vector listing all the columns to include
 #'    in the output.
 #'
+#' @return A dataframe with storms filtered based on the input criteria to the
+#'    function. Columns in the output will vary depending on the user's
+#'    selections for the \code{output_vars} argument.
+#'
 #' @examples
 #' filter_storm_data(counties = c("22071", "51700"), year_range = c(1988, 2011),
 #'                   distance_limit = 250, rain_limit = 150,

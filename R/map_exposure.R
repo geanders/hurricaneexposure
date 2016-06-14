@@ -1,9 +1,13 @@
 #' Create a default map with eastern US states
 #'
-#' Creates a ggplot object with the underlying map of all states in the
+#' Creates a \code{ggplot} object with the underlying map of all states in the
 #' eastern section of the US that might be prone to hurricane-related
 #' exposure. Other lines and points can be added to the output using
 #' `ggplot2` plotting functions.
+#'
+#' @details Only states in the eastern half of the United States (i.e., ones
+#' prone to exposure to Atlantic basin tropical storms) are included on this
+#' map.
 #'
 #' @return A ggplot object that maps the states of the Eastern United States
 #'

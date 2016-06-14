@@ -35,6 +35,11 @@ lower than -3 or higher than 3.}
 \item{output_vars}{A character vector listing all the columns to include
 in the output.}
 }
+\value{
+A dataframe with storms filtered based on the input criteria to the
+   function. Columns in the output will vary depending on the user's
+   selections for the \code{output_vars} argument.
+}
 \description{
 This function is a helper function for many of the the other functions in
 this package that measure exposure.
