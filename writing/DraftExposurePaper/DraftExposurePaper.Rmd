@@ -57,6 +57,7 @@ Current hurricane exposure assignments are often nonspecific and may lead to mis
 
 Studies have begun to assess county-level hurricane exposure using large historical datasets [@Zandbergen2009] ... making the `hurricaneexposure` package a powerful tool in future exposure analysis. 
 
+Currently, it seems that most hurricane track mapping capabilities are restricted to geographical information system software. The introduction of this package expands the mapping potential of hurricane tracks and therefore the assessment of hurricane exposure and impacts to R.
 #### Examples of using TS exposure estimates for multiple storms
 
 [@Zandbergen2009] developed an exposure factor based on location (longitude and latitude), county shape, county size, and distance from the coast.
