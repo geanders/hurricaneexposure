@@ -2,7 +2,7 @@
 title: Assessing exposure to Atlantic Basin tropical storms in United States counties
 author:
   - name: Joshua Ferreri
-    email: alice@example.com
+    email: joshua.m.ferreri@gmail.com
     affiliation: Colorado State University
   - name: Meilin Yan
     email: alice@example.com
@@ -53,7 +53,13 @@ Introduction
 
 #### Why it's important to measure TS exposure for counties
 
+Current hurricane exposure assignments are often nonspecific and may lead to missclassification of exposure at the county-level [@Grabich2016]. Such missclassification can have important public health and economic implications.
+
+Studies have begun to assess county-level hurricane exposure using large historical datasets [@Zandbergen2009] ... making the `hurricaneexposure` package a powerful tool in future exposure analysis. 
+
 #### Examples of using TS exposure estimates for multiple storms
+
+[@Zandbergen2009] developed an exposure factor based on location (longitude and latitude), county shape, county size, and distance from the coast.
 
 #### Examples of other datasets at the county level
 
@@ -100,9 +106,10 @@ There are a number of limitations to using distance to assess exposure to tropic
 
 There is some uncertainty in the position estimates from the best tracks hurricane dataset, since the estimation of storm position for best tracks data involes a poststorm subjective smoothing and integration of many different types of data [@Landsea2013]. In a survey of researchers who perform the poststorm data aggregation to create the best tracks datasets, uncertainty in the center position of a US landfalling storm in the "best tracks" dataset was estimated at approximately 8 nautical miles for major hurricanes, 11 nautical miles for Category 1 and 2 hurricanes, and 15 nautical miles for tropical storms [@Landsea2013]. Uncertainty in estimates of a storm's position also varies by time of day, with more certain estimates during daylight than during the night [@Landsea2013].
 
+Currently, distance parameters involved with assessing risk of a particular storm have been rather arbitrary, contributing to the necessity in understanding how such parameters influence a county's exposure status. In assessing the risk of a given storm based on distance, recent studies have defined the distance from the storm track affected by a given storm differently. [@Czajkowski2011] assessed county-level risk and exposure based on a three-tierd definition, with primary counties being those closest to the storm track on either side, secondary counties being adjacent to primary coutnies, and tertiary counties adjacent to secondary counties. Such a defenition resulted in an exposure defenition based on an average distance radius of 120 km on either side of the storm track [@Czajkowski2011]. Such a distance is slightly greater than that commonly used by public health departments (i.e., 100 km) [@Czajkowski2011]. In other cases, distance has been defined on the basis of maximum sustained wind speeds and their decay, with exposure defined as those counties exposed to wind speeds greater than or equal to tropical storm strength (39--73 miles per hour) [@Zandbergen2009] and may not provide an accurate respresentation of the communities exposed to a given storm (e.g., a large number of inland counties are likely underrepresented under this definition).  
 #### Rain-based exposure
 
-It can be very difficult to reliabily measure rain during extreme rain events, including tropical storms. For example, a heavy rain can wash away [?] rain monitors [?]. It can also be very hard to measure rain during heavy wind, as the rain does not fall straight into the monitor [?].
+It can be very difficult to reliably measure rain during extreme rain events, including tropical storms. For example, a heavy rain can wash away [?] rain monitors [?]. It can also be very hard to measure rain during heavy wind, as the rain does not fall straight into the monitor [?].
 
 Some of the other possible sources for estimating rain during tropical storms include ...
 
@@ -110,11 +117,11 @@ The estimated rainfall amounts from our data are likely underestimates. This dat
 
 Rainfall estimates are likely underestimates for a few reasons. First, they are based on averaging hourly measurements to a daily mean estimate. This averaging would smooth over shorter periods of very extreme rainfall. Further, this data is averaged over multiple grid points within each county and so would not fully reflect very extreme local precipitation (although this might be less of a concern for classifying exposure to a large-scale storm system, like a tropical storm, compared to more fine-scale storms). Finally, this NLDAS data provides a re-analysis that incorporates measured rainfall, using models, etc., to incorporate that observed data into a spatially and temporally continuous dataset of rainfall. However, during extreme storms, the problems with measuring rainfall using [rain monitors] would propogate into the NLDAS data, so although NLDAS would prevent missing values during the storm if monitors are not able to provide data, if monitors are out, rainfall estimates from NLDAS will be based more on models than on observations.
 
-Exposure classification based on rainfall has some advantages. For example, it allows the identification of exposed counties that are inland, rather than coastal, but that were affected by heavy rainfall during the storm. Often, storm-related deaths are associated with inland flooding. Storms can produce a lot of rain especially in certain topographies, like near mountains, so counties that are well inland can sometimes experience more extreme rain that other counties at similar distances from the storm's track. 
+Exposure classification based on rainfall has some advantages. For example, it allows the identification of exposed counties that are inland, rather than coastal, but that were affected by heavy rainfall during the storm. Often, storm-related deaths are associated with inland flooding. In fact, over half of the hurricane-related fatalities from 1970 to 1999 were a result of freshwater flooding, accounting for the vast majority of deaths in inland counties [@Rapport2000]. In another analysis, researchers found that 79\% of freshwater-drowning fatalities occured in inland counties,[@Czajkowski2011] further stressing the importance of rainfall in hurricane risk analysis. Storms can produce a lot of rain especially in certain topographies, like near mountains, so counties that are well inland can sometimes experience more extreme rain that other counties at similar distances from the storm's track. 
 
 In comparison to the storm track, the areas of extreme rain and extreme wind can vary. For example, storms undergoing an extratropical transition can bring heavy rains to the left of the storm's center track, while extreme winds are more common to the right of the track [@Halverson2015].
 
-Some storms can be of lower intensity (i.e., on the Saffir-Simpson scale) yet bring dangerous rainfall, including well inland of the storm's landfall. For example, storms including Floyd in 1999, Gaston in 2004, Irene in 2011, and Lee in 2011, have had severe inland impacts, often through extreme rainfall, as post-tropical storms [Halverson2015]. This rainfall can be particularly severe in the Appalachians [Halverson2015].
+Some storms can be of lower intensity (i.e., on the Saffir-Simpson scale) yet bring dangerous rainfall, including well inland of the storm's landfall. For example, storms including Floyd in 1999, Gaston in 2004, Irene in 2011, and Lee in 2011, have had severe inland impacts, often through extreme rainfall, as post-tropical storms [@Halverson2015]. This rainfall can be particularly severe in the Appalachians [@Halverson2015]. Further, heavier rainfall is more common for storms moving at slower wind speeds [@Chang2013]. Storms with a slower forward speed and larger rainfall area contribute to a longer duration of rainfall, and therefore an increased chance of flood-related damage [@Rezapour2014]. 
 
 For example, 
 
