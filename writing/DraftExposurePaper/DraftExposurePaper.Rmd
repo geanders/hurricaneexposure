@@ -141,6 +141,8 @@ A variety of other wind speed models exist besides the one used here. In particu
 
 There is some uncertainty in the maximum wind speed values estimated at each synoptic time for each storm. For US landfalling storms, the estimate of storm intensity in the best tracks dataset is estimated to have an uncertainty of around 8 knots for tropical storms, 10 knots for Category 1 and 2 hurricanes, and 13 knots for major hurricanes [@Landsea2013]. Since the wind model used here uses these best tracks maximum wind speeds as an input, this uncertaintly would propogate into our estimates of windspeed within each county for each storm. 
 
+A recent study suggests that nearly all states east of the Rocky Mountains have experienced wind exposure associated with either tropical or post-tropical storms [@Kruk2010].
+
 #### Example uses of exposure datasets
 
 
