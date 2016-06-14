@@ -80,7 +80,9 @@ We calculated the distance between each county's center and each of the 15-minut
 
 #### Rain-based exposure
 
-Given the its high resolution and consistancy with rain gage values, [@Villarini2011] recommends the use of Stage IV precipitation data for the analysis of rainfall distribution in landfalling tropical cyclones. However, the Stage IV dataset only provides data since 2001 [@Lin2005] and is therefore inadequate for use in this analysis.
+Given its high resolution and consistancy with rain gage values, [@Villarini2011] recommends the use of Stage IV precipitation data for the analysis of rainfall distribution in landfalling tropical cyclones. However, the Stage IV dataset only provides data since 2001 [@Lin2005] and is therefore inadequate for use in this analysis.
+
+NLDAS does not provide information on precipitation over the ocean, preventing its use in assessing the develpment of the storm prior to landfall [@Villarini2011]. This point is moot for this analysis.
 
 #### Wind-based exposure
 
@@ -126,7 +128,7 @@ Rainfall estimates are likely underestimates for a few reasons. First, they are 
 
 Exposure classification based on rainfall has some advantages. For example, it allows the identification of exposed counties that are inland, rather than coastal, but that were affected by heavy rainfall during the storm. Often, storm-related deaths are associated with inland flooding. In fact, over half of the hurricane-related fatalities from 1970 to 1999 were a result of freshwater flooding, accounting for the vast majority of deaths in inland counties [@Rapport2000]. In another analysis, researchers found that 79\% of freshwater-drowning fatalities occured in inland counties,[@Czajkowski2011] further stressing the importance of rainfall in hurricane risk analysis. Storms can produce a lot of rain especially in certain topographies, like near mountains, so counties that are well inland can sometimes experience more extreme rain that other counties at similar distances from the storm's track. 
 
-In comparison to the storm track, the areas of extreme rain and extreme wind can vary. For example, storms undergoing an extratropical transition can bring heavy rains to the left of the storm's center track, while extreme winds are more common to the right of the track [@Halverson2015, @Grabich2016].
+In comparison to the storm track, the areas of extreme rain and extreme wind can vary. For example, storms undergoing an extratropical transition can bring heavy rains to the left of the storm's center track, while extreme winds are more common to the right of the track [@Halverson2015, @Grabich2016]. In contrast, storm that interact with a downstream ridge tend to bring heavy rains to the right of the storm's center track [@Atallah2007].
 
 Some storms can be of lower intensity (i.e., on the Saffir-Simpson scale) yet bring dangerous rainfall, including well inland of the storm's landfall. For example, storms including Floyd in 1999, Gaston in 2004, Irene in 2011, and Lee in 2011, have had severe inland impacts, often through extreme rainfall, as post-tropical storms [@Halverson2015]. This rainfall can be particularly severe in the Appalachians [@Halverson2015]. Further, heavier rainfall is more common for storms moving at slower forward speeds [@Chang2013]. Storms with a slower forward speed and larger rainfall area contribute to a longer duration of rainfall, and therefore an increased chance of flood-related damage [@Rezapour2014]. 
 
