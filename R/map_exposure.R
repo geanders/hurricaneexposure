@@ -116,8 +116,14 @@ map_tracks <- function(storms, plot_object = NULL,
 #' @param storm Character string giving the name of the storm to plot (e.g.,
 #'    "Floyd-1999")
 #' @param metric Character string giving the metric to plot. Current options are
-#'    \code{"distance"} (default) and \code{"rainfall"}.
+#'    \code{"distance"} (default) and \code{"rainfall"}. These options are used
+#'    to customize the color palette and scale of the choropleth map produced
+#'    by this function.
 #' @inheritParams county_rain
+#'
+#' @return This function creates a choropleth map of counties in the eastern
+#'    part of the United States, showing distance from a storm track or total
+#'    rainfall over a given window of one or more days.
 #'
 #' @examples
 #' floyd_map <- map_counties("Floyd-1999", metric = "rainfall",
@@ -151,6 +157,11 @@ map_counties <-function(storm, metric = "distance",
 }
 
 #' Map counties with rain exposure
+#'
+#' Map counties as "exposed" or "unexposed" based on the criteria that the
+#' storm came within a given distance (specified by \code{dist_limit}) of
+#' the county's population mean center and a certain amount of rain
+#' \code{rain_limit} fell during a specified window of days (\code{days_included}).
 #'
 #' @inheritParams county_rain
 #' @inheritParams map_counties
@@ -206,8 +217,15 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
 
 #' Map counties with distance exposure
 #'
+#' Map counties as "exposed" or "unexposed" based on the criterion that the
+#' storm came within a given distance (specified by \code{dist_limit}) of
+#' the county's population mean center.
+#'
 #' @inheritParams county_rain
 #' @inheritParams map_counties
+#'
+#' @return Plots a map showing whether eastern US counties were exposed or
+#'    unexposed to a specific storm based on a distance criterion.
 #'
 #' @examples
 #'
@@ -254,12 +272,21 @@ map_distance_exposure <- function(storm, dist_limit){
 
 #' Create a map customized for this package
 #'
-#' @param map_data A dataframe with columns with FIPS numbers (\code{region})
-#'    and the exposure value (\code{value})
+#' This function creates a county choropleth map customized for displaying
+#' hurricane exposure. It provides a wrapper for the \code{CountyChoropleth}
+#' function from the \code{choroplethr} package, with customization for the
+#' purposes of the maps created for this package.
+#'
+#' @param map_data A dataframe with columns with FIPS numbers (in numeric
+#'    class) for all counties in the eastern US (\code{region}) and the
+#'    exposure value (\code{value})
 #' @inheritParams map_counties
 #'
 #' @return A \code{choroplethr} object. To plot the map, use the \code{render}
 #'    method.
+#'
+#' @details The function only maps counties in states likely to be exposed
+#' to Atlantic basin tropical storms.
 hurr_choroplethr <- function(map_data, metric = "distance"){
 
         if(metric == "rainfall"){
@@ -314,9 +341,3 @@ hurr_choroplethr <- function(map_data, metric = "distance"){
                                                        values = exposure_palette)
         return(out)
 }
-
-
-
-
-
-

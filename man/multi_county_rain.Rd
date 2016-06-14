@@ -36,12 +36,44 @@ seven-day window centered on the day when the storm is closest to the
 county).}
 }
 \value{
-Returns the same type dataframe as \code{county_rain},
-   but with storms listed by community instead of county.
+Returns a dataframe with a row for each county-storm pair and with
+   columns for:
+   \itemize{
+     \item{\code{commun}: }{Each community's unique id}
+     \item{\code{storm_id}: }{Unique storm identifier with the storm name and year,
+                 separated by a hyphen(e.g., "Alberto-1988",
+                 "Katrina-2005")}
+     \item{\code{closest_date}: }{Date (based on local time) of the closest
+                         approach of the storm to the county's population
+                         mean center.}
+     \item{\code{local_time}: }{Local time of the closest approach of the storm to the
+                       county's population mean center, based on storm tracks
+                       linearly interpolated to 15-minute increments.}
+    \item{\code{closest_time_utc}: }{Time, in UTC, of the closest approach of the
+                            storm to the county's population mean center,
+                            based on storm tracks linearly interpolated to
+                            15-minute increments.}
+     \item{\code{mean_dist}: }{Average of the minimum distance (in kilometers)
+                               between the storm's track and the population
+                               mean centers of all the counties in the
+                               community.}
+     \item{\code{mean_rain}: }{Average of cumulative rainfall, in millimeters,
+                               in the counties in the community for the days
+                               selected using the \code{days_included} option.}
+    \item{\code{min_dist}: }{The smallest minimum distance (in kilometers)
+                               between the storm's track and the population
+                               mean centers of any of the counties in the
+                               community.}
+    \item{\code{max_rain}: }{The maximum cumulative rainfall, in millimeters,
+                               in any of the counties in the community for
+                               the days selected using the \code{days_included}
+                               option.}
+   }
 }
 \description{
-This function takes a dataframe with multi-county communities and returns a
-community-level dataframe of "exposed" storms, based on the average distance
+This function takes a dataframe with multi-county communities (see example for
+the proper format) and returns a community-level dataframe of storms to which
+the community was exposed, based on the average distance
 between the storm's track and the population-based centers of each county
 in the community and the given threshold of rainfall, summed over the days
 included in the rainfall measurement.
@@ -55,5 +87,19 @@ rain_storm_df <- multi_county_rain(communities = communities,
                                    start_year = 1995, end_year = 2005,
                                    rain_limit = 100, dist_limit = 100)
 
+}
+\references{
+Al-Hamdan MZ, Crosson WL, Economou SA, Estes MG, Estes SM, Hemmings SN,
+Kent ST, Puckette M, Quattrochi DA, Rickman DL, Wade GM, McClure LA, 2014.
+Environmental public health applications using remotely sensed data.
+Geocarto International 29(1):85-98.
+
+North America Land Data Assimilation System (NLDAS) Daily Precipitation
+years 1979-2011 on CDC WONDER Online Database, released 2012.
+\url{http://wonder.cdc.gov/wonder/help/Precipitation.html}
+
+Rui H, Mocko D, 2014. README Document for North America Land Data
+Assimilation System Phase 2 (NLDAS-2) Products. Goddard Earth Sciences
+Data and Information Services Center.
 }
 

@@ -7,17 +7,27 @@
 hurr_choroplethr(map_data, metric = "distance")
 }
 \arguments{
-\item{map_data}{A dataframe with columns with FIPS numbers (\code{region})
-and the exposure value (\code{value})}
+\item{map_data}{A dataframe with columns with FIPS numbers (in numeric
+class) for all counties in the eastern US (\code{region}) and the
+exposure value (\code{value})}
 
 \item{metric}{Character string giving the metric to plot. Current options are
-\code{"distance"} (default) and \code{"rainfall"}.}
+\code{"distance"} (default) and \code{"rainfall"}. These options are used
+to customize the color palette and scale of the choropleth map produced
+by this function.}
 }
 \value{
 A \code{choroplethr} object. To plot the map, use the \code{render}
    method.
 }
 \description{
-Create a map customized for this package
+This function creates a county choropleth map customized for displaying
+hurricane exposure. It provides a wrapper for the \code{CountyChoropleth}
+function from the \code{choroplethr} package, with customization for the
+purposes of the maps created for this package.
+}
+\details{
+The function only maps counties in states likely to be exposed
+to Atlantic basin tropical storms.
 }
 

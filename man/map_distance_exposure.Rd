@@ -10,8 +10,14 @@ map_distance_exposure(storm, dist_limit)
 \item{storm}{Character string giving the name of the storm to plot (e.g.,
 "Floyd-1999")}
 }
+\value{
+Plots a map showing whether eastern US counties were exposed or
+   unexposed to a specific storm based on a distance criterion.
+}
 \description{
-Map counties with distance exposure
+Map counties as "exposed" or "unexposed" based on the criterion that the
+storm came within a given distance (specified by \code{dist_limit}) of
+the county's population mean center.
 }
 \examples{
 

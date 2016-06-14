@@ -10,7 +10,8 @@ rain_exposure(locations, start_year, end_year, rain_limit, dist_limit,
 \arguments{
 \item{locations}{Either a vector of FIPS county codes, for county-level
 output, or a dataframe with columns for community identifier (\code{commun})
-and associated FIPS codes (\code{fips}), for multi-county community output}
+and associated FIPS codes (\code{fips}), for multi-county community output.
+See the examples for the proper format for this argument.}
 
 \item{start_year}{Four-digit integer with first year to consider.}
 
@@ -41,17 +42,19 @@ to write output. This directory should already exist on your computer.}
 Options are \code{"csv"} (default) and \code{"rds"}.}
 }
 \value{
-Writes out a directory with rain exposure files for each county or
-   community indicated. For more on the columns in this output, see the
+This function writes out rain exposure files for each county or
+   community indicated to the specified output directory (\code{out_dir}).
+   For more details on the columns in the output files, see the
    documentation for \code{\link{county_rain}} and
    \code{\link{multi_county_rain}}.
 }
 \description{
 This function takes an input of locations (either a vector of county FIPS
-or a dataframe of multi-county FIPS, with all FIPS listed for each county)
-and creates time series dataframes that can be merged with health time series,
-giving the dates and exposures for all storms meeting the given rainfall and
-storm distance criteria.
+or a dataframe of multi-county FIPS, with all FIPS listed for each county;
+see examples) and creates time series dataframes with the dates and exposures
+for all storms meeting the given rainfall and storm distance criteria. These
+exposure time series can then be merged with other time series (e.g.,
+community-specific daily counts of health outcomes).
 }
 \examples{
 \dontrun{

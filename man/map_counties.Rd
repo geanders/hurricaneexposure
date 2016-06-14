@@ -11,7 +11,9 @@ map_counties(storm, metric = "distance", days_included = c(-1, 0, 1))
 "Floyd-1999")}
 
 \item{metric}{Character string giving the metric to plot. Current options are
-\code{"distance"} (default) and \code{"rainfall"}.}
+\code{"distance"} (default) and \code{"rainfall"}. These options are used
+to customize the color palette and scale of the choropleth map produced
+by this function.}
 
 \item{days_included}{A numeric vector listing the days to include when
 calculating total precipitation. Negative numbers are days before the
@@ -22,6 +24,11 @@ the storm center was closest to the county center. Values can range from
 -3 to 3 (i.e., at most, you can calculate the total rainfall for the
 seven-day window centered on the day when the storm is closest to the
 county).}
+}
+\value{
+This function creates a choropleth map of counties in the eastern
+   part of the United States, showing distance from a storm track or total
+   rainfall over a given window of one or more days.
 }
 \description{
 Map counties

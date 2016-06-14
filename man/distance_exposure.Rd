@@ -10,7 +10,8 @@ distance_exposure(locations, start_year, end_year, dist_limit, out_dir,
 \arguments{
 \item{locations}{Either a vector of FIPS county codes, for county-level
 output, or a dataframe with columns for community identifier (\code{commun})
-and associated FIPS codes (\code{fips}), for multi-county community output}
+and associated FIPS codes (\code{fips}), for multi-county community output.
+See the examples for the proper format for this argument.}
 
 \item{out_dir}{Character string giving the pathname of the directory in which
 to write output. This directory should already exist on your computer.}

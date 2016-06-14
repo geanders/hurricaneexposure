@@ -25,7 +25,10 @@ seven-day window centered on the day when the storm is closest to the
 county).}
 }
 \description{
-Map counties with rain exposure
+Map counties as "exposed" or "unexposed" based on the criteria that the
+storm came within a given distance (specified by \code{dist_limit}) of
+the county's population mean center and a certain amount of rain
+\code{rain_limit} fell during a specified window of days (\code{days_included}).
 }
 \examples{
 \dontrun{

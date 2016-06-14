@@ -92,8 +92,9 @@ county_rain <- function(counties, start_year, end_year,
 
 #' Hurricane exposure by rain for communities
 #'
-#' This function takes a dataframe with multi-county communities and returns a
-#' community-level dataframe of "exposed" storms, based on the average distance
+#' This function takes a dataframe with multi-county communities (see example for
+#' the proper format) and returns a community-level dataframe of storms to which
+#' the community was exposed, based on the average distance
 #' between the storm's track and the population-based centers of each county
 #' in the community and the given threshold of rainfall, summed over the days
 #' included in the rainfall measurement.
@@ -104,10 +105,39 @@ county_rain <- function(counties, start_year, end_year,
 #'    community (\code{fips}). See the example code.
 #' @inheritParams county_rain
 #'
-#' @return Returns the same type dataframe as \code{county_rain},
-#'    but with storms listed by community instead of county.
-#'
-#' @export
+#' @return Returns a dataframe with a row for each county-storm pair and with
+#'    columns for:
+#'    \itemize{
+#'      \item{\code{commun}: }{Each community's unique id}
+#'      \item{\code{storm_id}: }{Unique storm identifier with the storm name and year,
+#'                  separated by a hyphen(e.g., "Alberto-1988",
+#'                  "Katrina-2005")}
+#'      \item{\code{closest_date}: }{Date (based on local time) of the closest
+#'                          approach of the storm to the county's population
+#'                          mean center.}
+#'      \item{\code{local_time}: }{Local time of the closest approach of the storm to the
+#'                        county's population mean center, based on storm tracks
+#'                        linearly interpolated to 15-minute increments.}
+#'     \item{\code{closest_time_utc}: }{Time, in UTC, of the closest approach of the
+#'                             storm to the county's population mean center,
+#'                             based on storm tracks linearly interpolated to
+#'                             15-minute increments.}
+#'      \item{\code{mean_dist}: }{Average of the minimum distance (in kilometers)
+#'                                between the storm's track and the population
+#'                                mean centers of all the counties in the
+#'                                community.}
+#'      \item{\code{mean_rain}: }{Average of cumulative rainfall, in millimeters,
+#'                                in the counties in the community for the days
+#'                                selected using the \code{days_included} option.}
+#'     \item{\code{min_dist}: }{The smallest minimum distance (in kilometers)
+#'                                between the storm's track and the population
+#'                                mean centers of any of the counties in the
+#'                                community.}
+#'     \item{\code{max_rain}: }{The maximum cumulative rainfall, in millimeters,
+#'                                in any of the counties in the community for
+#'                                the days selected using the \code{days_included}
+#'                                option.}
+#'    }
 #'
 #' @examples
 #' communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
@@ -118,7 +148,24 @@ county_rain <- function(counties, start_year, end_year,
 #'                                    start_year = 1995, end_year = 2005,
 #'                                    rain_limit = 100, dist_limit = 100)
 #'
+#' @references
+#'
+#' Al-Hamdan MZ, Crosson WL, Economou SA, Estes MG, Estes SM, Hemmings SN,
+#' Kent ST, Puckette M, Quattrochi DA, Rickman DL, Wade GM, McClure LA, 2014.
+#' Environmental public health applications using remotely sensed data.
+#' Geocarto International 29(1):85-98.
+#'
+#' North America Land Data Assimilation System (NLDAS) Daily Precipitation
+#' years 1979-2011 on CDC WONDER Online Database, released 2012.
+#' \url{http://wonder.cdc.gov/wonder/help/Precipitation.html}
+#'
+#' Rui H, Mocko D, 2014. README Document for North America Land Data
+#' Assimilation System Phase 2 (NLDAS-2) Products. Goddard Earth Sciences
+#' Data and Information Services Center.
+#'
 #' @importFrom dplyr %>%
+#'
+#' @export
 multi_county_rain <- function(communities, start_year, end_year,
                          rain_limit, dist_limit,
                          days_included = c(-1, 0, 1)){
@@ -164,22 +211,25 @@ multi_county_rain <- function(communities, start_year, end_year,
 #' Write storm rain exposure files
 #'
 #' This function takes an input of locations (either a vector of county FIPS
-#' or a dataframe of multi-county FIPS, with all FIPS listed for each county)
-#' and creates time series dataframes that can be merged with health time series,
-#' giving the dates and exposures for all storms meeting the given rainfall and
-#' storm distance criteria.
+#' or a dataframe of multi-county FIPS, with all FIPS listed for each county;
+#' see examples) and creates time series dataframes with the dates and exposures
+#' for all storms meeting the given rainfall and storm distance criteria. These
+#' exposure time series can then be merged with other time series (e.g.,
+#' community-specific daily counts of health outcomes).
 #'
 #' @param locations Either a vector of FIPS county codes, for county-level
 #'    output, or a dataframe with columns for community identifier (\code{commun})
-#'    and associated FIPS codes (\code{fips}), for multi-county community output
+#'    and associated FIPS codes (\code{fips}), for multi-county community output.
+#'    See the examples for the proper format for this argument.
 #' @param out_dir Character string giving the pathname of the directory in which
 #'    to write output. This directory should already exist on your computer.
 #' @param out_type Character string giving the type of output files you'd like.
 #'    Options are \code{"csv"} (default) and \code{"rds"}.
 #' @inheritParams county_rain
 #'
-#' @return Writes out a directory with rain exposure files for each county or
-#'    community indicated. For more on the columns in this output, see the
+#' @return This function writes out rain exposure files for each county or
+#'    community indicated to the specified output directory (\code{out_dir}).
+#'    For more details on the columns in the output files, see the
 #'    documentation for \code{\link{county_rain}} and
 #'    \code{\link{multi_county_rain}}.
 #'
