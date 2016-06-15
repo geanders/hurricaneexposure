@@ -43,6 +43,7 @@ output: rticles::elsevier_article
 
 ```{r}
 library(hurricaneexposure)
+library(knitr)
 ```
 
 
@@ -57,7 +58,7 @@ Current hurricane exposure assignments are often nonspecific and may lead to mis
 
 Studies have begun to assess county-level hurricane exposure using large historical datasets [@Zandbergen2009] ... making the `hurricaneexposure` package a powerful tool in future exposure analysis. 
 
-Currently, it seems that most hurricane track mapping capabilities are restricted to geographical information system software. The introduction of this package expands the mapping potential of hurricane tracks and therefore the assessment of hurricane exposure and impacts to R.
+Currently, it seems that most hurricane track mapping capabilities are restricted to geographical information system software. The introduction of this package expands the mapping potential of hurricane tracks, and therefore the assessment of hurricane exposure and impacts, to R.
 
 #### Examples of using TS exposure estimates for multiple storms
 
@@ -116,6 +117,8 @@ Currently, distance parameters involved with assessing risk of a particular stor
 
 In a study assessing the association between hurricanes and undesireable birth outcomes, researchers found that results were not sensitive to the omission of residences 100 km from the storm path, and that results varied insignificantly from 30-75 km [@Currie2013].
 
+Most distance exposure definitions in the past have been based on maximum wind radii based on maximum sustained winds [@Kruck2010].
+
 #### Rain-based exposure
 
 It can be very difficult to reliably measure rain during extreme rain events, including tropical storms. For example, a heavy rain can wash away [?] rain monitors [?]. It can also be very hard to measure rain during heavy wind, as the rain does not fall straight into the monitor [?].
@@ -155,7 +158,17 @@ A recent study suggests that nearly all states east of the Rocky Mountains have 
 
 #### Table including various exposure papers and the parameters used
 
-
-
+```{r}
+studies <- c("Czajkowski 2010", "Rezempour 2014", "Zandbergen 2009", 
+             "Currie 2013", "Grabich 2016", "Zaharan 2010", "Kruck 2010", 
+             "Villarini 2011", "Atallah 2007")
+distance_km <- c("120", "", "Buffer", "25, 30, 60, 75", "30, 60, 100", 
+                 "2 counties", "Radial Max Wind", "100-500", "")
+rain_mm <- c("", "2/hr, 48/d", "", "", "", "", "", "", "200-500 (Floyd)")
+wind_kt <- c("", "", "SSWS", "", "SSWS", "", "34, 50, 64", "", "")
+exposure_parameters <- data.frame(studies, distance_km, rain_mm, wind_kt)
+kable(exposure_parameters, "markdown")
+```
+SSWS = Staffir-Simpson Hurricane Wind Scale (TS, 1, 2, 3, 4, and 5). Wind Cutoffs at 34, 64, 83, 96, 113, and 137 kt.  
 References {#references .unnumbered}
 ==========
