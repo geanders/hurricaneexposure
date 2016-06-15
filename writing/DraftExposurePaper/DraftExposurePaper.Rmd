@@ -153,6 +153,8 @@ A recent study suggests that nearly all states east of the Rocky Mountains have 
 
 #### Example uses of exposure datasets
 
+#### Table including various exposure papers and the parameters used
+
 
 
 References {#references .unnumbered}
