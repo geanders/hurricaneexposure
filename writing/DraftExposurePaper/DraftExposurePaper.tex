@@ -45,46 +45,6 @@
 \fi
 % use microtype if available
 \IfFileExists{microtype.sty}{\usepackage{microtype}}{}
-\usepackage{color}
-\usepackage{fancyvrb}
-\newcommand{\VerbBar}{|}
-\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
-\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
-% Add ',fontsize=\small' for more characters per line
-\usepackage{framed}
-\definecolor{shadecolor}{RGB}{248,248,248}
-\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{{#1}}}}
-\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{{#1}}}
-\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
-\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{{#1}}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
-\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
-\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
-\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{{#1}}}
-\newcommand{\ImportTok}[1]{{#1}}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{{#1}}}}
-\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
-\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
-\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{{#1}}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
-\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{{#1}}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{{#1}}}}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{{#1}}}}
-\newcommand{\BuiltInTok}[1]{{#1}}
-\newcommand{\ExtensionTok}[1]{{#1}}
-\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{{#1}}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{{#1}}}
-\newcommand{\RegionMarkerTok}[1]{{#1}}
-\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
-\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{{#1}}}}}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{{#1}}}
-\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{{#1}}}}
-\newcommand{\NormalTok}[1]{{#1}}
 \usepackage{graphicx}
 % We will generate all images so they have a width \maxwidth. This means
 % that they will get their normal width if they fit onto the page, but
@@ -169,12 +129,6 @@ Street, Fort Collins, CO, Zip}
   
  \end{frontmatter}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(hurricaneexposure)}
-\end{Highlighting}
-\end{Shaded}
-
 \section{Introduction}\label{introduction}
 
 \paragraph{What it means to assess county-level tropical storm
@@ -183,33 +137,59 @@ exposure}\label{what-it-means-to-assess-county-level-tropical-storm-exposure}
 \paragraph{Why it's important to measure TS exposure for
 counties}\label{why-its-important-to-measure-ts-exposure-for-counties}
 
-Current hurricane exposure assignments are often nonspecific and may
-lead to missclassification of exposure at the county-level (Grabich et
-al. 2016). Researchers have found heterogeneity in exposure assignments
-of counties in assessing multiple classification methods, both within
-and accross storms (i.e., storm dependent) (Grabich et al. 2016). Such
-missclassification can have important public health and economic
-implications.
+Many outcomes of interest are available at county-level aggregations
+(e.g., counts of health outcomes: Grabich et al. (2016): premature
+births and low birth weights). Further, decisions and policies to
+prepare for and respond to storms are often undertaken at the county
+level (Zandbergen 2009). Some studies suggest methods to determine
+exposure, including inland exposure, to tropical storms at the
+county-level over many years (Zandbergen 2009). Here, we offer tools,
+through the open-source \texttt{hurricaneexposure} package, to determine
+county-level exposure to tropical storms using several different metrics
+(distance, rainfall, wind). In this paper, we describe how this software
+package assesses exposure to tropical storms at the county level,
+provide an analysis of the advantages and disadvantages of different
+strategies for assessing county-level exposure, and explore variation in
+exposure assessments based on using different exposure metrics.
 
-Studies have begun to assess county-level hurricane exposure using large
-historical datasets (Zandbergen 2009) \ldots{} making the
-\texttt{hurricaneexposure} package a powerful tool in future exposure
-analysis.
+Current hurricane exposure assignments are often nonspecific {[}GBA-- I
+found this wording a bit unclear{]} and may lead to missclassification
+of exposure at the county-level (Grabich et al. 2016). Researchers have
+found heterogeneity in exposure assignments of counties, both within and
+between storms, when different metrics of exposure are used (Grabich et
+al. 2016). Such missclassification can have important implications of
+assessments of the public health and economic impacts of tropical
+storms.
 
-Currently, it seems that most hurricane track mapping capabilities are
-restricted to geographical information system software. The introduction
-of this package expands the mapping potential of hurricane tracks and
-therefore the assessment of hurricane exposure and impacts to R.
+Many of the studies that have assessed exposure to tropical storms in
+the US have used geographical information system software (e.g., ArcGIS)
+{[}example studies{]}. Here, we offer methods to map and output historic
+exposure to tropical storms that does not require the use of proprietary
+software but instead uses a package written in the R statistical
+programming language, which is free and open-source.
 
-\paragraph{Examples of using TS exposure estimates for multiple
-storms}\label{examples-of-using-ts-exposure-estimates-for-multiple-storms}
+\paragraph{Examples of estimating TS for multiple
+storms}\label{examples-of-estimating-ts-for-multiple-storms}
 
-(Zandbergen 2009) developed an exposure factor based on location
-(longitude and latitude), county shape, county size, and distance from
-the coast. The study assumed symmetrical activity of storm related
-factors,(Zandbergen 2009) which does not accurately represent storm
-characteristics once landfall has been made.(Kruk et al. 2010, Halverson
-(2015))
+When assessing exposure to a single tropical storm, a detailed analysis
+of \ldots{} can be performed for the storm. However, this level of
+detailed analysis is unreasonable when assessing exposure to all storms
+over an extended time period; further, such a long-term exposure
+assessment requires consistency in the data being used to determine
+levels of exposure to factors like wind and rain.
+
+A few studies have sought to determine exposure to tropical storms over
+a study period that includes multiple storms. For example, \ldots{}
+assessed the exposure of counties in Florida to hurricanes during the
+2004 season {[}citation{]}. The largest county-level exposure study is
+likely that of Zandbergen (2009), which estimated exposure in US
+counties to all {[}US landfalling? or all storms?{]} Atlantic basin
+tropical storms between 1851 and 2003, using both distance and an
+exposure metric that incorporated distance and windspeed. They used this
+exposure evaluation to create maps of total exposure to tropical storms
+within US counties, as well as to explore associations between a
+county's long-term exposure to tropical storms and its location,
+distance from the coast, size, and shape (Zandbergen 2009).
 
 \paragraph{Examples of other datasets at the county
 level}\label{examples-of-other-datasets-at-the-county-level}
@@ -308,10 +288,41 @@ data for the Atlantic basin.
 There are a number of limitations to using distance to assess exposure
 to tropical storms. Tropical storms vary in size and intensity, and a
 measure of distance from the storm track will not incorporate these
-differences and so could mis-classify exposure both in terms of
+differences and so could misclassify exposure both in terms of
 generating false positives (counties close to the storm track of very
 mild or small-radius storms) and false negatives (e.g., during very
-large or intense storms).
+large or intense storms). In particular, the forces of a storm tend to
+be distributed around the center in a non-symmetrical way
+{[}citation{]}, while distance-based exposure metrics that use buffers
+tend to use an equal buffer distance on each side of the storm track
+(e.g., {[}citations{]}).
+
+Other distance-based exposure metrics have defined ``exposure'' to occur
+only when a storm's center track passes through a county's boundary
+(e.g., Zandbergen (2009), who describe this metric of exposure as a
+``hit'' on the county). This way of measuring exposure can exclude
+nearby counties that suffered extreme conditions from the storm but were
+not directly on the hurricane's track, especially since hurricanes can
+have a width ({[}typical storm width; citation{]}) that is much larger
+than a typical county's width. Further, exposure assessed using this
+method has been found to be significantly {[}? double-check{]}
+associated with the size and shape of a county (Zandbergen 2009). By
+contrast, assessing distance-based exposure based on measuring distance
+between the storm track and each county's center would be less
+susceptible to differences in county size and shape and so might be a
+more reliable metric of exposure than determining if a storm track ever
+crossed a county boundary. Further, assessing the minimum distance
+between county center and the storm track, as we do here, allows for a
+continuous, rather than binary, metric of distance-based exposure to a
+storm.
+
+The Zandbergen (2009) study assumed symmetrical activity of storm
+related factors,which does not accurately represent storm
+characteristics once landfall has been made (Kruk et al. 2010, Halverson
+(2015)) {[}GBA-- I did not understand this thought. I agree that storms
+are asymmetric, but I don't think that's just after landfall. Is this
+something about characteristics of storms as they transform to
+extratropical systems? Let's discuss.{]}
 
 There is some uncertainty in the position estimates from the best tracks
 hurricane dataset, since the estimation of storm position for best
@@ -335,18 +346,17 @@ affected by a given storm differently. (Czajkowski, Simmons, and Sutter
 2011) assessed county-level risk and exposure based on a three-tierd
 definition, with primary counties being those closest to the storm track
 on either side, secondary counties being adjacent to primary coutnies,
-and tertiary counties adjacent to secondary counties. Such a defenition
+and tertiary counties adjacent to secondary counties. Such a definition
 resulted in an exposure defenition based on an average distance radius
 of 120 km on either side of the storm track (Czajkowski, Simmons, and
 Sutter 2011). Such a distance is slightly greater than that commonly
 used by public health departments (i.e., 100 km) (Czajkowski, Simmons,
-and Sutter 2011). In other cases, distance has been defined on the basis
-of maximum sustained wind speeds and their decay, with exposure defined
-as those counties exposed to wind speeds greater than or equal to
-tropical storm strength (39--73 miles per hour) (Zandbergen 2009) and
-may not provide an accurate respresentation of the communities exposed
-to a given storm (e.g., a large number of inland counties are likely
-underrepresented under this definition).
+and Sutter 2011).
+
+Another study used distance buffers of 30, 60, and 100 kilometers for
+different metrics of distance-based exposure (Grabich et al. 2016)
+{[}check the paper-- was this distance to any part of a county, or to
+the center of the county?{]}.
 
 In a study assessing the association between hurricanes and undesireable
 birth outcomes, researchers found that results were not sensitive to the
@@ -410,9 +420,18 @@ In comparison to the storm track, the areas of extreme rain and extreme
 wind can vary. For example, storms undergoing an extratropical
 transition can bring heavy rains to the left of the storm's center
 track, while extreme winds are more common to the right of the track
-(Halverson 2015, Grabich et al. (2016)). In contrast, storm that
-interact with a downstream ridge tend to bring heavy rains to the right
-of the storm's center track (Atallah, Bosart, and Aiyyer 2007).
+(Halverson 2015, Grabich et al. (2016) GBA-- I think it would be better
+to just use meteorological papers as references for this point. The
+Halverson paper is great, but the Grabich paper I think might just be a
+secondary, rather than primary, reference for this point, so I think we
+could probably find a more direct reference). Wind speeds are typically
+more severe to the right of the storm's track because here the
+counter-clockwise cyclonic {[}right word?{]} winds are moving in the
+same direction as the forward motion of the storm, creating an additive
+effect for total windspeeds {[}citation{]}. In contrast, rains can be
+heaviest to the left of the storm's track, especially in cases when the
+storm interacts with a downstream ridge (Atallah, Bosart, and Aiyyer
+2007).
 
 Some storms can be of lower intensity (i.e., on the Saffir-Simpson
 scale) yet bring dangerous rainfall, including well inland of the
@@ -441,6 +460,13 @@ estimate exposure to tropical storms based on winds.
 
 A variety of other wind speed models exist besides the one used here. In
 particular, there are options for wind speed models as far as \ldots{}
+One study used a very simple model of constant winds up to a distance of
+30 km from the storm track and a simple model of wind decay beyond that
+distance (Zandbergen 2009), based on a model developed by \ldots{}
+{[}see references for this paper{]}. Another study used wind data from a
+NOAA public database based on real-time hurricane wind analysis, rather
+than modeling windspeeds themselves (Grabich et al. 2016) {[}see the
+Powell reference in this paper for more on that data{]}.
 
 There is some uncertainty in the maximum wind speed values estimated at
 each synoptic time for each storm. For US landfalling storms, the
@@ -455,6 +481,58 @@ storm.
 A recent study suggests that nearly all states east of the Rocky
 Mountains have experienced wind exposure associated with either tropical
 or post-tropical storms (Kruk et al. 2010).
+
+Exposure metrics based on wind speed may not provide an accurate
+representation of the communities exposed to a given storm, since, while
+wind speeds rapidly decay after landfall {[}citation{]}, extreme rain
+can persist,for some storms affecting a large number of inland counties,
+which would be underrepresented using an exposure metric the depends on
+windspeed.
+
+Examples of studies that used windspeed as a sole criteria when
+determining tropical storm exposure include \ldots{} {[}citation{]}. In
+other studies, wind criteria have been combined with distance criteria,
+and with windspeed modeled based on maximum sustained windspeed
+estimates at each ``best tracks'' observation, combined with a simple
+model of decay in wind speed at distances further from the storm's
+center (wind speed equals the storm's maximum sustained windspeed up to
+30 kilometers from the storm's center then follows a simple decay
+function beyond that distance) (Zandbergen 2009) {[}GBA-- this paper
+references another paper with more details on this decay model for
+windspeed-- the Gray and Klotzbach reference they have{]}. In this
+study, wind speed cutoffs of 40 mph, 75 mph, and 115 mph were used to
+determine if a county was exposed to a storm (tropical, hurricane-force,
+and intense hurricane-force, respectively) (Zandbergen 2009).
+
+One study found that using a distance-based exposure metric that
+required the storm track to cross a county boundary assessed a number of
+counties as ``unexposed'' that suffered tropical storm- or
+hurricane-force winds from the storm and were assessed as ``exposed''
+using a metric that combined distance and windspeed (Zandbergen 2009);
+in fact, almost twice as many counties were assessed as having been
+exposed to at least one tropical storm between 1851 and 2003 when
+exposure was determined based on a combined wind-distance metric
+compared to a ``hit'' distance-based metric (Zandbergen 2009). This
+suggests that some distance-based metrics might result in a number of
+false negatives for county-level storm exposure.
+
+Studies that have used wind-based exposure metrics have used a variety
+of windspeed cutoff values to determine exposure. One study, for
+example, assigned a binary exposure value based on windspeed thresholds
+of 63 and 119 kilometers per hour, as well as a continuous exposure
+metric based on the exact value of the windspeed in the county during
+the storm and a categorical exposure metric based on the Saffir-Simpson
+storm severity categories (Grabich et al. 2016).
+
+\paragraph{Other ways of assessing tropical storm
+exposure}\label{other-ways-of-assessing-tropical-storm-exposure}
+
+One study used FEMA disaster declarations as a binary indicator of
+tropical storm exposure (Grabich et al. 2016). They found that this
+metric tended to assess a lot more counties as ``exposed'' to a storm
+than distance- or wind-based metrics (Grabich et al. 2016), although
+they only compared the two exposure metrics as applied to four storms
+(Hurricanes Charley, Frances, Ivan, and Jeanne in Florida in 2004).
 
 \paragraph{Example uses of exposure
 datasets}\label{example-uses-of-exposure-datasets}
