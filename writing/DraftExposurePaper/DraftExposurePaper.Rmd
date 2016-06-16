@@ -36,7 +36,7 @@ abstract: |
   There are many important applications for having county-level estimates of exposure to tropical storms over many years. For example, ... . Current approaches include ... but have the following limitations ... .
 
   Here, we present open source software we have developed to explore county-level exposure to tropical storms in United States counties between 1988 and 2011. Further, we explore the differences in exposure classification when using different metrics (e.g., wind speed, rainfall, distance).
-
+  
 bibliography: mybibfile.bib
 output: rticles::elsevier_article
 ---

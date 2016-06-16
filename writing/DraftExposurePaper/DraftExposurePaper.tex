@@ -128,7 +128,7 @@
   \title{Assessing exposure to Atlantic Basin tropical storms in United States
 counties}
     \author[Colorado State University]{Joshua Ferreri}
-   \ead{alice@example.com} 
+   \ead{joshua.m.ferreri@gmail.com} 
   
     \author[Colorado State University]{Meilin Yan}
    \ead{alice@example.com} 
@@ -183,8 +183,33 @@ exposure}\label{what-it-means-to-assess-county-level-tropical-storm-exposure}
 \paragraph{Why it's important to measure TS exposure for
 counties}\label{why-its-important-to-measure-ts-exposure-for-counties}
 
+Current hurricane exposure assignments are often nonspecific and may
+lead to missclassification of exposure at the county-level (Grabich et
+al. 2016). Researchers have found heterogeneity in exposure assignments
+of counties in assessing multiple classification methods, both within
+and accross storms (i.e., storm dependent) (Grabich et al. 2016). Such
+missclassification can have important public health and economic
+implications.
+
+Studies have begun to assess county-level hurricane exposure using large
+historical datasets (Zandbergen 2009) \ldots{} making the
+\texttt{hurricaneexposure} package a powerful tool in future exposure
+analysis.
+
+Currently, it seems that most hurricane track mapping capabilities are
+restricted to geographical information system software. The introduction
+of this package expands the mapping potential of hurricane tracks and
+therefore the assessment of hurricane exposure and impacts to R.
+
 \paragraph{Examples of using TS exposure estimates for multiple
 storms}\label{examples-of-using-ts-exposure-estimates-for-multiple-storms}
+
+(Zandbergen 2009) developed an exposure factor based on location
+(longitude and latitude), county shape, county size, and distance from
+the coast. The study assumed symmetrical activity of storm related
+factors,(Zandbergen 2009) which does not accurately represent storm
+characteristics once landfall has been made.(Kruk et al. 2010, Halverson
+(2015))
 
 \paragraph{Examples of other datasets at the county
 level}\label{examples-of-other-datasets-at-the-county-level}
@@ -235,6 +260,17 @@ identified the local date when the storm was closest to the county. This
 estimates.
 
 \paragraph{Rain-based exposure}\label{rain-based-exposure}
+
+Given its high resolution and consistancy with rain gage values,
+(Villarini et al. 2011) recommends the use of Stage IV precipitation
+data for the analysis of rainfall distribution in landfalling tropical
+cyclones. However, the Stage IV dataset only provides data since 2001
+(Lin and Mitchell 2005) and is therefore inadequate for use in this
+analysis.
+
+NLDAS does not provide information on precipitation over the ocean,
+preventing its use in assessing the develpment of the storm prior to
+landfall (Villarini et al. 2011). This point is moot for this analysis.
 
 \paragraph{Wind-based exposure}\label{wind-based-exposure}
 
@@ -290,16 +326,43 @@ storms (Landsea and Franklin 2013). Uncertainty in estimates of a
 storm's position also varies by time of day, with more certain estimates
 during daylight than during the night (Landsea and Franklin 2013).
 
+Currently, distance parameters involved with assessing risk of a
+particular storm have been rather arbitrary, contributing to the
+necessity in understanding how such parameters influence a county's
+exposure status. In assessing the risk of a given storm based on
+distance, recent studies have defined the distance from the storm track
+affected by a given storm differently. (Czajkowski, Simmons, and Sutter
+2011) assessed county-level risk and exposure based on a three-tierd
+definition, with primary counties being those closest to the storm track
+on either side, secondary counties being adjacent to primary coutnies,
+and tertiary counties adjacent to secondary counties. Such a defenition
+resulted in an exposure defenition based on an average distance radius
+of 120 km on either side of the storm track (Czajkowski, Simmons, and
+Sutter 2011). Such a distance is slightly greater than that commonly
+used by public health departments (i.e., 100 km) (Czajkowski, Simmons,
+and Sutter 2011). In other cases, distance has been defined on the basis
+of maximum sustained wind speeds and their decay, with exposure defined
+as those counties exposed to wind speeds greater than or equal to
+tropical storm strength (39--73 miles per hour) (Zandbergen 2009) and
+may not provide an accurate respresentation of the communities exposed
+to a given storm (e.g., a large number of inland counties are likely
+underrepresented under this definition).
+
+In a study assessing the association between hurricanes and undesireable
+birth outcomes, researchers found that results were not sensitive to the
+omission of residences 100 km from the storm path, and that results
+varied insignificantly from 30-75 km (Currie and Rossin-Slater 2013).
+
 \paragraph{Rain-based exposure}\label{rain-based-exposure-1}
 
-It can be very difficult to reliabily measure rain during extreme rain
+It can be very difficult to reliably measure rain during extreme rain
 events, including tropical storms. For example, a heavy rain can wash
 away {[}?{]} rain monitors {[}?{]}. It can also be very hard to measure
 rain during heavy wind, as the rain does not fall straight into the
 monitor {[}?{]}.
 
 Some of the other possible sources for estimating rain during tropical
-storms include \ldots{}
+storms include \ldots{}{[}Stage IV, TMPA, NEXRAD{]}
 
 The estimated rainfall amounts from our data are likely underestimates.
 This data source, however, should be internally consistent and so useful
@@ -321,30 +384,47 @@ storms, the problems with measuring rainfall using {[}rain monitors{]}
 would propogate into the NLDAS data, so although NLDAS would prevent
 missing values during the storm if monitors are not able to provide
 data, if monitors are out, rainfall estimates from NLDAS will be based
-more on models than on observations.
+more on models than on observations. More on NLDAS bias low here
+(Villarini et al. 2011). Such bias, though unimportant in our analysis,
+may play a larger role in the extrapolation to other studies or exposure
+analysese where the precipitation cutoffs used here may provide a
+threshold that results in the missclassification of less affected
+counties as exposed.
 
 Exposure classification based on rainfall has some advantages. For
 example, it allows the identification of exposed counties that are
 inland, rather than coastal, but that were affected by heavy rainfall
 during the storm. Often, storm-related deaths are associated with inland
-flooding. Storms can produce a lot of rain especially in certain
-topographies, like near mountains, so counties that are well inland can
-sometimes experience more extreme rain that other counties at similar
-distances from the storm's track.
+flooding. In fact, over half of the hurricane-related fatalities from
+1970 to 1999 were a result of freshwater flooding, accounting for the
+vast majority of deaths in inland counties ({\textbf{???}}). In another
+analysis, researchers found that 79\% of freshwater-drowning fatalities
+occured in inland counties,(Czajkowski, Simmons, and Sutter 2011)
+further stressing the importance of rainfall in hurricane risk analysis.
+Storms can produce a lot of rain especially in certain topographies,
+like near mountains, so counties that are well inland can sometimes
+experience more extreme rain that other counties at similar distances
+from the storm's track.
 
 In comparison to the storm track, the areas of extreme rain and extreme
 wind can vary. For example, storms undergoing an extratropical
 transition can bring heavy rains to the left of the storm's center
 track, while extreme winds are more common to the right of the track
-(Halverson 2015).
+(Halverson 2015, Grabich et al. (2016)). In contrast, storm that
+interact with a downstream ridge tend to bring heavy rains to the right
+of the storm's center track (Atallah, Bosart, and Aiyyer 2007).
 
 Some storms can be of lower intensity (i.e., on the Saffir-Simpson
 scale) yet bring dangerous rainfall, including well inland of the
 storm's landfall. For example, storms including Floyd in 1999, Gaston in
 2004, Irene in 2011, and Lee in 2011, have had severe inland impacts,
-often through extreme rainfall, as post-tropical storms
-{[}Halverson2015{]}. This rainfall can be particularly severe in the
-Appalachians {[}Halverson2015{]}.
+often through extreme rainfall, as post-tropical storms (Halverson
+2015). This rainfall can be particularly severe in the Appalachians
+(Halverson 2015). Further, heavier rainfall is more common for storms
+moving at slower forward speeds (Chang, Yang, and Kuo 2013). Storms with
+a slower forward speed and larger rainfall area contribute to a longer
+duration of rainfall, and therefore an increased chance of flood-related
+damage (Rezapour and Baldock 2014).
 
 For example,
 
@@ -372,18 +452,64 @@ tracks maximum wind speeds as an input, this uncertaintly would
 propogate into our estimates of windspeed within each county for each
 storm.
 
+A recent study suggests that nearly all states east of the Rocky
+Mountains have experienced wind exposure associated with either tropical
+or post-tropical storms (Kruk et al. 2010).
+
 \paragraph{Example uses of exposure
 datasets}\label{example-uses-of-exposure-datasets}
+
+\paragraph{Table including various exposure papers and the parameters
+used}\label{table-including-various-exposure-papers-and-the-parameters-used}
 
 \section*{References}\label{references}
 \addcontentsline{toc}{section}{References}
 
 \hypertarget{refs}{}
+\hypertarget{ref-Atallah2007}{}
+Atallah, Eyad, Lance F. Bosart, and Anantha R. Aiyyer. 2007.
+``Precipitation Distribution Associated with Landfalling Tropical
+Cyclones over the Eastern United States.'' \emph{Monthly Weather Review}
+135: 2185--2206.
+doi:\href{https://doi.org/10.1175/MWR3382.1}{10.1175/MWR3382.1}.
+
+\hypertarget{ref-Chang2013}{}
+Chang, Chih-Pei, Yi-Ting Yang, and Hung-Chi Kuo. 2013. ``Large
+Increasing Trend of Tropical Cyclone Rainfall in Taiwan and the Roles of
+Terrain.'' \emph{Journal of Climate} 26: 4136--47.
+doi:\href{https://doi.org/10.1175/JCLI-D-12-00463.1}{10.1175/JCLI-D-12-00463.1}.
+
+\hypertarget{ref-Currie2013}{}
+Currie, Janet, and Maya Rossin-Slater. 2013. ``Weathering the Storm:
+Hurricanes and Birth Outcomes.'' \emph{Journal of Health Economics} 32:
+487--503.
+doi:\href{https://doi.org/10.1016/j.jhealeco.2013.01.004}{10.1016/j.jhealeco.2013.01.004}.
+
+\hypertarget{ref-Czajkowski2011}{}
+Czajkowski, Jeffrey, Kevin Simmons, and Daniel Sutter. 2011. ``An
+Analysis of Coastal and Inland Fatalities in Landfalling US
+Hurricanes.'' \emph{Natural Hazards} 59: 1513--31.
+doi:\href{https://doi.org/10.1007/s11069-011-9849-x}{10.1007/s11069-011-9849-x}.
+
+\hypertarget{ref-Grabich2016}{}
+Grabich, S. C., J. Horney, C. Konrad, and D. T. Lobdell. 2016.
+``Measuring the Storm: Methods of Quantifying Hurricane Exposure with
+Pregnancy Outcomes.'' \emph{Natural Hazards Review} 17 (1):
+06015002--1--06015002--7.
+doi:\href{https://doi.org/10.1061/(ASCE)NH.1527-6996.0000204}{10.1061/(ASCE)NH.1527-6996.0000204}.
+
 \hypertarget{ref-Halverson2015}{}
-Halverson, Jeffrey B. 2015. ``Second Wind: The Dealdy and Destructive
+Halverson, Jeffrey B. 2015. ``Second Wind: The Deadly and Destructive
 Inland Phase of East Coast Hurricanes.'' \emph{Weatherwise} 68 (2):
 20--27.
 doi:\href{https://doi.org/10.1080/00431672.2015.997562}{10.1080/00431672.2015.997562}.
+
+\hypertarget{ref-Kruk2010}{}
+Kruk, Michael C., Ethan J. Gibney, David H. Levinson, and Michael
+Squires. 2010. ``A Climatology of Inland Winds from Tropical Cyclones
+for the Eastern United States.'' \emph{Journal of Applied Meteorology
+and Climatology} 49: 1538--47.
+doi:\href{https://doi.org/10.1175/2010JAMC2389.1}{10.1175/2010JAMC2389.1}.
 
 \hypertarget{ref-Landsea2013}{}
 Landsea, Christopher W., and James L. Franklin. 2013. ``Atlantic
@@ -396,6 +522,28 @@ Kruk, and Ethan J. Gibney. 2010. ``Toward a Homogenous Global Tropical
 Cyclone Best-Track Dataset.'' \emph{American Meteorological Society} x:
 377--80.
 doi:\href{https://doi.org/10.1175/2010BAMS2930.1}{10.1175/2010BAMS2930.1}.
+
+\hypertarget{ref-Lin2005}{}
+Lin, Ying, and Kenneth E. Mitchell. 2005. ``The NCEP Stage II/IV Hourly
+Precipitation Analyses: Development and Applications.'' \emph{19th
+Conference of Hydrology, American Meteorlogical Society}.
+
+\hypertarget{ref-Rezapour2014}{}
+Rezapour, Mehdi, and Tom E. Baldock. 2014. ``Classification of Hurricane
+Hazards: The Importance of Rainfall.'' \emph{Weather and Forcasting} 29:
+1319--31.
+
+\hypertarget{ref-Villarini2011}{}
+Villarini, Gabriele, James A. Smith, Mary Lynn Baeck, Timothy Marchok,
+and Gabriel A. Vecchi. 2011. ``Characterization of Rainfall Distribution
+and Flooding Associated with U.S. Landfalling Tropical Cyclones:
+Analysis of Hurricanes Frances, Ivan, and Jeanne (2004).'' \emph{Journal
+of Geophysical Research} 116: D23116.
+
+\hypertarget{ref-Zandbergen2009}{}
+Zandbergen, Paul A. 2009. ``Exposure of US Counties to Atlantic Tropical
+Storms and Hurricanes, 1851--2003.'' \emph{Natural Hazards} 48: 83--99.
+doi:\href{https://doi.org/10.1007/s11069-008-9250-6}{10.1007/s11069-008-9250-6}.
 
 \end{document}
 
