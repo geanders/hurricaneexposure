@@ -54,17 +54,19 @@ Introduction
 
 #### Why it's important to measure TS exposure for counties
 
-Many outcomes of interest are available at county-level aggregations (e.g., counts of health outcomes: @Grabich2016: premature births and low birth weights). Further, decisions and policies to prepare for and respond to storms are often undertaken at the county level [@Zandbergen2009]. Some studies suggest methods to determine exposure, including inland exposure, to tropical storms at the county-level over many years [@Zandbergen2009]. Here, we offer tools, through the open-source `hurricaneexposure` package, to determine county-level exposure to tropical storms using several different metrics (distance, rainfall, wind). In this paper, we describe how this software package assesses exposure to tropical storms at the county level, provide an analysis of the advantages and disadvantages of different strategies for assessing county-level exposure, and explore variation in exposure assessments based on using different exposure metrics.
+Many outcomes of interest are available at county-level aggregations (e.g., counts of health outcomes: @Grabich2016: premature births and low birth weights; @Grabich2015: birth rates). Further, decisions and policies to prepare for and respond to storms are often undertaken at the county level [@Zandbergen2009]. Some studies suggest methods to determine exposure, including inland exposure, to tropical storms at the county-level over many years [@Zandbergen2009]. Here, we offer tools, through the open-source `hurricaneexposure` package, to determine county-level exposure to tropical storms using several different metrics (distance, rainfall, wind). In this paper, we describe how this software package assesses exposure to tropical storms at the county level, provide an analysis of the advantages and disadvantages of different strategies for assessing county-level exposure, and explore variation in exposure assessments based on using different exposure metrics.
 
-Current hurricane exposure assignments are often nonspecific [GBA-- I found this wording a bit unclear] and may lead to missclassification of exposure at the county-level [@Grabich2016]. Researchers have found heterogeneity in exposure assignments of counties, both within and between storms, when different metrics of exposure are used [@Grabich2016]. Such missclassification can have important implications of assessments of the public health and economic impacts of tropical storms.
+Current hurricane exposure assignments are often nonspecific [GBA-- I found this wording a bit unclear] and may lead to missclassification of exposure at the county-level [@Grabich2016]. Researchers have found heterogeneity in exposure assignments of counties, both within and between storms, when different metrics of exposure are used [@Grabich2016; @Grabich2015]. Such missclassification can have important implications of assessments of the public health and economic impacts of tropical storms.
 
-Many of the studies that have assessed exposure to tropical storms in the US have used geographical information system software (e.g., ArcGIS) [example studies]. Here, we offer methods to map and output historic exposure to tropical storms that does not require the use of proprietary software but instead uses a package written in the R statistical programming language, which is free and open-source.
+Many of the studies that have assessed exposure to tropical storms in the US have used geographical information system software (e.g., ArcGIS) [example studies: @Grabich2016; @Zandbergen2009]. Here, we offer methods to map and output historic exposure to tropical storms that does not require the use of proprietary software but instead uses a package written in the R statistical programming language, which is free and open-source.
 
 #### Examples of estimating TS for multiple storms
 
 When assessing exposure to a single tropical storm, a detailed analysis of ... can be performed for the storm. However, this level of detailed analysis is unreasonable when assessing exposure to all storms over an extended time period; further, such a long-term exposure assessment requires consistency in the data being used to determine levels of exposure to factors like wind and rain. 
 
-A few studies have sought to determine exposure to tropical storms over a  study period that includes multiple storms. For example, ... assessed the exposure of counties in Florida to hurricanes during the 2004 season [citation]. The largest county-level exposure study is likely that of @Zandbergen2009, which estimated exposure in US counties to all [US landfalling? or all storms?] Atlantic basin tropical storms between 1851 and 2003, using both distance and an exposure metric that incorporated distance and windspeed. They used this exposure evaluation to create maps of total exposure to tropical storms within US counties, as well as to explore associations between a county's long-term exposure to tropical storms and its location, distance from the coast, size, and shape [@Zandbergen2009].
+A few studies have sought to determine exposure to tropical storms over a  study period that includes multiple storms. For example, @Grabich2016 assessed the exposure of counties in Florida to land-falling hurricanes during the 2004 season. The largest-scale county-level exposure study is likely that of @Zandbergen2009, which estimated exposure in US counties to all [US landfalling? or all storms?] Atlantic basin tropical storms between 1851 and 2003, using both distance and an exposure metric that incorporated distance and windspeed. They used this exposure evaluation to create maps of total exposure to tropical storms within US counties, as well as to explore associations between a county's long-term exposure to tropical storms and its location, distance from the coast, size, and shape [@Zandbergen2009].
+
+Other studies have used county-level exposure criteria to determine exposure to specific storms. For example, @Grabich2015 determined county-level exposure to two severe storms in 2004 in Florida counties for an epidemiological study.
 
 #### Examples of other datasets at the county level
 
@@ -121,11 +123,11 @@ There is some uncertainty in the position estimates from the best tracks hurrica
 
 Currently, distance parameters involved with assessing risk of a particular storm have been rather arbitrary, contributing to the necessity in understanding how such parameters influence a county's exposure status. In assessing the risk of a given storm based on distance, recent studies have defined the distance from the storm track affected by a given storm differently. [@Czajkowski2011] assessed county-level risk and exposure based on a three-tierd definition, with primary counties being those closest to the storm track on either side, secondary counties being adjacent to primary coutnies, and tertiary counties adjacent to secondary counties. Such a definition resulted in an exposure defenition based on an average distance radius of 120 km on either side of the storm track [@Czajkowski2011]. Such a distance is slightly greater than that commonly used by public health departments (i.e., 100 km) [@Czajkowski2011]. 
 
-Another study used distance buffers of 30, 60, and 100 kilometers for different metrics of distance-based exposure [@Grabich2016] [check the paper-- was this distance to any part of a county, or to the center of the county?].
+Another study used distance buffers of 30, 60, and 100 kilometers for different metrics of distance-based exposure [@Grabich2016] [check the paper-- was this distance to any part of a county, or to the center of the county?]. Another study used a distance criterion of 60 kilometers from the storm track [@Grabich2015] [again, check to see if this was to any point in the county or to some center point of the county].
 
 In a study assessing the association between hurricanes and undesireable birth outcomes, researchers found that results were not sensitive to the omission of residences 100 km from the storm path, and that results varied insignificantly from 30-75 km [@Currie2013].
 
-Most distance exposure definitions in the past have been based on maximum wind radii based on maximum sustained winds [@Kruck2010].
+Most distance exposure definitions in the past have been based on maximum wind radii based on maximum sustained winds [@Kruk2010].
 
 #### Rain-based exposure
 
@@ -168,7 +170,7 @@ Examples of studies that used windspeed as a sole criteria when determining trop
 
 One study found that using a distance-based exposure metric that required the storm track to cross a county boundary assessed a number of counties as "unexposed" that suffered tropical storm- or hurricane-force winds from the storm and were assessed as "exposed" using a metric that combined distance and windspeed [@Zandbergen2009]; in fact, almost twice as many counties were assessed as having been exposed to at least one tropical storm between 1851 and 2003 when exposure was determined based on a combined wind-distance metric compared to a "hit" distance-based metric [@Zandbergen2009]. This suggests that some distance-based metrics might result in a number of false negatives for county-level storm exposure.
 
-Studies that have used wind-based exposure metrics have used a variety of windspeed cutoff values to determine exposure. One study, for example, assigned a binary exposure value based on windspeed thresholds of 63 and 119 kilometers per hour, as well as a continuous exposure metric based on the exact value of the windspeed in the county during the storm and a categorical exposure metric based on the Saffir-Simpson storm severity categories [@Grabich2016].
+Studies that have used wind-based exposure metrics have used a variety of windspeed cutoff values to determine exposure. One study, for example, assigned a binary exposure value based on windspeed thresholds of 63 and 119 kilometers per hour, as well as a continuous exposure metric based on the exact value of the windspeed in the county during the storm and a categorical exposure metric based on the Saffir-Simpson storm severity categories [@Grabich2016]. Another study used a criterion of wind speed at or above 74 miles per hour [@Grabich2015].
 
 #### Other ways of assessing tropical storm exposure
 
@@ -178,9 +180,9 @@ One study used FEMA disaster declarations as a binary indicator of tropical stor
 
 #### Table including various exposure papers and the parameters used
 
-```{r}
+```{r echo = FALSE}
 studies <- c("Czajkowski 2010", "Rezempour 2014", "Zandbergen 2009", 
-             "Currie 2013", "Grabich 2016", "Zaharan 2010", "Kruck 2010", 
+             "Currie 2013", "Grabich 2016", "Zaharan 2010", "Kruk 2010", 
              "Villarini 2011", "Atallah 2007")
 distance_km <- c("120", "", "Buffer", "25, 30, 60, 75", "30, 60, 100", 
                  "2 counties", "Radial Max Wind", "100-500", "")
@@ -189,6 +191,8 @@ wind_kt <- c("", "", "SSWS", "", "SSWS", "", "34, 50, 64", "", "")
 exposure_parameters <- data.frame(studies, distance_km, rain_mm, wind_kt)
 kable(exposure_parameters, "markdown")
 ```
+
 SSWS = Staffir-Simpson Hurricane Wind Scale (TS, 1, 2, 3, 4, and 5). Wind Cutoffs at 34, 64, 83, 96, 113, and 137 kt.  
+
 References {#references .unnumbered}
 ==========

@@ -45,6 +45,7 @@
 \fi
 % use microtype if available
 \IfFileExists{microtype.sty}{\usepackage{microtype}}{}
+\usepackage{longtable}
 \usepackage{graphicx}
 % We will generate all images so they have a width \maxwidth. This means
 % that they will get their normal width if they fit onto the page, but
@@ -139,34 +140,36 @@ counties}\label{why-its-important-to-measure-ts-exposure-for-counties}
 
 Many outcomes of interest are available at county-level aggregations
 (e.g., counts of health outcomes: Grabich et al. (2016): premature
-births and low birth weights). Further, decisions and policies to
-prepare for and respond to storms are often undertaken at the county
-level (Zandbergen 2009). Some studies suggest methods to determine
-exposure, including inland exposure, to tropical storms at the
-county-level over many years (Zandbergen 2009). Here, we offer tools,
-through the open-source \texttt{hurricaneexposure} package, to determine
-county-level exposure to tropical storms using several different metrics
-(distance, rainfall, wind). In this paper, we describe how this software
-package assesses exposure to tropical storms at the county level,
-provide an analysis of the advantages and disadvantages of different
-strategies for assessing county-level exposure, and explore variation in
-exposure assessments based on using different exposure metrics.
+births and low birth weights; Grabich et al. (2015): birth rates).
+Further, decisions and policies to prepare for and respond to storms are
+often undertaken at the county level (Zandbergen 2009). Some studies
+suggest methods to determine exposure, including inland exposure, to
+tropical storms at the county-level over many years (Zandbergen 2009).
+Here, we offer tools, through the open-source \texttt{hurricaneexposure}
+package, to determine county-level exposure to tropical storms using
+several different metrics (distance, rainfall, wind). In this paper, we
+describe how this software package assesses exposure to tropical storms
+at the county level, provide an analysis of the advantages and
+disadvantages of different strategies for assessing county-level
+exposure, and explore variation in exposure assessments based on using
+different exposure metrics.
 
 Current hurricane exposure assignments are often nonspecific {[}GBA-- I
 found this wording a bit unclear{]} and may lead to missclassification
 of exposure at the county-level (Grabich et al. 2016). Researchers have
 found heterogeneity in exposure assignments of counties, both within and
 between storms, when different metrics of exposure are used (Grabich et
-al. 2016). Such missclassification can have important implications of
-assessments of the public health and economic impacts of tropical
-storms.
+al. 2016; Grabich et al. 2015). Such missclassification can have
+important implications of assessments of the public health and economic
+impacts of tropical storms.
 
 Many of the studies that have assessed exposure to tropical storms in
 the US have used geographical information system software (e.g., ArcGIS)
-{[}example studies{]}. Here, we offer methods to map and output historic
-exposure to tropical storms that does not require the use of proprietary
-software but instead uses a package written in the R statistical
-programming language, which is free and open-source.
+(example studies: Grabich et al. 2016; Zandbergen 2009). Here, we offer
+methods to map and output historic exposure to tropical storms that does
+not require the use of proprietary software but instead uses a package
+written in the R statistical programming language, which is free and
+open-source.
 
 \paragraph{Examples of estimating TS for multiple
 storms}\label{examples-of-estimating-ts-for-multiple-storms}
@@ -179,17 +182,23 @@ assessment requires consistency in the data being used to determine
 levels of exposure to factors like wind and rain.
 
 A few studies have sought to determine exposure to tropical storms over
-a study period that includes multiple storms. For example, \ldots{}
-assessed the exposure of counties in Florida to hurricanes during the
-2004 season {[}citation{]}. The largest county-level exposure study is
-likely that of Zandbergen (2009), which estimated exposure in US
-counties to all {[}US landfalling? or all storms?{]} Atlantic basin
-tropical storms between 1851 and 2003, using both distance and an
-exposure metric that incorporated distance and windspeed. They used this
-exposure evaluation to create maps of total exposure to tropical storms
-within US counties, as well as to explore associations between a
-county's long-term exposure to tropical storms and its location,
-distance from the coast, size, and shape (Zandbergen 2009).
+a study period that includes multiple storms. For example, Grabich et
+al. (2016) assessed the exposure of counties in Florida to land-falling
+hurricanes during the 2004 season. The largest-scale county-level
+exposure study is likely that of Zandbergen (2009), which estimated
+exposure in US counties to all {[}US landfalling? or all storms?{]}
+Atlantic basin tropical storms between 1851 and 2003, using both
+distance and an exposure metric that incorporated distance and
+windspeed. They used this exposure evaluation to create maps of total
+exposure to tropical storms within US counties, as well as to explore
+associations between a county's long-term exposure to tropical storms
+and its location, distance from the coast, size, and shape (Zandbergen
+2009).
+
+Other studies have used county-level exposure criteria to determine
+exposure to specific storms. For example, Grabich et al. (2015)
+determined county-level exposure to two severe storms in 2004 in Florida
+counties for an epidemiological study.
 
 \paragraph{Examples of other datasets at the county
 level}\label{examples-of-other-datasets-at-the-county-level}
@@ -356,12 +365,18 @@ and Sutter 2011).
 Another study used distance buffers of 30, 60, and 100 kilometers for
 different metrics of distance-based exposure (Grabich et al. 2016)
 {[}check the paper-- was this distance to any part of a county, or to
-the center of the county?{]}.
+the center of the county?{]}. Another study used a distance criterion of
+60 kilometers from the storm track (Grabich et al. 2015) {[}again, check
+to see if this was to any point in the county or to some center point of
+the county{]}.
 
 In a study assessing the association between hurricanes and undesireable
 birth outcomes, researchers found that results were not sensitive to the
 omission of residences 100 km from the storm path, and that results
 varied insignificantly from 30-75 km (Currie and Rossin-Slater 2013).
+
+Most distance exposure definitions in the past have been based on
+maximum wind radii based on maximum sustained winds (Kruk et al. 2010).
 
 \paragraph{Rain-based exposure}\label{rain-based-exposure-1}
 
@@ -522,7 +537,9 @@ example, assigned a binary exposure value based on windspeed thresholds
 of 63 and 119 kilometers per hour, as well as a continuous exposure
 metric based on the exact value of the windspeed in the county during
 the storm and a categorical exposure metric based on the Saffir-Simpson
-storm severity categories (Grabich et al. 2016).
+storm severity categories (Grabich et al. 2016). Another study used a
+criterion of wind speed at or above 74 miles per hour (Grabich et al.
+2015).
 
 \paragraph{Other ways of assessing tropical storm
 exposure}\label{other-ways-of-assessing-tropical-storm-exposure}
@@ -539,6 +556,26 @@ datasets}\label{example-uses-of-exposure-datasets}
 
 \paragraph{Table including various exposure papers and the parameters
 used}\label{table-including-various-exposure-papers-and-the-parameters-used}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+studies & distance\_km & rain\_mm & wind\_kt\tabularnewline
+\midrule
+\endhead
+Czajkowski 2010 & 120 & &\tabularnewline
+Rezempour 2014 & & 2/hr, 48/d &\tabularnewline
+Zandbergen 2009 & Buffer & & SSWS\tabularnewline
+Currie 2013 & 25, 30, 60, 75 & &\tabularnewline
+Grabich 2016 & 30, 60, 100 & & SSWS\tabularnewline
+Zaharan 2010 & 2 counties & &\tabularnewline
+Kruk 2010 & Radial Max Wind & & 34, 50, 64\tabularnewline
+Villarini 2011 & 100-500 & &\tabularnewline
+Atallah 2007 & & 200-500 (Floyd) &\tabularnewline
+\bottomrule
+\end{longtable}
+
+SSWS = Staffir-Simpson Hurricane Wind Scale (TS, 1, 2, 3, 4, and 5).
+Wind Cutoffs at 34, 64, 83, 96, 113, and 137 kt.
 
 \section*{References}\label{references}
 \addcontentsline{toc}{section}{References}
@@ -572,9 +609,16 @@ doi:\href{https://doi.org/10.1007/s11069-011-9849-x}{10.1007/s11069-011-9849-x}.
 \hypertarget{ref-Grabich2016}{}
 Grabich, S. C., J. Horney, C. Konrad, and D. T. Lobdell. 2016.
 ``Measuring the Storm: Methods of Quantifying Hurricane Exposure with
-Pregnancy Outcomes.'' \emph{Natural Hazards Review} 17 (1):
-06015002--1--06015002--7.
+Pregnancy Outcomes.'' \emph{Natural Hazards Review} 17 (1): 06015002.
 doi:\href{https://doi.org/10.1061/(ASCE)NH.1527-6996.0000204}{10.1061/(ASCE)NH.1527-6996.0000204}.
+
+\hypertarget{ref-Grabich2015}{}
+Grabich, S. C., Whitney R. Robinson, Stephanie M. Engel, Charles E.
+Konrad, C. Konrad, and J. Horney. 2015. ``County-Level Hurricane
+Exposure and Birth Rates: Application of Difference-in-Differences
+Analysis for Confounding Control.'' \emph{Emerging Themes in
+Epidemiology} 12: 19.
+doi:\href{https://doi.org/10.1186/s12982-015-0042-7}{10.1186/s12982-015-0042-7}.
 
 \hypertarget{ref-Halverson2015}{}
 Halverson, Jeffrey B. 2015. ``Second Wind: The Deadly and Destructive
