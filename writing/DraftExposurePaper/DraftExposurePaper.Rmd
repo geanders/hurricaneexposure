@@ -5,19 +5,19 @@ author:
     email: joshua.m.ferreri@gmail.com
     affiliation: Colorado State University
   - name: Meilin Yan
-    email: alice@example.com
+    email: meilin.yan@colostate.edu
     affiliation: Colorado State University
   - name: Mohammad Z. Al-Hamdan
-    email: alice@example.com
+    email: mohammad.alhamdan@nasa.gov
     affiliation: NASA Marshall Space Flight Center
   - name: William L. Crosson
-    email: alice@example.com
+    email: bcrosson@usra.edu
     affiliation: NASA Marshall Space Flight Center
   - name: Seth Guikema
-    email: alice@example.com
+    email: sguikema@umich.edu
     affiliation: University of Michigan
   - name: Roger D. Peng
-    email: alice@example.com
+    email: rdpeng@jhu.edu
     affiliation: Johns Hopkins Bloomberg School of Public Health
   - name: G. Brooke Anderson
     email: brooke.anderson@colostate.edu
@@ -27,11 +27,11 @@ address:
   - code: Colorado State University
     address: Department of Environmental and Radiological Health Sciences, Lake Street, Fort Collins, CO, Zip
   - code: NASA Marshall Space Flight Center
-    address: Universities Space Research Association, Street, Huntsville, AL, Zip
+    address: Universities Space Research Association, 320 Sparkman Dr., Huntsville, AL, 35805
   - code: University of Michigan
-    address: Department, Street, City, State, Zip
+    address: Department of Industrial and Operations Engineering, 1205 Beal Ave., Ann Arbor, MI, 48109
   - code: Johns Hopkins Bloomberg School of Public Health
-    address: Department of Biostatistics, Street, Baltimore, MD, Zip
+    address: Department of Biostatistics, 615 North Wolfe Street, Baltimore, MD, 21205
 abstract: |
   There are many important applications for having county-level estimates of exposure to tropical storms over many years. For example, ... . Current approaches include ... but have the following limitations ... .
 
@@ -44,6 +44,7 @@ output: rticles::elsevier_article
 ```{r echo = FALSE}
 library(hurricaneexposure)
 library(knitr)
+library(gridExtra)
 ```
 
 
@@ -85,7 +86,7 @@ We calculated the distance between each county's center and each of the 15-minut
 
 #### Rain-based exposure
 
-Given its high resolution and consistancy with rain gage values, [@Villarini2011] recommends the use of Stage IV precipitation data for the analysis of rainfall distribution in landfalling tropical cyclones. However, the Stage IV dataset only provides data since 2001 [@Lin2005] and is therefore inadequate for use in this analysis.
+Given its better consistancy with rain gage values compared to NLDAS precipitation data [GBA-- you had something in here about resolution, as well. Does it have a better resolution than the NLDAS data? I think we probably want to focus on comparing this source with NLDAS, and we don't need to put much about advantages that it has that are very similar to NLDAS], [@Villarini2011] recommends Stage IV precipitation data for the analysis of rainfall distribution in landfalling tropical cyclones. However, the Stage IV dataset has only been archived since 2002 [@Lin2005] and cannot be used to analyze exposure to tropical storms for studies that include storms before 2002.
 
 NLDAS does not provide information on precipitation over the ocean, preventing its use in assessing the develpment of the storm prior to landfall [@Villarini2011]. This point is moot for this analysis.
 
@@ -96,10 +97,12 @@ These wind models use estimates of maximum wind speed from the best tracks datas
 Results
 ============
 
-```{r echo = FALSE}
-library(hurricaneexposure)
-map_rain_exposure("Floyd-1999", rain_limit = 75, dist_limit = 500,
-                      days_included = -1:1)
+```{r echo = FALSE, fig.width = 6, fig.height = 8}
+a <- map_counties(storm = "Floyd-1999", metric = "rainfall")
+a <- map_tracks(storms = "Floyd-1999", plot_object = a, plot_points = FALSE)
+b <- map_counties(storm = "Floyd-1999", metric = "distance")
+b <- map_tracks(storms = "Floyd-1999", plot_object = b, plot_points = FALSE)
+grid.arrange(a, b, ncol = 1)
 ```
 
 Discussion
@@ -141,16 +144,10 @@ Rainfall estimates are likely underestimates for a few reasons. First, they are 
 
 Exposure classification based on rainfall has some advantages. For example, it allows the identification of exposed counties that are inland, rather than coastal, but that were affected by heavy rainfall during the storm. Often, storm-related deaths are associated with inland flooding. In fact, over half of the hurricane-related fatalities from 1970 to 1999 were a result of freshwater flooding, accounting for the vast majority of deaths in inland counties [@Rappaport2000]. In another analysis, researchers found that 79\% of freshwater-drowning fatalities occured in inland counties,[@Czajkowski2011] further stressing the importance of rainfall in hurricane risk analysis. Storms can produce a lot of rain especially in certain topographies, like near mountains, so counties that are well inland can sometimes experience more extreme rain that other counties at similar distances from the storm's track. 
 
-In comparison to the storm track, the areas of extreme rain and extreme wind can vary. For example, storms undergoing an extratropical transition can bring heavy rains to the left of the storm's center track, while extreme winds are more common to the right of the track [@Halverson2015, @Grabich2016 GBA-- I think it would be better to just use meteorological papers as references for this point. The Halverson paper is great, but the Grabich paper I think might just be a secondary, rather than primary, reference for this point, so I think we could probably find a more direct reference]. Wind speeds are typically more severe to the right of the storm's track because here the counter-clockwise cyclonic [right word?] winds are moving in the same direction as the forward motion of the storm, creating an additive effect for total windspeeds [citation]. In contrast, rains can be heaviest to the left of the storm's track, especially in cases when the storm interacts with a downstream ridge [@Atallah2007].
+In comparison to the storm track, the areas of extreme rain and extreme wind can vary. For example, storms undergoing an extratropical transition can bring heavy rains to the left of the storm's center track [@Halverson2015], while extreme winds are more common to the right of the track [@Halverson2015, @Grabich2016 GBA-- I think it would be better to just use meteorological papers as references for this point. The Halverson paper is great, but the Grabich paper I think might just be a secondary, rather than primary, reference for this point, so I think we could probably find a more direct reference]. Wind speeds are typically more severe to the right of the storm's track because here the counter-clockwise cyclonic [right word?] winds are moving in the same direction as the forward motion of the storm, creating an additive effect for total windspeeds [citation]. In contrast, rains can be heaviest to the left of the storm's track, especially in cases when the storm interacts with a downstream ridge [@Atallah2007].
 
 Some storms can be of lower intensity (i.e., on the Saffir-Simpson scale) yet bring dangerous rainfall, including well inland of the storm's landfall. For example, storms including Floyd in 1999, Gaston in 2004, Irene in 2011, and Lee in 2011, have had severe inland impacts, often through extreme rainfall, as post-tropical storms [@Halverson2015]. This rainfall can be particularly severe in the Appalachians [@Halverson2015]. Further, heavier rainfall is more common for storms moving at slower forward speeds [@Chang2013]. Storms with a slower forward speed and larger rainfall area contribute to a longer duration of rainfall, and therefore an increased chance of flood-related damage [@Rezapour2014]. 
 
-For example, 
-
-```{r echo = FALSE}
-map_rain_exposure("Floyd-1999", rain_limit = 75, dist_limit = 500,
-                      days_included = -1:1)
-```
 
 #### Wind-based exposure
 
