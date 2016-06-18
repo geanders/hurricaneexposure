@@ -98,7 +98,7 @@ These wind models use estimates of maximum wind speed from the best tracks datas
 Results
 ============
 
-#### Are exposure patterns different when using distance-, rain-, and wind-based metrics?
+#### Are exposure patterns different when using distance-, rain-, and wind-based metrics? In particular, (1) do some exposure metrics result in more "exposed" classifications than others and (2) are geographic patterns of exposure different among the different metrics?
 
 One interesting contrast is between storms that were noteworthy for direct wind-related deaths (Anderew in 1992, Hugo in 1989) versus storms noteworthy for direct freshwater flooding-related deaths (Floyd in 1999, Alberto in 1994, Charley in 1998) for the 1970--1999 period [@Rappaport2000]. Here are two examples, one of each of these two types:
 
@@ -141,7 +141,7 @@ Discussion
 
 There are some sources of uncertainty for storm locations from the best track hurricane data. These include ...
 
-However, these best tracks should be fairly reliable for more recent years of storms, as we use here. Many of the uncertainties related to storm positions in best track data are more of a concern for the years before ... (e.g., pre-19[xx]).
+However, these best tracks should be fairly reliable for more recent years of storms, as we use here. Many of the uncertainties related to storm positions in best track data are more of a concern for the years before ... (e.g., pre-19[xx], before aircraft reconnaisance of Atlantic basin tropical storms).
 
 While there are often several different "best tracks" datasets, from different sources [?-- weather services?] for other ocean basins, the "best tracks" data from ..., which is the basis of the tracks we use here, are the undisputed primary source of tropical storm track data for the Atlantic basin. 
 
