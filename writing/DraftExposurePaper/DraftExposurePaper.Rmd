@@ -44,6 +44,7 @@ output: rticles::elsevier_article
 ```{r echo = FALSE}
 library(hurricaneexposure)
 library(knitr)
+library(ggplot2)
 library(gridExtra)
 ```
 
@@ -55,9 +56,9 @@ Introduction
 
 #### Why it's important to measure TS exposure for counties
 
-Many outcomes of interest are available at county-level aggregations (e.g., counts of health outcomes: @Grabich2016: premature births and low birth weights; @Grabich2015: birth rates). Further, decisions and policies to prepare for and respond to storms are often undertaken at the county level [@Zandbergen2009]. Some studies suggest methods to determine exposure, including inland exposure, to tropical storms at the county-level over many years [@Zandbergen2009]. Here, we offer tools, through the open-source `hurricaneexposure` package, to determine county-level exposure to tropical storms using several different metrics (distance, rainfall, wind). In this paper, we describe how this software package assesses exposure to tropical storms at the county level, provide an analysis of the advantages and disadvantages of different strategies for assessing county-level exposure, and explore variation in exposure assessments based on using different exposure metrics.
+Many outcomes of interest are available at county-level aggregations (e.g., counts of health outcomes: @Grabich2016: premature births and low birth weights; @Grabich2015: birth rates; @Rappaport2000: direct hurricane-related deaths). Further, decisions and policies to prepare for and respond to storms are often undertaken at the county level [@Zandbergen2009; @Rappaport2000]. Some studies suggest methods to determine exposure, including inland exposure, to tropical storms at the county-level over many years [@Zandbergen2009]. Here, we offer tools, through the open-source `hurricaneexposure` package, to determine county-level exposure to tropical storms using several different metrics (distance, rainfall, wind). In this paper, we describe how this software package assesses exposure to tropical storms at the county level, provide an analysis of the advantages and disadvantages of different strategies for assessing county-level exposure, and explore variation in exposure assessments based on using different exposure metrics.
 
-Current hurricane exposure assignments are often nonspecific [GBA-- I found this wording a bit unclear] and may lead to missclassification of exposure at the county-level [@Grabich2016]. Researchers have found heterogeneity in exposure assignments of counties, both within and between storms, when different metrics of exposure are used [@Grabich2016; @Grabich2015]. Such missclassification can have important implications of assessments of the public health and economic impacts of tropical storms.
+Current hurricane exposure assignments are often nonspecific [GBA-- I found this wording a bit unclear] and may lead to missclassification of exposure at the county-level [@Grabich2016]. Researchers have found heterogeneity in exposure assignments of counties, both within and between storms, when different metrics of exposure are used [@Grabich2016; @Grabich2015]. Such missclassification can have important consequences in assessments of the public health and economic impacts of tropical storms.
 
 Many of the studies that have assessed exposure to tropical storms in the US have used geographical information system software (e.g., ArcGIS) [example studies: @Grabich2016; @Zandbergen2009]. Here, we offer methods to map and output historic exposure to tropical storms that does not require the use of proprietary software but instead uses a package written in the R statistical programming language, which is free and open-source.
 
@@ -71,24 +72,24 @@ Other studies have used county-level exposure criteria to determine exposure to 
 
 #### Examples of other datasets at the county level
 
-If exposure to tropical storms over multiple storms and years can be assessed, these exposure datasets can be joined with other time series to explore the impacts of tropical storms. For example, daily counts of human health outcomes in environmental epidemiology studies are often available aggregated at the county level, and such data has often been paired with time series of environmental exposures (e.g., air pollution, temperature) to determine associated risks. 
+If exposure to tropical storms over multiple storms and years can be assessed, these exposure datasets can be joined with other time series to explore the impacts of tropical storms. For example, daily counts of human health outcomes in environmental epidemiology studies are often available aggregated at the county level, and such data has often been paired with time series of environmental exposures (e.g., air pollution, temperature) to determine associated risks. Databases of storm impacts, including direct deaths [@Rappaport2000], ..., and ..., are often aggregated at the county level.
 
 Data and Methods
 ==================
 
 #### Distance-based exposure
 
-We collected "best tracks" data on hurricane tracks for Atlantic basin storms between 1988 and 2014 from the extended best tracks database. This dataset is based on a poststorm assessment of each storm conducted by the United States National Hurricane Center (NHC) and incorporates data from a variety of sources, including satellite data and, when available, aircraft reconnaisance data [@Landsea2013]. This data gives time stamps for each observation in Coordinated Universal Time (UTC; also known as Zulu Time, sometimes indicated by "Z"). 
+We collected "best tracks" data on hurricane tracks for Atlantic basin storms between 1988 and 2014 from the extended best tracks database. This dataset is based on a post-storm assessment of each storm conducted by the United States National Hurricane Center (NHC) and incorporates data from a variety of sources, including satellite data and, when available, aircraft reconnaisance data [@Landsea2013]. This data gives time stamps for each observation in Coordinated Universal Time (UTC; also known as Zulu Time, sometimes indicated by "Z"). 
 
 These data typically give measurements of storm center location at 6-hour intervals, at synoptic times (i.e., 6:00 am, 12:00 pm, 6:00 pm, and 12:00 am UTC); some landfalling storms have an additional observation at the time of landfall [@Landsea2013]. These positions are given to within 0.1 degrees latitude / longitude at these synoptic times [@Landsea2013]. We interpolated these location values to every 15 minutes during the period when the storm was active, using a linear interpolation between each measured point. 
 
-We calculated the distance between each county's center and each of the 15-minute-interval estimates of a storm's location. To do this, we used the Great Circle method to calculate the distance between pairs of latitude and longitude coordinates, using the R package `sp`. For each county, we used the population mean center, based on the U.S. Census's 2010 Decennial Census, as the center location of the county. From these distance calculations, we identified the date-time and distance between the storm track and the county center at the 15-minute interval when the storm was closest to the county center. We used the `countytimezones` R package to convert each date-time of the closest storm approach for a county to the county's local time zone and identified the local date when the storm was closest to the county. This "closest date" was used to pair the distance estimates with rainfall estimates.
+We calculated the distance between each county's center and each of the 15-minute-interval estimates of a storm's location. To do this, we used the Great Circle method to calculate the distance between pairs of latitude and longitude coordinates, using the R package `sp`. For each county, we used the population mean center, based on the U.S. Census's 2010 Decennial Census, as the center location of the county. From these distance calculations, we identified the date-time and distance between the storm track and the county center at the 15-minute interval when the storm was closest to the county center. We identified the date when the storm was closest to each county and converted this date-time  to the county's local time zone using the `countytimezones` R package [citation]. This "closest date" was used to pair the distance estimates with rainfall estimates and can also be used to merge exposure datasets with daily aggregated outcomes like daily county-level mortality and morbidity counts.
 
 #### Rain-based exposure
 
 Given its better consistancy with rain gage values compared to NLDAS precipitation data [GBA-- you had something in here about resolution, as well. Does it have a better resolution than the NLDAS data? I think we probably want to focus on comparing this source with NLDAS, and we don't need to put much about advantages that it has that are very similar to NLDAS], [@Villarini2011] recommends Stage IV precipitation data for the analysis of rainfall distribution in landfalling tropical cyclones. However, the Stage IV dataset has only been archived since 2002 [@Lin2005] and cannot be used to analyze exposure to tropical storms for studies that include storms before 2002.
 
-NLDAS does not provide information on precipitation over the ocean, preventing its use in assessing the develpment of the storm prior to landfall [@Villarini2011]. This point is moot for this analysis.
+NLDAS does not provide information on precipitation over the ocean, preventing its use in assessing the development of the storm prior to landfall [@Villarini2011]. This point is moot for this analysis.
 
 #### Wind-based exposure
 
@@ -97,13 +98,41 @@ These wind models use estimates of maximum wind speed from the best tracks datas
 Results
 ============
 
-```{r echo = FALSE, fig.width = 6, fig.height = 8}
-a <- map_counties(storm = "Floyd-1999", metric = "rainfall")
-a <- map_tracks(storms = "Floyd-1999", plot_object = a, plot_points = FALSE)
-b <- map_counties(storm = "Floyd-1999", metric = "distance")
-b <- map_tracks(storms = "Floyd-1999", plot_object = b, plot_points = FALSE)
+#### Are exposure patterns different when using distance-, rain-, and wind-based metrics?
+
+One interesting contrast is between storms that were noteworthy for direct wind-related deaths (Anderew in 1992, Hugo in 1989) versus storms noteworthy for direct freshwater flooding-related deaths (Floyd in 1999, Alberto in 1994, Charley in 1998) for the 1970--1999 period [@Rappaport2000]. Here are two examples, one of each of these two types:
+
+```{r fig.width = 6, fig.height = 8, echo = FALSE}
+storm <- "Hugo-1989"
+a <- map_tracks(storms = storm, plot_points = FALSE, 
+                plot_object = map_counties(storm = storm, 
+                                           metric = "distance")) + 
+        ggtitle(paste(storm, "distance"))
+b <- map_tracks(storms = storm, plot_points = FALSE, 
+                plot_object = map_counties(storm = storm, 
+                                           metric = "rainfall")) + 
+        ggtitle(paste(storm, "rainfall")) 
+
 grid.arrange(a, b, ncol = 1)
 ```
+
+```{r fig.width = 6, fig.height = 8, echo = FALSE}
+storm <- "Floyd-1999"
+a <- map_tracks(storms = storm, plot_points = FALSE, 
+                plot_object = map_counties(storm = storm, 
+                                           metric = "distance")) + 
+        ggtitle(paste(storm, "distance"))
+b <- map_tracks(storms = storm, plot_points = FALSE, 
+                plot_object = map_counties(storm = storm, 
+                                           metric = "rainfall")) + 
+        ggtitle(paste(storm, "rainfall"))
+
+grid.arrange(a, b, ncol = 1)
+```
+
+#### Which storms exposed the most counties when using distance-, rain-, and wind-based metrics? What were the top county-storm exposures for rain- and wind-based metrics?
+
+#### Are storms with heavy rain exposure likely to occur early in the hurricane season?
 
 Discussion
 ===================
@@ -116,7 +145,9 @@ However, these best tracks should be fairly reliable for more recent years of st
 
 While there are often several different "best tracks" datasets, from different sources [?-- weather services?] for other ocean basins, the "best tracks" data from ..., which is the basis of the tracks we use here, are the undisputed primary source of tropical storm track data for the Atlantic basin. 
 
-There are a number of limitations to using distance to assess exposure to tropical storms. Tropical storms vary in size and intensity, and a measure of distance from the storm track will not incorporate these differences and so could misclassify exposure both in terms of generating false positives (counties close to the storm track of very mild or small-radius storms) and false negatives (e.g., during very large or intense storms). In particular, the forces of a storm tend to be distributed around the center in a non-symmetrical way [citation], while distance-based exposure metrics that use buffers tend to use an equal buffer distance on each side of the storm track (e.g., [citations]).
+There are a number of limitations to using distance to assess exposure to tropical storms. Tropical storms vary in size and intensity, and a measure of distance from the storm track will not incorporate these differences and so could misclassify exposure both in terms of generating false positives (counties close to the storm track of very mild or small-radius storms) and false negatives (e.g., during very large or intense storms). While a number of storm characteristics are strongly associated with distance from the storm's center (e.g., wind and, at the coast, storm surge and waves; @Rappaport2000), other characteristics like rain can occur at dangerous levels well away from the storm's central track [@Rappaport2000]. Although storm surge was a major cause of hurricane-related deaths in the past, more recently freshwater flooding has become a much more common cause of deaths directly resulting from tropical storms in the US [@Rappaport2000].
+
+Further, the forces of a storm tend to be distributed around the center in a non-symmetrical way [citation], while distance-based exposure metrics that use buffers tend to use an equal buffer distance on each side of the storm track (e.g., [citations]).
 
 Other distance-based exposure metrics have defined "exposure" to occur only when a storm's center track passes through a county's boundary (e.g., @Zandbergen2009, who describe this metric of exposure as a "hit" on the county). This way of measuring exposure can exclude nearby counties that suffered extreme conditions from the storm but were not directly on the hurricane's track, especially since hurricanes can have a width ([typical storm width; citation]) that is much larger than a typical county's width. Further, exposure assessed using this method has been found to be significantly [? double-check] associated with the size and shape of a county [@Zandbergen2009]. By contrast, assessing distance-based exposure based on measuring distance between the storm track and each county's center would be less susceptible to differences in county size and shape and so might be a more reliable metric of exposure than determining if a storm track ever crossed a county boundary. Further, assessing the minimum distance between county center and the storm track, as we do here, allows for a continuous, rather than binary, metric of distance-based exposure to a storm.
 
@@ -134,6 +165,8 @@ Most distance exposure definitions in the past have been based on maximum wind r
 
 #### Rain-based exposure
 
+Rain from tropical storms can bring important risks to human health and property, even in counties well inland from the coast. For example, most of the direct hurricane-related deaths in the US from 1970 to 1999 were caused by freshwater flooding and were in inland, rather than coastal, counties [@Rappaport2000]. Rains from tropical storms can flood roads [@Rappaport2000].
+
 It can be very difficult to reliably measure rain during extreme rain events, including tropical storms. For example, a heavy rain can wash away [?] rain monitors [?]. It can also be very hard to measure rain during heavy wind, as the rain does not fall straight into the monitor [?].
 
 Some of the other possible sources for estimating rain during tropical storms include ...[Stage IV, TMPA, NEXRAD]
@@ -142,14 +175,17 @@ The estimated rainfall amounts from our data are likely underestimates. This dat
 
 Rainfall estimates are likely underestimates for a few reasons. First, they are based on averaging hourly measurements to a daily mean estimate. This averaging would smooth over shorter periods of very extreme rainfall. Further, this data is averaged over multiple grid points within each county and so would not fully reflect very extreme local precipitation (although this might be less of a concern for classifying exposure to a large-scale storm system, like a tropical storm, compared to more fine-scale storms). Finally, this NLDAS data provides a re-analysis that incorporates measured rainfall, using models, etc., to incorporate that observed data into a spatially and temporally continuous dataset of rainfall. However, during extreme storms, the problems with measuring rainfall using [rain monitors] would propogate into the NLDAS data, so although NLDAS would prevent missing values during the storm if monitors are not able to provide data, if monitors are out, rainfall estimates from NLDAS will be based more on models than on observations. More on NLDAS bias low here [@Villarini2011]. Such bias, though unimportant in our analysis, may play a larger role in the extrapolation to other studies or exposure analysese where the precipitation cutoffs used here may provide a threshold that results in the missclassification of less affected counties as exposed. 
 
-Exposure classification based on rainfall has some advantages. For example, it allows the identification of exposed counties that are inland, rather than coastal, but that were affected by heavy rainfall during the storm. Often, storm-related deaths are associated with inland flooding. In fact, over half of the hurricane-related fatalities from 1970 to 1999 were a result of freshwater flooding, accounting for the vast majority of deaths in inland counties [@Rappaport2000]. In another analysis, researchers found that 79\% of freshwater-drowning fatalities occured in inland counties,[@Czajkowski2011] further stressing the importance of rainfall in hurricane risk analysis. Storms can produce a lot of rain especially in certain topographies, like near mountains, so counties that are well inland can sometimes experience more extreme rain that other counties at similar distances from the storm's track. 
+Exposure classification based on rainfall has some advantages. For example, it allows the identification of exposed counties that are inland, rather than coastal, but that were affected by heavy rainfall during the storm. Often, storm-related deaths are associated with inland flooding. In the United States, over half of hurricane-related direct deaths from 1970 to 1999 from Atlantic basin storms were a result of freshwater flooding; as a result, most of these deaths were in inland, rather than coastal, counties [@Rappaport2000]. In another analysis, researchers found that 79\% of freshwater-drowning fatalities occured in inland counties,[@Czajkowski2011] further stressing the importance of rainfall in hurricane risk analysis. Storms can produce a lot of rain especially in certain topographies, like near mountains, so counties that are well inland can sometimes experience more extreme rain that other counties at similar distances from the storm's track. 
 
 In comparison to the storm track, the areas of extreme rain and extreme wind can vary. For example, storms undergoing an extratropical transition can bring heavy rains to the left of the storm's center track [@Halverson2015], while extreme winds are more common to the right of the track [@Halverson2015, @Grabich2016 GBA-- I think it would be better to just use meteorological papers as references for this point. The Halverson paper is great, but the Grabich paper I think might just be a secondary, rather than primary, reference for this point, so I think we could probably find a more direct reference]. Wind speeds are typically more severe to the right of the storm's track because here the counter-clockwise cyclonic [right word?] winds are moving in the same direction as the forward motion of the storm, creating an additive effect for total windspeeds [citation]. In contrast, rains can be heaviest to the left of the storm's track, especially in cases when the storm interacts with a downstream ridge [@Atallah2007].
 
 Some storms can be of lower intensity (i.e., on the Saffir-Simpson scale) yet bring dangerous rainfall, including well inland of the storm's landfall. For example, storms including Floyd in 1999, Gaston in 2004, Irene in 2011, and Lee in 2011, have had severe inland impacts, often through extreme rainfall, as post-tropical storms [@Halverson2015]. This rainfall can be particularly severe in the Appalachians [@Halverson2015]. Further, heavier rainfall is more common for storms moving at slower forward speeds [@Chang2013]. Storms with a slower forward speed and larger rainfall area contribute to a longer duration of rainfall, and therefore an increased chance of flood-related damage [@Rezapour2014]. 
 
+Several storm characteristics are associated with the likelihood of heavy rain and flooding from the storm, including the storm's forward speed and size [@Rappaport2000]. There is some evidence that the worst tropical storms, in terms of heavy rainfall and freshwater flood-related deaths in the US, tend to occur early in the hurricane season, when it is more common to get the meteorological conditions (weak steering currents) that lead to slow-moving storms [@Rappaport2000].
 
 #### Wind-based exposure
+
+A tropical storm's high winds can bring a number of dangers, including health risks and property damage caused by structural damage of houses and other buildings, falling trees, and wind-borne debris [@Rappaport2000]. While severe winds pose an important threat, risks of a tropical storm can exist without severe wind; for example, one study found that most of the direct hurricane-related deaths in the US between 1970 and 1999 occurred in cases when wind was below hurricane strength (i.e., < 64 knots) [@Rappaport2000].
 
 Wind suffers from similar challenges for measuring during tropical storms. In particular, the strong winds of tropical storms can break or blow away the anemometers used to measure wind speed. 
 
