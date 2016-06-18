@@ -41,11 +41,12 @@ bibliography: mybibfile.bib
 output: rticles::elsevier_article
 ---
 
-```{r echo = FALSE}
+```{r echo = FALSE, message = FALSE, warning = FALSE}
 library(hurricaneexposure)
 library(knitr)
 library(ggplot2)
 library(gridExtra)
+library(dplyr)
 ```
 
 
@@ -54,13 +55,19 @@ Introduction
 
 #### What it means to assess county-level tropical storm exposure
 
+Tropical storms bring a number of threats, including high winds, heavy rain and flooding, storm surge, tornadoes, ... . To determine whether a county is exposed to a particular tropical storm, a researcher could use criteria based on measurements of any of these values during the storm, use a metric based on the distance from the county to the storm's track, or use a metric that combines several of these measurements.
+
+While the risks to life from some tropical storm threats (e.g., storm surge) have been greatly reduced over the past century, other risks (e.g., inland flooding) have remained more steady [@Rappaport2000]. Determining the metrics of storm exposure that are most associated with loss of life and property damage may help identify and emphasize the important threats that remain from tropical storms in the United States, which could allow similar future success in reducing these threats through community planning, warning systems, etc.
+
 #### Why it's important to measure TS exposure for counties
 
-Many outcomes of interest are available at county-level aggregations (e.g., counts of health outcomes: @Grabich2016: premature births and low birth weights; @Grabich2015: birth rates; @Rappaport2000: direct hurricane-related deaths). Further, decisions and policies to prepare for and respond to storms are often undertaken at the county level [@Zandbergen2009; @Rappaport2000]. Some studies suggest methods to determine exposure, including inland exposure, to tropical storms at the county-level over many years [@Zandbergen2009]. Here, we offer tools, through the open-source `hurricaneexposure` package, to determine county-level exposure to tropical storms using several different metrics (distance, rainfall, wind). In this paper, we describe how this software package assesses exposure to tropical storms at the county level, provide an analysis of the advantages and disadvantages of different strategies for assessing county-level exposure, and explore variation in exposure assessments based on using different exposure metrics.
+Many outcomes of interest are available at county-level aggregations (e.g., counts of health outcomes: @Grabich2016: premature births and low birth weights; @Grabich2015: birth rates; @Rappaport2000: direct hurricane-related deaths). Further, decisions and policies to prepare for and respond to storms are often undertaken at the county level [@Zandbergen2009; @Rappaport2000]. Some studies suggest methods to determine exposure, including inland exposure, to tropical storms at the county-level over many years [@Zandbergen2009]. 
+
+Here, we offer tools, through the open-source `hurricaneexposure` package, to determine county-level exposure to tropical storms using several different metrics (distance, rainfall, wind). In this paper, we describe how this software package assesses exposure to tropical storms at the county level, provide an analysis of the advantages and disadvantages of different strategies for assessing county-level exposure, and explore variation in exposure assessments based on using different exposure metrics. 
 
 Current hurricane exposure assignments are often nonspecific [GBA-- I found this wording a bit unclear] and may lead to missclassification of exposure at the county-level [@Grabich2016]. Researchers have found heterogeneity in exposure assignments of counties, both within and between storms, when different metrics of exposure are used [@Grabich2016; @Grabich2015]. Such missclassification can have important consequences in assessments of the public health and economic impacts of tropical storms.
 
-Many of the studies that have assessed exposure to tropical storms in the US have used geographical information system software (e.g., ArcGIS) [example studies: @Grabich2016; @Zandbergen2009]. Here, we offer methods to map and output historic exposure to tropical storms that does not require the use of proprietary software but instead uses a package written in the R statistical programming language, which is free and open-source.
+Many of the studies that have assessed exposure to tropical storms in the US have used geographical information system software (e.g., ArcGIS) [example studies: @Grabich2016; @Zandbergen2009; @Czajkowski2011]. Here, we offer methods to map and output historic exposure to tropical storms that does not require the use of proprietary software but instead uses a package written in the R statistical programming language, which is free and open-source.
 
 #### Examples of estimating TS for multiple storms
 
@@ -100,6 +107,37 @@ Results
 
 #### Are exposure patterns different when using distance-, rain-, and wind-based metrics? In particular, (1) do some exposure metrics result in more "exposed" classifications than others and (2) are geographic patterns of exposure different among the different metrics?
 
+Map of county exposures to the top 1000 county-storm pairs by distance-based exposure:
+
+```{r echo = FALSE}
+# Code for this map here
+```
+
+Map of county exposures to the top 1000 county-storm pairs by wind-based exposure:
+
+```{r echo = FALSE}
+# Code for this map here
+```
+
+
+Map of county exposures to the top 1000 county-storm pairs by rain-based exposure:
+
+```{r echo = FALSE}
+# Code for this map here
+```
+
+Map of total count of "exposures" by county, based on "exposed" = distance of 100 [or do we want a different distance limit for this? What seems reasonable?] kilometers or less: 
+
+```{r echo = FALSE}
+# Code for this map here
+```
+
+Map of total count of "exposures" by county, based on "exposed" = rainfall over a three-day window of 75 millimeters or more and distance of 500 kilometers or less: 
+
+```{r echo = FALSE}
+# Code for this map here
+```
+
 One interesting contrast is between storms that were noteworthy for direct wind-related deaths (Anderew in 1992, Hugo in 1989) versus storms noteworthy for direct freshwater flooding-related deaths (Floyd in 1999, Alberto in 1994, Charley in 1998) for the 1970--1999 period [@Rappaport2000]. Here are two examples, one of each of these two types:
 
 ```{r fig.width = 6, fig.height = 8, echo = FALSE}
@@ -131,6 +169,86 @@ grid.arrange(a, b, ncol = 1)
 ```
 
 #### Which storms exposed the most counties when using distance-, rain-, and wind-based metrics? What were the top county-storm exposures for rain- and wind-based metrics?
+
+Here is a table of the top 10 storms by number of counties exposed, based on a distance metric of within 100 kilometers or less of the storm track:
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+data("closest_dist")
+all_counties <- unique(closest_dist$fips)
+
+all_distance <- county_distance(counties = all_counties, start_year = 1988, 
+                        end_year = 2011, dist_limit = 60)
+
+distance_exposed <- all_distance %>%
+        group_by(storm_id) %>%
+        summarize(number_of_counties_exposed = n()) %>%
+        arrange(desc(number_of_counties_exposed)) %>%
+        top_n(10) 
+
+distance_exposed %>%
+        mutate(storm_id = gsub("-", " (", storm_id),
+               storm_id = paste0(storm_id, ")")) %>%
+        kable(col.names = c("Storm", "# of exposed counties"),
+              caption = "Top 10 storms based on the number of counties exposed, using a metric of distance.")
+```
+
+Here are plots of the top four storms based on number of counties exposed by distance:
+
+
+```{r echo = FALSE, fig.width = 10, fig.height = 8}
+top_distance_exposed <- function(storm_id){
+        my_map <- map_distance_exposure(storm_id, dist_limit = 60)
+        my_map <- map_tracks(storm = storm_id, plot_object = my_map, 
+                             plot_points = FALSE) + 
+                ggtitle(paste0(gsub("-", " (", storm_id), ")"))
+}
+
+n <- 4
+distance_plots <- lapply(distance_exposed$storm_id[1:n], top_distance_exposed)
+names(distance_plots) <- letters[1:n]
+grid.arrange(distance_plots$a, distance_plots$b, distance_plots$c,
+             distance_plots$d, ncol = 2)
+```
+
+Here is a table of the top 10 storms by number of counties exposed, based on a rain metric of 75 millimeters or more and within 500 kilometers or less of the storm track:
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+data("closest_dist")
+all_counties <- unique(closest_dist$fips)
+
+all_rain <- county_rain(counties = all_counties, start_year = 1988, 
+                        end_year = 2011, rain_limit = 75, dist_limit = 500,
+                        days_included = -1:1)
+
+rain_exposed <- all_rain %>%
+        group_by(storm_id) %>%
+        summarize(number_of_counties_exposed = n()) %>%
+        arrange(desc(number_of_counties_exposed)) %>%
+        top_n(10) 
+
+rain_exposed %>%
+        mutate(storm_id = gsub("-", " (", storm_id),
+               storm_id = paste0(storm_id, ")")) %>%
+        kable(col.names = c("Storm", "# of exposed counties"),
+              caption = "Top 10 storms based on the number of counties exposed, using a metric of rainfall.")
+```
+
+Here are plots of the exposed counties for the top 4 storms based on that rain metric: 
+
+```{r echo = FALSE, fig.width = 10, fig.height = 8}
+top_rain_exposed <- function(storm_id){
+        my_map <- map_rain_exposure(storm_id, rain_limit = 75, 
+                                    dist_limit = 500)
+        my_map <- map_tracks(storm = storm_id, plot_object = my_map, 
+                             plot_points = FALSE) + 
+                ggtitle(paste0(gsub("-", " (", storm_id), ")"))
+}
+
+n <- 4
+rain_plots <- lapply(rain_exposed$storm_id[1:n], top_rain_exposed)
+names(rain_plots) <- letters[1:n]
+grid.arrange(rain_plots$a, rain_plots$b, rain_plots$c, rain_plots$d, ncol = 2)
+```
 
 #### Are storms with heavy rain exposure likely to occur early in the hurricane season?
 
@@ -165,7 +283,7 @@ Most distance exposure definitions in the past have been based on maximum wind r
 
 #### Rain-based exposure
 
-Rain from tropical storms can bring important risks to human health and property, even in counties well inland from the coast. For example, most of the direct hurricane-related deaths in the US from 1970 to 1999 were caused by freshwater flooding and were in inland, rather than coastal, counties [@Rappaport2000]. Rains from tropical storms can flood roads [@Rappaport2000].
+Rain from tropical storms can bring important risks to human health and property, even in counties well inland from the coast. For example, most of the direct hurricane-related deaths in the US from 1970 to 1999 were caused by freshwater flooding and were in inland, rather than coastal, counties [@Rappaport2000]. Rains from tropical storms can flood roads [@Rappaport2000]. Examples of historical tropical storms that caused many direct deaths from flooding in inland counties include Hurricane Diane in 1955 and Hurricane Camille in 1969 [@Rappaport2000]; more recent examples include Hurricane Floyd in 1999, Hurricane Alberto in 1994, Hurricane Charley in 1998, and Hurricane Fran in 1996 [@Rappaport2000].
 
 It can be very difficult to reliably measure rain during extreme rain events, including tropical storms. For example, a heavy rain can wash away [?] rain monitors [?]. It can also be very hard to measure rain during heavy wind, as the rain does not fall straight into the monitor [?].
 
@@ -181,11 +299,11 @@ In comparison to the storm track, the areas of extreme rain and extreme wind can
 
 Some storms can be of lower intensity (i.e., on the Saffir-Simpson scale) yet bring dangerous rainfall, including well inland of the storm's landfall. For example, storms including Floyd in 1999, Gaston in 2004, Irene in 2011, and Lee in 2011, have had severe inland impacts, often through extreme rainfall, as post-tropical storms [@Halverson2015]. This rainfall can be particularly severe in the Appalachians [@Halverson2015]. Further, heavier rainfall is more common for storms moving at slower forward speeds [@Chang2013]. Storms with a slower forward speed and larger rainfall area contribute to a longer duration of rainfall, and therefore an increased chance of flood-related damage [@Rezapour2014]. 
 
-Several storm characteristics are associated with the likelihood of heavy rain and flooding from the storm, including the storm's forward speed and size [@Rappaport2000]. There is some evidence that the worst tropical storms, in terms of heavy rainfall and freshwater flood-related deaths in the US, tend to occur early in the hurricane season, when it is more common to get the meteorological conditions (weak steering currents) that lead to slow-moving storms [@Rappaport2000].
+Several storm characteristics are associated with the likelihood of heavy rain and flooding from the storm, including the storm's forward speed and size [@Rappaport2000]. There is some evidence that the worst tropical storms, in terms of heavy rainfall and freshwater flood-related deaths in the US, tend to occur early in the hurricane season (e.g., June--August), when it is more common to get the meteorological conditions (weak steering currents) that lead to slow-moving storms [@Rappaport2000].
 
 #### Wind-based exposure
 
-A tropical storm's high winds can bring a number of dangers, including health risks and property damage caused by structural damage of houses and other buildings, falling trees, and wind-borne debris [@Rappaport2000]. While severe winds pose an important threat, risks of a tropical storm can exist without severe wind; for example, one study found that most of the direct hurricane-related deaths in the US between 1970 and 1999 occurred in cases when wind was below hurricane strength (i.e., < 64 knots) [@Rappaport2000].
+A tropical storm's high winds can bring a number of dangers, including health risks and property damage caused by structural damage of houses and other buildings, falling trees, and wind-borne debris [@Rappaport2000]. These types of wind-related damage can occur when winds are below hurricane strength (i.e., < 64 knots) [@Rappaport2000]. While severe winds pose an important threat, risks of a tropical storm can exist without severe wind; for example, one study found that most of the direct hurricane-related deaths in the US between 1970 and 1999 occurred in cases when wind was below hurricane strength, including for Tropical Storms Charley in 1998 and Alberto in 1994 [@Rappaport2000]. Further, wind-based exposure metrics are directly linked to a storm's strength, and some research suggests that hurricane strength and landfall is not strongly associated with the number of direct deaths ultimately caused by the storm [@Rappaport2000].
 
 Wind suffers from similar challenges for measuring during tropical storms. In particular, the strong winds of tropical storms can break or blow away the anemometers used to measure wind speed. 
 
