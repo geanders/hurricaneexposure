@@ -177,7 +177,7 @@ data("closest_dist")
 all_counties <- unique(closest_dist$fips)
 
 all_distance <- county_distance(counties = all_counties, start_year = 1988, 
-                        end_year = 2011, dist_limit = 60)
+                        end_year = 2011, dist_limit =100)
 
 distance_exposed <- all_distance %>%
         group_by(storm_id) %>%
@@ -197,7 +197,7 @@ Here are plots of the top four storms based on number of counties exposed by dis
 
 ```{r echo = FALSE, fig.width = 10, fig.height = 8}
 top_distance_exposed <- function(storm_id){
-        my_map <- map_distance_exposure(storm_id, dist_limit = 60)
+        my_map <- map_distance_exposure(storm_id, dist_limit = 100)
         my_map <- map_tracks(storm = storm_id, plot_object = my_map, 
                              plot_points = FALSE) + 
                 ggtitle(paste0(gsub("-", " (", storm_id), ")"))
