@@ -34,7 +34,7 @@ US county in states in the eastern half of the United States.
 }
 \details{
 The minimum distance was calculated using the Great Circle method,
-using the \code{spDist} function from the \code{\link{sp}} package.
+using the \code{spDist} function from the \code{sp} package.
 }
 \keyword{datasets}
 
