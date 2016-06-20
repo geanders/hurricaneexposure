@@ -47,37 +47,41 @@ filter_storm_data <- function(counties = NULL, storm = NULL, year_range = NULL,
         closest_dist <- data.table::data.table(hurricaneexposure::closest_dist)
 
         if(!is.null(counties)){
-                closest_dist <- closest_dist[fips %in% counties]
+                closest_dist <- closest_dist[get("fips") %in% counties]
         }
 
         if(!is.null(storm)){
-                closest_dist <- closest_dist[storm_id == storm]
+                closest_dist <- closest_dist[get("storm_id") == storm]
         }
 
         if(!is.null(year_range)){
-                closest_dist <- closest_dist[ , .(storm_id, fips,
+                closest_dist <- closest_dist[ , .(storm_id,
+                                                  fips,
                                                   closest_date, storm_dist,
                                                   local_time,
                                                   closest_time_utc,
-                                                year = substring(closest_date,
+                                                year = substring(get("closest_date"),
                                                                  1, 4)), ][
-                                         year %in% year_range[1]:year_range[2]
+                                         get("year") %in%
+                                                 year_range[1]:year_range[2]
                                                                  ]
         }
 
         if(!is.null(distance_limit)){
-                closest_dist <- closest_dist[storm_dist <= distance_limit]
+                closest_dist <- closest_dist[get("storm_dist") <=
+                                                     distance_limit]
         }
 
         if(include_rain){
                 rain <- data.table::data.table(hurricaneexposure::rain)
-                rain <- rain[lag %in% days_included]
-                rain <- rain[ , .(tot_precip = sum(precip)),
+                rain <- rain[get("lag") %in% days_included]
+                rain <- rain[ , .(tot_precip = sum(get("precip"))),
                               by = .(fips, storm_id)]
                 closest_dist <- merge(closest_dist, rain, all.x = TRUE,
                                       by = c("storm_id", "fips"))
                 if(!is.null(rain_limit)){
-                        closest_dist <- closest_dist[tot_precip >= rain_limit]
+                        closest_dist <- closest_dist[get("tot_precip") >=
+                                                             rain_limit]
                 }
         }
 
