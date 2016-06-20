@@ -139,13 +139,13 @@ map_counties <-function(storm, metric = "distance",
                 map_data <- filter_storm_data(storm = storm,
                                               output_vars = c("fips",
                                                               "storm_dist")) %>%
-                        dplyr::rename(region = fips, value = storm_dist)
+                        dplyr::rename_(region = ~ fips, value = ~ storm_dist)
         } else if(metric == "rainfall"){
                 map_data <- filter_storm_data(storm = storm, include_rain = TRUE,
                                               days_included = days_included,
                                               output_vars = c("fips",
                                                               "tot_precip")) %>%
-                        dplyr::rename(region = fips, value = tot_precip)
+                        dplyr::rename_(region = ~ fips, value = ~ tot_precip)
         } else{
                 stop("`metric` must be either `distance` or `rainfall`")
         }
@@ -163,6 +163,7 @@ map_counties <-function(storm, metric = "distance",
 #' the county's population mean center and a certain amount of rain
 #' \code{rain_limit} fell during a specified window of days (\code{days_included}).
 #'
+#' @inheritParams county_distance
 #' @inheritParams county_rain
 #' @inheritParams map_counties
 #'
@@ -221,6 +222,7 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
 #' storm came within a given distance (specified by \code{dist_limit}) of
 #' the county's population mean center.
 #'
+#' @inheritParams county_distance
 #' @inheritParams county_rain
 #' @inheritParams map_counties
 #'

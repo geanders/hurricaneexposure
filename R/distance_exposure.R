@@ -75,6 +75,7 @@ county_distance <- function(counties, start_year, end_year, dist_limit){
 #' between the storm's track and the population-based centers of each county
 #' in the community.
 #'
+#' @inheritParams county_distance
 #' @inheritParams county_rain
 #' @inheritParams multi_county_rain
 #'
@@ -127,6 +128,7 @@ multi_county_distance <- function(communities, start_year, end_year,
 #' giving the dates and exposures for all storms meeting the given
 #' storm distance criteria.
 #'
+#' @inheritParams county_distance
 #' @inheritParams county_rain
 #' @inheritParams rain_exposure
 #'
