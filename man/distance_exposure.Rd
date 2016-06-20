@@ -13,6 +13,14 @@ output, or a dataframe with columns for community identifier (\code{commun})
 and associated FIPS codes (\code{fips}), for multi-county community output.
 See the examples for the proper format for this argument.}
 
+\item{start_year}{Four-digit integer with first year to consider.}
+
+\item{end_year}{Four-digit integer with last year to consider.}
+
+\item{dist_limit}{Maximum distance, in kilometers, of how close the storm
+track must come to the county's population mean center to classify
+the county as "exposed" to the storm.}
+
 \item{out_dir}{Character string giving the pathname of the directory in which
 to write output. This directory should already exist on your computer.}
 

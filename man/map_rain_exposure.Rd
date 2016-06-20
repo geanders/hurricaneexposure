@@ -14,6 +14,10 @@ map_rain_exposure(storm, rain_limit, dist_limit, days_included = c(-1, 0, 1))
 selected to be included (\code{days_included}), that must fall in a
 county for the county to be classified as "exposed" to the storm.}
 
+\item{dist_limit}{Maximum distance, in kilometers, of how close the storm
+track must come to the county's population mean center to classify
+the county as "exposed" to the storm.}
+
 \item{days_included}{A numeric vector listing the days to include when
 calculating total precipitation. Negative numbers are days before the
 closest date of the storm to a county. For example,
