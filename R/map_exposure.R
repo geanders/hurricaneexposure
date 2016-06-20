@@ -86,7 +86,7 @@ map_tracks <- function(storms, plot_object = NULL,
         map_dim <- apply(map_data[ , c("long", "lat")],
                          MARGIN = 2,
                          function(x) range(x) + c(-1, 1) * padding)
-        tracks <- hurricaneexposure::hurr_tracks %>%
+        tracks <- hurricaneexposuredata::hurr_tracks %>%
                 dplyr::select_(~ latitude, ~ longitude, ~ storm_id) %>%
                 dplyr::filter_(~ as.character(storm_id) %in% storms &
                               longitude > map_dim[1, 1] &

@@ -99,7 +99,7 @@ multi_county_distance <- function(communities, start_year, end_year,
 
         communities <- dplyr::mutate_(communities, fips = ~ as.character(fips))
 
-        distance_df <- hurricaneexposure::closest_dist %>%
+        distance_df <- hurricaneexposuredata::closest_dist %>%
                 dplyr::mutate_(closest_date =
                                        ~ lubridate::ymd(closest_date)) %>%
                 dplyr::filter_(~ fips %in% communities$fips &

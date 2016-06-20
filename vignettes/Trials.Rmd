@@ -11,6 +11,10 @@ output: html_document
 library(lubridate)
 library(ggplot2)
 library(devtools)
+# If you need to install the hurricaneexposuredata package: 
+# library(devtools)
+# install_github("geanders/hurricaneexposuredata")
+library(hurricaneexposuredata)
 library(hurricaneexposure)
 library(weathermetrics)
 ```

@@ -2,12 +2,14 @@
 Loading the package
 -------------------
 
-The package currently exists in [a development version](https://github.com/geanders/hurricaneexposure) on GitHub. You can use the following code to load it:
+The package currently exists in [a development version](https://github.com/geanders/hurricaneexposure) on GitHub, and all the associated data is in its own [development version package](https://github.com/geanders/hurricaneexposuredata), also on GitHub. You can use the following code to load both:
 
 ``` r
 library(devtools)
+install_github("geanders/hurricaneexposuredata")
 install_github("geanders/hurricaneexposure", 
                build_vignettes = TRUE)
+library(hurricaneexposuredata)
 library(hurricaneexposure)
 ```
 
@@ -49,21 +51,23 @@ county_rain(counties = c("22071", "51700"),
             rain_limit = 100, dist_limit = 100,
             days_included = c(-1, 0, 1))
 #>        storm_id  fips closest_date storm_dist tot_precip       local_time
-#> 1:    Bill-2003 22071   2003-06-30   41.67038      141.1 2003-06-30 11:45
-#> 2: Charley-2004 51700   2004-08-14   55.21439      136.2 2004-08-14 13:45
-#> 3:   Cindy-2005 22071   2005-07-05   29.76580      113.2 2005-07-05 20:00
-#> 4:   Floyd-1999 51700   1999-09-16   47.77641      207.5 1999-09-16 05:00
-#> 5: Isidore-2002 22071   2002-09-26   12.68783      249.0 2002-09-26 00:30
-#> 6: Katrina-2005 22071   2005-08-29   43.71121      196.2 2005-08-29 02:45
-#> 7: Matthew-2004 22071   2004-10-10   81.76565      123.2 2004-10-10 04:30
+#> 1: Allison-2001 22071   2001-06-10   27.87770      109.2 2001-06-10 20:30
+#> 2:    Bill-2003 22071   2003-06-30   41.67038      141.1 2003-06-30 11:45
+#> 3: Charley-2004 51700   2004-08-14   55.21439      136.2 2004-08-14 13:45
+#> 4:   Cindy-2005 22071   2005-07-05   29.76580      110.0 2005-07-05 20:00
+#> 5:   Floyd-1999 51700   1999-09-16   47.77641      207.5 1999-09-16 05:00
+#> 6: Isidore-2002 22071   2002-09-26   12.68783      249.0 2002-09-26 00:30
+#> 7: Katrina-2005 22071   2005-08-29   43.71121      196.2 2005-08-29 02:45
+#> 8: Matthew-2004 22071   2004-10-10   81.76565      123.2 2004-10-10 04:30
 #>    closest_time_utc
-#> 1: 2003-06-30 16:45
-#> 2: 2004-08-14 17:45
-#> 3: 2005-07-06 01:00
-#> 4: 1999-09-16 09:00
-#> 5: 2002-09-26 05:30
-#> 6: 2005-08-29 07:45
-#> 7: 2004-10-10 09:30
+#> 1: 2001-06-11 01:30
+#> 2: 2003-06-30 16:45
+#> 3: 2004-08-14 17:45
+#> 4: 2005-07-06 01:00
+#> 5: 1999-09-16 09:00
+#> 6: 2002-09-26 05:30
+#> 7: 2005-08-29 07:45
+#> 8: 2004-10-10 09:30
 ```
 
 In addition to giving you the names and closest dates of each storm for each county (`closest_date`-- note, this is given using the UTC timezone), this function also gives you the distance between the county and the storm's track at the time when the storm was closest to the county's population weighted center (`storm_dist`, in kilometers) and the total precipitation over the included days (`tot_precip`).

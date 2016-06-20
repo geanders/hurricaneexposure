@@ -44,7 +44,7 @@ filter_storm_data <- function(counties = NULL, storm = NULL, year_range = NULL,
                               include_rain = FALSE, days_included = NULL,
                               output_vars = c("fips")){
 
-        closest_dist <- data.table::data.table(hurricaneexposure::closest_dist)
+        closest_dist <- data.table::data.table(hurricaneexposuredata::closest_dist)
 
         if(!is.null(counties)){
                 closest_dist <- closest_dist[get("fips") %in% counties]
@@ -73,7 +73,7 @@ filter_storm_data <- function(counties = NULL, storm = NULL, year_range = NULL,
         }
 
         if(include_rain){
-                rain <- data.table::data.table(hurricaneexposure::rain)
+                rain <- data.table::data.table(hurricaneexposuredata::rain)
                 rain <- rain[get("lag") %in% days_included]
                 rain <- rain[ , .(tot_precip = sum(get("precip"))),
                               by = .(fips, storm_id)]

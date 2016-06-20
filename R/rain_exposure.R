@@ -175,13 +175,13 @@ multi_county_rain <- function(communities, start_year, end_year,
         dots <- stats::setNames(list(lazyeval::interp(~ lubridate::ymd(x),
                                                       x = quote(closest_date))),
                                 "closest_date")
-        rain_storm_df <- hurricaneexposure::closest_dist %>%
+        rain_storm_df <- hurricaneexposuredata::closest_dist %>%
                 dplyr::mutate_(.dots = dots) %>%
                 dplyr::filter_(~ fips %in% communities$fips &
                                       lubridate::year(closest_date) >= start_year &
                                       lubridate::year(closest_date) <= end_year) %>%
                 dplyr::left_join(communities, by = "fips") %>%
-                dplyr::left_join(hurricaneexposure::rain,
+                dplyr::left_join(hurricaneexposuredata::rain,
                                  by = c("storm_id", "fips")) %>%
                 dplyr::filter_(~ lag %in% days_included) %>%
                 dplyr::group_by_(~ storm_id, ~ fips) %>%
