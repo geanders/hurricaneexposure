@@ -43,6 +43,10 @@ output: rticles::elsevier_article
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
 library(hurricaneexposure)
+# install hurricane exposure data package if you don't already have it
+# library(devtools)
+# install_github("geanders/hurricaneexposuredata")
+library(hurricaneexposuredata)
 library(knitr)
 library(ggplot2)
 library(gridExtra)
