@@ -4,5 +4,5 @@
 inst/doc
 data-raw/nasa_precip_export_2.txt
 writing/DraftExposurePaper/DraftExposurePaper_files
-writing/DraftExposurePaper/DraftExposurePaper.pdf
-writing/DraftExposurePaper/DraftExposurePaper.tex
+*.pdf
+*.tex
