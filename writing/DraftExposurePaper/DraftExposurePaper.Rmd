@@ -127,9 +127,12 @@ Results
 
 #### Are exposure patterns different when using distance-, rain-, and wind-based metrics? In particular, (1) do some exposure metrics result in more "exposed" classifications than others and (2) are geographic patterns of exposure different among the different metrics?
 
-Map of county exposures to the top 1000 county-storm pairs by distance-based exposure:
+Map of the count of county exposures to the top 1000 county-storm pairs by distance-based exposure, based on "exposed" = distance of 100 kilometers or less:
 
 ```{r echo = FALSE}
+data(closest_dist)
+my_fips <- closest_dist$fips
+my_fips <- unique(my_fips)
 distance_exposure <- county_distance(counties = my_fips,
                                  start_year = 1988, end_year = 2011,
                                  dist_limit = 100)
@@ -158,9 +161,6 @@ Map of county exposures to the top 1000 county-storm pairs by wind-based exposur
 Map of county exposures to the top 1000 county-storm pairs by rain-based exposure:
 
 ```{r echo = FALSE, warning=FALSE}
-data(closest_dist)
-my_fips <- closest_dist$fips
-my_fips <- unique(my_fips)
 rain_exposure <- county_rain(counties = my_fips,
                              start_year = 1988, end_year = 2011,
                              rain_limit = 75, dist_limit = 500,
