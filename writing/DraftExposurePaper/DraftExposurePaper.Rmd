@@ -50,7 +50,9 @@ library(hurricaneexposuredata)
 library(knitr)
 library(ggplot2)
 library(gridExtra)
+library(plyr)
 library(dplyr)
+library(choroplethr)
 ```
 
 
@@ -140,8 +142,37 @@ Map of county exposures to the top 1000 county-storm pairs by wind-based exposur
 
 Map of county exposures to the top 1000 county-storm pairs by rain-based exposure:
 
-```{r echo = FALSE}
-# Code for this map here
+```{r echo = FALSE, warning=FALSE}
+data(closest_dist)
+my_fips <- closest_dist$fips
+my_fips <- unique(my_fips)
+rain_exposure <- county_rain(counties = my_fips,
+                             start_year = 1988, end_year = 2011,
+                             rain_limit = 75, dist_limit = 500,
+                             days_include = c(-1, 0, 1))
+rain_1000 <- rain_exposure %>%
+        arrange(desc(tot_precip)) %>%
+        group_by(fips) %>%
+        summarise(value = n()) %>%
+        rename(region = fips) %>%
+        mutate(region = as.numeric(region), value = as.factor(value)) %>%
+        arrange(desc(value)) %>%
+        slice(1:1000)
+eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
+                    "district of columbia", "florida", "georgia", "illinois",
+                    "indiana", "iowa", "kansas", "kentucky", "louisiana",
+                    "maine", "maryland", "massachusetts", "michigan",
+                    "mississippi", "missouri", "new hampshire", "new jersey",
+                    "new york", "north carolina", "ohio", "oklahoma",
+                    "pennsylvania", "rhode island", "south carolina",
+                    "tennessee", "texas", "vermont", "virginia",
+                    "west virginia", "wisconsin")
+rain_1000$value <- as.numeric(rain_1000$value)
+map_1000 <- county_choropleth(rain_1000,
+                              title = "Hits for top 1000 Storm-County Pairs\nfor Rain > 75 mm",
+                              legend = "Hits per County", num_colors = 9,
+                              state_zoom = eastern_states)
+map_1000 + scale_fill_brewer("Hits per\nCounty", palette = "YlGnBu", na.value = "white")
 ```
 
 Map of total count of "exposures" by county, based on "exposed" = distance of 100 [or do we want a different distance limit for this? What seems reasonable?] kilometers or less: 
