@@ -130,7 +130,22 @@ Results
 Map of county exposures to the top 1000 county-storm pairs by distance-based exposure:
 
 ```{r echo = FALSE}
-# Code for this map here
+distance_exposure <- county_distance(counties = my_fips,
+                                 start_year = 1988, end_year = 2011,
+                                 dist_limit = 100)
+distance_1000 <- distance_exposure %>%
+        arrange(desc(storm_dist)) %>%
+        group_by(fips) %>%
+        summarise(value = n()) %>%
+        rename(region = fips) %>%
+        mutate(region = as.numeric(region), value = as.numeric(value)) %>%
+        arrange(desc(value)) %>%
+        slice(1:1000)
+map_dist_1000 <- county_choropleth(distance_1000, 
+                              title = "Hits by County\nfor Distance < 100 mm",
+                              legend = "Hits per County", num_colors = 9,
+                              state_zoom = eastern_states)
+map_dist_1000 + scale_fill_brewer("Hits per\nCounty", palette = "YlGnBu", na.value = "white")
 ```
 
 Map of county exposures to the top 1000 county-storm pairs by wind-based exposure:
@@ -178,13 +193,36 @@ map_1000 + scale_fill_brewer("Hits per\nCounty", palette = "YlGnBu", na.value = 
 Map of total count of "exposures" by county, based on "exposed" = distance of 100 [or do we want a different distance limit for this? What seems reasonable?] kilometers or less: 
 
 ```{r echo = FALSE}
-# Code for this map here
+distance_exposure <- county_distance(counties = my_fips,
+                                 start_year = 1988, end_year = 2011,
+                                 dist_limit = 100)
+distance_1000 <- distance_exposure %>%
+        arrange(desc(storm_dist)) %>%
+        group_by(fips) %>%
+        summarise(value = n()) %>%
+        rename(region = fips) %>%
+        mutate(region = as.numeric(region), value = as.numeric(value)) %>%
+        arrange(desc(value))
+map_dist_count <- county_choropleth(distance_1000, 
+                              title = "Hits by County\nfor Distance < 100 mm",
+                              legend = "Hits per County", num_colors = 9,
+                              state_zoom = eastern_states)
+map_dist_count + scale_fill_brewer("Hits per\nCounty", palette = "YlGnBu", na.value = "white")
 ```
 
 Map of total count of "exposures" by county, based on "exposed" = rainfall over a three-day window of 75 millimeters or more and distance of 500 kilometers or less: 
 
 ```{r echo = FALSE}
-# Code for this map here
+rain_count <- rain_exposure %>%
+              group_by(fips) %>%
+              summarise(count = n()) %>%
+              rename(region = fips, value = count) %>%
+              mutate(region = as.numeric(region), value = as.numeric(value))
+map_counts <- county_choropleth(rain_count,
+                                title = "Hits by County\nfor Rain > 75 mm",
+                                legend = "Hits per County", num_colors = 9,
+                                state_zoom = eastern_states)
+map_counts + scale_fill_brewer("Hits per\nCounty", palette = "YlGnBu", na.value = "white")
 ```
 
 One interesting contrast is between storms that were noteworthy for direct wind-related deaths (Anderew in 1992, Hugo in 1989) versus storms noteworthy for direct freshwater flooding-related deaths (Floyd in 1999, Alberto in 1994, Charley in 1998) for the 1970--1999 period [@Rappaport2000]. (Another study notes the following storms were notable for inland impacts-- Hugo, 1989 (wind and rain); Floyd, 1999 (flooding); Allison, 2001 (flooding); Fran, 1996 (wind) [@Kruk2010].) Here are two examples, one of each of these two types:
