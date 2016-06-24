@@ -193,18 +193,15 @@ map_1000 + scale_fill_brewer("Hits per\nCounty", palette = "YlGnBu", na.value = 
 Map of total count of "exposures" by county, based on "exposed" = distance of 100 [or do we want a different distance limit for this? What seems reasonable?] kilometers or less: 
 
 ```{r echo = FALSE}
-distance_exposure <- county_distance(counties = my_fips,
-                                 start_year = 1988, end_year = 2011,
-                                 dist_limit = 100)
-distance_1000 <- distance_exposure %>%
+distance_count <- distance_exposure %>%
         arrange(desc(storm_dist)) %>%
         group_by(fips) %>%
         summarise(value = n()) %>%
         rename(region = fips) %>%
         mutate(region = as.numeric(region), value = as.numeric(value)) %>%
         arrange(desc(value))
-map_dist_count <- county_choropleth(distance_1000, 
-                              title = "Hits by County\nfor Distance < 100 mm",
+map_dist_count <- county_choropleth(distance_count, 
+                              title = "Hits by County\nfor Distance < 100 km",
                               legend = "Hits per County", num_colors = 9,
                               state_zoom = eastern_states)
 map_dist_count + scale_fill_brewer("Hits per\nCounty", palette = "YlGnBu", na.value = "white")
