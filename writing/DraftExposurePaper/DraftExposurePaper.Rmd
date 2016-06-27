@@ -71,7 +71,7 @@ Many outcomes of interest are available at county-level aggregations (e.g., coun
 
 Here, we offer tools, through the open-source `hurricaneexposure` package, to determine county-level exposure to tropical storms using several different metrics (distance, rainfall, wind). In this paper, we describe how this software package assesses exposure to tropical storms at the county level, provide an analysis of the advantages and disadvantages of different strategies for assessing county-level exposure, and explore variation in exposure assessments based on using different exposure metrics. 
 
-Current hurricane exposure assignments are often nonspecific [GBA-- I found this wording a bit unclear] and may lead to missclassification of exposure at the county-level [@Grabich2016]. Researchers have found heterogeneity in exposure assignments of counties, both within and between storms, when different metrics of exposure are used [@Grabich2016; @Grabich2015]. Such missclassification can have important consequences in assessments of the public health and economic impacts of tropical storms.
+The most often used hurricane exposure criteria at the county-level include FEMA disaster declarations and area within the storm track, which can be somewhat nonspecific and potentially lead to misclassification of exposure at the county-level [@Grabich2016]. FEMA declaration is largely subjective, requiring state governors and/or tribal chiefs to submit a proposal for government aid on the basis that local resources are overwhelmed [@FEMA]. As a result, using FEMA disaster declarations as exposure classification to hurricanes restricts exposure to 1) those states whose resources are overwhelmed and 2) those states who apply for FEMA aid. As a result, other severely impacted counties and states that may not fit FEMA criteria are excluded and may therefore be incorrectly identified as unexposed, preventing researchers from assessing the full impact of a given hurricane. Researchers have found heterogeneity in exposure assignments of counties, both within and between storms, when different metrics of exposure are used [@Grabich2016; @Grabich2015]. Such missclassification can have important consequences in assessments of the public health and economic impacts of tropical storms.
 
 Many of the studies that have assessed exposure to tropical storms in the US have used geographical information system software (e.g., ArcGIS) [example studies: @Grabich2016; @Zandbergen2009; @Czajkowski2011; @Kruk2010]. Here, we offer methods to map and output historic exposure to tropical storms that does not require the use of proprietary software but instead uses a package written in the R statistical programming language, which is free and open-source.
 
@@ -83,7 +83,7 @@ When assessing exposure to a single tropical storm, a detailed analysis of ... c
 
 A few studies have sought to determine exposure to tropical storms over a study period that includes multiple storms. For example, @Grabich2016 assessed the exposure of counties in Florida to land-falling hurricanes during the 2004 season. The largest-scale county-level exposure study is likely that of @Zandbergen2009, which estimated exposure in US counties to all US landfalling Atlantic basin tropical storms between 1851 and 2003, using both distance and an exposure metric that incorporated distance and windspeed. They used this exposure evaluation to create maps of total exposure to tropical storms within US counties, as well as to explore associations between a county's long-term exposure to tropical storms and its location, distance from the coast, size, and shape [@Zandbergen2009].
 
-Another study explored trends in direct hurricane fatalities for all landfalling US hurricanes between 1970 and 2007 in counties that were "exposed" to storms, based on a distance-based metric (whether the county was along the path of the storm [primary exposure], neighboring a county along the storm's path [secondary counties], or neighboring a secondary county [tertiary county]), determining wind- and rain-related hazards for all "exposed" counties and exploring associated with fatality counts [@Czajkowski2011].
+Another study explored trends in direct hurricane fatalities for all landfalling US hurricanes between 1970 and 2007 in counties that were "exposed" to storms, based on a distance-based metric (whether the county was along the path of the storm [primary exposure], neighboring a county along the storm's path [secondary counties], or neighboring a secondary county [tertiary county]), determining wind- and rain-related hazards for all "exposed" counties and exploring associations with fatality counts [@Czajkowski2011].
 
 @Kruk2010 explored exposure to hurricane-related winds in the United States, including inland areas, for 1900-2008.
 
@@ -112,9 +112,9 @@ We calculated the distance between each county's center and each of the 15-minut
 
 In this study, we use precipitation data from the North American Land Data Assimilation System, phase 2 (NLDAS-2) [@Rui2014] to characterize rain-based exposure to tropical storms. The NLDAS-2 data integrates satellite-based and land-based monitoring and applies a land-surface model to create a reanalysis dataset that is spatially and temporally complete across the continental United States [@Rui2014; @AlHamdan2014]. This data has been used in previous research to investigate tropical storms, including in a study of the relationship between rainfall and streamflow responses for tropical storms in a North Carolina watershed [@Chen2015].
 
-The NLDAS-2 precipitation data is originally provided hourly for a 1/8 degree grid [@Rui2014; @AlHamdan2014]. To generate county-level daily rainfall estimates, we first aggregated data at each grid point, after converting the timestamp of each observation to local time, to create a daily estimate at the grid point. We then averaged all grid points within a county's boundaries to generate a county-level average of daily precipitation [@AlHamdan2014]. This county-level precipitation data is publicly available through the US Centers for Disease Control's Wide-ranging Online Data for Epidemiological Research (WONDER) database [citation for WONDER; @AlHamdan2014].
+The NLDAS-2 precipitation data is originally provided hourly for a 1/8 degree grid [@Rui2014; @AlHamdan2014]. To generate county-level daily rainfall estimates, we first aggregated data at each grid point, after converting the timestamp of each observation to local time, to create a daily estimate at the grid point. We then averaged all grid points within a county's boundaries to generate a county-level average of daily precipitation [@AlHamdan2014]. This county-level precipitation data is publicly available through the US Centers for Disease Control's Wide-ranging Online Data for Epidemiological Research (WONDER) database [@WONDER; @AlHamdan2014].
 
-Given its better consistancy with streamflow gage measurements compared to NLDAS precipitation data [GBA-- you had something in here about resolution, as well. Does it have a better resolution than the NLDAS data? I think we probably want to focus on comparing this source with NLDAS, and we don't need to put much about advantages that it has that are very similar to NLDAS], @Villarini2011 recommends Stage IV precipitation data for the analysis of rainfall distribution in landfalling tropical cyclones. However, the Stage IV dataset has only been archived since 2002 [@Lin2005] and cannot be used to analyze exposure to tropical storms for studies that include storms before 2002.
+Given its better consistancy with streamflow gage measurements compared to NLDAS precipitation data [GBA-- you had something in here about resolution, as well. Does it have a better resolution than the NLDAS data? I think we probably want to focus on comparing this source with NLDAS, and we don't need to put much about advantages that it has that are very similar to NLDAS; JMF-- Page 5 in Villarini 2011 disucsses how the spacial resolution is much finer for Stage IV than NLDAS and TMPA, which they argue causes a smoothing of maximum rainfall data for the Appalachians], @Villarini2011 recommends Stage IV precipitation data for the analysis of rainfall distribution in landfalling tropical cyclones. However, the Stage IV dataset has only been archived since 2002 [@Lin2005] and cannot be used to analyze exposure to tropical storms for studies that include storms before 2002.
 
 NLDAS does not provide information on precipitation over the ocean, preventing its use in assessing the development of the storm prior to landfall [@Villarini2011]. This point is moot for this analysis.
 
@@ -144,11 +144,20 @@ distance_1000 <- distance_exposure %>%
         mutate(region = as.numeric(region), value = as.numeric(value)) %>%
         arrange(desc(value)) %>%
         slice(1:1000)
+eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
+                    "district of columbia", "florida", "georgia", "illinois",
+                    "indiana", "iowa", "kansas", "kentucky", "louisiana",
+                    "maine", "maryland", "massachusetts", "michigan",
+                    "mississippi", "missouri", "new hampshire", "new jersey",
+                    "new york", "north carolina", "ohio", "oklahoma",
+                    "pennsylvania", "rhode island", "south carolina",
+                    "tennessee", "texas", "vermont", "virginia",
+                    "west virginia", "wisconsin")
 map_dist_1000 <- county_choropleth(distance_1000, 
-                              title = "Hits by County\nfor Distance < 100 mm",
+                              title = "Hits by County\nfor Distance < 100 km",
                               legend = "Hits per County", num_colors = 9,
                               state_zoom = eastern_states)
-map_dist_1000 + scale_fill_brewer("Hits per\nCounty", palette = "YlGnBu", na.value = "white")
+map_dist_1000 + scale_fill_brewer("Hits per\nCounty", palette = "YlGn", na.value = "white")
 ```
 
 Map of county exposures to the top 1000 county-storm pairs by wind-based exposure:
@@ -173,15 +182,6 @@ rain_1000 <- rain_exposure %>%
         mutate(region = as.numeric(region), value = as.factor(value)) %>%
         arrange(desc(value)) %>%
         slice(1:1000)
-eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
-                    "district of columbia", "florida", "georgia", "illinois",
-                    "indiana", "iowa", "kansas", "kentucky", "louisiana",
-                    "maine", "maryland", "massachusetts", "michigan",
-                    "mississippi", "missouri", "new hampshire", "new jersey",
-                    "new york", "north carolina", "ohio", "oklahoma",
-                    "pennsylvania", "rhode island", "south carolina",
-                    "tennessee", "texas", "vermont", "virginia",
-                    "west virginia", "wisconsin")
 rain_1000$value <- as.numeric(rain_1000$value)
 map_1000 <- county_choropleth(rain_1000,
                               title = "Hits for top 1000 Storm-County Pairs\nfor Rain > 75 mm",
@@ -190,7 +190,7 @@ map_1000 <- county_choropleth(rain_1000,
 map_1000 + scale_fill_brewer("Hits per\nCounty", palette = "YlGnBu", na.value = "white")
 ```
 
-Map of total count of "exposures" by county, based on "exposed" = distance of 100 [or do we want a different distance limit for this? What seems reasonable?] kilometers or less: 
+Map of total count of "exposures" by county, based on "exposed" = distance of 100 [or do we want a different distance limit for this? What seems reasonable?; JMF-- Based on what I have read so far, I think this seems reasonable, unless we want to push it out to 120 km to loosely reflect the Czajkowski study which seems to have found a great number of fatalities in tertiary counties] kilometers or less: 
 
 ```{r echo = FALSE}
 distance_count <- distance_exposure %>%
@@ -204,7 +204,7 @@ map_dist_count <- county_choropleth(distance_count,
                               title = "Hits by County\nfor Distance < 100 km",
                               legend = "Hits per County", num_colors = 9,
                               state_zoom = eastern_states)
-map_dist_count + scale_fill_brewer("Hits per\nCounty", palette = "YlGnBu", na.value = "white")
+map_dist_count + scale_fill_brewer("Hits per\nCounty", palette = "YlGn", na.value = "white")
 ```
 
 Map of total count of "exposures" by county, based on "exposed" = rainfall over a three-day window of 75 millimeters or more and distance of 500 kilometers or less: 
