@@ -130,7 +130,7 @@ Results
 
 Map of the count of county exposures to the top 1000 county-storm pairs by distance-based exposure, based on "exposed" = distance of 100 kilometers or less:
 
-```{r echo = FALSE}
+```{r echo = FALSE, warning=FALSE}
 data(closest_dist)
 my_fips <- closest_dist$fips
 my_fips <- unique(my_fips)
@@ -193,7 +193,7 @@ map_1000 + scale_fill_brewer("Hits per\nCounty", palette = "YlGnBu", na.value = 
 
 Map of total count of "exposures" by county, based on "exposed" = distance of 100 [or do we want a different distance limit for this? What seems reasonable?; JMF-- Based on what I have read so far, I think this seems reasonable, unless we want to push it out to 120 km to loosely reflect the Czajkowski study which seems to have found a great number of fatalities in tertiary counties] kilometers or less: 
 
-```{r echo = FALSE}
+```{r echo = FALSE, warning=FALSE}
 distance_count <- distance_exposure %>%
         arrange(desc(storm_dist)) %>%
         group_by(fips) %>%
@@ -210,7 +210,7 @@ map_dist_count + scale_fill_brewer("Hits per\nCounty", palette = "YlGn", na.valu
 
 Map of total count of "exposures" by county, based on "exposed" = rainfall over a three-day window of 75 millimeters or more and distance of 500 kilometers or less: 
 
-```{r echo = FALSE}
+```{r echo = FALSE, warning=FALSE}
 rain_count <- rain_exposure %>%
               group_by(fips) %>%
               summarise(count = n()) %>%
