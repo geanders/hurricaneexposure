@@ -52,6 +52,7 @@ library(ggplot2)
 library(gridExtra)
 library(plyr)
 library(dplyr)
+library(tidyr)
 library(choroplethr)
 ```
 
@@ -220,6 +221,17 @@ map_counts <- county_choropleth(rain_count,
                                 legend = "Hits per County", num_colors = 9,
                                 state_zoom = eastern_states)
 map_counts + scale_fill_brewer("Hits per\nCounty", palette = "YlGnBu", na.value = "white")
+```
+
+```{r}
+exposure_name <- c("Rain_Exposure", "Distance_Exposure")
+count <- c(sum(rain_count$value), sum(distance_count$value))
+exposure_table <- cbind(exposure_name, count)
+exposure_table <- data.frame(exposure_table)
+exposure_table %>%
+        mutate(exposure_name = gsub("_", " ", exposure_name)) %>%
+        kable(col.names = c("Exposure Criteria", "Total # exposed counties"), 
+              caption = "Total number of county hits based on rain, distance, and wind exposures")
 ```
 
 One interesting contrast is between storms that were noteworthy for direct wind-related deaths (Anderew in 1992, Hugo in 1989) versus storms noteworthy for direct freshwater flooding-related deaths (Floyd in 1999, Alberto in 1994, Charley in 1998) for the 1970--1999 period [@Rappaport2000]. (Another study notes the following storms were notable for inland impacts-- Hugo, 1989 (wind and rain); Floyd, 1999 (flooding); Allison, 2001 (flooding); Fran, 1996 (wind) [@Kruk2010].) Here are two examples, one of each of these two types:
