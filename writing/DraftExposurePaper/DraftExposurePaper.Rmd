@@ -140,12 +140,11 @@ distance_exposure <- county_distance(counties = my_fips,
 distance_1000 <- distance_exposure %>%
         arrange(desc(storm_dist)) %>%
         group_by(fips) %>%
-        summarise(value = n()) %>%
+        summarise(count = n()) %>%
         rename(region = fips) %>%
-        mutate(region = as.numeric(region), value = as.numeric(value)) %>%
-        arrange(desc(value)) %>%
-        slice(1:1000) %>%
-        rename(count = value)
+        mutate(region = as.numeric(region), count = as.numeric(count)) %>%
+        arrange(desc(count)) %>%
+        slice(1:1000)
 distance_1000$value <- cut(distance_1000$count, c(0, 5, 8, 12, 15, 18, 21, 24),
                            labels = c("0-5", "6-8", "9-12", "13-15", "16-18", "19-21", "22-24"),
                            include.lowest = TRUE)
@@ -182,15 +181,17 @@ rain_exposure <- county_rain(counties = my_fips,
 rain_1000 <- rain_exposure %>%
         arrange(desc(tot_precip)) %>%
         group_by(fips) %>%
-        summarise(value = n()) %>%
+        summarise(count = n()) %>%
         rename(region = fips) %>%
-        mutate(region = as.numeric(region), value = as.factor(value)) %>%
-        arrange(desc(value)) %>%
+        mutate(region = as.numeric(region), count = as.numeric(count)) %>%
+        arrange(desc(count)) %>%
         slice(1:1000)
-rain_1000$value <- as.numeric(rain_1000$value)
+rain_1000$value <- cut(rain_1000$count, c(0, 3, 6, 9, 12, 15, 17), 
+                   labels = c("0-3", "4-6", "7-9", "10-12", "13-15", "16-17"), 
+                   include.lowest = TRUE)
 map_1000 <- county_choropleth(rain_1000,
                               title = "Hits for top 1000 Storm-County Pairs\nfor Rain > 75 mm",
-                              legend = "Hits per County", num_colors = 9,
+                              legend = "Hits per County", num_colors = 6,
                               state_zoom = eastern_states)
 map_1000 + scale_fill_brewer("Hits per\nCounty", palette = "YlGnBu", na.value = "white")
 ```
@@ -201,13 +202,16 @@ Map of total count of "exposures" by county, based on "exposed" = distance of 10
 distance_count <- distance_exposure %>%
         arrange(desc(storm_dist)) %>%
         group_by(fips) %>%
-        summarise(value = n()) %>%
+        summarise(count = n()) %>%
         rename(region = fips) %>%
-        mutate(region = as.numeric(region), value = as.numeric(value)) %>%
-        arrange(desc(value))
+        mutate(region = as.numeric(region), count = as.numeric(count)) %>%
+        arrange(desc(count))
+distance_count$value <- cut(distance_count$count, c(0, 5, 8, 12, 15, 18, 21, 24),
+                           labels = c("0-5", "6-8", "9-12", "13-15", "16-18", "19-21", "22-24"),
+                           include.lowest = TRUE)
 map_dist_count <- county_choropleth(distance_count, 
                               title = "Hits by County\nfor Distance < 100 km",
-                              legend = "Hits per County", num_colors = 9,
+                              legend = "Hits per County", num_colors = 7,
                               state_zoom = eastern_states)
 map_dist_count + scale_fill_brewer("Hits per\nCounty", palette = "YlGn", na.value = "white")
 ```
@@ -218,18 +222,21 @@ Map of total count of "exposures" by county, based on "exposed" = rainfall over 
 rain_count <- rain_exposure %>%
               group_by(fips) %>%
               summarise(count = n()) %>%
-              rename(region = fips, value = count) %>%
-              mutate(region = as.numeric(region), value = as.numeric(value))
+              rename(region = fips) %>%
+              mutate(region = as.numeric(region), count = as.numeric(count))
+rain_count$value <- cut(rain_count$count, c(0, 3, 6, 9, 12, 15, 17), 
+                   labels = c("0-3", "4-6", "7-9", "10-12", "13-15", "16-17"), 
+                   include.lowest = TRUE)
 map_counts <- county_choropleth(rain_count,
                                 title = "Hits by County\nfor Rain > 75 mm",
-                                legend = "Hits per County", num_colors = 9,
+                                legend = "Hits per County", num_colors = 6,
                                 state_zoom = eastern_states)
 map_counts + scale_fill_brewer("Hits per\nCounty", palette = "YlGnBu", na.value = "white")
 ```
 
 ```{r}
 exposure_name <- c("Rain_Exposure", "Distance_Exposure")
-count <- c(sum(rain_count$value), sum(distance_count$value))
+count <- c(sum(rain_count$count), sum(distance_count$count))
 exposure_table <- cbind(exposure_name, count)
 exposure_table <- data.frame(exposure_table)
 exposure_table %>%
