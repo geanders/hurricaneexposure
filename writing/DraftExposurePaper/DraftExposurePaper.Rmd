@@ -1,7 +1,7 @@
 ---
 title: Assessing exposure to Atlantic Basin tropical storms in United States counties
 author:
-  - name: Joshua Ferreri
+  - name: Joshua M. Ferreri
     email: joshua.m.ferreri@gmail.com
     affiliation: Colorado State University
   - name: Meilin Yan
