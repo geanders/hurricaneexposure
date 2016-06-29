@@ -158,7 +158,7 @@ eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
                     "tennessee", "texas", "vermont", "virginia",
                     "west virginia", "wisconsin")
 map_dist_1000 <- county_choropleth(distance_1000, 
-                              title = "Hits by County\nfor Distance < 100 km",
+                              title = "Hits for top 1000 Storm-County Pairs\nfor Distance < 100 km",
                               legend = "Hits per County", num_colors = 7,
                               state_zoom = eastern_states)
 map_dist_1000 + scale_fill_brewer("Hits per\nCounty", palette = "YlGn", na.value = "white")
