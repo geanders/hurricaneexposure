@@ -144,7 +144,11 @@ distance_1000 <- distance_exposure %>%
         rename(region = fips) %>%
         mutate(region = as.numeric(region), value = as.numeric(value)) %>%
         arrange(desc(value)) %>%
-        slice(1:1000)
+        slice(1:1000) %>%
+        rename(count = value)
+distance_1000$value <- cut(distance_1000$count, c(0, 5, 8, 12, 15, 18, 21, 24),
+                           labels = c("0-5", "6-8", "9-12", "13-15", "16-18", "19-21", "22-24"),
+                           include.lowest = TRUE)
 eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
                     "district of columbia", "florida", "georgia", "illinois",
                     "indiana", "iowa", "kansas", "kentucky", "louisiana",
@@ -156,7 +160,7 @@ eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
                     "west virginia", "wisconsin")
 map_dist_1000 <- county_choropleth(distance_1000, 
                               title = "Hits by County\nfor Distance < 100 km",
-                              legend = "Hits per County", num_colors = 9,
+                              legend = "Hits per County", num_colors = 7,
                               state_zoom = eastern_states)
 map_dist_1000 + scale_fill_brewer("Hits per\nCounty", palette = "YlGn", na.value = "white")
 ```
