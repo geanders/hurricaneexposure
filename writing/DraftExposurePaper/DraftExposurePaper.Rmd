@@ -143,7 +143,7 @@ Our analysis included [x] Atlantic basin tropical storms over the years 1988 to 
 
 #### Are exposure patterns different when using distance-, rain-, and wind-based metrics? In particular, (1) do some exposure metrics result in more "exposed" classifications than others and (2) are geographic patterns of exposure different among the different metrics?
 
-Map of the count of county exposures to the top 1000 county-storm pairs by distance-based exposure, based on "exposed" = distance of 100 kilometers or less [GBA-- These are **awesome**. I think we want to tweak the color scale and the legend a bit so that they're consistent between the three plots showing the top 1000 storm-county pairs for the three metrics (distance, rain, and wind). That will make it easier to compare across the three maps, which is what we want readers to be able to do here.]:
+Map of the count of county exposures to the top 1000 county-storm pairs by distance-based exposure, based on "exposed" = distance of 100 kilometers or less [GBA-- These are **awesome**. I think we want to tweak the color scale and the legend a bit so that they're consistent between the three plots showing the top 5000 storm-county pairs for the three metrics (distance, rain, and wind). That will make it easier to compare across the three maps, which is what we want readers to be able to do here.]:
 
 ```{r echo = FALSE, warning=FALSE, message=FALSE}
 data(closest_dist)
@@ -157,19 +157,30 @@ my_fips <- unique(my_fips)
 distance_exposure <- county_distance(counties = my_fips, start_year = 1988,
                                      end_year = 2011, dist_limit = 100)
 
-distance_1000 <- distance_exposure %>%
-        arrange(desc(storm_dist)) %>%
+# distance_1000 <- distance_exposure %>%
+#         arrange(desc(storm_dist)) %>%
+#         group_by(fips) %>%
+#         summarise(count = n()) %>%
+#         rename(region = fips) %>%
+#         mutate(region = as.numeric(region), count = as.numeric(count)) %>%
+#         arrange(desc(count)) %>%
+#         slice(1:1000)
+
+distance_5000 <- distance_exposure %>%
+        arrange(storm_dist) %>% # For distance, I don't think we want `desc`
+        slice(1:5000) %>% # I think we need to slice out the top 1000 before 
+                          # counting up by county. We want the top 1000
+                          # county-storm pairs, not to count up the numbers for
+                          # all storms within 100 km and then take the top 1000
+                          # counties from that (which is what the old code did)
         group_by(fips) %>%
         summarise(count = n()) %>%
         rename(region = fips) %>%
-        mutate(region = as.numeric(region), count = as.numeric(count)) %>%
-        arrange(desc(count)) %>%
-        slice(1:1000)
+        mutate(region = as.numeric(region), count = as.numeric(count))
 
-distance_1000$value <- cut(distance_1000$count, c(0, 5, 8, 12, 15, 18, 21, 24),
-                           labels = c("0-5", "6-8", "9-12", "13-15", "16-18",
-                                      "19-21", "22-24"),
-                           include.lowest = TRUE)
+distance_5000$value <- cut(distance_5000$count, c(0, 3, 6, 9, 12, 15, 17), 
+                   labels = c("0-3", "4-6", "7-9", "10-12", "13-15", "16-17"), 
+                   include.lowest = TRUE)
 eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
                     "district of columbia", "florida", "georgia", "illinois",
                     "indiana", "iowa", "kansas", "kentucky", "louisiana",
@@ -179,11 +190,12 @@ eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
                     "pennsylvania", "rhode island", "south carolina",
                     "tennessee", "texas", "vermont", "virginia",
                     "west virginia", "wisconsin")
-map_dist_1000 <- county_choropleth(distance_1000, 
-                              title = "Hits for top 1000 Storm-County Pairs\nfor Distance < 100 km",
-                              legend = "Hits per County", num_colors = 7,
+map_dist_5000 <- county_choropleth(distance_5000, 
+                              title = "Hits for top 5000 Storm-County Pairs\nfor Distance < 100 km",
+                              legend = "Hits per County", # num_colors = 7,
                               state_zoom = eastern_states)
-map_dist_1000 + scale_fill_brewer("Hits per\nCounty", palette = "YlGn", na.value = "white")
+map_dist_5000 + scale_fill_brewer("Hits per\nCounty", palette = "YlGnBu",
+                                  na.value = "white")
 ```
 
 Map of county exposures to the top 1000 county-storm pairs by wind-based exposure:
@@ -196,26 +208,38 @@ Map of county exposures to the top 1000 county-storm pairs by wind-based exposur
 Map of county exposures to the top 1000 county-storm pairs by rain-based exposure:
 
 ```{r echo = FALSE, warning=FALSE, message=FALSE}
+# Get the rain-based exposure for all counties over the study period, 
+# using a rain limit of 75 mm and a distance limit of 500 km
 rain_exposure <- county_rain(counties = my_fips,
                              start_year = 1988, end_year = 2011,
                              rain_limit = 75, dist_limit = 500,
                              days_include = c(-1, 0, 1))
-rain_1000 <- rain_exposure %>%
+
+# rain_1000 <- rain_exposure %>%
+#         arrange(desc(tot_precip)) %>%
+#         group_by(fips) %>%
+#         summarise(count = n()) %>%
+#         rename(region = fips) %>%
+#         mutate(region = as.numeric(region), count = as.numeric(count)) %>%
+#         arrange(desc(count)) %>%
+#         slice(1:1000)
+rain_5000 <- rain_exposure %>%
         arrange(desc(tot_precip)) %>%
+        slice(1:5000) %>%
         group_by(fips) %>%
         summarise(count = n()) %>%
         rename(region = fips) %>%
-        mutate(region = as.numeric(region), count = as.numeric(count)) %>%
-        arrange(desc(count)) %>%
-        slice(1:1000)
-rain_1000$value <- cut(rain_1000$count, c(0, 3, 6, 9, 12, 15, 17), 
+        mutate(region = as.numeric(region), count = as.numeric(count))
+
+rain_5000$value <- cut(rain_5000$count, c(0, 3, 6, 9, 12, 15, 17), 
                    labels = c("0-3", "4-6", "7-9", "10-12", "13-15", "16-17"), 
                    include.lowest = TRUE)
-map_1000 <- county_choropleth(rain_1000,
-                              title = "Hits for top 1000 Storm-County Pairs\nfor Rain > 75 mm",
+map_5000 <- county_choropleth(rain_5000,
+                              title = "Hits for top 5000 Storm-County Pairs\nfor Rain > 75 mm",
                               legend = "Hits per County", num_colors = 6,
                               state_zoom = eastern_states)
-map_1000 + scale_fill_brewer("Hits per\nCounty", palette = "YlGnBu", na.value = "white")
+map_5000 + scale_fill_brewer("Hits per\nCounty", palette = "YlGnBu",
+                             na.value = "white")
 ```
 
 Map of total count of "exposures" by county, based on "exposed" = distance of 100 [or do we want a different distance limit for this? What seems reasonable?; JMF-- Based on what I have read so far, I think this seems reasonable, unless we want to push it out to 120 km to loosely reflect the Czajkowski study which seems to have found a great number of fatalities in tertiary counties] kilometers or less: 
