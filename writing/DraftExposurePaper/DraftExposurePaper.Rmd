@@ -67,6 +67,10 @@ Tropical storms bring a number of threats, including high winds, heavy rain and 
 
 While the risks to life from some tropical storm threats (e.g., storm surge) have been greatly reduced over the past century, other risks (e.g., inland flooding) have remained more steady [@Rappaport2000], and costs related to property damage have increased [citation]. Determining the metrics of storm exposure that are most associated with loss of life and property damage may help identify and emphasize the important threats that remain from tropical storms in the United States, which could allow similar future success in reducing these threats through community planning, warning systems, etc.
 
+It is critical to characterize the risks of cyclonic storms in order to help individuals and communities prepare for and respond to storms. By characterizing the health risks of other climate-related disasters, communities have improved their responses in ways tailored to protect human health. For example, in response to the health threats of heat, several US cities—including Philadelphia, PA; Washington, DC; Phoenix, AZ; Dallas-Fort Worth, TX; Chicago, IL; and New Orleans, LA—have implemented heat watch-warning systems specifically designed to limit all-cause heat-related health outcomes [@Sheridan2004]. An alert of these heat-health warning systems can instigate a number of health-protecting responses including: halting suspensions of electric and water utilities; increasing the number of Fire Department Emergency Medical Service staff on duty; and issuing media announcements [@Sheridan2004].
+
+According to the Intergovernmental Panel on Climate Change, climate change may alter patterns of climate-related natural disasters [@Seneviratne2012 -- double-check formatting for this reference], while future population movement may continue to increase the number of people at risk from natural disasters (e.g., movement of retirees to Florida [@Smith1992]). Research assessing the risks of tropical storms will aid city- and national-level planning for storms, both in the short-term, to prepare for specific current storms, and in the long-term, to prepare for the health risks of climate change. 
+
 #### Why it's important to measure TS exposure for counties
 
 Many outcomes of interest are available at county-level aggregations (e.g., counts of health outcomes: @Grabich2016: premature births and low birth weights; @Grabich2015: birth rates; @Kinney2008: autism prevalence; @Kilpatrick2007: risk of PTSD and Major Depression in predisposed individuals (This is more of a cross-sectional study, I think); @Rappaport2000 and @Czajkowski2011: direct hurricane-related deaths; also, other impacts can be available aggregated by county, including fish kills [@Mallin2006]). Further, decisions and policies to prepare for and respond to storms are often undertaken at the county level [@Zandbergen2009; @Rappaport2000]. Some studies suggest methods to determine exposure, including inland exposure, to tropical storms at the county-level over many years [@Zandbergen2009]. 
@@ -297,7 +301,7 @@ map_rain_count$set_zoom(eastern_states)
 map_rain_count$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
                                                 values = exposure_palette,
                                                 na.value = "white")
-map_rain_count$title <- "Hits for top 2,000 Storm-County Pairs\nfor Distance > 75 mm"
+map_rain_count$title <- "Hits for top 2,000 Storm-County Pairs\nfor Rain > 75 mm"
 b <- map_rain_count$render()
 ```
 
