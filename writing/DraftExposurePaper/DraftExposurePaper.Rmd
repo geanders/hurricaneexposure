@@ -64,7 +64,7 @@ Introduction
 
 Tropical storms bring a number of threats, including high winds, heavy rain and flooding, storm surge, tornadoes, ... [@Rezapour2014: wind, storm surge, rain]. To determine whether a county is exposed to a particular tropical storm, a researcher could use criteria based on measurements of any of these values during the storm, use a metric based on the distance from the county to the storm's track, or use a metric that combines several of these measurements.
 
-While the risks to life from some tropical storm threats (e.g., storm surge) have been greatly reduced over the past century, other risks (e.g., inland flooding) have remained more steady [@Rappaport2000]. Determining the metrics of storm exposure that are most associated with loss of life and property damage may help identify and emphasize the important threats that remain from tropical storms in the United States, which could allow similar future success in reducing these threats through community planning, warning systems, etc.
+While the risks to life from some tropical storm threats (e.g., storm surge) have been greatly reduced over the past century, other risks (e.g., inland flooding) have remained more steady [@Rappaport2000], and costs related to property damage have increased [citation]. Determining the metrics of storm exposure that are most associated with loss of life and property damage may help identify and emphasize the important threats that remain from tropical storms in the United States, which could allow similar future success in reducing these threats through community planning, warning systems, etc.
 
 #### Why it's important to measure TS exposure for counties
 
@@ -72,7 +72,9 @@ Many outcomes of interest are available at county-level aggregations (e.g., coun
 
 Here, we offer tools, through the open-source `hurricaneexposure` package, to determine county-level exposure to tropical storms using several different metrics (distance, rainfall, wind). In this paper, we describe how this software package assesses exposure to tropical storms at the county level, provide an analysis of the advantages and disadvantages of different strategies for assessing county-level exposure, and explore variation in exposure assessments based on using different exposure metrics. 
 
-The most often used hurricane exposure criteria at the county-level include FEMA disaster declarations and area within the storm track, which can be somewhat nonspecific and potentially lead to misclassification of exposure at the county-level [@Grabich2016]. FEMA declaration is largely subjective, requiring state governors and/or tribal chiefs to submit a proposal for government aid on the basis that local resources are overwhelmed [@FEMA]. As a result, using FEMA disaster declarations as exposure classification to hurricanes restricts exposure to 1) those states whose resources are overwhelmed and 2) those states who apply for FEMA aid. As a result, other severely impacted counties and states that may not fit FEMA criteria are excluded and may therefore be incorrectly identified as unexposed, preventing researchers from assessing the full impact of a given hurricane [JMF-- the Grabich 2016 study actually found that FEMA assigned the highest exposure, and may overestimate the health effects of a hurricane]. Researchers have found heterogeneity in exposure assignments of counties, both within and between storms, when different metrics of exposure are used [@Grabich2016; @Grabich2015]. Such missclassification can have important consequences in assessments of the public health and economic impacts of tropical storms.
+[GBA-- Somewhere (maybe just for helping us draft the paper), let's come up with a list of the "ideal" characteristics of an exposure metric for hurricanes. I think that will be helpful for us to have a framework of a "gold standard" to compare advantages and disadvantages of different metrics used. To start, we could create a list of "good characteristics" and another of "bad characteristics", and read through the text we have and pull out characteristics we describe as good or bad aspects of different metrics.]
+
+The most often used hurricane exposure criteria at the county-level include FEMA disaster declarations [GBA-- are these that commonly used? We should certainly put them in as one way to measure exposure, but I don't know if we want to include them, with distance, as "most often used" unless we can find quite a few examples of them being used to determine exposure] and whether a county's perimeter intercepts a swath describing a buffer a certain distance from the storm's central track. These ways of assessing exposure can be nonspecific and potentially lead to misclassification of exposure at the county-level [@Grabich2016]. FEMA declaration is largely subjective, requiring state governors and/or tribal chiefs to submit a proposal for government aid on the basis that local resources are overwhelmed [@FEMA]. As a result, using FEMA disaster declarations as exposure classification to hurricanes restricts exposure to 1) those states whose resources are overwhelmed and 2) those states who apply for FEMA aid. As a result, other severely impacted counties and states that may not fit FEMA criteria are excluded and may therefore be incorrectly identified as unexposed, preventing researchers from assessing the full impact of a given hurricane [JMF-- the Grabich 2016 study actually found that FEMA assigned the highest exposure, and may overestimate the health effects of a hurricane; GBA-- let's think about why that might have had "false positives". I think that would be an interesting point to include here.]. Researchers have found heterogeneity in exposure assignments of counties, both within and between storms, when different metrics of exposure are used [@Grabich2016; @Grabich2015]. Such missclassification can have important consequences in assessments of the public health and economic impacts of tropical storms.
 
 Many of the studies that have assessed exposure to tropical storms in the US have used geographical information system software (e.g., ArcGIS) [example studies: @Grabich2016; @Zandbergen2009; @Czajkowski2011; @Kruk2010]. Here, we offer methods to map and output historic exposure to tropical storms that does not require the use of proprietary software but instead uses a package written in the R statistical programming language, which is free and open-source.
 
@@ -80,7 +82,7 @@ We acknowledge that in some cases it will be important to estimate hurricane exp
 
 #### Examples of estimating TS for multiple storms
 
-When assessing exposure to a single tropical storm, a detailed analysis of ... can be performed for the storm. However, this level of detailed analysis is unreasonable when assessing exposure to all storms over an extended time period; further, such a long-term exposure assessment requires consistency in the data being used to determine levels of exposure to factors like wind and rain. 
+When assessing exposure to a single tropical storm, a detailed *ad hoc* analysis can be performed for the single storm. However, this level of detailed analysis is unreasonable when assessing exposure to all storms over an extended time period; further, such a long-term exposure assessment requires consistency in the data being used to determine levels of exposure to factors like wind and rain. 
 
 A few studies have sought to determine exposure to tropical storms over a study period that includes multiple storms. For example, @Grabich2016 assessed the exposure of counties in Florida to land-falling hurricanes during the 2004 season. The largest-scale county-level exposure study is likely that of @Zandbergen2009, which estimated exposure in US counties to all US landfalling Atlantic basin tropical storms between 1851 and 2003, using both distance and an exposure metric that incorporated distance and windspeed. They used this exposure evaluation to create maps of total exposure to tropical storms within US counties, as well as to explore associations between a county's long-term exposure to tropical storms and its location, distance from the coast, size, and shape [@Zandbergen2009].
 
@@ -96,7 +98,7 @@ One of the challenges of trying to assess exposure to multiple storms is that so
 
 #### Examples of other datasets at the county level
 
-If exposure to tropical storms over multiple storms and years can be assessed, these exposure datasets can be joined with other time series to explore the impacts of tropical storms. For example, daily counts of human health outcomes in environmental epidemiology studies are often available aggregated at the county level, and such data has often been paired with time series of environmental exposures (e.g., air pollution, temperature) to determine associated risks. Databases of storm impacts, including direct deaths [@Rappaport2000], ..., and ..., are often aggregated at the county level.
+If exposure to tropical storms over multiple storms and years can be assessed, these exposure datasets can be joined with other time series to explore the impacts of tropical storms. For example, daily counts of human health outcomes in environmental epidemiology studies are often available aggregated at the county level, and such data has often been paired with time series of environmental exposures (e.g., air pollution, temperature) to determine associated risks. Databases of storm impacts, including direct deaths [@Rappaport2000], ..., and ..., are often aggregated at the county level. [Let's see if we can find other examples of county-level outcomes that researchers might want to pair with hurricane exposure. For example, property damage, crop damage, injuries, ... These are all given in NOAA's Storm Events database, but let's also see if we can find studies that have analyzed these outcomes in relation to tropical storms, if we can.]
 
 Data and Methods
 ==================
@@ -105,9 +107,9 @@ Data and Methods
 
 We collected "best tracks" data on hurricane tracks for Atlantic basin storms between 1988 and 2014 from the extended best tracks database [@Demuth2006]. This dataset is based on a post-storm assessment of each storm conducted by the United States National Hurricane Center (NHC) and incorporates data from a variety of sources, including satellite data and, when available, aircraft reconnaisance data [@Landsea2013; @Jarvinen1988]. This data gives time stamps for each observation in Coordinated Universal Time (UTC; also known as Zulu Time, sometimes indicated by "Z") [@Jarvinen1988; this source (1978) says GMT]. This dataset has been used extensively to study Atlantic basin tropical storms (e.g., @Rezapour2014, ...). The extended best tracks data extension of HURDAT [@Demuth2006], which we use in this study, has been used in studies of hurricane-related inland wind exposure [@Kruk2010], ... [citations].
 
-These data typically give measurements of storm center location at 6-hour intervals, at synoptic times (i.e., 6:00 am, 12:00 pm, 6:00 pm, and 12:00 am UTC); some landfalling storms have an additional observation at the time of landfall [@Landsea2013]. These positions are given to within 0.1 degrees latitude / longitude at these synoptic times [@Landsea2013]. We interpolated these location values to every 15 minutes during the period when the storm was active, using a linear interpolation between each measured point. 
+These data typically give measurements of storm center location at 6-hour intervals, at synoptic times (i.e., 6:00 am, 12:00 pm, 6:00 pm, and 12:00 am UTC); some landfalling storms have an additional observation at the time of landfall [@Landsea2013]. These positions are given to within 0.1 degrees latitude / longitude at these synoptic times [@Landsea2013]. We interpolated these location values to every 15 minutes during the period when the storm was active, using a linear interpolation [should we somehow be using great circle distance to do this?] between each measured point. 
 
-We calculated the distance between each county's center and each of the 15-minute-interval estimates of a storm's location. To do this, we used the Great Circle method to calculate the distance between pairs of latitude and longitude coordinates, using the R package `sp`. For each county, we used the population mean center, based on the U.S. Census's 2010 Decennial Census, as the center location of the county. From these distance calculations, we identified the date-time and distance between the storm track and the county center at the 15-minute interval when the storm was closest to the county center. We identified the date when the storm was closest to each county and converted this date-time  to the county's local time zone using the `countytimezones` R package [citation]. This "closest date" was used to pair the distance estimates with rainfall estimates and can also be used to merge exposure datasets with daily aggregated outcomes like daily county-level mortality and morbidity counts.
+We calculated the distance between each county's center and each of the 15-minute-interval estimates of a storm's location. To do this, we used the Great Circle method to calculate the distance between pairs of latitude and longitude coordinates [citation-- R package `sp`]. For each county, we used the population mean center, based on the U.S. Census's 2010 Decennial Census, as the center location of the county. From these distance calculations, we identified the date-time and distance between the storm track and the county center at the 15-minute interval when the storm was closest to the county center. We identified the date when the storm was closest to each county and converted this date-time  to the county's local time zone [citation-- `countytimezones` R package]. This "closest date" was used to pair the distance estimates with rainfall estimates for a specific storm and county. Futher, this "closest date" provides a county-specific estimate of the date of storm exposure and so can also be used to merge exposure datasets with daily aggregated outcomes like daily county-level mortality and morbidity counts.
 
 #### Rain-based exposure
 
@@ -123,20 +125,38 @@ NLDAS does not provide information on precipitation over the ocean, preventing i
 
 These wind models use estimates of maximum wind speed from the best tracks dataset. These maximum wind speed estimates in the best tracks dataset are rounded to 5-knot intervals and is the maximum 1-minute-average windspeed at 10 meters above the ground [@Landsea2013; @Jarvinen1988]. This windspeed is typically determined using the Dvorak technique to estimate windspeed from satellite measurements, although data from aircraft reconnaisance in also sometimes incorporated in the estimate [@Levinson2010]. Sometimes, the maximum windspeed in this dataset is estimated from the central pressure of the storm [@Jarvinen1988]. 
 
+### Analysis of hurricane exposure classification methods
+
+[We'll want to describe the methods for the analyses we perform here, as well as which set of storms we use in our analyses.]
+
 Results
 ============
 
+Our analysis included [x] Atlantic basin tropical storms over the years 1988 to 2011. This dataset includes several noteworthy storms, including ... . 
+
+[As a summary of our available dataset, do we want to include a US map showing the storm tracks for all of the storms included in our analysis?]
+
+```{r}
+# Include code for map of tracks of all storms in study here. 
+# I think there's a function in `hurricaneexposure` we can use for this.
+```
+
 #### Are exposure patterns different when using distance-, rain-, and wind-based metrics? In particular, (1) do some exposure metrics result in more "exposed" classifications than others and (2) are geographic patterns of exposure different among the different metrics?
 
-Map of the count of county exposures to the top 1000 county-storm pairs by distance-based exposure, based on "exposed" = distance of 100 kilometers or less:
+Map of the count of county exposures to the top 1000 county-storm pairs by distance-based exposure, based on "exposed" = distance of 100 kilometers or less [GBA-- These are **awesome**. I think we want to tweak the color scale and the legend a bit so that they're consistent between the three plots showing the top 1000 storm-county pairs for the three metrics (distance, rain, and wind). That will make it easier to compare across the three maps, which is what we want readers to be able to do here.]:
 
 ```{r echo = FALSE, warning=FALSE, message=FALSE}
 data(closest_dist)
+
+# Generate a list of unique study fips (all in the eastern US)
 my_fips <- closest_dist$fips
 my_fips <- unique(my_fips)
-distance_exposure <- county_distance(counties = my_fips,
-                                 start_year = 1988, end_year = 2011,
-                                 dist_limit = 100)
+
+# Get distance-based exposure for all study counties, all years, using a 
+# distance limit that will ensure at least 1000 storm-county pairs
+distance_exposure <- county_distance(counties = my_fips, start_year = 1988,
+                                     end_year = 2011, dist_limit = 100)
+
 distance_1000 <- distance_exposure %>%
         arrange(desc(storm_dist)) %>%
         group_by(fips) %>%
@@ -145,8 +165,10 @@ distance_1000 <- distance_exposure %>%
         mutate(region = as.numeric(region), count = as.numeric(count)) %>%
         arrange(desc(count)) %>%
         slice(1:1000)
+
 distance_1000$value <- cut(distance_1000$count, c(0, 5, 8, 12, 15, 18, 21, 24),
-                           labels = c("0-5", "6-8", "9-12", "13-15", "16-18", "19-21", "22-24"),
+                           labels = c("0-5", "6-8", "9-12", "13-15", "16-18",
+                                      "19-21", "22-24"),
                            include.lowest = TRUE)
 eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
                     "district of columbia", "florida", "georgia", "illinois",
