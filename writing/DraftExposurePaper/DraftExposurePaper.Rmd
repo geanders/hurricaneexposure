@@ -137,9 +137,12 @@ Our analysis included [x] Atlantic basin tropical storms over the years 1988 to 
 
 [As a summary of our available dataset, do we want to include a US map showing the storm tracks for all of the storms included in our analysis?]
 
-```{r}
-# Include code for map of tracks of all storms in study here. 
-# I think there's a function in `hurricaneexposure` we can use for this.
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+# Map of tracks of all storms in study.
+data("closest_dist")
+storms <- unique(closest_dist$storm_id)
+storms <- storms[which(gsub("*.+-", "", storms) <= 2011)]
+map_tracks(storms, plot_points = FALSE, alpha = 0.3)
 ```
 
 #### Are exposure patterns different when using distance-, rain-, and wind-based metrics? In particular, (1) do some exposure metrics result in more "exposed" classifications than others and (2) are geographic patterns of exposure different among the different metrics?
@@ -302,7 +305,7 @@ b <- map_rain_count$render()
 grid.arrange(a, b, ncol = 1)
 ```
 
-```{r}
+```{r echo = FALSE}
 exposure_name <- c("Rain_Exposure", "Distance_Exposure")
 count <- c(sum(rain_count$count), sum(distance_count$count))
 exposure_table <- cbind(exposure_name, count)
@@ -369,7 +372,6 @@ distance_exposed %>%
 
 Here are plots of the top four storms based on number of counties exposed by distance:
 
-
 ```{r echo = FALSE, fig.width = 10, fig.height = 8}
 top_distance_exposed <- function(storm_id){
         my_map <- map_distance_exposure(storm_id, dist_limit = 100)
@@ -424,6 +426,33 @@ rain_plots <- lapply(rain_exposed$storm_id[1:n], top_rain_exposed)
 names(rain_plots) <- letters[1:n]
 grid.arrange(rain_plots$a, rain_plots$b, rain_plots$c, rain_plots$d, ncol = 2)
 ```
+
+Here are the top storms when measured by summing all rainfall for all counties exposed to the storm (where "exposed" means the county was within 500 km of the storm track and had 75 mm or more of rainfall over the three-day window when the storm was closest to the county).
+
+```{r echo = FALSE}
+rain_exposure <- county_rain(counties = my_fips,
+                             start_year = 1988, end_year = 2011,
+                             rain_limit = 75, dist_limit = 500,
+                             days_include = c(-1, 0, 1))
+
+rain_exposure %>%
+        group_by(storm_id) %>%
+        summarise(sum_rain = round(sum(tot_precip), -2)) %>%
+        arrange(desc(sum_rain)) %>%
+        slice(1:10) %>%
+        kable(col.names = c("Storm", "Summed county-level rainfall"),
+              caption = "Top 10 storms based on summed rainfall across all counties exposed, using a metric of rainfall.")
+```
+
+Here is a map of the rain totals for Frances: 
+
+```{r echo = FALSE}
+map_tracks(storms = "Frances-2004", plot_points = FALSE, 
+                plot_object = map_counties(storm = "Frances-2004", 
+                                           metric = "rainfall")) + 
+        ggtitle(paste("Frances-2004", "rainfall"))
+```
+
 
 #### Are storms with heavy rain exposure likely to occur early in the hurricane season?
 
