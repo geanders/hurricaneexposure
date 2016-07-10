@@ -206,7 +206,7 @@ map_dist_2000$set_zoom(eastern_states)
 map_dist_2000$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
                                                 values = exposure_palette,
                                                 na.value = "white")
-map_dist_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor Distance < 100 km"
+map_dist_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor Distance Metric"
 a <- map_dist_2000$render()
 ```
 
@@ -245,7 +245,7 @@ map_rain_2000$set_zoom(eastern_states)
 map_rain_2000$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
                                                 values = exposure_palette,
                                                 na.value = "white")
-map_rain_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor Rain > 75 mm"
+map_rain_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor Rain Metric"
 b <- map_rain_2000$render()
 ```
 
@@ -279,7 +279,7 @@ map_dist_count$set_zoom(eastern_states)
 map_dist_count$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
                                                 values = exposure_palette,
                                                 na.value = "white")
-map_dist_count$title <- "Hits for top 2,000 Storm-County Pairs\nfor Distance < 100 km"
+map_dist_count$title <- "Hits for top 2,000 Storm-County Pairs\nfor Distance <= 100 km"
 a <- map_dist_count$render()
 ```
 
@@ -301,7 +301,7 @@ map_rain_count$set_zoom(eastern_states)
 map_rain_count$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
                                                 values = exposure_palette,
                                                 na.value = "white")
-map_rain_count$title <- "Hits for top 2,000 Storm-County Pairs\nfor Rain > 75 mm"
+map_rain_count$title <- "Hits for top 2,000 Storm-County Pairs\nfor Rain > 75 mm and Distance <= 500 km"
 b <- map_rain_count$render()
 ```
 
@@ -431,12 +431,12 @@ names(rain_plots) <- letters[1:n]
 grid.arrange(rain_plots$a, rain_plots$b, rain_plots$c, rain_plots$d, ncol = 2)
 ```
 
-Here are the top storms when measured by summing all rainfall for all counties exposed to the storm (where "exposed" means the county was within 500 km of the storm track and had 75 mm or more of rainfall over the three-day window when the storm was closest to the county).
+Here are the top storms when measured by summing all rainfall for all eastern US counties exposed within 500 km of the storm track (rainfall totals are for the three-day window when the storm was closest to each county).
 
 ```{r echo = FALSE}
 rain_exposure <- county_rain(counties = my_fips,
                              start_year = 1988, end_year = 2011,
-                             rain_limit = 75, dist_limit = 500,
+                             rain_limit = 0, dist_limit = 500,
                              days_include = c(-1, 0, 1))
 
 rain_exposure %>%
@@ -445,7 +445,7 @@ rain_exposure %>%
         arrange(desc(sum_rain)) %>%
         slice(1:10) %>%
         kable(col.names = c("Storm", "Summed county-level rainfall"),
-              caption = "Top 10 storms based on summed rainfall across all counties exposed, using a metric of rainfall.")
+              caption = "Top 10 storms based on summed rainfall across all eastern US counties within 500 km of the storm track.")
 ```
 
 Here is a map of the rain totals for Frances: 
