@@ -332,7 +332,19 @@ sum(all_exposure$tot_precip < 75 & all_exposure$storm_dist.x <= 100, na.rm = TRU
                                                                                    # storm pairs, there is ample
                                                                                    # rain to meet criteria        
 sum(all_exposure$tot_precip < 75, na.rm = TRUE) # This also returns 0
-```
+#Test
+rain_exposure_2 <- county_rain(counties = my_fips,
+                             start_year = 1988, end_year = 2011,
+                             rain_limit = 75, dist_limit = 100,
+                             days_include = c(-1, 0, 1)) # Creates a data frame with 4040 obs (expected)
+distance_rain_exposure <- county_rain(counties = my_fips,
+                             start_year = 1988, end_year = 2011,
+                             rain_limit = 0, dist_limit = 100,
+                             days_include = c(-1, 0, 1)) 
+sum(distance_rain_exposure$tot_precip >= 75) # 4040 obs (meet both criteria)
+sum(distance_rain_exposure$tot_precip < 75 & distance_rain_exposure$storm_dist <= 100) #7103 obs meet distance but 
+                                                                                       #not rain criteria
+``` 
 
 JMF-- I was surprised to see that there were no observations in the data frame that had total precipitation less than 75 mm. I am wondering if I am missing something in the `full_join` code
 
