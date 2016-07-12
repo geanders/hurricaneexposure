@@ -271,7 +271,8 @@ rain_exposure <- function(locations, start_year, end_year,
                                   rain_limit = rain_limit,
                                   dist_limit = dist_limit,
                                   days_included = days_included) %>%
-                        dplyr::rename_(loc = ~ commun)
+                        dplyr::rename_(loc = ~ commun) %>%
+                        dplyr::ungroup()
         } else {
                 df <- county_rain(counties = locations,
                                   start_year = start_year,
@@ -286,7 +287,7 @@ rain_exposure <- function(locations, start_year, end_year,
         for(i in 1:length(locs)){
                 out_df <- df %>%
                         dplyr::filter_(~ loc == locs[i]) %>%
-                        dplyr::select_('-loc')
+                        dplyr::select_(.dots = list(quote(-loc)))
                 out_file <- paste0(out_dir, "/", locs[i], ".", out_type)
                 if(out_type == "rds"){
                         saveRDS(out_df, file = out_file)

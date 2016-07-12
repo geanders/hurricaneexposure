@@ -169,7 +169,8 @@ distance_exposure <- function(locations, start_year, end_year,
                                   start_year = start_year,
                                   end_year = end_year,
                                   dist_limit = dist_limit) %>%
-                        dplyr::rename_(loc = ~ commun)
+                        dplyr::rename_(loc = ~ commun) %>%
+                        dplyr::ungroup()
         } else {
                 df <- county_distance(counties = locations,
                                   start_year = start_year,
