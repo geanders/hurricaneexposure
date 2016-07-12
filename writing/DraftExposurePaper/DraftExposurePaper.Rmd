@@ -206,7 +206,7 @@ map_dist_2000$set_zoom(eastern_states)
 map_dist_2000$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
                                                 values = exposure_palette,
                                                 na.value = "white")
-map_dist_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor Distance < 100 km"
+map_dist_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor Distance Metric"
 a <- map_dist_2000$render()
 ```
 
@@ -245,7 +245,7 @@ map_rain_2000$set_zoom(eastern_states)
 map_rain_2000$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
                                                 values = exposure_palette,
                                                 na.value = "white")
-map_rain_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor Rain > 75 mm"
+map_rain_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor Rain Metric"
 b <- map_rain_2000$render()
 ```
 
@@ -279,7 +279,7 @@ map_dist_count$set_zoom(eastern_states)
 map_dist_count$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
                                                 values = exposure_palette,
                                                 na.value = "white")
-map_dist_count$title <- "Hits for top 2,000 Storm-County Pairs\nfor Distance < 100 km"
+map_dist_count$title <- "Hits for top 2,000 Storm-County Pairs\nfor Distance <= 100 km"
 a <- map_dist_count$render()
 ```
 
@@ -301,7 +301,7 @@ map_rain_count$set_zoom(eastern_states)
 map_rain_count$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
                                                 values = exposure_palette,
                                                 na.value = "white")
-map_rain_count$title <- "Hits for top 2,000 Storm-County Pairs\nfor Rain > 75 mm"
+map_rain_count$title <- "Hits for top 2,000 Storm-County Pairs\nfor Rain > 75 mm and Distance <= 500 km"
 b <- map_rain_count$render()
 ```
 
@@ -443,12 +443,12 @@ names(rain_plots) <- letters[1:n]
 grid.arrange(rain_plots$a, rain_plots$b, rain_plots$c, rain_plots$d, ncol = 2)
 ```
 
-Here are the top storms when measured by summing all rainfall for all counties exposed to the storm (where "exposed" means the county was within 500 km of the storm track and had 75 mm or more of rainfall over the three-day window when the storm was closest to the county).
+Here are the top storms when measured by summing all rainfall for all eastern US counties exposed within 500 km of the storm track (rainfall totals are for the three-day window when the storm was closest to each county).
 
 ```{r echo = FALSE}
 rain_exposure <- county_rain(counties = my_fips,
                              start_year = 1988, end_year = 2011,
-                             rain_limit = 75, dist_limit = 500,
+                             rain_limit = 0, dist_limit = 500,
                              days_include = c(-1, 0, 1))
 
 rain_exposure %>%
@@ -457,7 +457,7 @@ rain_exposure %>%
         arrange(desc(sum_rain)) %>%
         slice(1:10) %>%
         kable(col.names = c("Storm", "Summed county-level rainfall"),
-              caption = "Top 10 storms based on summed rainfall across all counties exposed, using a metric of rainfall.")
+              caption = "Top 10 storms based on summed rainfall across all eastern US counties within 500 km of the storm track.")
 ```
 
 Here is a map of the rain totals for Frances: 
@@ -585,6 +585,8 @@ Currently, precipitation measurements have not become resolute enough to quantit
 Storm-motion, as well as the direction from which a storm approaches, can play significant roles in determining the extent of precipitation produced by a storm [@Rees2001; @Chang2013]. (Examples include the south-to-north storm circulation for Hurricane Fran (1996) with an east-to-west movement, causing an amplification of rainband convection, which played a key role in runoff distribution [@Rees2001] and increased precipitation intensity for storms approaching Taiwan from the east [@Chang2013]).
 
 The topography of a location (e.g., elevation change in a county) could also affect how extreme rainfall is from a particular storm, as well as whether rains from a tropical storm cause a flood, particularly a flash flood [@Rees2001 on orographic enhancement; @Czajkowski2011 mentions this, but is not a primary source for this point]. For example, topographical characteristics in Taiwan play a key role in regulating rainfall intensity and its location [@Chang2013]. @Chang2013 found that the most intense rainfall was found in areas with the greatest wind-terrain interaction. Storms embodying such characteristics are increasing in both frequency and duration in Taiwan [@Chang2013].[JMF--I am not sure how much of this detail is needed beyond discussing topographical impact, or if mentioning Taiwan distracts from our main focus]. More specifically, the Appalachian mountains provide topography that both enhance precipitation during tropical storms as well as provide ample hydrological conditions for severe flooding [@Rees2001]. Maximum rainfall for Hurricane Fran (1996) occurred in the Appalachians, with flood-peaks reaching recurrance intervals greater than 100 years in many river basins [@Rees2001]. [JMF--This seems to be true for Floyd, too, even though the following study argues severe flooding would have occurred without the mountain regions] However, @Colle2003 performed an extensive evaluation of Hurricane Floyd (1999) in an effort to understand the mechanisms that led to the development of heavy precipitation and flooding. Though differences in the terrain, namely the Appalachian Mountains, contributed to the development of heavy precipitation in this event, @Colle2003 concluded that flooding would have occured in this region regardless of the presence of the Appalachians and other coastal hills. Instead, the heavy precipitation is thought to have been primarily caused by strong frontogenesis in combination with slant-wise neutrality [@Colle2003]. [Look at Bosart and Dean reference in Colle 2003 reference for more on conditions leading to severe flooding]
+
+Flash floods cause most of the flood-related deaths in the eastern US [@Ashley2008], and one study found that most flash flooding in the eastern half of the US results from extreme rainfall over a period of six hours or less [@Ashley2008], which suggests that are exposure window of the three days around a storm may be wide enough to capture the most dangerous exposures.
 
 Other studies, like ours, do not attempt to identify and remove any precipitation over the aggregating period associated with weather systems other than the tropical storm (e.g., @Czajkowski2011).
 
