@@ -319,7 +319,19 @@ exposure_table %>%
         kable(col.names = c("Exposure Criteria", "Total # exposed counties"), 
               caption = "Total number of county hits based on rain, distance, and wind exposures")
 ```
-
+```{r}
+rain_exposure$county_storm <- transmute(rain_exposure, county_storm = paste0(fips, " ", storm_id))
+distance_exposure$county_storm <- transmute(distance_exposure, county_storm = paste0(fips, " ", storm_id))
+all_exposure <- full_join(rain_exposure, distance_exposure, by = "county_storm")
+both_exposure <- subset(all_exposure, tot_precip >= 75 & storm_dist.x <= 100) #4040 observations
+rain_only <- subset(all_exposure, tot_precip >= 75 & storm_dist.x > 100) #4200 obs
+distance_only <- subset(all_exposure, tot_precip < 75 & storm_dist.x <= 100)
+sum(all_exposure$tot_precip >= 75 & all_exposure$storm_dist.x <= 100, na.rm = TRUE)
+sum(all_exposure$tot_precip >= 75 & all_exposure$storm_dist.x > 100, na.rm = TRUE)
+sum(all_exposure$tot_precip < 75 & all_exposure$storm_dist.x <= 100, na.rm = TRUE) # It appears that in all county-
+                                                                                   # storm pairs, there is ample
+                                                                                   # rain to meet criteria
+```
 One interesting contrast is between storms that were noteworthy for direct wind-related deaths (Anderew in 1992, Hugo in 1989) versus storms noteworthy for direct freshwater flooding-related deaths (Floyd in 1999, Alberto in 1994, Charley in 1998) for the 1970--1999 period [@Rappaport2000]. (Another study notes the following storms were notable for inland impacts-- Hugo, 1989 (wind and rain); Floyd, 1999 (flooding); Allison, 2001 (flooding); Fran, 1996 (wind) [@Kruk2010].) Here are two examples, one of each of these two types:
 
 ```{r fig.width = 6, fig.height = 8, echo = FALSE}
