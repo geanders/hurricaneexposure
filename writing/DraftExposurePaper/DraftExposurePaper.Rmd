@@ -325,13 +325,17 @@ distance_exposure$county_storm <- transmute(distance_exposure, county_storm = pa
 all_exposure <- full_join(rain_exposure, distance_exposure, by = "county_storm")
 both_exposure <- subset(all_exposure, tot_precip >= 75 & storm_dist.x <= 100) #4040 observations
 rain_only <- subset(all_exposure, tot_precip >= 75 & storm_dist.x > 100) #4200 obs
-distance_only <- subset(all_exposure, tot_precip < 75 & storm_dist.x <= 100)
+distance_only <- subset(all_exposure, tot_precip < 75 & storm_dist.x <= 100) #0 obs
 sum(all_exposure$tot_precip >= 75 & all_exposure$storm_dist.x <= 100, na.rm = TRUE)
 sum(all_exposure$tot_precip >= 75 & all_exposure$storm_dist.x > 100, na.rm = TRUE)
 sum(all_exposure$tot_precip < 75 & all_exposure$storm_dist.x <= 100, na.rm = TRUE) # It appears that in all county-
                                                                                    # storm pairs, there is ample
-                                                                                   # rain to meet criteria
+                                                                                   # rain to meet criteria        
+sum(all_exposure$tot_precip < 75, na.rm = TRUE) # This also returns 0
 ```
+
+JMF-- I was surprised to see that there were no observations in the data frame that had total precipitation less than 75 mm. I am wondering if I am missing something in the `full_join` code
+
 One interesting contrast is between storms that were noteworthy for direct wind-related deaths (Anderew in 1992, Hugo in 1989) versus storms noteworthy for direct freshwater flooding-related deaths (Floyd in 1999, Alberto in 1994, Charley in 1998) for the 1970--1999 period [@Rappaport2000]. (Another study notes the following storms were notable for inland impacts-- Hugo, 1989 (wind and rain); Floyd, 1999 (flooding); Allison, 2001 (flooding); Fran, 1996 (wind) [@Kruk2010].) Here are two examples, one of each of these two types:
 
 ```{r fig.width = 6, fig.height = 8, echo = FALSE}
