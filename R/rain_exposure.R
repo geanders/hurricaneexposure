@@ -286,8 +286,7 @@ rain_exposure <- function(locations, start_year, end_year,
 
         for(i in 1:length(locs)){
                 out_df <- df %>%
-                        dplyr::filter_(~ loc == locs[i]) %>%
-                        dplyr::select_(.dots = list(quote(-loc)))
+                        dplyr::filter_(~ loc == locs[i])
                 out_file <- paste0(out_dir, "/", locs[i], ".", out_type)
                 if(out_type == "rds"){
                         saveRDS(out_df, file = out_file)
