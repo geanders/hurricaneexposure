@@ -71,7 +71,7 @@ county_distance <- function(counties, start_year, end_year, dist_limit){
 #' Hurricane exposure by distance for communities
 #'
 #' This function takes a dataframe with multi-county communities and returns a
-#' community-level dataframe of "exposed" storms, based on the average distance
+#' community-level dataframe of "exposed" storms, based on the shortest distance
 #' between the storm's track and the population-based centers of each county
 #' in the community.
 #'

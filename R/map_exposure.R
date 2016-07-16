@@ -130,6 +130,8 @@ map_tracks <- function(storms, plot_object = NULL,
 #'                            days_included = c(-1, 0, 1))
 #' floyd_map
 #'
+#' beryl_map <- map_counties("Beryl-1988", metric = "wind")
+#'
 #' @export
 #'
 #' @importFrom dplyr %>%
@@ -146,6 +148,11 @@ map_counties <-function(storm, metric = "distance",
                                               output_vars = c("fips",
                                                               "tot_precip")) %>%
                         dplyr::rename_(region = ~ fips, value = ~ tot_precip)
+        } else if (metric == "wind") {
+                map_data <- filter_wind_data(storm = storm,
+                                             output_vars = c("fips",
+                                                             "max_sust")) %>%
+                        dplyr::rename_(region = ~ fips, value = ~ max_sust)
         } else{
                 stop("`metric` must be either `distance` or `rainfall`")
         }
@@ -272,6 +279,59 @@ map_distance_exposure <- function(storm, dist_limit){
         return(out$render())
 }
 
+#' Map counties with wind exposure
+#'
+#' Map counties as "exposed" or "unexposed" based on the criterion that the
+#' storm had a certain wind speed (specified by \code{wind_limit}, in meters
+#' per second).
+#'
+#' @inheritParams filter_wind_data
+#' @inheritParams county_rain
+#'
+#' @return Plots a map showing whether eastern US counties were exposed or
+#'    unexposed to a specific storm based on a wind criterion.
+#'
+#' @examples
+#'
+#' beryl_map <- map_wind_exposure(storm = "Beryl-1988", wind_limit = 15)
+#' beryl_map
+#' map_tracks("Beryl-1988", plot_points = FALSE, plot_object = beryl_map)
+#'
+#' @importFrom dplyr %>%
+#'
+#' @export
+map_wind_exposure <- function(storm, wind_limit){
+
+        map_data <- filter_wind_data(storm = storm,
+                                      output_vars = c("fips", "max_gust",
+                                                      "max_sust")) %>%
+                dplyr::mutate_(exposed = ~ max_sust >= wind_limit) %>%
+                dplyr::mutate_(value = ~ factor(exposed,
+                                                levels = c("FALSE", "TRUE"))) %>%
+                dplyr::mutate_(region = ~ as.numeric(fips)) %>%
+                dplyr::select_(~ region, ~ value) %>%
+                dplyr::tbl_df()
+
+        eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
+                            "district of columbia", "florida", "georgia", "illinois",
+                            "indiana", "iowa", "kansas", "kentucky", "louisiana",
+                            "maine", "maryland", "massachusetts", "michigan",
+                            "mississippi", "missouri", "new hampshire", "new jersey",
+                            "new york", "north carolina", "ohio", "oklahoma",
+                            "pennsylvania", "rhode island", "south carolina",
+                            "tennessee", "texas", "vermont", "virginia",
+                            "west virginia", "wisconsin")
+
+        out <- choroplethr::CountyChoropleth$new(map_data)
+        out$set_zoom(eastern_states)
+        out$ggplot_scale <- ggplot2::scale_fill_manual(name = "",
+                                                       values = c("white",
+                                                                  "darkorange"),
+                                                       labels = c("Unexposed",
+                                                                  "Exposed"))
+        return(out$render())
+}
+
 #' Create a map customized for this package
 #'
 #' This function creates a county choropleth map customized for displaying
@@ -299,6 +359,10 @@ hurr_choroplethr <- function(map_data, metric = "distance"){
                 breaks <- seq(0, 200, by = 25)
                 palette_name <- "Greens"
                 exposure_legend <- "Distance (km)"
+        } else if(metric == "wind"){
+                breaks <- c(0, seq(15, 45, by = 5))
+                palette_name <- "Reds"
+                exposure_legend <- "Wind speed (m / s)"
         }
 
         exposure_palette <- RColorBrewer::brewer.pal(length(breaks) - 2,
