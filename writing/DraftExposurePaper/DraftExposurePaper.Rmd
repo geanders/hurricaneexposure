@@ -149,6 +149,16 @@ storms <- storms[which(gsub("*.+-", "", storms) <= 2011)]
 map_tracks(storms, plot_points = FALSE, alpha = 0.3)
 ```
 
+#### Are our methods of assessing distance reasonable
+
+[Spline vs. linear interpolation? Is 15 minutes adequate? Should we use shapefiles instead? IBTrACS probably has this (`rnoaa`).]
+
+#### Are our methods of assessing rainfall reasonable
+
+[Is three-day window reasonable? Probably should be. If we go larger, there's the problem of picking up things that aren't related to the storm. Storms to check-- Floyd (ET), Irene (ET), Lee (slow moving), Ike (for timing), Faye, Allison]
+
+#### Are our methods of assessing wind speed reasonable
+
 #### Are exposure patterns different when using distance-, rain-, and wind-based metrics? In particular, (1) do some exposure metrics result in more "exposed" classifications than others and (2) are geographic patterns of exposure different among the different metrics?
 
 Map of the count of county exposures to the top 2,000 county-storm pairs by distance-based exposure, based on "exposed" = distance of 100 kilometers or less [GBA-- These are **awesome**. I think we want to tweak the color scale and the legend a bit so that they're consistent between the three plots showing the top 2,000 storm-county pairs for the three metrics (distance, rain, and wind). That will make it easier to compare across the three maps, which is what we want readers to be able to do here.]:
