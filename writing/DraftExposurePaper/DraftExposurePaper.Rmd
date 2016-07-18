@@ -686,8 +686,8 @@ my_hurricanes <- c("Floyd-1999",
                    "Lee-2011", 
                    "Ike-2008",
                    "Allison-2001")
-pdf("validate_precip.pdf")
-for(hurricane in my_hurricanes){
+#pdf("validate_precip.pdf")
+#for(hurricane in my_hurricanes){
         a <- map_counties(storm = hurricane, metric = "rainfall",
                           days_included = -3)
         a <- map_tracks(storm = hurricane, 
@@ -719,7 +719,7 @@ for(hurricane in my_hurricanes){
         precip_plot <- grid.arrange(a, b, c, d, e, f, g, nrow = 2)
         print(precip_plot)
 }
-dev.off()
+#dev.off()
 ```
 
 ```{r}
