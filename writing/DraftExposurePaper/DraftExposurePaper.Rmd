@@ -593,6 +593,32 @@ map_tracks(storms = "Frances-2004", plot_points = FALSE,
         ggtitle(paste("Frances-2004", "rainfall"))
 ```
 
+Here is a table of the top 10 storms by number of counties exposed, based on a wind metric of 18 m/s or greater (e.g., tropical storm strength or greater): 
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+data("closest_dist")
+all_counties <- unique(closest_dist$fips)
+
+all_wind <- county_wind(counties = all_counties, start_year = 1988, 
+                        end_year = 2011, wind_limit = 18)
+
+wind_exposed <- all_wind %>%
+        group_by(storm_id) %>%
+        summarize(number_of_counties_exposed = n()) %>%
+        arrange(desc(number_of_counties_exposed)) %>%
+        top_n(10) 
+
+wind_exposed %>%
+        mutate(storm_id = gsub("-", " (", storm_id),
+               storm_id = paste0(storm_id, ")")) %>%
+        kable(col.names = c("Storm", "# of exposed counties"),
+              caption = "Top 10 storms based on the number of counties exposed, using a metric of wind.")
+```
+#### Is our 3-day window for rian exposure reasonable?
+
+```{r}
+
+```
 
 #### Are storms with heavy rain exposure likely to occur early in the hurricane season?
 
