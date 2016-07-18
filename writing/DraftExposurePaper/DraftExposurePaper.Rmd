@@ -199,6 +199,8 @@ my_hurricanes <- c("Floyd-1999",
 #dev.off()
 ```
 
+For the most part, using a three day window of the day before, day of, and day after a tropical cyclone in assessing precipitation exposure seemed to capture the effects of the storm while excluding precipitation from other weather systems. However, for storms that have tracks that make a loop, such as Allison (2001), this three day window may not be adequate.
+
 #### Are our methods of assessing wind speed reasonable
 
 #### Are exposure patterns different when using distance-, rain-, and wind-based metrics? In particular, (1) do some exposure metrics result in more "exposed" classifications than others and (2) are geographic patterns of exposure different among the different metrics?
