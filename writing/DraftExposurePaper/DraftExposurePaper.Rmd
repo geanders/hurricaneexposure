@@ -682,12 +682,47 @@ For all of the above exposure categories, Lili (1996), Karl (2004), and Ophelia 
 
 ```{r}
 my_hurricanes <- c("Floyd-1999", 
-                   #"Irene-2011", 
-                   #"Lee-2011", 
-                   #"Ike-2008", 
-                   #"Faye-2014",
-                   #"Allison-2001")
-my_day <- c(-3, -2, -1, 0, 1, 2, 3)
+                   "Irene-2011", 
+                   "Lee-2011", 
+                   "Ike-2008",
+                   "Allison-2001")
+pdf("validate_precip.pdf")
+for(hurricane in my_hurricanes){
+        a <- map_counties(storm = hurricane, metric = "rainfall",
+                          days_included = -3)
+        a <- map_tracks(storm = hurricane, 
+                        plot_object = a)
+        b <- map_counties(storm = hurricane, metric = "rainfall",
+                          days_included = -2)
+        b <- map_tracks(storm = hurricane, 
+                        plot_object = b)
+        c <- map_counties(storm = hurricane, metric = "rainfall",
+                          days_included = -1)
+        c <- map_tracks(storm = hurricane, 
+                        plot_object = c)
+        d <- map_counties(storm = hurricane, metric = "rainfall",
+                          days_included = 0)
+        d <- map_tracks(storm = hurricane, 
+                        plot_object = d)
+        e <- map_counties(storm = hurricane, metric = "rainfall",
+                          days_included = 1)
+        e <- map_tracks(storm = hurricane, 
+                        plot_object = e)
+        f <- map_counties(storm = hurricane, metric = "rainfall",
+                          days_included = 2)
+        f <- map_tracks(storm = hurricane, 
+                        plot_object = f)
+        g <- map_counties(storm = hurricane, metric = "rainfall",
+                          days_included = 3)
+        g <- map_tracks(storm = hurricane, 
+                        plot_object = g)
+        precip_plot <- grid.arrange(a, b, c, d, e, f, g, nrow = 2)
+        print(precip_plot)
+}
+dev.off()
+```
+
+```{r}
 for(day in my_day){
         exposed <- map_counties(storm = "Floyd-1999", metric = "rainfall", 
                         days_included = day)
