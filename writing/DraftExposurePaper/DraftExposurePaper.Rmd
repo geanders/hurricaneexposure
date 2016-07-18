@@ -266,6 +266,12 @@ grid.arrange(a, b, ncol = 1)
 Map of county exposures to the top 1000 county-storm pairs by wind-based exposure:
 
 ```{r echo = FALSE}
+#TS winds and above
+TS_wind_exposure <- county_wind(counties = my_fips,
+                             start_year = 1988,
+                             end_year = 2011,
+                             wind_limit = 18,
+                             wind_var = "max_sust")
 # Code for this map here
 ```
 
