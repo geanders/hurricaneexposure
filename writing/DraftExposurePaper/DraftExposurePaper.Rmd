@@ -301,7 +301,30 @@ HU_wind_2000 <- HU_wind_exposure %>%
         rename(region = fips) %>%
         mutate(region = as.numeric(region), count = as.numeric(count)) # Max of 1 again for hits for top Storm-
                                                                        # County pairs
-# Code for this map here 
+TS_wind_2000$value <- cut(TS_wind_2000$count, c(0, 1, 2, 3, 4, 5, 6, 7), 
+                   labels = c("1", "2", "3", "4", "5", "6", "7"), 
+                   include.lowest = TRUE)
+exposure_palette <- brewer.pal(7, name = "YlGnBu")
+map_TS_2000 <- CountyChoropleth$new(TS_wind_2000)
+map_TS_2000$set_zoom(eastern_states)
+map_TS_2000$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
+                                                values = exposure_palette,
+                                                na.value = "white")
+map_TS_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor TS Wind Metric"
+a <- map_TS_2000$render()
+HU_wind_2000$value <- cut(TS_wind_2000$count, c(0, 1, 2, 3, 4, 5, 6, 7), 
+                   labels = c("1", "2", "3", "4", "5", "6", "7"), 
+                   include.lowest = TRUE)
+map_HU_2000 <- CountyChoropleth$new(HU_wind_2000)
+map_HU_2000$set_zoom(eastern_states)
+map_HU_2000$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
+                                                values = exposure_palette,
+                                                na.value = "white")
+map_HU_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor HU Wind Metric"
+b <- map_HU_2000$render()
+```
+```{r fig.width = 6, fig.height = 8, echo = FALSE}
+grid.arrange(a, b, ncol = 1)
 ```
 
 Here are a map of total count of "exposures" by county, based on "exposed" = distance of 100 [or do we want a different distance limit for this? What seems reasonable?; JMF-- Based on what I have read so far, I think this seems reasonable, unless we want to push it out to 120 km to loosely reflect the Czajkowski study which seems to have found a great number of fatalities in tertiary counties] kilometers or less and a map of total count of "exposures" by county, based on "exposed" = rainfall over a three-day window of 75 millimeters or more and distance of 500 kilometers or less: 
