@@ -312,7 +312,7 @@ map_TS_2000$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
                                                 na.value = "white")
 map_TS_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor TS Wind Metric"
 a <- map_TS_2000$render()
-HU_wind_2000$value <- cut(TS_wind_2000$count, c(0, 1, 2, 3, 4, 5, 6, 7), 
+HU_wind_2000$value <- cut(HU_wind_2000$count, c(0, 1, 2, 3, 4, 5, 6, 7), 
                    labels = c("1", "2", "3", "4", "5", "6", "7"), 
                    include.lowest = TRUE)
 map_HU_2000 <- CountyChoropleth$new(HU_wind_2000)
@@ -323,9 +323,42 @@ map_HU_2000$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
 map_HU_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor HU Wind Metric"
 b <- map_HU_2000$render()
 ```
+
 ```{r fig.width = 6, fig.height = 8, echo = FALSE}
 grid.arrange(a, b, ncol = 1)
 ```
+
+```{r}
+#Category 3 and above 
+cat3_exposure <- county_wind(counties = my_fips,
+                                start_year = 1988,
+                                end_year = 2011,
+                                wind_limit = 50,
+                                wind_var = "max_sust")
+cat3_2000 <- cat3_exposure %>% 
+        arrange(desc(max_sust)) %>%
+        slice (1:2000) %>%
+        group_by(fips) %>%
+        summarise(count = n()) %>%
+        rename(region = fips) %>%
+        mutate(region = as.numeric(region), count = as.numeric(count))
+cat3_2000$value <- cut(cat3_2000$count, c(0, 1, 2, 3, 4, 5, 6, 7), 
+                   labels = c("1", "2", "3", "4", "5", "6", "7"), 
+                   include.lowest = TRUE)
+map_cat3_2000 <- CountyChoropleth$new(cat3_2000)
+map_cat3_2000$set_zoom(eastern_states)
+map_cat3_2000$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
+                                                values = exposure_palette,
+                                                na.value = "white")
+map_cat3_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor Category 3 and Above Wind Metric"
+c <- map_cat3_2000$render()
+```
+
+```{r fig.width = 6, fig.height = 8, echo = FALSE}
+grid.arrange(a, b, c, ncol = 1)
+```
+
+JMF-- I do not think that using the top 2000 Storm-County pairs will be too descriptive (All 3 maps have the identical 2000 pairs), any ideas?
 
 Here are a map of total count of "exposures" by county, based on "exposed" = distance of 100 [or do we want a different distance limit for this? What seems reasonable?; JMF-- Based on what I have read so far, I think this seems reasonable, unless we want to push it out to 120 km to loosely reflect the Czajkowski study which seems to have found a great number of fatalities in tertiary counties] kilometers or less and a map of total count of "exposures" by county, based on "exposed" = rainfall over a three-day window of 75 millimeters or more and distance of 500 kilometers or less: 
 
