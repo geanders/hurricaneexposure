@@ -681,7 +681,48 @@ For all of the above exposure categories, Lili (1996), Karl (2004), and Ophelia 
 #### Is our 3-day window for rian exposure reasonable?
 
 ```{r}
-
+my_hurricanes <- c("Floyd-1999", 
+                   #"Irene-2011", 
+                   #"Lee-2011", 
+                   #"Ike-2008", 
+                   #"Faye-2014",
+                   #"Allison-2001")
+my_day <- c(-3, -2, -1, 0, 1, 2, 3)
+for(day in my_day){
+        exposed <- map_counties(storm = "Floyd-1999", metric = "rainfall", 
+                        days_included = day)
+        tracks <- map_tracks(storm = "Floyd-1999", 
+                        plot_object = exposed)
+        print(tracks)
+}
+for(day in my_day){
+        exposed <- map_counties(storm = "Irene-2011", metric = "rainfall", 
+                        days_included = day)
+        tracks <- map_tracks(storm = "Irene-2011", 
+                        plot_object = exposed)
+        print(tracks)
+}
+for(day in my_day){
+        exposed <- map_counties(storm = "Lee-2011", metric = "rainfall", 
+                        days_included = day)
+        tracks <- map_tracks(storm = "Lee-2011", 
+                        plot_object = exposed)
+        print(tracks)
+}
+for(day in my_day){
+        exposed <- map_counties(storm = "Ike-2008", metric = "rainfall", 
+                        days_included = day)
+        tracks <- map_tracks(storm = "Ike-2008", 
+                        plot_object = exposed)
+        print(tracks)
+}
+for(day in my_day){
+        exposed <- map_counties(storm = "Allison-2001", metric = "rainfall", 
+                        days_included = day)
+        tracks <- map_tracks(storm = "Allison-2001", 
+                        plot_object = exposed)
+        print(tracks)
+}
 ```
 
 #### Are storms with heavy rain exposure likely to occur early in the hurricane season?
