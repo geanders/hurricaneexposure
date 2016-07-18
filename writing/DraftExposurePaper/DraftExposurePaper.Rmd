@@ -614,6 +614,23 @@ wind_exposed %>%
         kable(col.names = c("Storm", "# of exposed counties"),
               caption = "Top 10 storms based on the number of counties exposed, using a metric of wind.")
 ```
+
+Here are plots of the top four storms based on number of counties exposed by wind:
+
+```{r echo = FALSE, fig.width = 10, fig.height = 8}
+top_wind_exposed <- function(storm_id){
+        my_map <- map_wind_exposure(storm_id, wind_limit = 18)
+        my_map <- map_tracks(storm = storm_id, plot_object = my_map, 
+                             plot_points = FALSE) + 
+                ggtitle(paste0(gsub("-", " (", storm_id), ")"))
+}
+
+n <- 4
+wind_plots <- lapply(wind_exposed$storm_id[1:n], top_wind_exposed)
+names(wind_plots) <- letters[1:n]
+grid.arrange(wind_plots$a, wind_plots$b, wind_plots$c,
+             wind_plots$d, ncol = 2)
+```
 #### Is our 3-day window for rian exposure reasonable?
 
 ```{r}
