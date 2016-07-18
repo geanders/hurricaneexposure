@@ -272,7 +272,36 @@ TS_wind_exposure <- county_wind(counties = my_fips,
                              end_year = 2011,
                              wind_limit = 18,
                              wind_var = "max_sust")
-# Code for this map here
+#HU exposures (32.1 mps and above)
+HU_wind_exposure <- county_wind(counties = my_fips,
+                                start_year = 1988,
+                                end_year = 2011,
+                                wind_limit = 32.1,
+                                wind_var = "max_sust")
+TS_wind_2000 <- TS_wind_exposure %>% 
+        arrange(desc(max_sust)) %>%
+        slice (1:2000) %>%
+        group_by(fips) %>%
+        summarise(count = n()) %>%
+        rename(region = fips) %>%
+        mutate(region = as.numeric(region), count = as.numeric(count)) # Max is 1 for hits for top Storm-County
+                                                                       # pairs
+test <- TS_wind_exposure %>%         
+        group_by(fips) %>%
+        summarise(count = n()) %>%
+        rename(region = fips) %>%
+        mutate(region = as.numeric(region), count = as.numeric(count)) %>%
+        arrange(desc(count)) %>%
+        slice (1:2000) #This gives a max of 17 for number of counts for the top 2000 counties
+HU_wind_2000 <- HU_wind_exposure %>% 
+        arrange(desc(max_sust)) %>%
+        slice (1:2000) %>%
+        group_by(fips) %>%
+        summarise(count = n()) %>%
+        rename(region = fips) %>%
+        mutate(region = as.numeric(region), count = as.numeric(count)) # Max of 1 again for hits for top Storm-
+                                                                       # County pairs
+# Code for this map here 
 ```
 
 Here are a map of total count of "exposures" by county, based on "exposed" = distance of 100 [or do we want a different distance limit for this? What seems reasonable?; JMF-- Based on what I have read so far, I think this seems reasonable, unless we want to push it out to 120 km to loosely reflect the Czajkowski study which seems to have found a great number of fatalities in tertiary counties] kilometers or less and a map of total count of "exposures" by county, based on "exposed" = rainfall over a three-day window of 75 millimeters or more and distance of 500 kilometers or less: 
