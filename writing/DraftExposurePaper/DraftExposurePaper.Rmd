@@ -163,12 +163,12 @@ my_hurricanes <- c("Floyd-1999",
                    "Lee-2011", 
                    "Ike-2008",
                    "Allison-2001")
-#pdf("validate_precip.pdf")
-#for(hurricane in my_hurricanes){
+pdf("validate_precip.pdf", height = 8, width = 12)
+for(hurricane in my_hurricanes){
         a <- map_counties(storm = hurricane, metric = "rainfall",
-                          days_included = -3)
+                          days_included = -3) + theme(legend.position="none")
         a <- map_tracks(storm = hurricane, 
-                        plot_object = a)
+                        plot_object = a, plot_points = FALSE)
         b <- map_counties(storm = hurricane, metric = "rainfall",
                           days_included = -2)
         b <- map_tracks(storm = hurricane, 
@@ -193,10 +193,11 @@ my_hurricanes <- c("Floyd-1999",
                           days_included = 3)
         g <- map_tracks(storm = hurricane, 
                         plot_object = g)
-        precip_plot <- grid.arrange(a, b, c, d, e, f, g, nrow = 2)
+        precip_plot <- grid.arrange(a, b, c, d, e, f, g, nrow = 2,
+                                    top = textGrob("Title"))
         print(precip_plot)
 }
-#dev.off()
+dev.off()
 ```
 
 For the most part, using a three day window of the day before, day of, and day after a tropical cyclone in assessing precipitation exposure seemed to capture the effects of the storm while excluding precipitation from other weather systems. However, for storms that have tracks that make a loop, such as Allison (2001), this three day window may not be adequate.
