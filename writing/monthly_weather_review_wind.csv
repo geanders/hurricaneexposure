@@ -1,0 +1,111 @@
+storm, location, fips, sust_wind_kt, gust_wind_kt, highest
+"Don-2011", "Laredo, TX", "48479", 30, NA, TRUE
+"Don-2011", "Waldron Field, TX", "48355", NA, 36, TRUE
+"Irene-2011", "Cape Lookout, NC", "37031", 75, NA, FALSE
+"Irene-2011", "Mayport, FL", "12031", 28, NA, FALSE
+"Irene-2011", "Fort Pulaski, GA", "13053", 26, 33, FALSE
+"Irene-2011", "Myrtle Beach, SC", "45051", 30, 38, FALSE
+"Irene-2011", "North Myrtle Beach, SC", "45051", 28, 43, FALSE
+"Irene-2011", "Charleston, SC", "45019", 30, 40, FALSE
+"Irene-2011", "Springmaid Pier, SC", "45051", 40, 54
+"Irene-2011", "Beaufort, NC", "37031", 48, 61, FALSE
+"Irene-2011", "Frisco, NC", "37055", 51, 76, FALSE
+"Irene-2011", "Cedar Island, NC", "37031", NA, 100, TRUE
+"Irene-2011", "Fort Macon, NC", "37031", NA, 80, FALSE
+"Irene-2011", "Oregon Inlet, NC", "37055", 51, 70, FALSE
+"Irene-2011", "Duck, NC", "37055", 61, 73, FALSE
+"Irene-2011", "Richmond, VA", "51760", 35, 61, FALSE
+"Irene-2011", "Williamsburg, VA", "51830", 21, 66, FALSE
+"Irene-2011", "Reston, VA", "51059", NA, 48, FALSE
+"Irene-2011", "Lorton, VA", "51059", NA, 43, FALSE
+"Irene-2011", "Cape Henry, VA", "51810", 48, 57, FALSE
+"Irene-2011", "Salisbury, MD", "24045", 40, 53, FALSE
+"Irene-2011", "Patuxent River NAS, MD", "24039", 36, 56, FALSE
+"Irene-2011", "Chesapeake Beach, MD", "24009", NA, 63, FALSE
+"Irene-2011", "Gaithersburg, MD", "24031", NA, 63, FALSE
+"Irene-2011", "Herring Bay, MD", "24003", 41, 56, FALSE
+"Irene-2011", "Tolly Point, MD", "24003", 45, 60, FALSE
+"Irene-2011", "Thomas Point, MD", "24003", 49, 62, FALSE
+"Irene-2011", "Cove Point, MD", "24009", 51, 63, FALSE
+"Irene-2011", "Georgetown, DE", "10005", 36, 52, FALSE
+"Irene-2011", "Wilmington, DE", "10003", 31, 49, FALSE
+"Irene-2011", "Lewes, DE", "10005", 41, 57, FALSE
+"Irene-2011", "Atlantic City, NJ", "34001", 35, 50, FALSE
+"Irene-2011", "Newark, NJ", "34013", 39, 53, FALSE
+"Irene-2011", "Perth Amboy Junction, NJ", "34039", NA, 58, FALSE
+"Irene-2011", "Cape May, NJ", "34009", 51, 65, FALSE
+"Irene-2011", "Atlantic City, NJ", "34001", 30, 55, FALSE
+"Irene-2011", "Philadelphia, PA", "42101", 30, 45, FALSE
+"Irene-2011", "Allentown, PA", "42077", 29, 46, FALSE
+"Irene-2011", "Newbold, PA", "42101", 26, 38, FALSE
+"Irene-2011", "Philadelphia, PA", "42101", 20, 35, FALSE
+"Irene-2011", "New York-LaGuardia, NY", "36061", 45, 58, FALSE
+"Irene-2011", "Islip, NY", "36103", 41, 54, FALSE
+"Irene-2011", "Sayville, NY", "36103", NA, 79, FALSE
+"Irene-2011", "East Moriches, NY","36103", NA, 62, FALSE
+"Irene-2011", "Kings Point, NY", "36059", 33, 43, FALSE
+"Irene-2011", "Bridgeport, CT", ..., 40, 55, FALSE
+"Irene-2011", "New Haven, CT", ..., 37, 58, FALSE
+"Irene-2011", "Bridgeport, CT", ..., 37, 45, FALSE
+"Irene-2011", "New London, CT", ..., 37, 47, FALSE
+"Irene-2011", "Providence, RI", ..., 34, 56, FALSE
+"Irene-2011", "Block Island, RI", ..., 31, 48, FALSE
+"Irene-2011", "Quonset Point, RI", ..., 44, 56, FALSE
+"Irene-2011", "Hyannis, MA", ..., 38, 57, FALSE
+"Irene-2011", "Milton, MA", ..., 37, 70, FALSE
+"Irene-2011", "Nantucket Island, MA", ..., 26, 42
+"Irene-2011", "Springfield, VE", ..., NA, 35, FALSE
+"Irene-2011", "Burlington, VE", ..., NA, 43, FALSE
+"Irene-2011", "Nashua, VE", ..., 28, 45, FALSE
+"Irene-2011", "Mt. Washington, VE", ..., 86, 97, FALSE
+"Irene-2011", "Augusta, ME", ..., 32, 49, FALSE
+"Irene-2011", "Bar Harbor, ME", ..., 32, 46, FALSE
+"Irene-2011", "Wells, ME", ..., 29, 38, FALSE
+"Irene-2011", "Eastport, ME", ..., 36, 47, FALSE
+"Lee-2011", "Dauphin Island, AL", "01097", 44, NA, TRUE
+"Lee-2011", "New Orleans, LA", "22071", 42, NA, FALSE
+"Lee-2011", "Galveston, TX", "48167", 34, 41, FALSE
+"Alex-2010", "Port Isabel, TX", "48061", 44, 54, TRUE
+"Bonnie-2010", "Elliot Key, FL", "12086", 35, NA, FALSE
+"Bonnie-2010", "Fowey Rocks, FL", "12086", 41, 49, TRUE
+"Hermine-2010", "Harlingen, TX", "48061", 51, 63, TRUE
+"Claudette-2009", "Fort Walton Beach, FL", "12091", 40, NA, NA
+"Claudette-2009", "Eastpoint, FL", "12037", 43, 57, TRUE
+"Claudette-2009", "Apalachicola, FL", "12037", 31, 45, FALSE
+"Claudette-2009", "Crestview, FL", "12091", 20, 34, FALSE
+"Claudette-2009", "Destin Airport, FL", "12091", 24, 39, FALSE
+"Claudette-2009", "Panama City, FL", "12005", 21, 34, FALSE
+"Claudette-2009", "Tallahassee, FL", "12073", 22, 34, FALSE
+"Claudette-2009", "Tyndall AFB, FL", "12005", 29, 37, FALSE
+"Claudette-2009", "Valparaiso, FL", "12091", NA, 39, FALSE
+"Claudette-2009", "Apalachicola, FL", "12037", 29, 40, FALSE
+"Claudette-2009", "Panama City, FL", "12005", 24, 41, FALSE
+"Claudette-2009", "Tyndall AFB, FL", "12005", 44, 52, FALSE
+"Claudette-2009", "Eglin AFB, FL", "12091", NA, 43, FALSE
+"Claudette-2009", "Shell Point, FL", "12129", 32, 40, FALSE
+"Claudette-2009", "Alligator Point, FL", "12037", 42, 51, FALSE
+"Claudette-2009", "Lanark Village, FL", "12037", 28, 35, FALSE
+"Claudette-2009", "Andalusia, AL", "01039", NA, 35, FALSE
+"Ida-2009", "Belle Chasse, LA", "22075", NA, 38, FALSE
+"Ida-2009", "Boothville, LA", "22075", NA, 50, FALSE
+"Ida-2009", "New Orleans, LA", "22071", NA, 39, FALSE
+"Ida-2009", "New Orleans, LA", "22071", NA, 36, FALSE
+"Ida-2009", "Grand Isle, LA", "22051", 33, 44, FALSE
+"Ida-2009", "Shell Beach, LA", "22087", 43, 55, FALSE
+"Ida-2009", "Biloxi, MS", "28047", NA, 42, FALSE
+"Ida-2009", "Pascagoula, MS", "28059", NA, 39, FALSE
+"Ida-2009", "Gulfport, MS", "28047", 37, 45, FALSE
+"Ida-2009", "Gulfport, MS", "28047", 34, 46, FALSE
+"Ida-2009", "Bay Waveland Yacht Club, MS", "28045", 38, 48, FALSE
+"Ida-2009", "Petit Bois Island, MS", "28059",  40, 51, FALSE
+"Ida-2009", "Jackson County, MS", "28059", 33, 41, FALSE
+"Ida-2009", "Gulf Shores, AL", "01003", NA, 38, FALSE
+"Ida-2009", "Mobile, AL", "01097", NA, 41, FALSE
+"Ida-2009", "Dauphin Island, AL", "01097", NA, 42, FALSE
+"Ida-2009", "Fort Morgan, AL", "01003", 40, 46, FALSE
+"Ida-2009", "Destin, FL", "12091", NA, 40, FALSE
+"Ida-2009", "Pensacola, FL", "12033", NA, 38, FALSE
+"Ida-2009", "Pensacola, FL", "12033", NA, 37, FALSE
+"Ida-2009", "Sand Key, FL", "12103", 40, NA, FALSE
+"Ida-2009", "Tyndall AFB, FL", "12005", 41, 50, FALSE
+"Ida-2009", "Apalachicola, FL", "12037", NA, 38, FALSE

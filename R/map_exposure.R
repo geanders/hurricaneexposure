@@ -154,7 +154,7 @@ map_counties <-function(storm, metric = "distance",
                                                              "max_sust")) %>%
                         dplyr::rename_(region = ~ fips, value = ~ max_sust)
         } else{
-                stop("`metric` must be either `distance` or `rainfall`")
+                stop("`metric` must be either `distance`, `rainfall`, or `wind`")
         }
         map_data <- map_data %>%
                 dplyr::mutate_(region = ~ as.numeric(region)) %>%

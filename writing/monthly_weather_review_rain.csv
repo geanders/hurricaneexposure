@@ -1,0 +1,56 @@
+storm, location, fips, rain_mm, highest
+"Don-2011", "Bay City, TX", "48321", 65, TRUE
+"Irene-2011", "Bayboro, NC", "37137", 399.8, TRUE
+"Irene-2011", "Beaufort, NC", ..., 160.27, FALSE
+"Irene-2011", "Frisco, NC", ..., 171.96, FALSE
+"Irene-2011", "Richmond, VA", ..., 136.40, FALSE
+"Irene-2011", "Georgetown, DE", ..., 142.24, FALSE
+"Irene-2011", "Wilmington, DE", ..., 176.28, FALSE
+"Irene-2011", "Atlantic City, NJ", ..., 149.35, FALSE
+"Irene-2011", "Newark, NJ", ..., 226.57, FALSE
+"Irene-2011", "Philadelphia, PA", ..., 144.78, FALSE
+"Irene-2011", "Allentown, PA", ..., 127.25, FALSE
+"Irene-2011", "New York-LaGuardia, NY", ..., 136.40, FALSE
+"Irene-2011", "Islip, NY", ..., 76.96, FALSE
+"Irene-2011", "Bridgeport, CT", ..., 88.90, FALSE
+"Irene-2011", "New Haven, CT", ..., 84.84, FALSE
+"Irene-2011", "Providence, RI", ..., 50.29, FALSE
+"Irene-2011", "Block Island, RI", ..., 19.05, FALSE
+"Irene-2011", "Hyannis, MA", ..., 1.78, FALSE
+"Irene-2011", "Milton, MA", ..., 50.55, FALSE
+"Irene-2011", "Springfield, VE", ..., 143.76, FALSE
+"Irene-2011", "Burlington, VE", ..., 85.85, FALSE
+"Irene-2011", "Nashua, VE", ..., 77.22, FALSE
+
+
+
+
+
+"Lee-2011", "Colonial Beach, VA", "51193", 532.4, TRUE
+"Lee-2011", "Holden, LA", "22063", 393.1, FALSE
+"Lee-2011", "Pine Grove, PA", "42107", 386.6, FALSE
+"Lee-2011", "New Orleans, LA", "22071", 320, FALSE
+"Lee-2011", "Mobile, AL", "01097", 320, FALSE
+"Bonnie-2010", "Bal Harbour, FL", "12086", 82.6, TRUE
+"Hermine-2010", "Georgetown Lake, TX", "48491", 415.8, NA
+"Nicole-2010", "North Key Largo, FL", "12087", 321.1, NA
+"Claudette-2009", "Milligan, FL", "12091", 118.4, TRUE
+"Claudette-2009", "Apalachicola, FL", "12037", 80.0, FALSE
+"Claudette-2009", "Panama City, FL", "12005", 53.6, FALSE
+"Claudette-2009", "Cape San Blas, FL", "12045", 99.8, FALSE
+"Claudette-2009", "Crestview, FL", "12091", 99.3, FALSE
+"Claudette-2009", "Port St. Joe, FL", "12045", 101.6, FALSE
+"Ida-2009", "New Orleans, LA", "22071", 29.5, FALSE
+"Ida-2009", "New Orleans, LA", "22071", 3.0, FALSE
+"Ida-2009", "Gulfport, MS",  "28047", 63.2, FALSE
+"Ida-2009", "Pascagoula, MS", "28059", 86.9, FALSE
+"Ida-2009", "Ocean Springs, MS", "28059", 71.9, FALSE
+"Ida-2009", "Elberta, AL", "01003", 148.3, FALSE
+"Ida-2009", "Foley, AL", "01003", 167.9, FALSE
+"Ida-2009", "Orange Beach, AL", "01003", 128.0, FALSE
+"Ida-2009", "Summerdale, AL", "01003", 155.7, FALSE
+"Ida-2009", "Theodore, AL", "01097", 127.0, FALSE
+"Ida-2009", "Bellview, FL", "12033", 129.3, FALSE
+"Ida-2009", "Ensley, FL", "12033", 136.1, FALSE
+"Ida-2009", "Gonzales, FL", "12033", 171.2, TRUE
+"Ida-2009", "Pensacola, FL", "12033", 124.7, FALSE
