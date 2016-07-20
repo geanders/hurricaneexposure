@@ -221,7 +221,7 @@ rain_lag <- rain %>%
         mutate(storm_county = paste0(storm_id, "_", fips)) %>%
         filter(storm_county %in% storm_lag$storm_county)
 rain_lag_plot <- ggplot(rain_lag, aes(x = lag, y = precip, group = storm_county)) +
-        geom_line(alpha = 0.2, size = 0.5)
+        geom_line(alpha = 0.1, size = 0.3) + theme_minimal()
 rain_lag_plot
 ```
 
