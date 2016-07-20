@@ -56,6 +56,7 @@ library(dplyr)
 library(tidyr)
 library(choroplethr)
 library(RColorBrewer)
+library(grid)
 ```
 
 
@@ -171,31 +172,31 @@ for(hurricane in my_hurricanes){
         a <- map_tracks(storm = hurricane, 
                         plot_object = a, plot_points = FALSE)
         b <- map_counties(storm = hurricane, metric = "rainfall",
-                          days_included = -2)
+                          days_included = -2) + theme(legend.position = "none")
         b <- map_tracks(storm = hurricane, 
-                        plot_object = b)
+                        plot_object = b, plot_points = FALSE)
         c <- map_counties(storm = hurricane, metric = "rainfall",
-                          days_included = -1)
+                          days_included = -1) + theme(legend.position = "none")
         c <- map_tracks(storm = hurricane, 
-                        plot_object = c)
+                        plot_object = c, plot_points - FALSE)
         d <- map_counties(storm = hurricane, metric = "rainfall",
-                          days_included = 0)
+                          days_included = 0) + theme(legend.position = FALSE)
         d <- map_tracks(storm = hurricane, 
-                        plot_object = d)
+                        plot_object = d, plot_points = FALSE)
         e <- map_counties(storm = hurricane, metric = "rainfall",
-                          days_included = 1)
+                          days_included = 1) + theme(legend.position = "none")
         e <- map_tracks(storm = hurricane, 
-                        plot_object = e)
+                        plot_object = e, plot_points = FALSE)
         f <- map_counties(storm = hurricane, metric = "rainfall",
-                          days_included = 2)
+                          days_included = 2) + theme(legend.position = "none")
         f <- map_tracks(storm = hurricane, 
-                        plot_object = f)
+                        plot_object = f, plot_points = FALSE)
         g <- map_counties(storm = hurricane, metric = "rainfall",
-                          days_included = 3)
+                          days_included = 3) + theme(legend.position = "none")
         g <- map_tracks(storm = hurricane, 
-                        plot_object = g)
+                        plot_object = g, plot_points = FALSE)
         precip_plot <- grid.arrange(a, b, c, d, e, f, g, nrow = 2,
-                                    top = textGrob("Title"))
+                                    top = textGrob(paste0("7-Day Precipitation For\n Storm ", hurricane)))
         print(precip_plot)
 }
 dev.off()
