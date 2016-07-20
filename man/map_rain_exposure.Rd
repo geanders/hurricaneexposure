@@ -4,7 +4,8 @@
 \alias{map_rain_exposure}
 \title{Map counties with rain exposure}
 \usage{
-map_rain_exposure(storm, rain_limit, dist_limit, days_included = c(-1, 0, 1))
+map_rain_exposure(storm, rain_limit, dist_limit, days_included = c(-2, -1, 0,
+  1))
 }
 \arguments{
 \item{storm}{Character string giving the name of the storm to plot (e.g.,

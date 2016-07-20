@@ -9,9 +9,17 @@ county_events(counties, start_year, end_year, event_type)
 \description{
 Find events for storms by county
 }
+\note{
+Of the event types that this function can pull, only "tornado" and
+   "wind" are available for years before 1996. Therefore, this function will
+   pull listed tornado events or wind events for all years, but for any other
+   event type, you should not use a start year prior to 1996, as events of
+   other types were not recorded in the database before 1996.
+}
 \examples{
 county_events(counties = c("37031", "37053", "37055"),
-              start_year = 1999, end_year = 1999,
+              start_year = 1988, end_year = 1999,
               event_type = "flood")
+
 }
 
