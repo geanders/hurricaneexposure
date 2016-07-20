@@ -204,6 +204,25 @@ dev.off()
 
 For the most part, using a three day window of the day before, day of, and day after a tropical cyclone in assessing precipitation exposure seemed to capture the effects of the storm while excluding precipitation from other weather systems. However, for storms that have tracks that make a loop, such as Allison (2001), this three day window may not be adequate.
 
+```{r}
+data(closest_dist)
+
+# Generate a list of unique study fips (all in the eastern US)
+my_fips <- closest_dist$fips
+my_fips <- unique(my_fips)
+storm_lag <- county_rain(counties = my_fips,
+                             start_year = 1988, end_year = 2011,
+                             rain_limit = 150, dist_limit = 500,
+                             days_include = -3:3)
+storm_lag <- storm_lag %>%
+        mutate(storm_county = paste0(storm_id, "_", fips))
+data(rain)
+rain_lag <- rain %>%
+        mutate(storm_county = paste0(storm_id, "_", fips)) %>%
+        filter(storm_county %in% storm_lag$storm_county)
+rain_lag_plot <- 
+```
+
 #### Are our methods of assessing wind speed reasonable
 
 [Validate windspeedmodel functions using Extended Best Tracks Data]
@@ -245,10 +264,10 @@ distance_2000 <- distance_exposure %>%
         rename(region = fips) %>%
         mutate(region = as.numeric(region), count = as.numeric(count))
 
-distance_2000$value <- cut(distance_2000$count, c(0, 1, 2, 3, 4, 5, 6, 7), 
-                   labels = c("1", "2", "3", "4", "5", "6", "7"), 
+distance_2000$value <- cut(distance_2000$count, c(0, 1, 3, 5, 7, 9, 11, 13, 15), 
+                   labels = c("0-1", "2-3", "4-5", "6-7", "8-9", "10-11", "12-13", "14-15"), 
                    include.lowest = TRUE)
-exposure_palette <- brewer.pal(7, name = "YlGnBu")
+exposure_palette <- brewer.pal(8, name = "YlGnBu")
 
 eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
                     "district of columbia", "florida", "georgia", "illinois",
@@ -294,10 +313,10 @@ rain_2000 <- rain_exposure %>%
         rename(region = fips) %>%
         mutate(region = as.numeric(region), count = as.numeric(count))
 
-rain_2000$value <- cut(rain_2000$count, c(0, 1, 2, 3, 4, 5, 6, 7), 
-                   labels = c("1", "2", "3", "4", "5", "6", "7"), 
+rain_2000$value <- cut(rain_2000$count, c(0, 1, 3, 5, 7, 9, 11, 13, 15), 
+                   labels = c("0-1", "2-3", "4-5", "6-7", "8-9", "10-11", "12-13", "14-15"), 
                    include.lowest = TRUE)
-exposure_palette <- brewer.pal(7, name = "YlGnBu")
+exposure_palette <- brewer.pal(8, name = "YlGnBu")
 
 map_rain_2000 <- CountyChoropleth$new(rain_2000)
 map_rain_2000$set_zoom(eastern_states)
@@ -354,8 +373,8 @@ map_TS_2000$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
                                                 na.value = "white")
 map_TS_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor TS Wind Metric"
 a <- map_TS_2000$render()
-HU_wind_2000$value <- cut(HU_wind_2000$count, c(0, 1, 2, 3, 4, 5, 6, 7), 
-                   labels = c("1", "2", "3", "4", "5", "6", "7"), 
+HU_wind_2000$value <- cut(HU_wind_2000$count, c(0, 1, 3, 5, 7, 9, 11, 13, 15), 
+                   labels = c("0-1", "2-3", "4-5", "6-7", "8-9", "10-11", "12-13", "14-15"), 
                    include.lowest = TRUE)
 map_HU_2000 <- CountyChoropleth$new(HU_wind_2000)
 map_HU_2000$set_zoom(eastern_states)
@@ -384,8 +403,8 @@ cat3_2000 <- cat3_exposure %>%
         summarise(count = n()) %>%
         rename(region = fips) %>%
         mutate(region = as.numeric(region), count = as.numeric(count))
-cat3_2000$value <- cut(cat3_2000$count, c(0, 1, 2, 3, 4, 5, 6, 7), 
-                   labels = c("1", "2", "3", "4", "5", "6", "7"), 
+cat3_2000$value <- cut(cat3_2000$count, c(0, 1, 3, 5, 7, 9, 11, 13, 15), 
+                   labels = c("0-1", "2-3", "4-5", "6-7", "8-9", "10-11", "12-13", "14-15"), 
                    include.lowest = TRUE)
 map_cat3_2000 <- CountyChoropleth$new(cat3_2000)
 map_cat3_2000$set_zoom(eastern_states)
@@ -399,8 +418,6 @@ c <- map_cat3_2000$render()
 ```{r fig.width = 6, fig.height = 8, echo = FALSE}
 grid.arrange(a, b, c, ncol = 1)
 ```
-
-JMF-- I do not think that using the top 2000 Storm-County pairs will be too descriptive (All 3 maps have the identical 2000 pairs), any ideas?
 
 Here are a map of total count of "exposures" by county, based on "exposed" = distance of 100 [or do we want a different distance limit for this? What seems reasonable?; JMF-- Based on what I have read so far, I think this seems reasonable, unless we want to push it out to 120 km to loosely reflect the Czajkowski study which seems to have found a great number of fatalities in tertiary counties] kilometers or less and a map of total count of "exposures" by county, based on "exposed" = rainfall over a three-day window of 75 millimeters or more and distance of 500 kilometers or less: 
 
@@ -448,13 +465,35 @@ map_rain_count$title <- "Hits for top 2,000 Storm-County Pairs\nfor Rain > 75 mm
 b <- map_rain_count$render()
 ```
 
+```{r}
+wind_count <- TS_wind_exposure %>%
+              group_by(fips) %>%
+              summarise(count = n()) %>%
+              rename(region = fips) %>%
+              mutate(region = as.numeric(region), count = as.numeric(count)) #Same size df as before (only 474 obs)
+wind_count$value <- cut(wind_count$count, c(0, 5, 8, 12, 15,
+                                                    18, 21, 24),
+                           labels = c("0-5", "6-8", "9-12", "13-15",
+                                      "16-18", "19-21", "22-24"),
+                           include.lowest = TRUE)
+exposure_palette <- brewer.pal(7, name = "YlGnBu")
+
+map_wind_count <- CountyChoropleth$new(wind_count)
+map_wind_count$set_zoom(eastern_states)
+map_wind_count$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
+                                                values = exposure_palette,
+                                                na.value = "white")
+map_wind_count$title <- "Hits for top 2,000 Storm-County Pairs\nfor Wind > 18 m/s"
+c <- map_wind_count$render()
+```
+
 ```{r fig.width = 6, fig.height = 8, echo = FALSE}
-grid.arrange(a, b, ncol = 1)
+grid.arrange(a, b, c, ncol = 1)
 ```
 
 ```{r echo = FALSE}
-exposure_name <- c("Rain_Exposure", "Distance_Exposure")
-count <- c(sum(rain_count$count), sum(distance_count$count))
+exposure_name <- c("Distance_Exposure", "Rain_Exposure", "Wind_Exposure")
+count <- c(sum(distance_count$count), sum(rain_count$count), sum(wind_count$count))
 exposure_table <- cbind(exposure_name, count)
 exposure_table <- data.frame(exposure_table)
 exposure_table %>%
@@ -462,6 +501,7 @@ exposure_table %>%
         kable(col.names = c("Exposure Criteria", "Total # exposed counties"), 
               caption = "Total number of county hits based on rain, distance, and wind exposures")
 ```
+
 ```{r}
 rain_exposure$county_storm <- transmute(rain_exposure, county_storm = paste0(fips, " ", storm_id))
 distance_exposure$county_storm <- transmute(distance_exposure, county_storm = paste0(fips, " ", storm_id))
