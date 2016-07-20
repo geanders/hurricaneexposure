@@ -178,9 +178,9 @@ for(hurricane in my_hurricanes){
         c <- map_counties(storm = hurricane, metric = "rainfall",
                           days_included = -1) + theme(legend.position = "none")
         c <- map_tracks(storm = hurricane, 
-                        plot_object = c, plot_points - FALSE)
+                        plot_object = c, plot_points = FALSE)
         d <- map_counties(storm = hurricane, metric = "rainfall",
-                          days_included = 0) + theme(legend.position = FALSE)
+                          days_included = 0) + theme(legend.position = "none")
         d <- map_tracks(storm = hurricane, 
                         plot_object = d, plot_points = FALSE)
         e <- map_counties(storm = hurricane, metric = "rainfall",
