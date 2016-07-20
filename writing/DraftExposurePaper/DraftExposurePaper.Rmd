@@ -333,15 +333,8 @@ TS_wind_2000 <- TS_wind_exposure %>%
         group_by(fips) %>%
         summarise(count = n()) %>%
         rename(region = fips) %>%
-        mutate(region = as.numeric(region), count = as.numeric(count)) # Max is 1 for hits for top Storm-County
-                                                                       # pairs
-test <- TS_wind_exposure %>%         
-        group_by(fips) %>%
-        summarise(count = n()) %>%
-        rename(region = fips) %>%
-        mutate(region = as.numeric(region), count = as.numeric(count)) %>%
-        arrange(desc(count)) %>%
-        slice (1:2000) #This gives a max of 17 for number of counts for the top 2000 counties
+        mutate(region = as.numeric(region), count = as.numeric(count)) # Max count of 178 is a NA value
+TS_wind_2000 <- subset(TS_wind_2000, !is.na(TS_wind_2000$region)) # Remove NA observation
 HU_wind_2000 <- HU_wind_exposure %>% 
         arrange(desc(max_sust)) %>%
         slice (1:2000) %>%
@@ -350,10 +343,10 @@ HU_wind_2000 <- HU_wind_exposure %>%
         rename(region = fips) %>%
         mutate(region = as.numeric(region), count = as.numeric(count)) # Max of 1 again for hits for top Storm-
                                                                        # County pairs
-TS_wind_2000$value <- cut(TS_wind_2000$count, c(0, 1, 2, 3, 4, 5, 6, 7), 
-                   labels = c("1", "2", "3", "4", "5", "6", "7"), 
+TS_wind_2000$value <- cut(TS_wind_2000$count, c(0, 1, 3, 5, 7, 9, 11, 13, 15), 
+                   labels = c("0-1", "2-3", "4-5", "6-7", "8-9", "10-11", "12-13", "14-15"), 
                    include.lowest = TRUE)
-exposure_palette <- brewer.pal(7, name = "YlGnBu")
+exposure_palette <- brewer.pal(8, name = "YlGnBu")
 map_TS_2000 <- CountyChoropleth$new(TS_wind_2000)
 map_TS_2000$set_zoom(eastern_states)
 map_TS_2000$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
