@@ -49,6 +49,7 @@ library(hurricaneexposure)
 library(hurricaneexposuredata)
 library(knitr)
 library(ggplot2)
+library(ggthemes)
 library(grid)
 library(gridExtra)
 library(plyr)
@@ -159,7 +160,7 @@ map_tracks(storms, plot_points = FALSE, alpha = 0.3)
 
 [Is three-day window reasonable? Probably should be. If we go larger, there's the problem of picking up things that aren't related to the storm. Storms to check-- Floyd (ET), Irene (ET), Lee (slow moving), Ike (for timing), Faye, Allison]
 
-```{r}
+```{r eval = FALSE}
 my_hurricanes <- c("Floyd-1999", 
                    "Irene-2011", 
                    "Lee-2011", 
@@ -168,31 +169,45 @@ my_hurricanes <- c("Floyd-1999",
 pdf("validate_precip.pdf", height = 8, width = 12)
 for(hurricane in my_hurricanes){
         a <- map_counties(storm = hurricane, metric = "rainfall",
-                          days_included = -3) + theme(legend.position="none")
+                          days_included = -3) + 
+                theme(legend.position="none") +
+                ggtitle("Three days before")
         a <- map_tracks(storm = hurricane, 
                         plot_object = a, plot_points = FALSE)
         b <- map_counties(storm = hurricane, metric = "rainfall",
-                          days_included = -2) + theme(legend.position = "none")
+                          days_included = -2) + 
+                theme(legend.position = "none") +
+                ggtitle("Two days before")
         b <- map_tracks(storm = hurricane, 
                         plot_object = b, plot_points = FALSE)
         c <- map_counties(storm = hurricane, metric = "rainfall",
-                          days_included = -1) + theme(legend.position = "none")
+                          days_included = -1) + 
+                theme(legend.position = "none")  +
+                ggtitle("One day before")
         c <- map_tracks(storm = hurricane, 
                         plot_object = c, plot_points = FALSE)
         d <- map_counties(storm = hurricane, metric = "rainfall",
-                          days_included = 0) + theme(legend.position = "none")
+                          days_included = 0) + 
+                theme(legend.position = "none")  +
+                ggtitle("Day of")
         d <- map_tracks(storm = hurricane, 
                         plot_object = d, plot_points = FALSE)
         e <- map_counties(storm = hurricane, metric = "rainfall",
-                          days_included = 1) + theme(legend.position = "none")
+                          days_included = 1) + 
+                theme(legend.position = "none") +
+                ggtitle("One day after")
         e <- map_tracks(storm = hurricane, 
                         plot_object = e, plot_points = FALSE)
         f <- map_counties(storm = hurricane, metric = "rainfall",
-                          days_included = 2) + theme(legend.position = "none")
+                          days_included = 2) + 
+                theme(legend.position = "none") +
+                ggtitle("Two days after")
         f <- map_tracks(storm = hurricane, 
                         plot_object = f, plot_points = FALSE)
         g <- map_counties(storm = hurricane, metric = "rainfall",
-                          days_included = 3) + theme(legend.position = "none")
+                          days_included = 3) + 
+                theme(legend.position = "none") +
+                ggtitle("Three days after")
         g <- map_tracks(storm = hurricane, 
                         plot_object = g, plot_points = FALSE)
         precip_plot <- grid.arrange(a, b, c, d, e, f, g, nrow = 2,
@@ -202,9 +217,60 @@ for(hurricane in my_hurricanes){
 dev.off()
 ```
 
+```{r fig.height=12, fig.width=10}
+hurricane <- "Lee-2011"
+        a <- map_counties(storm = hurricane, metric = "rainfall",
+                          days_included = -3) + 
+                theme(legend.position="none") +
+                ggtitle("Three days before")
+        a <- map_tracks(storm = hurricane, 
+                        plot_object = a, plot_points = FALSE)
+        b <- map_counties(storm = hurricane, metric = "rainfall",
+                          days_included = -2) + 
+                theme(legend.position = "none") +
+                ggtitle("Two days before")
+        b <- map_tracks(storm = hurricane, 
+                        plot_object = b, plot_points = FALSE)
+        c <- map_counties(storm = hurricane, metric = "rainfall",
+                          days_included = -1) + 
+                theme(legend.position = "none")  +
+                ggtitle("One day before")
+        c <- map_tracks(storm = hurricane, 
+                        plot_object = c, plot_points = FALSE)
+        d <- map_counties(storm = hurricane, metric = "rainfall",
+                          days_included = 0) + 
+                theme(legend.position = "none")  +
+                ggtitle("Day of")
+        d <- map_tracks(storm = hurricane, 
+                        plot_object = d, plot_points = FALSE)
+        e <- map_counties(storm = hurricane, metric = "rainfall",
+                          days_included = 1) + 
+                theme(legend.position = "none") +
+                ggtitle("One day after")
+        e <- map_tracks(storm = hurricane, 
+                        plot_object = e, plot_points = FALSE)
+        f <- map_counties(storm = hurricane, metric = "rainfall",
+                          days_included = 2) + 
+                theme(legend.position = "none") +
+                ggtitle("Two days after")
+        f <- map_tracks(storm = hurricane, 
+                        plot_object = f, plot_points = FALSE)
+        g <- map_counties(storm = hurricane, metric = "rainfall",
+                          days_included = 3) + 
+                theme(legend.position = "none") +
+                ggtitle("Three days after")
+        g <- map_tracks(storm = hurricane, 
+                        plot_object = g, plot_points = FALSE)
+        
+precip_plot <- grid.arrange(a, b, c, d, e, f, g, nrow = 4,
+                                    top = textGrob(paste0("7-Day Precipitation For\n Storm ", hurricane)))
+print(precip_plot)
+```
+
+
 For the most part, using a three day window of the day before, day of, and day after a tropical cyclone in assessing precipitation exposure seemed to capture the effects of the storm while excluding precipitation from other weather systems. However, for storms that have tracks that make a loop, such as Allison (2001), this three day window may not be adequate.
 
-```{r}
+```{r warning = FALSE}
 data(closest_dist)
 
 # Generate a list of unique study fips (all in the eastern US)
@@ -219,9 +285,27 @@ storm_lag <- storm_lag %>%
 data(rain)
 rain_lag <- rain %>%
         mutate(storm_county = paste0(storm_id, "_", fips)) %>%
-        filter(storm_county %in% storm_lag$storm_county)
-rain_lag_plot <- ggplot(rain_lag, aes(x = lag, y = precip, group = storm_county)) +
-        geom_line(alpha = 0.1, size = 0.3) + theme_minimal()
+        filter(storm_county %in% storm_lag$storm_county) %>%
+        group_by(storm_county) %>%
+        mutate(cumulative_rain = cumsum(precip),
+               difference_rain = lead(cumulative_rain) - cumulative_rain,
+               next_lag = lead(lag),
+               next_cumulative_rain = lead(cumulative_rain),
+               most_rain = difference_rain == max(difference_rain,
+                                                  na.rm = TRUE))
+to_highlight <- data.frame(x = c(-1.5, -1.5, 1.5, 1.5), y = c(0, 400, 400, 0))
+
+rain_lag_plot <- ggplot(rain_lag, aes(x = lag, y = cumulative_rain)) +
+        theme_tufte() + 
+        geom_segment(aes(xend = next_lag, yend = next_cumulative_rain,
+                         color = most_rain),
+                     alpha = 0.1, size = 0.3) +
+        geom_polygon(data = to_highlight, aes(x = x, y = y),
+                     alpha = 0.2, color = "red", fill = NA) +
+        xlab("Days from storm's closest approach to county") + 
+        ylab("Cumulative rainfall in \ncounty from storm (mm)") + 
+        scale_color_manual(values = c("darkgray", "blue"),
+                           guide = FALSE) 
 rain_lag_plot
 ```
 
