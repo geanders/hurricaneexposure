@@ -73,7 +73,7 @@
 #' @export
 county_rain <- function(counties, start_year, end_year,
                            rain_limit, dist_limit,
-                        days_included = c(-1, 0, 1)){
+                        days_included = c(-2, -1, 0, 1)){
 
         rain_storm_df <- filter_storm_data(counties = counties,
                                            year_range = c(start_year, end_year),
@@ -168,7 +168,7 @@ county_rain <- function(counties, start_year, end_year,
 #' @export
 multi_county_rain <- function(communities, start_year, end_year,
                          rain_limit, dist_limit,
-                         days_included = c(-1, 0, 1)){
+                         days_included = c(-2, -1, 0, 1)){
 
         communities <- dplyr::mutate_(communities, fips = ~ as.character(fips))
 
@@ -257,7 +257,7 @@ multi_county_rain <- function(communities, start_year, end_year,
 #' @export
 rain_exposure <- function(locations, start_year, end_year,
                           rain_limit, dist_limit,
-                          days_included = c(-1, 0, 1),
+                          days_included = c(-2, -1, 0, 1),
                           out_dir, out_type = "csv"){
 
         if(!dir.exists(out_dir)){

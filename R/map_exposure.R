@@ -127,7 +127,7 @@ map_tracks <- function(storms, plot_object = NULL,
 #'
 #' @examples
 #' floyd_map <- map_counties("Floyd-1999", metric = "rainfall",
-#'                            days_included = c(-1, 0, 1))
+#'                            days_included = c(-2, -1, 0, 1))
 #' floyd_map
 #'
 #' beryl_map <- map_counties("Beryl-1988", metric = "wind")
@@ -136,7 +136,7 @@ map_tracks <- function(storms, plot_object = NULL,
 #'
 #' @importFrom dplyr %>%
 map_counties <-function(storm, metric = "distance",
-                        days_included = c(-1, 0, 1)){
+                        days_included = c(-2, -1, 0, 1)){
         if(metric == "distance"){
                 map_data <- filter_storm_data(storm = storm,
                                               output_vars = c("fips",
@@ -188,7 +188,7 @@ map_counties <-function(storm, metric = "distance",
 #'
 #' @export
 map_rain_exposure <- function(storm, rain_limit, dist_limit,
-                              days_included = c(-1, 0, 1)){
+                              days_included = c(-2, -1, 0, 1)){
 
         map_data <- filter_storm_data(storm = storm,
                                            days_included = days_included,
