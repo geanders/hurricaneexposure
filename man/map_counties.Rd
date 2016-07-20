@@ -38,5 +38,7 @@ floyd_map <- map_counties("Floyd-1999", metric = "rainfall",
                            days_included = c(-1, 0, 1))
 floyd_map
 
+beryl_map <- map_counties("Beryl-1988", metric = "wind")
+
 }
 
