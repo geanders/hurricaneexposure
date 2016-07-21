@@ -281,7 +281,6 @@ rain_lag_plot <- ggplot(rain_lag, aes(x = lag, y = cumulative_rain)) +
 rain_lag_plot
 ```
 
-<<<<<<< HEAD
 Justification of NLDAS data: comparison of NLDAS and gauge data for hurricane Alex (2010).
 
 ```{r}
@@ -299,7 +298,6 @@ a <- ggplot(compare_rain, aes(rain_mm, tot_precip, color = fips)) + geom_point()
 a
 ```
 
-=======
 Here is a histogram of the amount of rain per day during a storm for the county-storm pairs with 150 mm or more rain associated with a storm. Although there are outliers with high rainfalls on all days, for most county-storm pairs, the only days with notable rain are one and two days before the storm, the day of the storm, and one day after the storm.
 
 ```{r echo = FALSE, fig.width = 6, fig.height = 4}
@@ -494,7 +492,6 @@ storm_exposed %>%
 
 Only two storms (Irene in 2011 and Floyd and 1999) have over 50% agreement among counties classified as exposed by at least one of the two metrics. Throughout, in almost every storm, among the discordant counties (classified as exposed by one but not both metrics), there were many more counties classified as exposed based on the rain metric but where no flood events were reported in the NOAA Storm Events database. The only exceptions, where more discordant counties were classified as exposed based on flood than rain, were Allison (2001) and Cindy (2005).
 
->>>>>>> 7de5d512393b46d3f1dab5138c5b34525b932b38
 #### Are our methods of assessing wind speed reasonable
 
 [Validate windspeedmodel functions using Extended Best Tracks Data]
