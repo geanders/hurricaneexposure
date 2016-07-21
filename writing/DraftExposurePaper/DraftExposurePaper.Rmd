@@ -310,14 +310,17 @@ a
 compare_rain %>% group_by(fips) %>%
         summarize(ave_rain_mm = mean(rain_mm),
                   ave_tot_precip = mean(tot_precip),
-                  n = n()) %>%
-        ggplot(aes(x = ave_tot_precip, y = ave_rain_mm, size = n)) + 
+                  n = n(),
+                  within_500_km = first(storm_dist) <= 500) %>%
+        ggplot(aes(x = ave_tot_precip, y = ave_rain_mm, 
+                   size = n, color = within_500_km)) + 
         geom_point(alpha = 0.5) + 
         theme_bw() +
         xlim(c(10, 225)) + ylim(c(10, 225)) + 
         geom_abline(intercept = 0, slope = 1) + 
         xlab("Rainfall based on NLDAS-2 data (mm)") + 
-        ylab("Rainfall reported in Monthly \nWeather Report (mm)")
+        ylab("Rainfall reported in Monthly \nWeather Report (mm)") + 
+        scale_color_manual(values = c("blue", "black"), guide = "none") 
 ```
 
 
