@@ -290,12 +290,12 @@ Justification of NLDAS data: comparison of NLDAS and gauge data for hurricane Al
 load("alex_gauge.Rdata")
 alex_nldas <- county_rain(counties = unique(alex_gauge$fips),
                              start_year = 2010, end_year = 2010,
-                             rain_limit = 0, dist_limit = 500,
-                             days_include = c(-2, 0, 1))
+                             rain_limit = 0, dist_limit = 1500,
+                             days_include = c(-2, -1, 0, 1))
 alex_nldas <- alex_nldas %>%
         filter(storm_id == "Alex-2010")
 alex_gauge$fips <- as.character(alex_gauge$fips)
-compare_rain <- full_join(alex_nldas, alex_gauge, by = "fips")
+compare_rain <- right_join(alex_nldas, alex_gauge, by = "fips")
 #alex_nldas <- as.data.table(alex_nldas)
 #alex_gauge <- as.data.table(alex_gauge)
 #compare_rain <- left_join(alex_nldas, alex_gauge, by = "fips")
@@ -314,7 +314,7 @@ compare_rain %>% group_by(fips) %>%
         ggplot(aes(x = ave_tot_precip, y = ave_rain_mm, size = n)) + 
         geom_point(alpha = 0.5) + 
         theme_bw() +
-        xlim(c(75, 225)) + ylim(c(75, 225)) + 
+        xlim(c(10, 225)) + ylim(c(10, 225)) + 
         geom_abline(intercept = 0, slope = 1) + 
         xlab("Rainfall based on NLDAS-2 data (mm)") + 
         ylab("Rainfall reported in Monthly \nWeather Report (mm)")
