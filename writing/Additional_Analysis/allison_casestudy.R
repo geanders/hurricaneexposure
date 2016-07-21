@@ -4,6 +4,7 @@ library(dplyr)
 library(tidyr)
 library(lubridate)
 library(data.table)
+library(choroplethrMaps)
 check_dates <- dplyr::select(closest_dist, -storm_dist) %>%
         dplyr::mutate(closest_date = ymd(closest_date)) %>%
         dplyr::rename(day_0 = closest_date) %>%
@@ -94,12 +95,12 @@ filter_precip_data <- function(df = df, counties = NULL,
         return(closest_dist)
 }
 
-new_function <- function(df = df, days_included = days_included)
 storm_rain <-function(df, days_included = c(-2, -1, 0, 1)){
-                map_data <- filter_data(df = df,
-                                        days_included = days_included,
-                                        output_vars = c("fips",
-                                                        "tot_precip")) %>%
+                map_data <- filter_precip_data(df = df,
+                                               rain_limit = 0,
+                                               days_included = days_included,
+                                               output_vars = c("fips",
+                                                               "tot_precip")) %>%
                         #filter_storm_data(storm = storm, include_rain = TRUE,
                                               #days_included = days_included,
                                               #output_vars = c("fips",
@@ -108,6 +109,17 @@ storm_rain <-function(df, days_included = c(-2, -1, 0, 1)){
         map_data <- map_data %>%
                 dplyr::mutate_(region = ~ as.numeric(region)) %>%
                 dplyr::tbl_df()
-        out <- hurr_choroplethr(map_data, metric = metric)
+        out <- hurricaneexposure:::hurr_choroplethr(map_data, metric = "rainfall")
         return(out$render())
+}
+
+#Create plots of Allison Precipitation
+
+my_lags <- c(-10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+for(lags in my_lags){
+        a <- storm_rain(allison, days_included = lags) +
+                ggtitle(paste0("Precipitation for Hurricane Allison\n at lag ", lags))
+        a <- map_tracks(storm = "Allison-2001",
+                        plot_object = a, plot_points = FALSE)
+        print(a)
 }
