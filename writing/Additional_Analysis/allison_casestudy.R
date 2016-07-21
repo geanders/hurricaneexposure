@@ -59,3 +59,55 @@ allison <- data.table::fread("data-raw/nasa_precip_export_2.txt",
         dplyr::filter(storm_id == "Allison-2001")
 allison[allison$fips == 12025, "fips"] <- 12086
 
+#Create function to plot out total precipitation for Allison using different lag days (out to -10 and 10)
+
+filter_precip_data <- function(df = df, counties = NULL,
+                              distance_limit = NULL, rain_limit = NULL, include_rain = TRUE,
+                              days_included = NULL,
+                              output_vars = c("fips", "tot_precip")){
+
+        closest_dist <- data.table::data.table(hurricaneexposuredata::closest_dist)
+
+        if(!is.null(counties)){
+                closest_dist <- closest_dist[get("fips") %in% counties]
+        }
+
+        if(!is.null(distance_limit)){
+                closest_dist <- closest_dist[get("storm_dist") <=
+                                                     distance_limit]
+        }
+
+        if(include_rain == TRUE){
+                rain <- data.table::data.table(df)
+                rain <- rain[get("lag") %in% days_included]
+                rain <- rain[ , .(tot_precip = sum(get("precip"))),
+                             by = .(fips, storm_id)]
+                closest_dist <- merge(closest_dist, rain, all.x = TRUE,
+                                      by = c("storm_id", "fips"))
+                if(!is.null(rain_limit)){
+                        closest_dist <- closest_dist[get("tot_precip") >=
+                                                             rain_limit]
+                }
+        }
+
+        closest_dist <- closest_dist[ , .SD, , .SDcols = output_vars]
+        return(closest_dist)
+}
+
+new_function <- function(df = df, days_included = days_included)
+storm_rain <-function(df, days_included = c(-2, -1, 0, 1)){
+                map_data <- filter_data(df = df,
+                                        days_included = days_included,
+                                        output_vars = c("fips",
+                                                        "tot_precip")) %>%
+                        #filter_storm_data(storm = storm, include_rain = TRUE,
+                                              #days_included = days_included,
+                                              #output_vars = c("fips",
+                                                              #"tot_precip")) %>%
+                        dplyr::rename_(region = ~ fips, value = ~ tot_precip)
+        map_data <- map_data %>%
+                dplyr::mutate_(region = ~ as.numeric(region)) %>%
+                dplyr::tbl_df()
+        out <- hurr_choroplethr(map_data, metric = metric)
+        return(out$render())
+}
