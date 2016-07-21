@@ -4,7 +4,7 @@
 \alias{map_counties}
 \title{Map counties}
 \usage{
-map_counties(storm, metric = "distance", days_included = c(-1, 0, 1))
+map_counties(storm, metric = "distance", days_included = c(-2, -1, 0, 1))
 }
 \arguments{
 \item{storm}{Character string giving the name of the storm to plot (e.g.,
@@ -35,7 +35,7 @@ Map counties
 }
 \examples{
 floyd_map <- map_counties("Floyd-1999", metric = "rainfall",
-                           days_included = c(-1, 0, 1))
+                           days_included = c(-2, -1, 0, 1))
 floyd_map
 
 beryl_map <- map_counties("Beryl-1988", metric = "wind")

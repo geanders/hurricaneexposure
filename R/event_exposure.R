@@ -10,6 +10,8 @@
 #' county_events(counties = c("37031", "37053", "37055"),
 #'               start_year = 1988, end_year = 1999,
 #'               event_type = "flood")
+#'
+#' @export
 county_events <- function(counties, start_year, end_year, event_type){
         events <- hurricaneexposuredata::storm_events
 
@@ -38,6 +40,8 @@ county_events <- function(counties, start_year, end_year, event_type){
 #' map_event_exposure(storm_id = "Floyd-1999", event_type = "tornado")
 #' map_event_exposure(storm_id = "Floyd-1999", event_type = "wind")
 #' map_event_exposure(storm_id = "Floyd-1999", event_type = "tropical_storm")
+#'
+#' @export
 map_event_exposure <- function(storm_id, event_type){
         storm <- storm_id
         storm_year <- gsub("*.+-", "", storm_id)
