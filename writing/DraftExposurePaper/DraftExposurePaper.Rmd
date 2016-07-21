@@ -160,7 +160,7 @@ map_tracks(storms, plot_points = FALSE, alpha = 0.3)
 
 [Is three-day window reasonable? Probably should be. If we go larger, there's the problem of picking up things that aren't related to the storm. Storms to check-- Floyd (ET), Irene (ET), Lee (slow moving), Ike (for timing), Faye, Allison]
 
-```{r eval = FALSE}
+```{r eval = FALSE, echo = FALSE}
 my_hurricanes <- c("Floyd-1999", 
                    "Irene-2011", 
                    "Lee-2011", 
@@ -217,7 +217,7 @@ for(hurricane in my_hurricanes){
 dev.off()
 ```
 
-```{r fig.height=12, fig.width=10}
+```{r fig.height=12, fig.width=10, echo = FALSE}
 hurricane <- "Lee-2011"
         a <- map_counties(storm = hurricane, metric = "rainfall",
                           days_included = -3) + 
@@ -267,10 +267,9 @@ precip_plot <- grid.arrange(a, b, c, d, e, f, g, nrow = 4,
 print(precip_plot)
 ```
 
-
 For the most part, using a three day window of the day before, day of, and day after a tropical cyclone in assessing precipitation exposure seemed to capture the effects of the storm while excluding precipitation from other weather systems. However, for storms that have tracks that make a loop, such as Allison (2001), this three day window may not be adequate.
 
-```{r warning = FALSE}
+```{r warning = FALSE, message = FALSE, echo = FALSE}
 data(closest_dist)
 
 # Generate a list of unique study fips (all in the eastern US)
@@ -293,7 +292,7 @@ rain_lag <- rain %>%
                next_cumulative_rain = lead(cumulative_rain),
                most_rain = difference_rain == max(difference_rain,
                                                   na.rm = TRUE))
-to_highlight <- data.frame(x = c(-1.5, -1.5, 1.5, 1.5), y = c(0, 400, 400, 0))
+to_highlight <- data.frame(x = c(-3.1, -3.1, 1.1, 1.1), y = c(0, 400, 400, 0))
 
 rain_lag_plot <- ggplot(rain_lag, aes(x = lag, y = cumulative_rain)) +
         theme_tufte() + 
@@ -413,13 +412,13 @@ map_rain_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor Rain Metric"
 b <- map_rain_2000$render()
 ```
 
-```{r fig.width = 6, fig.height = 8, echo = FALSE}
+```{r fig.width = 6, fig.height = 8, echo = FALSE, message = FALSE, warning = FALSE}
 grid.arrange(a, b, ncol = 1)
 ```
 
 Map of county exposures to the top 1000 county-storm pairs by wind-based exposure:
 
-```{r echo = FALSE}
+```{r echo = FALSE, message = FALSE, warning = FALSE}
 #TS winds and above
 TS_wind_exposure <- county_wind(counties = my_fips,
                              start_year = 1988,
@@ -471,11 +470,11 @@ map_HU_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor HU Wind Metric"
 b <- map_HU_2000$render()
 ```
 
-```{r fig.width = 6, fig.height = 8, echo = FALSE}
+```{r fig.width = 6, fig.height = 8, echo = FALSE, message = FALSE, warning = FALSE}
 grid.arrange(a, b, ncol = 1)
 ```
 
-```{r}
+```{r echo = FALSE, message = FALSE, warning = FALSE}
 #Category 3 and above 
 cat3_exposure <- county_wind(counties = my_fips,
                                 start_year = 1988,
@@ -551,7 +550,7 @@ map_rain_count$title <- "Hits for top 2,000 Storm-County Pairs\nfor Rain > 75 mm
 b <- map_rain_count$render()
 ```
 
-```{r}
+```{r echo = FALSE, warning = FALSE, message = FALSE}
 wind_count <- TS_wind_exposure %>%
               group_by(fips) %>%
               summarise(count = n()) %>%
@@ -577,7 +576,7 @@ c <- map_wind_count$render()
 grid.arrange(a, b, c, ncol = 1)
 ```
 
-```{r echo = FALSE}
+```{r echo = FALSE, warning = FALSE, message = FALSE}
 exposure_name <- c("Distance_Exposure", "Rain_Exposure", "Wind_Exposure")
 count <- c(sum(distance_count$count), sum(rain_count$count), sum(wind_count$count))
 exposure_table <- cbind(exposure_name, count)
@@ -607,7 +606,7 @@ JMF-- I was surprised to see that there were no observations in the data frame t
 
 Below, I tried recreating the above data set using different parameters to see if I could get the exposure counts to match up okay:
 
-```{r}
+```{r echo = FALSE, message = FALSE, warning = FALSE}
 #Test
 rain_exposure_2 <- county_rain(counties = my_fips,
                              start_year = 1988, end_year = 2011,
@@ -760,6 +759,42 @@ map_tracks(storms = "Frances-2004", plot_points = FALSE,
                                            metric = "rainfall")) + 
         ggtitle(paste("Frances-2004", "rainfall"))
 ```
+
+Our exposure metrics restricts "exposed" counties to be within 500 km of the storm track. In a few cases, hurricane best tracks stop when the storm transitions from a tropical to extratropical system [let's check that I got the wording right on this]. In these cases, extreme rain from the storm system might have affected counties further along the storm's path, but that are not counted as being near the storm's track. For example, Lee in 2011 was only tracked through the best tracks until it was near the Georgia-Tennessee border. However, remnants of the system brought extreme rain further north, into the Mid-Atlantic and New England [I believe that the Monthly Weather Review for the 2011 season includes a description of these rain impacts. We likely want to look over that and incorporate it here]:
+
+```{r echo = FALSE, fig.width = 6, fig.height = 8}
+storm <- "Lee-2011"
+a <- map_tracks(storms = storm, plot_points = FALSE, 
+                plot_object = map_counties(storm = storm, 
+                                           metric = "rainfall")) + 
+        ggtitle("Rainfall during Lee, 2011")
+b <- map_tracks(storms = storm, plot_points = FALSE, 
+                plot_object = map_rain_exposure(storm = storm, 
+                                           dist_limit = 500,
+                                           rain_limit = 75)) + 
+        ggtitle("Rain-based exposure during Lee, 2011")
+grid.arrange(a, b, ncol = 1)
+```
+
+Other possible examples of this during our study period include Nicole (2010) [check storm history in MWR to confirm that Mid-Atlantic and New England rain during this time was related to storm], Ida (2009), Humberto (2007), Katrina (2005), Grace (2003) [confirm rain was from storm remnants], Frances (1998), Marco (1990)
+
+For rain-based exposure, we use a distance constraint of 500 km. With storms where the best track extends throughout the storm, this should typically be a large enough swath to include all extreme rain exposures from the storm. There are only a few very large storms where this might not be the case. One example is Ike (2008), in which case the 500 km constraint excludes some of the counties in northern Texas that got heavy rain from the system:
+
+```{r echo = FALSE, fig.width = 6, fig.height = 8}
+storm <- "Ike-2008"
+a <- map_tracks(storms = storm, plot_points = FALSE, 
+                plot_object = map_counties(storm = storm, 
+                                           metric = "rainfall")) + 
+        ggtitle("Rainfall during Ike, 2008")
+b <- map_tracks(storms = storm, plot_points = FALSE, 
+                plot_object = map_rain_exposure(storm = storm, 
+                                           dist_limit = 500,
+                                           rain_limit = 75)) + 
+        ggtitle("Rain-based exposure during Ike, 2008")
+grid.arrange(a, b, ncol = 1)
+```
+
+Other large systems where this might be a concern include Wilma (2005), Hermine (2004) [confirm rain in SC, NC, and VA during this time was from this storm], Arlene (1993) [confirm rain through to LA is from this storm]
 
 Here is a table of the top 10 storms by number of counties exposed, based on a wind metric of 18 m/s or greater (e.g., tropical storm strength or greater): 
 
