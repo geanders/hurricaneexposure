@@ -312,16 +312,16 @@ rain_lag_plot
 Justification of NLDAS data: comparison of NLDAS and gauge data for hurricane Alex (2010).
 
 ```{r}
-gauge <- read.csv("/Users/joshuaferreri/Documents/NWR_Alex_Rain.csv", header = TRUE)
-nldas <- county_rain(counties = unique(gauge$fips),
+alex_gauge <- read.csv("/Users/joshuaferreri/Documents/NWR_Alex_Rain.csv", header = TRUE)
+alex_nldas <- county_rain(counties = unique(gauge$fips),
                              start_year = 2010, end_year = 2010,
                              rain_limit = 0, dist_limit = 500,
                              days_include = c(-2, 0, 1))
-nldas <- nldas %>%
+alex_nldas <- alex_nldas %>%
         filter(storm_id == "Alex-2010")
-gauge$fips <- as.character(gauge$fips)
-compare_rain <- full_join(nldas, gauge, by = "fips")
-#compare_rain <- full_join(nldas, gauge, by = "fips")
+alex_gauge$fips <- as.character(alex_gauge$fips)
+compare_rain <- full_join(alex_nldas, alex_gauge, by = "fips")
+#compare_rain <- left_join(alex_nldas, alex_gauge, by = "fips")
 a <- ggplot(compare_rain, aes(rain_mm, tot_precip, color = fips)) + geom_point()
 a
 ```
