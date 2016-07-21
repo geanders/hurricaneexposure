@@ -286,7 +286,7 @@ Justification of NLDAS data: comparison of NLDAS and gauge data for hurricane Al
 ```{r}
 #library(data.table)
 #alex_gauge <- read.csv("/Users/joshuaferreri/Documents/NWR_Alex_Rain.csv", header = TRUE)
-#save(alex_gauge, file = "alex_gauge.RData")
+#save(alex_gauge, file = "writing/DraftExposurePaper/alex_gauge.RData")
 data(alex_gauge)
 alex_nldas <- county_rain(counties = unique(gauge$fips),
                              start_year = 2010, end_year = 2010,
