@@ -291,7 +291,7 @@ load("alex_gauge.Rdata")
 alex_nldas <- county_rain(counties = unique(alex_gauge$fips),
                              start_year = 2010, end_year = 2010,
                              rain_limit = 0, dist_limit = 1500,
-                             days_include = c(-2, -1, 0, 1))
+                             days_included = c(-2, -1, 0, 1))
 alex_nldas <- alex_nldas %>%
         filter(storm_id == "Alex-2010")
 alex_gauge$fips <- as.character(alex_gauge$fips)
