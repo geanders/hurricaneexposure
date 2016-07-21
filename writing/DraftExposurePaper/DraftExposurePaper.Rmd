@@ -306,7 +306,7 @@ a <- ggplot(compare_rain, aes(x = tot_precip, y = rain_mm,
 a
 ```
 
-```{r echo = FALSE, fig.width = 4, fig.height = 3}
+```{r echo = FALSE, fig.width = 5.5, fig.height = 4}
 compare_rain %>% group_by(fips) %>%
         summarize(ave_rain_mm = mean(rain_mm),
                   ave_tot_precip = mean(tot_precip),
@@ -314,6 +314,8 @@ compare_rain %>% group_by(fips) %>%
                   within_500_km = first(storm_dist) <= 500) %>%
         ggplot(aes(x = ave_tot_precip, y = ave_rain_mm, 
                    size = n, color = within_500_km)) + 
+        geom_hline(yintercept = 75, color = "gray") + 
+        geom_vline(xintercept = 75, color = "gray") + 
         geom_point(alpha = 0.5) + 
         theme_bw() +
         xlim(c(10, 225)) + ylim(c(10, 225)) + 
