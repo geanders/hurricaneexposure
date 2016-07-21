@@ -306,7 +306,7 @@ a <- ggplot(compare_rain, aes(x = tot_precip, y = rain_mm,
 a
 ```
 
-```{r echo = FALSE, fig.width = 4, fig.height = 3}
+```{r echo = FALSE, fig.width = 5.5, fig.height = 4}
 compare_rain %>% group_by(fips) %>%
         summarize(ave_rain_mm = mean(rain_mm),
                   ave_tot_precip = mean(tot_precip),
@@ -314,6 +314,8 @@ compare_rain %>% group_by(fips) %>%
                   within_500_km = first(storm_dist) <= 500) %>%
         ggplot(aes(x = ave_tot_precip, y = ave_rain_mm, 
                    size = n, color = within_500_km)) + 
+        geom_hline(yintercept = 75, color = "gray") + 
+        geom_vline(xintercept = 75, color = "gray") + 
         geom_point(alpha = 0.5) + 
         theme_bw() +
         xlim(c(10, 225)) + ylim(c(10, 225)) + 
@@ -788,7 +790,8 @@ grid.arrange(a, b, c, ncol = 1)
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE}
 exposure_name <- c("Distance_Exposure", "Rain_Exposure", "Wind_Exposure")
-count <- c(sum(distance_count$count), sum(rain_count$count), sum(wind_count$count))
+count <- c(sum(distance_count$count), sum(rain_count$count),
+           sum(wind_count$count))
 exposure_table <- cbind(exposure_name, count)
 exposure_table <- data.frame(exposure_table)
 exposure_table %>%
@@ -798,21 +801,47 @@ exposure_table %>%
 ```
 
 ```{r}
-rain_exposure$county_storm <- transmute(rain_exposure, county_storm = paste0(fips, " ", storm_id))
-distance_exposure$county_storm <- transmute(distance_exposure, county_storm = paste0(fips, " ", storm_id))
-all_exposure <- full_join(rain_exposure, distance_exposure, by = "county_storm")
-both_exposure <- subset(all_exposure, tot_precip >= 75 & storm_dist.x <= 100) #4040 observations
-rain_only <- subset(all_exposure, tot_precip >= 75 & storm_dist.x > 100) #4200 obs
-distance_only <- subset(all_exposure, tot_precip < 75 & storm_dist.x <= 100) #0 obs
-sum(all_exposure$tot_precip >= 75 & all_exposure$storm_dist.x <= 100, na.rm = TRUE)
-sum(all_exposure$tot_precip >= 75 & all_exposure$storm_dist.x > 100, na.rm = TRUE)
-sum(all_exposure$tot_precip < 75 & all_exposure$storm_dist.x <= 100, na.rm = TRUE) # It appears that in all county-
-                                                                                   # storm pairs, there is ample
-                                                                                   # rain to meet criteria        
-sum(all_exposure$tot_precip < 75, na.rm = TRUE) # This also returns 0
+rain_exposure$county_storm <- transmute(rain_exposure,
+                                        county_storm = paste0(fips, " ",
+                                                              storm_id))
+distance_exposure$county_storm <- transmute(distance_exposure,
+                                            county_storm = paste0(fips, " ",
+                                                                  storm_id))
+all_exposure <- rain_exposure %>% 
+        dplyr::select(county_storm, tot_precip) %>%
+        dplyr::full_join(distance_exposure, by = "county_storm")  %>%
+        dplyr::mutate(rain_exposure =  !is.na(tot_precip) & 
+                              tot_precip >= 75,
+                      dist_exposure = !is.na(storm_dist) & 
+                              storm_dist < 100,
+                      both_exposures = rain_exposure & dist_exposure,
+                      rain_only = rain_exposure & !dist_exposure,
+                      dist_only = !rain_exposure & dist_exposure,
+                      neither_exposure = !rain_exposure & !dist_exposure) %>%
+        dplyr::summarize(both_exposure = sum(both_exposures),
+                         rain_only = sum(rain_only),
+                         dist_only = sum(dist_only),
+                         neither_exposure = sum(neither_exposure))
+all_exposure
+
+# both_exposure <- subset(all_exposure, tot_precip >= 75 & 
+#                                 storm_dist <= 100) #4040 observations
+# rain_only <- subset(all_exposure, tot_precip >= 75 & 
+#                             storm_dist.x > 100) #4200 obs
+# distance_only <- subset(all_exposure, tot_precip < 75 & 
+#                                 storm_dist.x <= 100) #0 obs
+# sum(all_exposure$tot_precip >= 75 & all_exposure$storm_dist.x <= 100,
+#     na.rm = TRUE)
+# sum(all_exposure$tot_precip >= 75 & all_exposure$storm_dist.x > 100,
+#     na.rm = TRUE)
+# sum(all_exposure$tot_precip < 75 & all_exposure$storm_dist.x <= 100,
+#     na.rm = TRUE) # It appears that in all county-
+#                                                                                    # storm pairs, there is ample
+#                                                                                    # rain to meet criteria        
+# sum(all_exposure$tot_precip < 75, na.rm = TRUE) # This also returns 0
 ```
 
-JMF-- I was surprised to see that there were no observations in the data frame that had total precipitation less than 75 mm. I am wondering if I am missing something in the `full_join` code
+JMF-- I was surprised to see that there were no observations in the data frame that had total precipitation less than 75 mm. I am wondering if I am missing something in the `full_join` code. [GBA-- I've re-done this code and it now looks like it's getting the same values as your code below.]
 
 Below, I tried recreating the above data set using different parameters to see if I could get the exposure counts to match up okay:
 
