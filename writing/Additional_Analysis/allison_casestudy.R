@@ -1,9 +1,11 @@
 #Create data frame for Hurricane Allison (2001) with 2 weeks of precipitation data
+library(hurricaneexposuredata)
 data("closest_dist")
 library(dplyr)
 library(tidyr)
 library(lubridate)
 library(data.table)
+library(ggplot2)
 library(choroplethrMaps)
 check_dates <- dplyr::select(closest_dist, -storm_dist) %>%
         dplyr::mutate(closest_date = ymd(closest_date)) %>%
@@ -40,7 +42,9 @@ all_fips <- unique(check_dates$fips) # has Miami as "12086", and is still in che
 all_fips <- c(all_fips, as.integer(12025))
 check_dates[check_dates$fips == 12086, "fips"] <- 12025
 
-allison <- data.table::fread("data-raw/nasa_precip_export_2.txt",
+allison <- data.table::fread(
+        #"/Users/brookeanderson/Documents/CSU2016/hurricaneproject/hurricaneexposuredata/data-raw/nasa_precip_export_2.txt",
+        "data-raw/nasa_precip_export_2.txt",
                              header = TRUE,
                              select = c("county", "year_month_day", "precip", "precip_max")) %>%
         dplyr::filter(county %in% all_fips,
@@ -115,6 +119,8 @@ storm_rain <-function(df, days_included = c(-2, -1, 0, 1)){
 
 #Create plots of Allison Precipitation
 
+setwd("writing/Additional_Analysis/")
+pdf("allison_plot.pdf")
 my_lags <- c(-10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 for(lags in my_lags){
         a <- storm_rain(allison, days_included = lags) +
@@ -123,3 +129,5 @@ for(lags in my_lags){
                         plot_object = a, plot_points = FALSE)
         print(a)
 }
+dev.off()
+
