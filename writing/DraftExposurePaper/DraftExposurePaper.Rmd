@@ -716,6 +716,29 @@ c <- map_cat3_2000$render()
 grid.arrange(a, b, c, ncol = 1)
 ```
 
+```{r}
+tornado_exposure <- county_events(counties = my_fips,
+                             start_year = 1988, end_year = 2011,
+                             event_type = "tornado")
+tornado_2000 <- tornado_exposure %>%
+        slice(1:2000) %>%
+        group_by(fips) %>%
+        summarise(count = n()) %>%
+        rename(region = fips) %>%
+        mutate(region = as.numeric(region), count = as.numeric(count))
+tornado_2000$value <- cut(tornado_2000$count, c(0, 1, 3, 5, 7, 9, 11, 13, 15), 
+                   labels = c("0-1", "2-3", "4-5", "6-7", "8-9", "10-11", "12-13", "14-15"), 
+                   include.lowest = TRUE)
+exposure_palette <- brewer.pal(8, name = "YlGnBu")
+map_tornado_2000 <- CountyChoropleth$new(tornado_2000)
+map_tornado_2000$set_zoom(eastern_states)
+map_tornado_2000$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
+                                                values = exposure_palette,
+                                                na.value = "white")
+map_tornado_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor Tornado Events"
+b <- map_tornado_2000$render()
+```
+
 Here are a map of total count of "exposures" by county, based on "exposed" = distance of 100 [or do we want a different distance limit for this? What seems reasonable?; JMF-- Based on what I have read so far, I think this seems reasonable, unless we want to push it out to 120 km to loosely reflect the Czajkowski study which seems to have found a great number of fatalities in tertiary counties] kilometers or less and a map of total count of "exposures" by county, based on "exposed" = rainfall over a three-day window of 75 millimeters or more and distance of 500 kilometers or less: 
 
 ```{r echo = FALSE, warning=FALSE, message=FALSE}
