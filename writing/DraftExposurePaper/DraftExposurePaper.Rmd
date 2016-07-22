@@ -628,6 +628,33 @@ b <- map_rain_2000$render()
 grid.arrange(a, b, ncol = 1)
 ```
 
+```{r}
+#Top 2000 storm-county pairs for flooding events during tropical cyclones (since 1996)
+flood_exposure <- county_events(counties = my_fips,
+                              start_year = 1996, end_year = 2011,
+                              event_type = "flood")
+flood_2000 <- flood_exposure %>%
+        slice(1:2000) %>%
+        group_by(fips) %>%
+        summarise(count = n()) %>%
+        rename(region = fips) %>%
+        mutate(region = as.numeric(region), count = as.numeric(count))
+flood_2000$value <- cut(flood_2000$count, c(0, 1, 3, 5, 7, 9, 11, 13, 15), 
+                   labels = c("0-1", "2-3", "4-5", "6-7", "8-9", "10-11", "12-13", "14-15"), 
+                   include.lowest = TRUE)
+exposure_palette <- brewer.pal(8, name = "YlGnBu")
+map_flood_2000 <- CountyChoropleth$new(flood_2000)
+map_flood_2000$set_zoom(eastern_states)
+map_flood_2000$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
+                                                values = exposure_palette,
+                                                na.value = "white")
+map_tornado_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor Flood Events"
+c <- map_flood_2000$render()
+```
+
+```{r}
+grid.arrange(b, c, ncol = 1)
+```
 Map of county exposures to the top 1000 county-storm pairs by wind-based exposure:
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
@@ -767,6 +794,7 @@ b <- map_wind_2000$render()
 ```{r}
 grid.arrange(a, b, ncol = 1)
 ```
+
 Here are a map of total count of "exposures" by county, based on "exposed" = distance of 100 [or do we want a different distance limit for this? What seems reasonable?; JMF-- Based on what I have read so far, I think this seems reasonable, unless we want to push it out to 120 km to loosely reflect the Czajkowski study which seems to have found a great number of fatalities in tertiary counties] kilometers or less and a map of total count of "exposures" by county, based on "exposed" = rainfall over a three-day window of 75 millimeters or more and distance of 500 kilometers or less: 
 
 ```{r echo = FALSE, warning=FALSE, message=FALSE}
