@@ -628,7 +628,7 @@ b <- map_rain_2000$render()
 grid.arrange(a, b, ncol = 1)
 ```
 
-```{r}
+```{r warning = FALSE, message = FALSE, echo = FALSE}
 #Top 2000 storm-county pairs for flooding events during tropical cyclones (since 1996)
 flood_exposure <- county_events(counties = my_fips,
                               start_year = 1996, end_year = 2011,
@@ -744,7 +744,7 @@ c <- map_cat3_2000$render()
 grid.arrange(a, b, c, ncol = 1)
 ```
 
-```{r}
+```{r warning = FALSE, message = FALSE, echo = FALSE}
 #Top 2000 storm-county pairs for tornado events during tropical cyclones
 tornado_exposure <- county_events(counties = my_fips,
                              start_year = 1988, end_year = 2011,
@@ -768,7 +768,7 @@ map_tornado_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor Tornado Ev
 a <- map_tornado_2000$render()
 ```
 
-```{r}
+```{r warning = FALSE, message = FALSE, echo = FALSE}
 #Top 2000 storm-county pairs for wind events during tropical cyclones
 wind_exposure <- county_events(counties = my_fips,
                               start_year = 1988, end_year = 2011,
@@ -876,7 +876,7 @@ c <- map_wind_count$render()
 grid.arrange(a, b, c, ncol = 1)
 ```
 
-```{r}
+```{r warning = FALSE, message = FALSE, echo = FALSE}
 tornado_count <- tornado_exposure %>%
               group_by(fips) %>%
               summarise(count = n()) %>%
@@ -898,7 +898,7 @@ map_tornado_count$title <- "Total Hits for Storm-County Pairs\nfor Tornado Event
 d <- map_tornado_count$render()
 ```
 
-```{r}
+```{r warning = FALSE, message = FALSE, echo = FALSE}
 wind_count <- wind_exposure %>%
               group_by(fips) %>%
               summarise(count = n()) %>%
@@ -920,7 +920,7 @@ map_wind_count$title <- "Total Hits for Storm-County Pairs\nfor Wind Events"
 e <- map_wind_count$render()
 ```
 
-```{r}
+```{r warning = FALSE, message = FALSE, echo = FALSE}
 flood_count <- flood_exposure %>%
               group_by(fips) %>%
               summarise(count = n()) %>%
