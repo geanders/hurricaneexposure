@@ -655,6 +655,7 @@ c <- map_flood_2000$render()
 ```{r}
 grid.arrange(b, c, ncol = 1)
 ```
+
 Map of county exposures to the top 1000 county-storm pairs by wind-based exposure:
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
@@ -778,6 +779,14 @@ wind_2000 <- wind_exposure %>%
         summarise(count = n()) %>%
         rename(region = fips) %>%
         mutate(region = as.numeric(region), count = as.numeric(count))
+#Or
+#wind_2000 <- wind_exposure %>%
+        #group_by(fips) %>%
+        #summarise(count = n()) %>%
+        #arrange(desc(count))
+        #slice(1:2000)
+        #rename(region = fips) %>%
+        #mutate(region = as.numeric(region), count = as.numeric(count))
 wind_2000$value <- cut(wind_2000$count, c(0, 1, 3, 5, 7, 9, 11, 13, 15), 
                    labels = c("0-1", "2-3", "4-5", "6-7", "8-9", "10-11", "12-13", "14-15"), 
                    include.lowest = TRUE)
@@ -804,11 +813,11 @@ distance_count <- distance_exposure %>%
         rename(region = fips) %>%
         mutate(region = as.numeric(region), count = as.numeric(count)) 
 distance_count$value <- cut(distance_count$count, c(0, 5, 8, 12, 15,
-                                                    18, 21, 24),
+                                                    18, 21, 24, 26),
                            labels = c("0-5", "6-8", "9-12", "13-15",
-                                      "16-18", "19-21", "22-24"),
+                                      "16-18", "19-21", "22-24", "25-26"),
                            include.lowest = TRUE)
-exposure_palette <- brewer.pal(7, name = "YlGnBu")
+exposure_palette <- brewer.pal(8, name = "YlGnBu")
 
 map_dist_count <- CountyChoropleth$new(distance_count)
 map_dist_count$set_zoom(eastern_states)
@@ -826,11 +835,11 @@ rain_count <- rain_exposure %>%
               rename(region = fips) %>%
               mutate(region = as.numeric(region), count = as.numeric(count))
 rain_count$value <- cut(rain_count$count, c(0, 5, 8, 12, 15,
-                                                    18, 21, 24),
+                                                    18, 21, 24, 26),
                            labels = c("0-5", "6-8", "9-12", "13-15",
-                                      "16-18", "19-21", "22-24"),
+                                      "16-18", "19-21", "22-24", "25-26"),
                            include.lowest = TRUE)
-exposure_palette <- brewer.pal(7, name = "YlGnBu")
+exposure_palette <- brewer.pal(8, name = "YlGnBu")
 
 map_rain_count <- CountyChoropleth$new(rain_count)
 map_rain_count$set_zoom(eastern_states)
@@ -848,11 +857,11 @@ wind_count <- TS_wind_exposure %>%
               rename(region = fips) %>%
               mutate(region = as.numeric(region), count = as.numeric(count)) #Same size df as before (only 474 obs)
 wind_count$value <- cut(wind_count$count, c(0, 5, 8, 12, 15,
-                                                    18, 21, 24),
+                                                    18, 21, 24, 26),
                            labels = c("0-5", "6-8", "9-12", "13-15",
-                                      "16-18", "19-21", "22-24"),
+                                      "16-18", "19-21", "22-24", "25-26"),
                            include.lowest = TRUE)
-exposure_palette <- brewer.pal(7, name = "YlGnBu")
+exposure_palette <- brewer.pal(8, name = "YlGnBu")
 
 map_wind_count <- CountyChoropleth$new(wind_count)
 map_wind_count$set_zoom(eastern_states)
@@ -865,6 +874,72 @@ c <- map_wind_count$render()
 
 ```{r fig.width = 6, fig.height = 8, echo = FALSE}
 grid.arrange(a, b, c, ncol = 1)
+```
+
+```{r}
+tornado_count <- tornado_exposure %>%
+              group_by(fips) %>%
+              summarise(count = n()) %>%
+              rename(region = fips) %>%
+              mutate(region = as.numeric(region), count = as.numeric(count))
+tornado_count$value <- cut(tornado_count$count, c(0, 5, 8, 12, 15,
+                                                    18, 21, 24, 26),
+                           labels = c("0-5", "6-8", "9-12", "13-15",
+                                      "16-18", "19-21", "22-24", "25-26"),
+                           include.lowest = TRUE)
+exposure_palette <- brewer.pal(8, name = "YlGnBu")
+
+map_tornado_count <- CountyChoropleth$new(tornado_count)
+map_tornado_count$set_zoom(eastern_states)
+map_tornado_count$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
+                                                values = exposure_palette,
+                                                na.value = "white")
+map_tornado_count$title <- "Total Hits for Storm-County Pairs\nfor Tornado Events"
+d <- map_tornado_count$render()
+```
+
+```{r}
+wind_count <- wind_exposure %>%
+              group_by(fips) %>%
+              summarise(count = n()) %>%
+              rename(region = fips) %>%
+              mutate(region = as.numeric(region), count = as.numeric(count))
+wind_count$value <- cut(wind_count$count, c(0, 5, 8, 12, 15,
+                                                    18, 21, 24, 26),
+                           labels = c("0-5", "6-8", "9-12", "13-15",
+                                      "16-18", "19-21", "22-24", "25-26"),
+                           include.lowest = TRUE)
+exposure_palette <- brewer.pal(8, name = "YlGnBu")
+
+map_wind_count <- CountyChoropleth$new(wind_count)
+map_wind_count$set_zoom(eastern_states)
+map_wind_count$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
+                                                values = exposure_palette,
+                                                na.value = "white")
+map_wind_count$title <- "Total Hits for Storm-County Pairs\nfor Wind Events"
+e <- map_wind_count$render()
+```
+
+```{r}
+flood_count <- flood_exposure %>%
+              group_by(fips) %>%
+              summarise(count = n()) %>%
+              rename(region = fips) %>%
+              mutate(region = as.numeric(region), count = as.numeric(count))
+flood_count$value <- cut(flood_count$count, c(0, 5, 8, 12, 15,
+                                                    18, 21, 24, 26),
+                           labels = c("0-5", "6-8", "9-12", "13-15",
+                                      "16-18", "19-21", "22-24", "25-26"),
+                           include.lowest = TRUE)
+exposure_palette <- brewer.pal(8, name = "YlGnBu")
+
+map_flood_count <- CountyChoropleth$new(flood_count)
+map_flood_count$set_zoom(eastern_states)
+map_flood_count$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
+                                                values = exposure_palette,
+                                                na.value = "white")
+map_wind_count$title <- "Total Hits for Storm-County Pairs\nfor Flood Events"
+f <- map_flood_count$render()
 ```
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE}
@@ -924,7 +999,7 @@ JMF-- I was surprised to see that there were no observations in the data frame t
 
 Below, I tried recreating the above data set using different parameters to see if I could get the exposure counts to match up okay:
 
-```{r message = FALSE, warning = FALSE}
+```{r message = FALSE, warning = FALSE, echo = FALSE}
 #Test
 rain_exposure_2 <- county_rain(counties = my_fips,
                              start_year = 1988, end_year = 2011,
