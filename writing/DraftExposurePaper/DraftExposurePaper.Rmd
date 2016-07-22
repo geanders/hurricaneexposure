@@ -648,7 +648,7 @@ map_flood_2000$set_zoom(eastern_states)
 map_flood_2000$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
                                                 values = exposure_palette,
                                                 na.value = "white")
-map_tornado_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor Flood Events"
+map_flood_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor Flood Events"
 c <- map_flood_2000$render()
 ```
 
