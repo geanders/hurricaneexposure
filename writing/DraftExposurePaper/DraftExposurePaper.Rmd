@@ -350,6 +350,8 @@ b <- ggplot(compare_rain, aes(x = tot_precip, y = rain_mm,
 b
 ```
 
+[JMF-- Missing values are those from Arkansas (missing the leading 0 in fips code)]
+
 ```{r echo = FALSE, fig.width = 5.5, fig.height = 4}
 compare_rain1 %>% group_by(fips) %>%
         summarize(ave_rain_mm = mean(rain_mm),
