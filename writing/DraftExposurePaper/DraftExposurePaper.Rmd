@@ -370,7 +370,8 @@ library(weathermetrics)
 #library(data.table)
 #ike_gauge <- read.csv("/Users/joshuaferreri/Documents/ike_rain.csv", header = TRUE)
 #save(ike_gauge, file = "writing/DraftExposurePaper/ike_gauge.RData")
-load("~/Documents/hurricaneexposure/writing/DraftExposurePaper/ike_gauge.RData")
+#load("~/Documents/hurricaneexposure/writing/DraftExposurePaper/ike_gauge.RData")
+load("ike_gauge.RData")
 ike_gauge$rain_mm <- convert_precip(ike_gauge$rain_in, 
                                     "inches", "mm")
 ike_nldas <- county_rain(counties = unique(ike_gauge$fips),
@@ -438,10 +439,11 @@ alex_fips <- unique(alex_fips)
 #Ike-2008
 ike_fips <- ike_nldas$fips
 ike_fips <- unique(ike_fips)
-#ike_weather <- weather_fips(fips = ike_fips,
-                             #date_min = "2008-09-01",
-                             #date_max = "2010-09-14",
-                             #var = "PRCP") # Same thing here
+
+ike_weather <- weather_fips(fips = ike_fips[1],
+                             date_min = "2008-09-01",
+                             date_max = "2010-09-14",
+                             var = "PRCP") # Same thing here
 ```
 
 
