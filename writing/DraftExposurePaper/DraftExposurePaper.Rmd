@@ -376,8 +376,8 @@ compare_rain1 %>% group_by(fips) %>%
 ```{r}
 #Ike-2008 wind
 #ike_wind <- read.csv("/Users/joshuaferreri/Documents/ike_wind.csv", na.strings = 999, header = TRUE)
-#save(ike_gauge, file = "writing/DraftExposurePaper/ike_gauge.RData")
-load("~/Documents/hurricaneexposure/writing/DraftExposurePaper/ike_gauge.RData")
+#save(ike_wind, file = "writing/DraftExposurePaper/ike_wind.RData")
+load("~/Documents/hurricaneexposure/writing/DraftExposurePaper/ike_wind.RData")
 ```
 
 Here is a histogram of the amount of rain per day during a storm for the county-storm pairs with 150 mm or more rain associated with a storm. Although there are outliers with high rainfalls on all days, for most county-storm pairs, the only days with notable rain are one and two days before the storm, the day of the storm, and one day after the storm.
