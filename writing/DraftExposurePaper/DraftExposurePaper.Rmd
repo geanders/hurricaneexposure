@@ -381,12 +381,14 @@ load("~/Documents/hurricaneexposure/writing/DraftExposurePaper/ike_wind.RData")
 ####How does NLDAS-2 data compare with rnoaa data from the `countyweather` package in R?
 
 ```{r}
-devtools::install_github("ropenscilabs/rnoaa")
+#devtools::install_github("ropenscilabs/rnoaa")
 library(rnoaa)
-devtools::install_github("leighseverson/countyweather")
+#devtools::install_github("leighseverson/countyweather")
 library(countyweather)
 options("noaakey" = Sys.getenv("noaakey"))
-alex_weather <- weather_fips(fips = alex_nldas$fips,
+alex_fips <- alex_nldas$fips
+alex_fips <- unique(alex_fips)
+alex_weather <- weather_fips(fips = alex_fips,
                              date_min = "2010-06-25",
                              date_max = "2010-07-02",
                              var = "PRCP")
