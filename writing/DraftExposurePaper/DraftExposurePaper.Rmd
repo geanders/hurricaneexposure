@@ -57,7 +57,6 @@ library(dplyr)
 library(tidyr)
 library(choroplethr)
 library(RColorBrewer)
-library(grid)
 ```
 
 
@@ -326,10 +325,13 @@ compare_rain %>% group_by(fips) %>%
 ```
 
 ```{r}
+library(weathermetrics)
 #library(data.table)
 #ike_gauge <- read.csv("/Users/joshuaferreri/Documents/ike_rain.csv", header = TRUE)
 #save(ike_gauge, file = "writing/DraftExposurePaper/ike_gauge.RData")
-load("ike_gauge.Rdata")
+load("~/Documents/hurricaneexposure/writing/DraftExposurePaper/ike_gauge.RData")
+ike_gauge$rain_mm <- convert_precip(ike_gauge$rain_in, 
+                                    "inches", "mm")
 ike_nldas <- county_rain(counties = unique(ike_gauge$fips),
                              start_year = 2008, end_year = 2008,
                              rain_limit = 0, dist_limit = 1500,
@@ -346,6 +348,25 @@ b <- ggplot(compare_rain, aes(x = tot_precip, y = rain_mm,
         geom_point() + 
         theme_bw()
 b
+```
+
+```{r echo = FALSE, fig.width = 5.5, fig.height = 4}
+compare_rain %>% group_by(fips) %>%
+        summarize(ave_rain_mm = mean(rain_mm),
+                  ave_tot_precip = mean(tot_precip),
+                  n = n(),
+                  within_500_km = first(storm_dist) <= 500) %>%
+        ggplot(aes(x = ave_tot_precip, y = ave_rain_mm, 
+                   size = n, color = within_500_km)) + 
+        geom_hline(yintercept = 75, color = "gray") + 
+        geom_vline(xintercept = 75, color = "gray") + 
+        geom_point(alpha = 0.5) + 
+        theme_bw() +
+        xlim(c(10, 225)) + ylim(c(10, 225)) + 
+        geom_abline(intercept = 0, slope = 1) + 
+        xlab("Rainfall based on NLDAS-2 data (mm)") + 
+        ylab("Rainfall reported in Monthly \nWeather Report (mm)") + 
+        scale_color_manual(values = c("blue", "black"), guide = "none") 
 ```
 
 Here is a histogram of the amount of rain per day during a storm for the county-storm pairs with 150 mm or more rain associated with a storm. Although there are outliers with high rainfalls on all days, for most county-storm pairs, the only days with notable rain are one and two days before the storm, the day of the storm, and one day after the storm.
