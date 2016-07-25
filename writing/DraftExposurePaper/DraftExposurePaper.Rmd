@@ -325,6 +325,28 @@ compare_rain %>% group_by(fips) %>%
         scale_color_manual(values = c("blue", "black"), guide = "none") 
 ```
 
+```{r}
+#library(data.table)
+#ike_gauge <- read.csv("/Users/joshuaferreri/Documents/ike_rain.csv", header = TRUE)
+#save(ike_gauge, file = "writing/DraftExposurePaper/ike_gauge.RData")
+load("ike_gauge.Rdata")
+ike_nldas <- county_rain(counties = unique(ike_gauge$fips),
+                             start_year = 2008, end_year = 2008,
+                             rain_limit = 0, dist_limit = 1500,
+                             days_included = c(-2, -1, 0, 1))
+ike_nldas <- ike_nldas %>%
+        filter(storm_id == "Ike-2008")
+ike_gauge$fips <- as.character(ike_gauge$fips)
+compare_rain <- right_join(ike_nldas, ike_gauge, by = "fips")
+#alex_nldas <- as.data.table(alex_nldas)
+#alex_gauge <- as.data.table(alex_gauge)
+#compare_rain <- left_join(alex_nldas, alex_gauge, by = "fips")
+b <- ggplot(compare_rain, aes(x = tot_precip, y = rain_mm,
+                              color = fips)) +
+        geom_point() + 
+        theme_bw()
+b
+```
 
 Here is a histogram of the amount of rain per day during a storm for the county-storm pairs with 150 mm or more rain associated with a storm. Although there are outliers with high rainfalls on all days, for most county-storm pairs, the only days with notable rain are one and two days before the storm, the day of the storm, and one day after the storm.
 
