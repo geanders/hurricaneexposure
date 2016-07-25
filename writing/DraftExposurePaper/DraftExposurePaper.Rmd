@@ -286,7 +286,7 @@ Justification of NLDAS data: comparison of NLDAS and gauge data for hurricane Al
 #library(data.table)
 #alex_gauge <- read.csv("/Users/joshuaferreri/Documents/NWR_Alex_Rain.csv", header = TRUE)
 #save(alex_gauge, file = "writing/DraftExposurePaper/alex_gauge.RData")
-load("alex_gauge.Rdata")
+load("~/Documents/hurricaneexposure/writing/DraftExposurePaper/alex_gauge.Rdata")
 alex_nldas <- county_rain(counties = unique(alex_gauge$fips),
                              start_year = 2010, end_year = 2010,
                              rain_limit = 0, dist_limit = 1500,
@@ -371,8 +371,6 @@ compare_rain1 %>% group_by(fips) %>%
         scale_color_manual(values = c("blue", "black"), guide = "none") 
 ```
 
-[JMF-- The two comparison plots look identical. I will keep looking at the code to see why]
-
 ```{r}
 #Ike-2008 wind
 #ike_wind <- read.csv("/Users/joshuaferreri/Documents/ike_wind.csv", na.strings = 999, header = TRUE)
@@ -387,7 +385,11 @@ devtools::install_github("ropenscilabs/rnoaa")
 library(rnoaa)
 devtools::install_github("leighseverson/countyweather")
 library(countyweather)
-
+options("noaakey" = Sys.getenv("noaakey"))
+alex_weather <- weather_fips(fips = alex_nldas$fips,
+                             date_min = "2010-06-25",
+                             date_max = "2010-07-02",
+                             var = "PRCP")
 ```
 
 Here is a histogram of the amount of rain per day during a storm for the county-storm pairs with 150 mm or more rain associated with a storm. Although there are outliers with high rainfalls on all days, for most county-storm pairs, the only days with notable rain are one and two days before the storm, the day of the storm, and one day after the storm.
