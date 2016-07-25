@@ -380,6 +380,16 @@ compare_rain1 %>% group_by(fips) %>%
 load("~/Documents/hurricaneexposure/writing/DraftExposurePaper/ike_wind.RData")
 ```
 
+####How does NLDAS-2 data compare with rnoaa data from the `countyweather` package in R?
+
+```{r}
+devtools::install_github("ropenscilabs/rnoaa")
+library(rnoaa)
+devtools::install_github("leighseverson/countyweather")
+library(countyweather)
+
+```
+
 Here is a histogram of the amount of rain per day during a storm for the county-storm pairs with 150 mm or more rain associated with a storm. Although there are outliers with high rainfalls on all days, for most county-storm pairs, the only days with notable rain are one and two days before the storm, the day of the storm, and one day after the storm.
 
 ```{r echo = FALSE, fig.width = 6, fig.height = 4}
