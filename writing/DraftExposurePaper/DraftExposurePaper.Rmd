@@ -321,9 +321,51 @@ compare_rain %>% group_by(fips) %>%
         xlim(c(10, 225)) + ylim(c(10, 225)) + 
         geom_abline(intercept = 0, slope = 1) + 
         xlab("Rainfall based on NLDAS-2 data (mm)") + 
-        ylab("Rainfall reported in Monthly \nWeather Report (mm)") + 
-        scale_color_manual(values = c("blue", "black"), guide = "none") 
+        ylab("Rainfall reported in Monthly \nWeather Report (mm)")  + 
+        scale_color_manual(values = c("TRUE" = "blue", "FALSE" = "black"), 
+                           guide = "none") 
 ```
+
+```{r echo = FALSE, fig.height = 4, fig.width = 6}
+allison_gauge <- read.csv("MWR_gauge_rain_data/allison_mwr.csv")
+allison_nldas <- county_rain(counties = unique(allison_gauge$fips),
+                             start_year = 2001, end_year = 2001,
+                             rain_limit = 0, dist_limit = 1500,
+                             days_included = c(-2, -1, 0, 1))
+allison_nldas <- allison_nldas %>%
+        filter(storm_id == "Allison-2001")
+allison_gauge$fips <- as.character(allison_gauge$fips)
+compare_rain <- right_join(allison_nldas, allison_gauge, by = "fips")
+#alex_nldas <- as.data.table(alex_nldas)
+#alex_gauge <- as.data.table(alex_gauge)
+#compare_rain <- left_join(alex_nldas, alex_gauge, by = "fips")
+a <- ggplot(compare_rain, aes(x = tot_precip, y = rain_mm,
+                              color = fips)) +
+        geom_point() + 
+        theme_bw()
+a
+```
+
+```{r echo = FALSE, fig.width = 5.5, fig.height = 4}
+compare_rain %>% group_by(fips) %>%
+        summarize(ave_rain_mm = mean(rain_mm),
+                  ave_tot_precip = mean(tot_precip),
+                  n = n(),
+                  within_500_km = first(storm_dist) <= 500) %>%
+        ggplot(aes(x = ave_tot_precip, y = ave_rain_mm, 
+                   size = n, color = within_500_km)) + 
+        geom_hline(yintercept = 75, color = "gray") + 
+        geom_vline(xintercept = 75, color = "gray") + 
+        geom_point(alpha = 0.5) + 
+        theme_bw() +
+        xlim(c(25, 200)) + ylim(c(25, 800)) + 
+        geom_abline(intercept = 0, slope = 1) + 
+        xlab("Rainfall based on NLDAS-2 data (mm)") + 
+        ylab("Rainfall reported in Monthly \nWeather Report (mm)") + 
+        scale_color_manual(values = c("TRUE" = "blue", "FALSE" = "black"), 
+                           guide = "none") 
+```
+
 
 
 Here is a histogram of the amount of rain per day during a storm for the county-storm pairs with 150 mm or more rain associated with a storm. Although there are outliers with high rainfalls on all days, for most county-storm pairs, the only days with notable rain are one and two days before the storm, the day of the storm, and one day after the storm.
