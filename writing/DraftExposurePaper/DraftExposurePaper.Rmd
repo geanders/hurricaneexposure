@@ -447,7 +447,8 @@ ike_fips <- unique(ike_fips)
                                  #out_type = ".csv")
 ike_weather <- weather_fips(fips = ike_fips[1],
                              date_min = "2008-09-01",
-                             date_max = "2010-09-14",
+                             date_max = "2008-09-14",
+                             #date_max = "2010-09-14",
                              var = "PRCP") # Same thing here
 ```
 
