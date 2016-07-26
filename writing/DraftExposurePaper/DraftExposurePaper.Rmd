@@ -448,8 +448,25 @@ ike_fips <- unique(ike_fips)
 ike_weather <- weather_fips(fips = ike_fips[1],
                              date_min = "2008-09-01",
                              date_max = "2008-09-14",
-                             #date_max = "2010-09-14",
-                             var = "PRCP") # Same thing here
+                             var = "PRCP") 
+#Find fips with greatest number of observations
+test <- data.frame(fips = ike_fips[1:2], station = NA)
+#for(fips in ike_fips[1:2]){ 
+        ike_weather <- weather_fips(fips = fips,
+                                    date_min = "2008-09-01",
+                                    date_max = "2008-09-14",
+                                    var = "PRCP")
+        test["fips", ] <- fips
+        test[ , "station"] <- max(ike_weather$daily_weather$prcp_reporting)
+} #Still working on it
+ike_table <- data.frame(fips = ike_fips, station = NA)
+#for(fips in ike_fips){
+        ike_weather <- weather_fips(fips = fips,
+                                    date_min = "2008-09-01",
+                                    date_max = "2008-09-14",
+                                    var = "PRCP")
+        ike_table[ , "station"] <- max(ike_weather$daily_weather$prcp_reporting)
+} #still working on it
 ```
 
 
