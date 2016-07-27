@@ -413,6 +413,14 @@ compare_rain1 %>% group_by(fips) %>%
         scale_color_manual(values = c("blue", "black"), guide = "none") 
 ```
 
+Comparing MWR precipitation data to NLDAS-2 data for Frances-2004:
+
+```{r}
+
+```
+
+Ike wind data:
+
 ```{r}
 #Ike-2008 wind
 #ike_wind <- read.csv("/Users/joshuaferreri/Documents/ike_wind.csv", na.strings = 999, header = TRUE)
@@ -454,22 +462,26 @@ ike_weather <- weather_fips(fips = ike_fips[1],
 Trying to create a loop to identify the FIPS codes with the greatest number of stations reporting for each time period.
 
 ```{r}
-test <- data.frame(fips = ike_fips[1:2], station = NA)
-#for(fips in ike_fips[1:2]){
+my_fips <- ike_fips[1:3]
+my_stations <- NA
+test <- expand.grid(my_fips, my_stations)
+colnames(test) <- c("fips", "station")
+for(fips in my_fips){
         ike_weather <- weather_fips(fips = fips,
                                     date_min = "2008-09-01",
                                     date_max = "2008-09-14",
                                     var = "PRCP")
-        test[fips, "stations"] <- max(ike_weather$daily_weather$prcp_reporting)
-} #Still working on it
-ike_table <- data.frame(fips = ike_fips, station = NA)
-#for(fips in ike_fips){
+        test[test$fips == fips, "station"] <- max(ike_weather$daily_weather$prcp_reporting)    
+}
+ike_table <- expand.grid(ike_fips, my_stations)
+colnames(ike_table) <- c("fips", "station")
+for(fips in ike_fips){
         ike_weather <- weather_fips(fips = fips,
                                     date_min = "2008-09-01",
                                     date_max = "2008-09-14",
                                     var = "PRCP")
-        ike_table[ , "station"] <- max(ike_weather$daily_weather$prcp_reporting)
-} #still working on it
+        ike_table[ike_table$fips == fips, "station"] <- max(ike_weather$daily_weather$prcp_reporting)
+} 
 ```
 
 
