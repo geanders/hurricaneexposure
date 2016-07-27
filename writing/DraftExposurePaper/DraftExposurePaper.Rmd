@@ -459,8 +459,17 @@ Ike wind data:
 ```{r}
 #Ike-2008 wind
 #ike_wind <- read.csv("/Users/joshuaferreri/Documents/ike_wind.csv", na.strings = 999, header = TRUE)
-#save(ike_wind, file = "writing/DraftExposurePaper/ike_wind.RData")
+#save(ike_wind, file = "writing/DraftExposurePaper/frances_wind.RData")
 load("~/Documents/hurricaneexposure/writing/DraftExposurePaper/ike_wind.RData")
+```
+
+Frances wind data:
+
+```{r}
+frances_wind <- read.csv("/Users/joshuaferreri/Documents/NWR_frances_wind.csv", na.strings = 999,
+                         header = TRUE)
+save(frances_wind, file = "writing/DraftExposurePaper/frances_wind.RData")
+load("~/Documents/hurricaneexposure/writing/DraftExposurePaper/frances_wind.RData")
 ```
 
 ####How does NLDAS-2 data compare with rnoaa data from the `countyweather` package in R?
