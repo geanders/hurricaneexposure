@@ -449,15 +449,18 @@ ike_weather <- weather_fips(fips = ike_fips[1],
                              date_min = "2008-09-01",
                              date_max = "2008-09-14",
                              var = "PRCP") 
-#Find fips with greatest number of observations
+```
+
+Trying to create a loop to identify the FIPS codes with the greatest number of stations reporting for each time period.
+
+```{r}
 test <- data.frame(fips = ike_fips[1:2], station = NA)
-#for(fips in ike_fips[1:2]){ 
+#for(fips in ike_fips[1:2]){
         ike_weather <- weather_fips(fips = fips,
                                     date_min = "2008-09-01",
                                     date_max = "2008-09-14",
                                     var = "PRCP")
-        test["fips", ] <- fips
-        test[ , "station"] <- max(ike_weather$daily_weather$prcp_reporting)
+        test[fips, "stations"] <- max(ike_weather$daily_weather$prcp_reporting)
 } #Still working on it
 ike_table <- data.frame(fips = ike_fips, station = NA)
 #for(fips in ike_fips){
