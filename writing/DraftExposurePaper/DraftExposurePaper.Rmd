@@ -472,16 +472,16 @@ for(fips in my_fips){
                                     date_max = "2008-09-14",
                                     var = "PRCP")
         test[test$fips == fips, "station"] <- max(ike_weather$daily_weather$prcp_reporting)    
-}
+} #This works fine (small subset of code below)
 ike_table <- expand.grid(ike_fips, my_stations)
 colnames(ike_table) <- c("fips", "station")
-for(fips in ike_fips){
+#for(fips in ike_fips){
         ike_weather <- weather_fips(fips = fips,
                                     date_min = "2008-09-01",
                                     date_max = "2008-09-14",
                                     var = "PRCP")
         ike_table[ike_table$fips == fips, "station"] <- max(ike_weather$daily_weather$prcp_reporting)
-} 
+} #getting error
 ```
 
 
