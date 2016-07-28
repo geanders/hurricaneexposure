@@ -554,12 +554,12 @@ keys_cd <- subset(closest_dist, closest_dist$storm_id == "Ike-2008" & closest_di
 keys_cd <- keys_cd$closest_date
 ike_1 <- ike_1 %>%
         filter(date %in% seq(from = as.Date("2008-09-07"), to = as.Date("2008-09-10"), 1))
-#assuming the prcp is in inches
-ike_1$prcp_mm <- convert_precip(ike_1$prcp, "inches", "mm")
-ike_sum <- sum(ike_1$prcp_mm)
+ike_sum <- sum(ike_1$prcp)
 ike_nldas_sum <- subset(ike_nldas, ike_nldas$fips == "12087")
 ike_nldas_sum <- ike_nldas_sum$tot_precip
 ```
+
+[JMF-- It looks like precipitation measurements from `countyweather` are already in mm]
 
 Here is a histogram of the amount of rain per day during a storm for the county-storm pairs with 150 mm or more rain associated with a storm. Although there are outliers with high rainfalls on all days, for most county-storm pairs, the only days with notable rain are one and two days before the storm, the day of the storm, and one day after the storm.
 
