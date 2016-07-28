@@ -524,7 +524,8 @@ ike_table <- ike_table %>%
         slice(1:15)
 ike_top <- ike_table$fips
 #Find the top 15 FIPS by number of reporting stations for Alex-2010:
-my_fips <- alex_fips
+my_fips <- alex_fips[c(1:2, 4:6, 8, 10, 12:14, 16:18)]
+my_fips <- alex_fips[18]
 my_stations <- NA
 alex_table <- expand.grid(my_fips, my_stations)
 colnames(alex_table) <- c("fips", "station")
@@ -535,6 +536,7 @@ for(fips in my_fips){
                                     var = "PRCP")
         alex_table[alex_table$fips == fips, "station"] <- max(alex_weather$daily_weather$prcp_reporting)    
 } 
+#Alex FIPS without data: 3, 7, 9, 11, 15, 19   
 alex_table <- alex_table %>%
         arrange(desc(station)) %>%
         slice(1:15)
