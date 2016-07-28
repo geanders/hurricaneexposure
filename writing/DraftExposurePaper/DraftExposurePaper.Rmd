@@ -506,7 +506,7 @@ ike_weather <- weather_fips(fips = ike_fips[1],
 Trying to create a loop to identify the FIPS codes with the greatest number of stations reporting for each time period.
 
 ```{r}
-#Find the top 15 FIPS by number of reporting stations during Ike-2008
+#Find the top 15 FIPS by number of reporting stations during Ike-2008 (Warning: Takes a long time)
 my_fips <- ike_fips[c(1:6, 10, 13:16, 18, 20:25, 28:29, 31, 33:34, 36:40, 42, 44:45)]
 my_stations <- NA
 ike_table <- expand.grid(my_fips, my_stations)
@@ -518,10 +518,27 @@ for(fips in my_fips){
                                     var = "PRCP")
         ike_table[ike_table$fips == fips, "station"] <- max(ike_weather$daily_weather$prcp_reporting)    
 } 
-#Do not work: 7, 8, 9, 11, 12, 17, 19, 26, 27, 30, 32,35, 41, 43, 
+#Ike FIPS without data: 7, 8, 9, 11, 12, 17, 19, 26, 27, 30, 32,35, 41, 43, 
 ike_table <- ike_table %>%
         arrange(desc(station)) %>%
         slice(1:15)
+ike_top <- ike_table$fips
+#Find the top 15 FIPS by number of reporting stations for Alex-2010:
+my_fips <- alex_fips
+my_stations <- NA
+alex_table <- expand.grid(my_fips, my_stations)
+colnames(alex_table) <- c("fips", "station")
+for(fips in my_fips){
+        alex_weather <- weather_fips(fips = fips,
+                                    date_min = "2008-09-01",
+                                    date_max = "2008-09-14",
+                                    var = "PRCP")
+        alex_table[alex_table$fips == fips, "station"] <- max(alex_weather$daily_weather$prcp_reporting)    
+} 
+alex_table <- alex_table %>%
+        arrange(desc(station)) %>%
+        slice(1:15)
+alex_top <- alex_table$fips
 ```
 
 
