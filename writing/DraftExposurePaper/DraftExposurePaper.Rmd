@@ -538,22 +538,20 @@ As of right now, I am not going to do Frances (there are 184 unique fips).
 Create a timeseries for the top 15 FIPS by reporting stations for Alex and Ike:
 
 ```{r}
+data("closest_dist")
+data(rain)
 county_timeseries(fips = ike_top[1:2], 
                   percent_coverage = 0, 
                   date_min = "2008-09-01", 
                   date_max = "2010-09-14", var = "PRCP", 
                   out_directory = "~/tmp/ike_ex")
 ike_1 <- readRDS("~/tmp/ike_ex/12087.rds")
-ike_1 <- ike_1 %>%
-        select(date, prcp) %>%
-        filter(date %in% seq(from = as.Date("2008-09-01"), to = as.Date("2008-09-14"), by = 1))
-data(rain)
-ike_rain <- subset(rain, rain$storm_id == "Ike-2008" & rain$fips == "12087")
-data("closest_dist")
 keys_cd <- subset(closest_dist, closest_dist$storm_id == "Ike-2008" & closest_dist$fips == "12087")
 keys_cd <- keys_cd$closest_date
 ike_1 <- ike_1 %>%
-        filter(date %in% seq(from = as.Date("2008-09-07"), to = as.Date("2008-09-10"), 1))
+        select(date, prcp) %>%
+        filter(date %in% seq(from = as.Date("2008-09-07"), to = as.Date("2008-09-10"), by = 1))
+ike_rain <- subset(rain, rain$storm_id == "Ike-2008" & rain$fips == "12087")
 ike_sum <- sum(ike_1$prcp)
 ike_nldas_sum <- subset(ike_nldas, ike_nldas$fips == "12087")
 ike_nldas_sum <- ike_nldas_sum$tot_precip
