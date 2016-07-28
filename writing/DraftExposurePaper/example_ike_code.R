@@ -1,8 +1,15 @@
+options("noaakey" = Sys.getenv("noaakey"))
+
+ike_fips <- c("12021", "12071")
 county_timeseries(ike_fips, percent_coverage = 0,
                   date_min = "1988-01-01", date_max = "2011-12-31",
-                  var = "PRCP")
+                  var = "PRCP", out_directory = "~/ike_ex/")
 
-ike_dir <- "~/tmp/ike_ex/"
+# Check that it worked...
+list.files("~/ike_ex")
+
+# Do some plots
+ike_dir <- "~/ike_ex/"
 ike_counties <- gsub(".rds", "", list.files(ike_dir))
 
 ike_ave <- vector("list", length = length(ike_counties))
