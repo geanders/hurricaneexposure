@@ -506,6 +506,7 @@ ike_weather <- weather_fips(fips = ike_fips[1],
 Trying to create a loop to identify the FIPS codes with the greatest number of stations reporting for each time period.
 
 ```{r}
+#Find the top 15 FIPS by number of reporting stations during Ike-2008
 my_fips <- ike_fips[c(1:6, 10, 13:16, 18, 20:25, 28:29, 31, 33:34, 36:40, 42, 44:45)]
 my_stations <- NA
 ike_table <- expand.grid(my_fips, my_stations)
@@ -516,31 +517,11 @@ for(fips in my_fips){
                                     date_max = "2008-09-14",
                                     var = "PRCP")
         ike_table[ike_table$fips == fips, "station"] <- max(ike_weather$daily_weather$prcp_reporting)    
-} #This works fine (small subset of the code below)
-my_fips <- ike_fips[44:45]
-my_stations <- NA
-test_2 <- expand.grid(my_fips, my_stations)
-colnames(test_2) <- c("fips", "station")
-for(fips in my_fips){
-        ike_weather <- weather_fips(fips = fips,
-                                    date_min = "2008-09-01",
-                                    date_max = "2008-09-14",
-                                    var = "PRCP")
-        test_2[test_2$fips == fips, "station"] <- max(ike_weather$daily_weather$prcp_reporting)    
-}
+} 
 #Do not work: 7, 8, 9, 11, 12, 17, 19, 26, 27, 30, 32,35, 41, 43, 
 ike_table <- ike_table %>%
         arrange(desc(station)) %>%
         slice(1:15)
-ike_table <- expand.grid(ike_fips, my_stations)
-colnames(ike_table) <- c("fips", "station")
-#for(fips in ike_fips){
-        ike_weather <- weather_fips(fips = fips,
-                                    date_min = "2008-09-01",
-                                    date_max = "2008-09-14",
-                                    var = "PRCP")
-        ike_table[ike_table$fips == fips, "station"] <- max(ike_weather$daily_weather$prcp_reporting)
-} #getting error
 ```
 
 
