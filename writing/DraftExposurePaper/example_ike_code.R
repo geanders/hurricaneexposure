@@ -9,12 +9,16 @@ library(lubridate)
 ike_fips <- c("12021", "12071", "12087", "22051", "22053")
 county_timeseries(ike_fips, percent_coverage = 0,
                   date_min = "1988-01-01", date_max = "2011-12-31",
-                  var = "PRCP", out_directory = "~/ike_ex/")
+                  var = "PRCP", out_directory = "~/ike_ex/"
+                  #, out_directory = "~/Documents/hurricaneexposure/writing/DraftExposurePaper/ike_ex/"
+                  )
 
 # Check that it worked...
 list.files("~/ike_ex")
+#list.files("~/Documents/hurricaneexposure/writing/DraftExposurePaper/ike_ex/")
 
 # Do some plots
+#ike_dir <- "~/Documents/hurricaneexposure/writing/DraftExposurePaper/ike_ex/"
 ike_dir <- "~/ike_ex/"
 ike_counties <- gsub(".rds", "", list.files(ike_dir))
 
@@ -22,7 +26,7 @@ ike_ave <- vector("list", length = length(ike_counties))
 names(ike_ave) <- ike_counties
 
 for(x in ike_counties){
-        county_weather <- readRDS(paste0(ike_dir, x, ".rds"))$averaged
+        county_weather <- readRDS(paste0(ike_dir, x, ".rds"))#$averaged
         county_weather <- county_weather %>%
                 filter(year(date) == 2008 & month(date) == 9)
         county_weather$fips <- x
