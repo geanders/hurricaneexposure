@@ -336,6 +336,7 @@ compare_rain %>% group_by(fips) %>%
 ```
 
 ```{r echo = FALSE, fig.height = 4, fig.width = 6}
+#allison_gauge <- read.csv("~/Documents/hurricaneexposure/writing/DraftExposurePaper/MWR_gauge_rain_data/allison_mwr.csv")
 allison_gauge <- read.csv("MWR_gauge_rain_data/allison_mwr.csv")
 allison_nldas <- county_rain(counties = unique(allison_gauge$fips),
                              start_year = 2001, end_year = 2001,
