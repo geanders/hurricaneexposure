@@ -1,6 +1,12 @@
 options("noaakey" = Sys.getenv("noaakey"))
+library(countyweather)
+library(hurricaneexposure)
+library(dplyr)
+library(ggplot2)
+library(ggthemes)
+library(lubridate)
 
-ike_fips <- c("12021", "12071")
+ike_fips <- c("12021", "12071", "12087", "22051", "22053")
 county_timeseries(ike_fips, percent_coverage = 0,
                   date_min = "1988-01-01", date_max = "2011-12-31",
                   var = "PRCP", out_directory = "~/ike_ex/")
