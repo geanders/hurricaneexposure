@@ -69,3 +69,4 @@ alex_ave %>%
         xlab("Rainfall (mm) based on \naveraged county monitors") +
         ylab("Rainfall (mm) based on \nNLDAS-2 county data") +
         ggtitle("Monitor versus NLDAS rainfall estimates \nfor Hurricane Alex (2010)")
+#only showing one FIPS, but all FIPS are present in both alex_rain and alex_ave datasets
