@@ -82,11 +82,13 @@ Here, we offer tools, through the open-source `hurricaneexposure` package, to de
 [GBA-- Somewhere (maybe just for helping us draft the paper), let's come up with a list of the "ideal" characteristics of an exposure metric for hurricanes. I think that will be helpful for us to have a framework of a "gold standard" to compare advantages and disadvantages of different metrics used. To start, we could create a list of "good characteristics" and another of "bad characteristics", and read through the text we have and pull out characteristics we describe as good or bad aspects of different metrics.]
 
 Good Characteristics:
+
 - Flooding-- Most associated with death; property damage
 - Precipitation
 - Wind (potentially weighted)
 
 Bad Characteristics:
+
 - Distance alone
 - Wind alone
 
