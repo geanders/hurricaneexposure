@@ -395,7 +395,7 @@ compare_rain <- right_join(ike_nldas, ike_gauge, by = "fips")
 #ike_nldas <- as.data.table(alex_nldas)
 #ike_gauge <- as.data.table(alex_gauge)
 #compare_rain1 <- left_join(alex_nldas, alex_gauge, by = "fips")
-b <- ggplot(compare_rain1, aes(x = tot_precip, y = rain_mm,
+b <- ggplot(compare_rain, aes(x = tot_precip, y = rain_mm,
                               color = fips)) +
         geom_point() + 
         theme_bw()
@@ -499,6 +499,8 @@ options("noaakey" = Sys.getenv("noaakey"))
 #Alex-2010
 alex_fips <- alex_nldas$fips
 alex_fips <- unique(alex_fips)
+```
+```{r}
 #Ike-2008
 ike_fips <- ike_nldas$fips
 ike_fips <- unique(ike_fips)
@@ -576,15 +578,17 @@ As of right now, I am not going to do Frances (there are 184 unique fips).
 
 Create a timeseries for the top 15 FIPS by reporting stations for Alex and Ike:
 
-```{r}
-data("closest_dist")
-data(rain)
-county_timeseries(fips = ike_top[1:2], 
+```{r eval = FALSE}
+
+library(countyweather)
+county_timeseries(fips = ike_fips[1:2], 
                   percent_coverage = 0, 
                   date_min = "2008-09-01", 
                   date_max = "2010-09-14", var = "PRCP", 
-                  out_directory = "~/tmp/ike_ex")
-ike_1 <- readRDS("~/tmp/ike_ex/12087.rds")
+                  out_directory = "ike_ex")
+data("closest_dist")
+data(rain)
+ike_1 <- readRDS("ike_ex/12021.rds")
 keys_cd <- subset(closest_dist, closest_dist$storm_id == "Ike-2008" & closest_dist$fips == "12087")
 keys_cd <- keys_cd$closest_date
 ike_1 <- ike_1 %>%
