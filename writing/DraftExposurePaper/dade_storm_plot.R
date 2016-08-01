@@ -97,7 +97,7 @@ county_weather %>%
                   prcp_reporting = mean(prcp_reporting)) %>%
         ggplot(aes(x = monitor_rain, y = tot_precip)) +
         geom_abline(aes(intercept = 0, slope = 1), color = "gray", alpha = 0.5) +
-        geom_point(aes(size = prcp_reporting), alpha = 0.5) +
+        geom_point(aes(size = prcp_reporting), alpha = 0.2) +
         geom_text(aes(label = storm_id)) +
         theme_few() +
         scale_size_continuous(guide = "none") +
