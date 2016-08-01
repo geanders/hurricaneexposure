@@ -6,7 +6,10 @@ library(hurricaneexposure)
 library(hurricaneexposuredata)
 library(lubridate)
 library(data.table)
+library(ggplot2)
+library(ggthemes)
 data("closest_dist")
+
 
 # Create a new dataset for precip with lag -5 to 3 for fips 12086 only
 
@@ -57,8 +60,6 @@ dade_rain <- dade_rain %>%
         rename(date = day) %>%
         mutate(date = as.character(date)) %>%
         mutate(date = as.Date(date, format = "%Y%m%d"))
-dade_rain$date <- as.character(dade_rain$date)
-dade_rain$date <- as.Date(dade_rain$date, format = "%Y-%m-%d")
 
 #create timeseries for Dade precipitation data from the `countyweather` package
 
@@ -85,20 +86,22 @@ county_weather$fips <- fips
 #Join `dade_rain` and `county_weather` datasets by date and create a plot comparing rain by storm (not fips)
 
 county_weather %>%
-        left_join(dade_rain, "date") %>%
+        inner_join(dade_rain, "date") %>%
         group_by(storm_id) %>%
-        filter(ymd(closest_date) - ddays(2) <= date &
-                       date <= ymd(closest_date) + ddays(1)) %>%
+        filter(lag == -3 | lag == -2 | lag == -1 |lag == 0 | lag == 1) %>%
+        arrange(storm_id) %>%
+        #filter(ymd(closest_dist$closest_date) - ddays(2) <= date &
+         #              date <= ymd(closest_dist$closest_date) + ddays(1)) %>%
         summarize(monitor_rain = sum(prcp),
-                  tot_precip = first(tot_precip),
+                  tot_precip = sum(precip),
                   prcp_reporting = mean(prcp_reporting)) %>%
         ggplot(aes(x = monitor_rain, y = tot_precip)) +
         geom_abline(aes(intercept = 0, slope = 1), color = "gray", alpha = 0.5) +
         geom_point(aes(size = prcp_reporting), alpha = 0.5) +
-        geom_text(aes(label = fips)) +
+        geom_text(aes(label = storm_id)) +
         theme_few() +
         scale_size_continuous(guide = "none") +
         xlab("Rainfall (mm) based on \naveraged county monitors") +
         ylab("Rainfall (mm) based on \nNLDAS-2 county data") +
-        ggtitle("Monitor versus NLDAS rainfall estimates \nfor Hurricane Frances (2004)")
+        ggtitle("Monitor versus NLDAS rainfall estimates \nfor Miami-Dade county by Storm")
 
