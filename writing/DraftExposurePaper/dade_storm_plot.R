@@ -98,7 +98,7 @@ county_weather %>%
         ggplot(aes(x = monitor_rain, y = tot_precip)) +
         geom_abline(aes(intercept = 0, slope = 1), color = "gray", alpha = 0.5) +
         geom_point(aes(size = prcp_reporting), alpha = 0.2) +
-        geom_text(aes(label = storm_id)) +
+        geom_text(aes(x = monitor_rain + 100, label = storm_id)) +
         theme_few() +
         scale_size_continuous(guide = "none") +
         xlab("Rainfall (mm) based on \naveraged county monitors") +
