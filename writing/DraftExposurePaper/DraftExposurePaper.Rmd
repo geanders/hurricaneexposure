@@ -87,7 +87,8 @@ Good Characteristics:
 + Takes into account the unique characteristics of a particular storm and county's location in assessing exposure
 - Flooding-- Most associated with death; property damage
 - Precipitation
-- Wind (potentially weighted)
++ Gauge data if available
+- Wind (potentially weighted based on relation to the storm track), though wind alone has proven not to be sufficient in identifying the most affected region in some cases (e.g., Hurricane Andrew in 1992)[@Fronstin1994]. Therefore wind alone is not sufficient in all cases (as is commonly done using the Staffir-Simpson scale).
 
 Bad Characteristics:
 - Distance alone
