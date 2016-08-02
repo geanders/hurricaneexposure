@@ -87,29 +87,29 @@ dade_weather$fips <- fips
 
 #Join `dade_rain` and `dade_weather` datasets by date and create a plot comparing rain by storm (not fips)
 
-dade_weather %>%
-        inner_join(dade_rain, "date") %>%
-        group_by(storm_id) %>%
-        filter(lag == -3 | lag == -2 | lag == -1 |lag == 0 | lag == 1) %>%
-        arrange(storm_id) %>%
-        #filter(ymd(closest_dist$closest_date) - ddays(2) <= date &
-         #              date <= ymd(closest_dist$closest_date) + ddays(1)) %>%
-        summarize(monitor_rain = sum(prcp),
-                  tot_precip = sum(precip),
-                  prcp_reporting = mean(prcp_reporting)) %>%
-        ggplot(aes(x = monitor_rain, y = tot_precip)) +
-        geom_hline(aes(yintercept = 75), color = "lightgray") +
-        geom_vline(aes(xintercept = 75), color = "lightgray") +
-        geom_abline(aes(intercept = 0, slope = 1), color = "gray", alpha = 0.5) +
-        # geom_point(aes(size = prcp_reporting), alpha = 0.2) +
-        geom_point(alpha = 0.5) +
-        # geom_text(aes(x = monitor_rain + 100, label = storm_id)) +
-        xlim(c(0, 275)) + ylim(c(0, 275)) +
-        theme_few() +
-        scale_size_continuous(guide = "none") +
-        xlab("Rainfall (mm) based on \naveraged county monitors") +
-        ylab("Rainfall (mm) based on \nNLDAS-2 county data") +
-        ggtitle("Monitor versus NLDAS rainfall estimates \nfor Miami-Dade county by Storm")
+#dade_weather %>%
+#        inner_join(dade_rain, "date") %>%
+#        group_by(storm_id) %>%
+#        filter(lag == -3 | lag == -2 | lag == -1 |lag == 0 | lag == 1) %>%
+#        arrange(storm_id) %>%
+#        #filter(ymd(closest_dist$closest_date) - ddays(2) <= date &
+#         #              date <= ymd(closest_dist$closest_date) + ddays(1)) %>%
+#        summarize(monitor_rain = sum(prcp),
+#                  tot_precip = sum(precip),
+#                  prcp_reporting = mean(prcp_reporting)) %>%
+#        ggplot(aes(x = monitor_rain, y = tot_precip)) +
+#        geom_hline(aes(yintercept = 75), color = "lightgray") +
+#        geom_vline(aes(xintercept = 75), color = "lightgray") +
+#        geom_abline(aes(intercept = 0, slope = 1), color = "gray", alpha = 0.5) +
+#        # geom_point(aes(size = prcp_reporting), alpha = 0.2) +
+#        geom_point(alpha = 0.5) +
+#        # geom_text(aes(x = monitor_rain + 100, label = storm_id)) +
+#        xlim(c(0, 275)) + ylim(c(0, 275)) +
+#        theme_few() +
+#        scale_size_continuous(guide = "none") +
+#        xlab("Rainfall (mm) based on \naveraged county monitors") +
+#        ylab("Rainfall (mm) based on \nNLDAS-2 county data") +
+#        ggtitle("Monitor versus NLDAS rainfall estimates \nfor Miami-Dade county by Storm")
 
 lag_sum <- function(counties = NULL, county_weather, df2, year_range = NULL,
                               distance_limit = NULL, rain_limit = NULL,
