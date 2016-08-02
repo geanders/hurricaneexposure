@@ -72,12 +72,12 @@ county_timeseries(fips, percent_coverage = 0,
 
 # miami_dade_dir <- "~/Documents/hurricaneexposure/writing/DraftExposurePaper/dade_data/"
 dade_dir <- "dade_data/"
-county_weather <- readRDS(paste0(dade_dir, fips, ".rds"))
+dade_weather <- readRDS(paste0(dade_dir, fips, ".rds"))
 
-county_weather <- county_weather %>%
+dade_weather <- dade_weather %>%
         filter(date %in% seq(from = as.Date("1988-01-01"), to = as.Date("2011-12-31"), by = 1))
 
-county_weather$fips <- fips
+dade_weather$fips <- fips
 #dade_rain <- county_rain(counties = fips, start_year = 1988, end_year = 2011,
  #                        rain_limit = 0, dist_limit = 1000) %>%
   #      filter(fips == "12086")
@@ -87,7 +87,7 @@ county_weather$fips <- fips
 
 #Join `dade_rain` and `county_weather` datasets by date and create a plot comparing rain by storm (not fips)
 
-county_weather %>%
+dade_weather %>%
         inner_join(dade_rain, "date") %>%
         group_by(storm_id) %>%
         filter(lag == -3 | lag == -2 | lag == -1 |lag == 0 | lag == 1) %>%
@@ -198,7 +198,7 @@ countyweather_rain <- function(counties, county_weather, df2, start_year, end_ye
         return(rain_df)
 }
 
-miami_rain <- countyweather_rain(counties = "12086", county_weather = county_weather,
+miami_rain <- countyweather_rain(counties = "12086", county_weather = dade_weather,
                                  df2 = dade_rain, start_year = 1988, end_year = 2011,
                                  rain_limit = 0, dist_limit = 1000)
 miami_plot <- ggplot(miami_rain, aes(x = cw_precip, y = tot_precip)) +
