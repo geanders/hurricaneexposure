@@ -63,8 +63,15 @@ library(countyweather)
 
 data(closest_dist)
 data(rain)
-```
 
+# Generate a list of unique study fips (all in the eastern US)
+my_fips <- unique(closest_dist$fips)
+
+# Vector of all storms in study.
+storms <- unique(closest_dist$storm_id)
+storms <- storms[gsub("*.+-", "", storms) <= 2011 & 
+                        gsub("*.+-", "", storms) >= 1988]
+```
 
 Introduction
 ==========================
@@ -168,29 +175,82 @@ These wind models use estimates of maximum wind speed from the best tracks datas
 Results
 ============
 
-```{r echo = FALSE, message = FALSE, warning = FALSE}
-# Vector of all storms in study.
+Our analysis included `r length(storms)` Atlantic basin tropical storms over the years 1988 to 2011. This dataset covers several noteworthy storms, including Hugo (1989), Bob (1991), Andrew (1992), Opal (1995), Fran (1996), Georges (1998), Floyd (1999), Allison (2001), Isabel (2003), Charley (2004), Frances (2004), Ivan (2004), Jeanne (2004), Dennis (2005), Katrina (2005), Rita (2005), Gustav (2008), Ike (2008), and Irene (2011), all of which were severe enough their names were retired.
 
-storms <- unique(closest_dist$storm_id)
-storms <- storms[which(gsub("*.+-", "", storms) <= 2011)]
-```
-
-Our analysis included `r length(storms)` Atlantic basin tropical storms over the years 1988 to 2011. This dataset includes several noteworthy storms, including Hugo (1989), Andrew (1992), Floyd (1999), Katrina (2005), [maybe add Ike, Ivan, others?] ... . 
-
-```{r echo = FALSE, message = FALSE, warning = FALSE}
+```{r echo = FALSE, fig.align = 'center', fig.cap = "Tracks of tropical cyclones included in this study. Darker tracks indicate storms whose names were retired."}
 # Map of tracks of all storms in study.
-map_tracks(storms, plot_points = FALSE, alpha = 0.3)
+a <- map_tracks(storms, plot_points = FALSE, alpha = 0.3, color = "darkcyan")
+# Add storms whose names were retired
+# Source: http://www.nhc.noaa.gov/aboutnames_history.shtml
+map_tracks(c("Hugo-1989", "Bob-1991", "Andrew-1992", 
+             "Opal-1995", "Fran-1996", "Georges-1998", "Mitch-1998",
+             "Floyd-1999", "Allison-2001", "Michelle-2001",
+             "Isidore-2002", "Lili-2002", "Isabel-2003",
+             "Charley-2004", "Frances-2004",
+             "Ivan-2004", "Jeanne-2004", 
+             "Dennis-2005", "Katrina-2005", "Rita-2005",
+             "Wilma-2005", "Noel-2007",
+             "Gustav-2008", "Ike-2008", "Paloma-2008",
+             "Irene-2011"),
+           plot_object = a, plot_points = FALSE, color = "darkcyan") + 
+        theme(panel.grid.major = element_blank(),
+           panel.grid.minor = element_blank(),
+           panel.background = element_rect(colour = "black", size = 1))
 ```
 
 #### Are our methods of assessing distance reasonable
 
-[Spline vs. linear interpolation? Is 15 minutes adequate? Should we use shapefiles instead? IBTrACS probably has this (`rnoaa`).]
+[Is 15 minutes adequate? We could test if we get different results using a finer time resolution.]
 
 #### Are our methods of assessing rainfall reasonable
 
 For rainfall, we are using the cumulative rainfall from two days before to one day after the storm is closest to the county. This is based on analysis of the precipitation data for storms in our study period. If we go larger, there is a danger of picking up rainfall that isn't related to the storm. However, some storms move slowly, so if we limit to just the day the storm is closest to the county, we would miss some of the associated rainfall. 
 
-To explore if this window (two days before to one day after the storm's closest approach) was adequately large, we investigated patterns in rainfall by day (from four days before to two days after the storm's closest approach) for a few storms that had the potential to not fit this pattern, Floyd (1999), Irene (2011), Lee (2011), Ike (2008), and Allison (2001) (results shown in "validate_precip.pdf").
+```{r warning = FALSE, message = FALSE, echo = FALSE}
+storm_lag <- county_rain(counties = my_fips,
+                             start_year = 1988, end_year = 2011,
+                             rain_limit = 150, dist_limit = 500,
+                             days_include = -5:3)
+storm_lag <- storm_lag %>%
+        mutate(storm_county = paste0(storm_id, "_", fips))
+
+rain_lag <- rain %>%
+        mutate(storm_county = paste0(storm_id, "_", fips)) %>%
+        filter(storm_county %in% storm_lag$storm_county) %>%
+        group_by(storm_county) %>%
+        mutate(cumulative_rain = cumsum(precip),
+               difference_rain = lead(cumulative_rain) - cumulative_rain,
+               next_lag = lead(lag),
+               next_cumulative_rain = lead(cumulative_rain),
+               most_rain = difference_rain == max(difference_rain,
+                                                  na.rm = TRUE),
+               over_50 = lead(precip) > 50)
+to_highlight <- data.frame(x = c(-3.1, -3.1, 1.1, 1.1), y = c(0, 500, 500, 0))
+
+rain_lag_plot <- ggplot(rain_lag, aes(x = lag, y = cumulative_rain)) +
+        theme_tufte() + 
+        geom_segment(aes(xend = next_lag, yend = next_cumulative_rain,
+                         color = over_50),
+                     alpha = 0.1, size = 0.3) +
+        geom_polygon(data = to_highlight, aes(x = x, y = y),
+                     alpha = 0.2, color = "red", fill = NA) +
+        xlab("Days from storm's closest approach to county") + 
+        ylab("Cumulative rainfall in \ncounty from storm (mm)") + 
+        scale_color_manual(values = c("darkgray", "blue"),
+                           guide = FALSE) 
+rain_lag_plot
+```
+
+Here is a histogram of the amount of rain per day during a storm for the county-storm pairs with 150 mm or more rain associated with a storm. Although there are outliers with high rainfalls on all days, for most county-storm pairs, the only days with notable rain are one and two days before the storm, the day of the storm, and one day after the storm.
+
+```{r echo = FALSE, fig.width = 6, fig.height = 4}
+ggplot(rain_lag, aes(x = lag, y = precip, group = lag)) + 
+        geom_boxplot() + theme_tufte() + 
+        xlab("Days from storm's closest approach to county") + 
+        ylab("Rainfall in county (mm)") 
+```
+
+To explore if this window (two days before to one day after the storm's closest approach) was adequately large, we also investigated patterns in rainfall by day (from four days before to two days after the storm's closest approach) for a few storms that had the potential to not fit this pattern, Floyd (1999), Irene (2011), Lee (2011), Ike (2008), and Allison (2001) (results shown in "validate_precip.pdf").
 
 ```{r eval = FALSE, echo = FALSE}
 my_hurricanes <- c("Floyd-1999", 
@@ -272,52 +332,6 @@ dev.off()
 
 For the most part, using a four-day window from two days before to one day after a tropical cyclone in assessing precipitation exposure seemed to capture the effects of the storm while excluding potential false positives from precipitation from other weather systems. However, for storms that have tracks that make a loop, such as Allison (2001), this four-day window may not be adequate, and lead to an underestimation of total rainfall associated with the storm relative to estimates for faster-moving storms.
 
-```{r warning = FALSE, message = FALSE, echo = FALSE}
-# Generate a list of unique study fips (all in the eastern US)
-my_fips <- closest_dist$fips
-my_fips <- unique(my_fips)
-storm_lag <- county_rain(counties = my_fips,
-                             start_year = 1988, end_year = 2011,
-                             rain_limit = 150, dist_limit = 500,
-                             days_include = -5:3)
-storm_lag <- storm_lag %>%
-        mutate(storm_county = paste0(storm_id, "_", fips))
-
-rain_lag <- rain %>%
-        mutate(storm_county = paste0(storm_id, "_", fips)) %>%
-        filter(storm_county %in% storm_lag$storm_county) %>%
-        group_by(storm_county) %>%
-        mutate(cumulative_rain = cumsum(precip),
-               difference_rain = lead(cumulative_rain) - cumulative_rain,
-               next_lag = lead(lag),
-               next_cumulative_rain = lead(cumulative_rain),
-               most_rain = difference_rain == max(difference_rain,
-                                                  na.rm = TRUE),
-               over_50 = lead(precip) > 50)
-to_highlight <- data.frame(x = c(-3.1, -3.1, 1.1, 1.1), y = c(0, 500, 500, 0))
-
-rain_lag_plot <- ggplot(rain_lag, aes(x = lag, y = cumulative_rain)) +
-        theme_tufte() + 
-        geom_segment(aes(xend = next_lag, yend = next_cumulative_rain,
-                         color = over_50),
-                     alpha = 0.1, size = 0.3) +
-        geom_polygon(data = to_highlight, aes(x = x, y = y),
-                     alpha = 0.2, color = "red", fill = NA) +
-        xlab("Days from storm's closest approach to county") + 
-        ylab("Cumulative rainfall in \ncounty from storm (mm)") + 
-        scale_color_manual(values = c("darkgray", "blue"),
-                           guide = FALSE) 
-rain_lag_plot
-```
-
-Here is a histogram of the amount of rain per day during a storm for the county-storm pairs with 150 mm or more rain associated with a storm. Although there are outliers with high rainfalls on all days, for most county-storm pairs, the only days with notable rain are one and two days before the storm, the day of the storm, and one day after the storm.
-
-```{r echo = FALSE, fig.width = 6, fig.height = 4}
-ggplot(rain_lag, aes(x = lag, y = precip, group = lag)) + 
-        geom_boxplot() + theme_tufte() + 
-        xlab("Days from storm's closest approach to county") + 
-        ylab("Rainfall in county (mm)") 
-```
 
 We compared exposure results based on the NLDAS-2 precipitation data with values from monitors reported for certain storms in the *Monthly Weather Reviews* yearly summary of the Atlantic basin tropical storm season. Here are some of the plots comparing county-level estimates of rain exposure from the NLDAS-2 data to all *MWR*-reported rainfall estimates within the county:
 
@@ -883,10 +897,6 @@ For all storms, we divided counties into four categories:
 All counties in the first and fourth categories are consistently classified based on using rainfall and flood events as exposure metrics, while those in categories 2 and 3 are inconsistent, in that one metric marks the county as exposed to the storm while the other metric classifies it as unexposed.
 
 ```{r echo = FALSE}
-# Generate a list of unique study fips (all in the eastern US)
-my_fips <- closest_dist$fips
-my_fips <- unique(my_fips)
-
 all_storm_counties <- closest_dist %>%
         dplyr::select(storm_id, fips) %>%
         dplyr::mutate(storm_county = paste(storm_id, fips, sep = "-")) %>%
@@ -971,10 +981,6 @@ Only two storms (Irene in 2011 and Floyd and 1999) have over 50% agreement among
 Map of the count of county exposures to the top 2,000 county-storm pairs by distance-based exposure, based on "exposed" = distance of 100 kilometers or less [GBA-- These are **awesome**. I think we want to tweak the color scale and the legend a bit so that they're consistent between the three plots showing the top 2,000 storm-county pairs for the three metrics (distance, rain, and wind). That will make it easier to compare across the three maps, which is what we want readers to be able to do here.]:
 
 ```{r echo = FALSE, warning=FALSE, message=FALSE}
-# Generate a list of unique study fips (all in the eastern US)
-my_fips <- closest_dist$fips
-my_fips <- unique(my_fips)
-
 # Get distance-based exposure for all study counties, all years, using a 
 # distance limit that will ensure at least 1000 storm-county pairs
 distance_exposure <- county_distance(counties = my_fips, start_year = 1988,
@@ -1498,9 +1504,7 @@ grid.arrange(a, b, ncol = 1)
 Here is a table of the top 10 storms by number of counties exposed, based on a distance metric of within 100 kilometers or less of the storm track:
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
-all_counties <- unique(closest_dist$fips)
-
-all_distance <- county_distance(counties = all_counties, start_year = 1988, 
+all_distance <- county_distance(counties = my_fips, start_year = 1988, 
                         end_year = 2011, dist_limit =100)
 
 distance_exposed <- all_distance %>%
@@ -1536,9 +1540,7 @@ grid.arrange(distance_plots$a, distance_plots$b, distance_plots$c,
 Here is a table of the top 10 storms by number of counties exposed, based on a rain metric of 75 millimeters or more and within 500 kilometers or less of the storm track:
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
-all_counties <- unique(closest_dist$fips)
-
-all_rain <- county_rain(counties = all_counties, start_year = 1988, 
+all_rain <- county_rain(counties = my_fips, start_year = 1988, 
                         end_year = 2011, rain_limit = 75, dist_limit = 500,
                         days_included = -1:1)
 
@@ -1601,9 +1603,7 @@ map_tracks(storms = "Frances-2004", plot_points = FALSE,
 Here is a table of the top 10 storms by number of counties exposed, based on a wind metric of 18 m/s or greater (e.g., tropical storm strength or greater): 
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
-all_counties <- unique(closest_dist$fips)
-
-all_wind <- county_wind(counties = all_counties, start_year = 1988, 
+all_wind <- county_wind(counties = my_fips, start_year = 1988, 
                         end_year = 2011, wind_limit = 18)
 
 wind_exposed <- all_wind %>%
@@ -1639,9 +1639,7 @@ grid.arrange(wind_plots$a, wind_plots$b, wind_plots$c,
 Here is a table of the top 10 storms by number of counties exposed, based on a wind metric of 33 m/s or greater (e.g., Hurricane strength, category 1 or greater):
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
-all_counties <- unique(closest_dist$fips)
-
-all_wind <- county_wind(counties = all_counties, start_year = 1988, 
+all_wind <- county_wind(counties = my_fips, start_year = 1988, 
                         end_year = 2011, wind_limit = 33)
 
 hu_exposed <- all_wind %>%
@@ -1660,9 +1658,7 @@ hu_exposed %>%
 Here is a table of the top 10 storms by number of counties exposed, based on a wind metric of 50 m/s or greater (e.g., Intense Hurricane strength, category 3 or greater):
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
-all_counties <- unique(closest_dist$fips)
-
-all_wind <- county_wind(counties = all_counties, start_year = 1988, 
+all_wind <- county_wind(counties = my_fips, start_year = 1988, 
                         end_year = 2011, wind_limit = 50)
 
 cat3_exposed <- all_wind %>%
@@ -1688,10 +1684,6 @@ Here is a comparison of pair-wise metric agreement for all combinations of metri
 - In about half of storms, 50% or more of the counties classified as exposed based on rain are also classified as exposed based on distance (i.e., are within 100 km of the storm's track).
 
 ```{r echo = FALSE}
-# Generate a list of unique study fips (all in the eastern US)
-my_fips <- closest_dist$fips
-my_fips <- unique(my_fips)
-
 all_storm_counties <- closest_dist %>%
         dplyr::select(storm_id, fips) %>%
         dplyr::mutate(storm_county = paste(storm_id, fips, sep = "-")) %>%
