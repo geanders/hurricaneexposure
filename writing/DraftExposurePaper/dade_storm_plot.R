@@ -37,8 +37,8 @@ all_fips <- c(all_fips, as.integer(12025))
 check_dates[check_dates$fips == 12086, "fips"] <- 12025
 
 dade_rain <- data.table::fread(
-        #"/Users/joshuaferreri/Documents/nasa_precip_export_2.txt",
-        "~/Documents/CSU2016/hurricaneproject/hurricaneexposuredata/data-raw/nasa_precip_export_2.txt",
+        "/Users/joshuaferreri/Documents/nasa_precip_export_2.txt",
+        #"~/Documents/CSU2016/hurricaneproject/hurricaneexposuredata/data-raw/nasa_precip_export_2.txt",
         header = TRUE,
         select = c("county", "year_month_day", "precip", "precip_max")) %>%
         dplyr::filter(county %in% all_fips,
