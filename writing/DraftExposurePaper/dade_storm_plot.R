@@ -114,7 +114,7 @@ county_weather %>%
 lag_sum <- function(counties = NULL, county_weather, df2, year_range = NULL,
                               distance_limit = NULL, rain_limit = NULL,
                               include_rain = FALSE, days_included = NULL,
-                              output_vars = c("fips")){
+                              output_vars = c("fips", "cw_precip")){
 
         county_weather <- as.data.frame(county_weather)
         df <- inner_join(county_weather, df2, by = "date") %>%
@@ -146,19 +146,41 @@ lag_sum <- function(counties = NULL, county_weather, df2, year_range = NULL,
         }
 
         if(include_rain){
+                df <- data.table::data.table(df)
                 df <- df[get("lag") %in% days_included]
-                df <- df[ , .(tot_precip = sum(get("prcp"))),
+                df <- df[ , .(cw_precip = sum(get("prcp"))),
                               by = .(fips, storm_id)]
                 closest_dist <- merge(closest_dist, df, all.x = TRUE,
                                       by = c("storm_id", "fips"))
                 if(!is.null(rain_limit)){
-                        closest_dist <- closest_dist[get("tot_precip") >=
+                        closest_dist <- closest_dist[get("cw_precip") >=
                                                              rain_limit]
                 }
         }
 
         closest_dist <- closest_dist[ , .SD, , .SDcols = output_vars]
         return(closest_dist)
+}
+
+countyweather_rain <- function(counties, county_weather, df2, start_year, end_year,
+                        rain_limit, dist_limit,
+                        days_included = c(-2, -1, 0, 1)){
+
+        rain_storm_df <- lag_sum(counties = counties,
+                                           county_weather = county_weather,
+                                           df2 = df2,
+                                           year_range = c(start_year, end_year),
+                                           distance_limit = dist_limit,
+                                           rain_limit = rain_limit,
+                                           include_rain = TRUE,
+                                           days_included = days_included,
+                                           output_vars = c("storm_id", "fips",
+                                                           "closest_date",
+                                                           "storm_dist",
+                                                           "cw_precip",
+                                                           "local_time",
+                                                           "closest_time_utc"))
+        return(rain_storm_df)
 }
 
 check <- county_weather %>%
