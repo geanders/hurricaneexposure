@@ -166,7 +166,7 @@ countyweather_rain <- function(counties, county_weather, df2, start_year, end_ye
                         rain_limit, dist_limit,
                         days_included = c(-2, -1, 0, 1)){
 
-        rain_storm_df <- lag_sum(counties = counties,
+        county_rain_storm_df <- lag_sum(counties = counties,
                                            county_weather = county_weather,
                                            df2 = df2,
                                            year_range = c(start_year, end_year),
@@ -180,12 +180,22 @@ countyweather_rain <- function(counties, county_weather, df2, start_year, end_ye
                                                            "cw_precip",
                                                            "local_time",
                                                            "closest_time_utc"))
-        return(rain_storm_df)
+        rain_storm_df <- filter_storm_data(counties = counties,
+                                           year_range = c(start_year, end_year),
+                                           distance_limit = dist_limit,
+                                           rain_limit = rain_limit,
+                                           include_rain = TRUE,
+                                           days_included = days_included,
+                                           output_vars = c("storm_id", "fips",
+                                                           "closest_date",
+                                                           "storm_dist",
+                                                           "tot_precip",
+                                                           "local_time",
+                                                           "closest_time_utc"))
+        rain_df <- merge(county_rain_storm_df, rain_storm_df, all.x = TRUE,
+                         by = c("fips", "storm_id", "closest_date", "storm_dist",
+                                "local_time", "closest_time_utc"))
+        return(rain_df)
 }
 
-check <- county_weather %>%
-        inner_join(dade_rain, "date") %>%
-        filter(lag == -2 | lag == -1 | lag == 0 | lag == 1) %>%
-        arrange(storm_id) %>%
-        #mutate(monitor_rain = sum(prcp))
-        summarize(monitor_rain = sum(prcp))
+
