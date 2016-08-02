@@ -110,6 +110,57 @@ county_weather %>%
         xlab("Rainfall (mm) based on \naveraged county monitors") +
         ylab("Rainfall (mm) based on \nNLDAS-2 county data") +
         ggtitle("Monitor versus NLDAS rainfall estimates \nfor Miami-Dade county by Storm")
+
+lag_sum <- function(counties = NULL, county_weather, df2, year_range = NULL,
+                              distance_limit = NULL, rain_limit = NULL,
+                              include_rain = FALSE, days_included = NULL,
+                              output_vars = c("fips")){
+
+        county_weather <- as.data.frame(county_weather)
+        df <- inner_join(county_weather, df2, by = "date") %>%
+                arrange(storm_id)
+        df <- rename(df, fips = fips.x)
+
+        closest_dist <- data.table::data.table(hurricaneexposuredata::closest_dist)
+
+        if(!is.null(counties)){
+                closest_dist <- closest_dist[get("fips") %in% counties]
+        }
+
+        if(!is.null(year_range)){
+                closest_dist <- closest_dist[ , .(storm_id,
+                                                  fips,
+                                                  closest_date, storm_dist,
+                                                  local_time,
+                                                  closest_time_utc,
+                                                  year = substring(get("closest_date"),
+                                                                   1, 4)), ][
+                                                                           get("year") %in%
+                                                                                   year_range[1]:year_range[2]
+                                                                           ]
+        }
+
+        if(!is.null(distance_limit)){
+                closest_dist <- closest_dist[get("storm_dist") <=
+                                                     distance_limit]
+        }
+
+        if(include_rain){
+                df <- df[get("lag") %in% days_included]
+                df <- df[ , .(tot_precip = sum(get("prcp"))),
+                              by = .(fips, storm_id)]
+                closest_dist <- merge(closest_dist, df, all.x = TRUE,
+                                      by = c("storm_id", "fips"))
+                if(!is.null(rain_limit)){
+                        closest_dist <- closest_dist[get("tot_precip") >=
+                                                             rain_limit]
+                }
+        }
+
+        closest_dist <- closest_dist[ , .SD, , .SDcols = output_vars]
+        return(closest_dist)
+}
+
 check <- county_weather %>%
         inner_join(dade_rain, "date") %>%
         filter(lag == -2 | lag == -1 | lag == 0 | lag == 1) %>%
