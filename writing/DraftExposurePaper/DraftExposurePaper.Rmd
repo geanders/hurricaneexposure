@@ -544,7 +544,7 @@ b
 
 ```{r echo = FALSE, fig.width = 5.5, fig.height = 4}
 compare_rain %>% group_by(fips) %>%
-        summarize(ave_rain_mm = mean(precip_mm),
+        summarize(ave_rain_mm = mean(rain_mm),
                   ave_tot_precip = mean(tot_precip),
                   n = n(),
                   within_500_km = first(storm_dist) <= 500) %>%
@@ -619,8 +619,8 @@ Frances wind data:
 ```{r}
 load("frances_wind.RData")
 frances_wind <- frances_wind %>%
-        filter(!is.na(max_sust_kt)) %>%
-        mutate(max_sust_mps = convert_wind_speed(max_sust_kt, 
+        filter(!is.na(wind_sust)) %>%
+        mutate(max_sust_mps = convert_wind_speed(wind_sust, 
                                                  old_metric = "knots",
                                                  new_metric = "mps"),
                fips = sprintf("%05s", fips))
