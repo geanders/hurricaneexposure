@@ -198,4 +198,34 @@ countyweather_rain <- function(counties, county_weather, df2, start_year, end_ye
         return(rain_df)
 }
 
+miami_rain <- countyweather_rain(counties = "12086", county_weather = county_weather,
+                                 df2 = dade_rain, start_year = 1988, end_year = 2011,
+                                 rain_limit = 0, dist_limit = 1000)
+miami_plot <- ggplot(miami_rain, aes(x = cw_precip, y = tot_precip)) +
+        geom_hline(aes(yintercept = 75), color = "lightgray") +
+        geom_vline(aes(xintercept = 75), color = "lightgray") +
+        geom_abline(aes(intercept = 0, slope = 1), color = "gray", alpha = 0.5) +
+        # geom_point(aes(size = prcp_reporting), alpha = 0.2) +
+        geom_point(alpha = 0.5) +
+        # geom_text(aes(x = monitor_rain + 100, label = storm_id)) +
+        xlim(c(0, 275)) + ylim(c(0, 275)) +
+        theme_few() +
+        scale_size_continuous(guide = "none") +
+        xlab("Rainfall (mm) based on \naveraged county monitors") +
+        ylab("Rainfall (mm) based on \nNLDAS-2 county data") +
+        ggtitle("Monitor versus NLDAS rainfall estimates \nfor Miami-Dade county by Storm")
 
+
+        ggplot(aes(x = monitor_rain, y = tot_precip)) +
+        geom_hline(aes(yintercept = 75), color = "lightgray") +
+        geom_vline(aes(xintercept = 75), color = "lightgray") +
+        geom_abline(aes(intercept = 0, slope = 1), color = "gray", alpha = 0.5) +
+        # geom_point(aes(size = prcp_reporting), alpha = 0.2) +
+        geom_point(alpha = 0.5) +
+        # geom_text(aes(x = monitor_rain + 100, label = storm_id)) +
+        xlim(c(0, 275)) + ylim(c(0, 275)) +
+        theme_few() +
+        scale_size_continuous(guide = "none") +
+        xlab("Rainfall (mm) based on \naveraged county monitors") +
+        ylab("Rainfall (mm) based on \nNLDAS-2 county data") +
+        ggtitle("Monitor versus NLDAS rainfall estimates \nfor Miami-Dade county by Storm")
