@@ -110,4 +110,9 @@ county_weather %>%
         xlab("Rainfall (mm) based on \naveraged county monitors") +
         ylab("Rainfall (mm) based on \nNLDAS-2 county data") +
         ggtitle("Monitor versus NLDAS rainfall estimates \nfor Miami-Dade county by Storm")
-
+check <- county_weather %>%
+        inner_join(dade_rain, "date") %>%
+        filter(lag == -2 | lag == -1 | lag == 0 | lag == 1) %>%
+        arrange(storm_id) %>%
+        #mutate(monitor_rain = sum(prcp))
+        summarize(monitor_rain = sum(prcp))
