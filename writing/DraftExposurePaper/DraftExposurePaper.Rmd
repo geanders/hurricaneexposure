@@ -42,11 +42,8 @@ output: rticles::elsevier_article
 ---
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
-library(hurricaneexposure)
-# install hurricane exposure data package if you don't already have it
-# library(devtools)
-# install_github("geanders/hurricaneexposuredata")
 library(hurricaneexposuredata)
+library(hurricaneexposure)
 library(knitr)
 library(ggplot2)
 library(ggthemes)
@@ -57,6 +54,12 @@ library(dplyr)
 library(tidyr)
 library(choroplethr)
 library(RColorBrewer)
+library(weathermetrics)
+
+#devtools::install_github("ropenscilabs/rnoaa")
+library(rnoaa)
+#devtools::install_github("leighseverson/countyweather")
+library(countyweather)
 ```
 
 
@@ -437,7 +440,7 @@ compare_rain %>% group_by(fips) %>%
 ```
 
 ```{r echo = FALSE, fig.height = 4, fig.width = 6}
-library(weathermetrics)
+
 load("ike_gauge.RData")
 ike_gauge$rain_mm <- convert_precip(ike_gauge$rain_in, 
                                     "inches", "mm")
@@ -662,10 +665,6 @@ b
 ####How does NLDAS-2 data compare with rnoaa data from the `countyweather` package in R?
 
 ```{r eval = FALSE}
-#devtools::install_github("ropenscilabs/rnoaa")
-library(rnoaa)
-#devtools::install_github("leighseverson/countyweather")
-library(countyweather)
 options("noaakey" = Sys.getenv("noaakey"))
 #Alex-2010
 alex_fips <- alex_nldas$fips
@@ -760,8 +759,6 @@ As of right now, I am not going to do Frances (there are 184 unique fips).
 Create a timeseries for the top 15 FIPS by reporting stations for Alex and Ike:
 
 ```{r eval = FALSE}
-
-library(countyweather)
 county_timeseries(fips = ike_fips[1:2], 
                   percent_coverage = 0, 
                   date_min = "2008-09-01", 
