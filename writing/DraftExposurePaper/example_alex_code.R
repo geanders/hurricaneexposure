@@ -6,53 +6,54 @@ library(ggplot2)
 library(ggthemes)
 library(lubridate)
 
-ike_fips <- c("12021", "12071", "12087", "22051", "22053")
-county_timeseries(ike_fips, percent_coverage = 0,
+alex_fips <- c("48355", "48061", "48215", "48057", "12087")
+county_timeseries(alex_fips, percent_coverage = 0,
                   date_min = "1988-01-01", date_max = "2011-12-31",
-                  var = "PRCP", out_directory = "~/ike_ex/"
-                  #, out_directory = "~/Documents/hurricaneexposure/writing/DraftExposurePaper/ike_ex/"
-                  )
+                  var = "PRCP", out_directory = "~/alex_ex/"
+                  #out_directory = "~/Documents/hurricaneexposure/writing/DraftExposurePaper/alex_ex/"
+)
 
 # Check that it worked...
-list.files("~/ike_ex")
-#list.files("~/Documents/hurricaneexposure/writing/DraftExposurePaper/ike_ex/")
+list.files("~/alex_ex")
+#list.files("~/Documents/hurricaneexposure/writing/DraftExposurePaper/alex_ex/")
 
 # Do some plots
-#ike_dir <- "~/Documents/hurricaneexposure/writing/DraftExposurePaper/ike_ex/"
-ike_dir <- "~/ike_ex/"
-ike_counties <- gsub(".rds", "", list.files(ike_dir))
+#alex_dir <- "~/Documents/hurricaneexposure/writing/DraftExposurePaper/alex_ex/"
+alex_dir <- "~/alex_ex/"
+alex_counties <- gsub(".rds", "", list.files(alex_dir))
 
-ike_ave <- vector("list", length = length(ike_counties))
-names(ike_ave) <- ike_counties
+alex_ave <- vector("list", length = length(alex_counties))
+names(alex_ave) <- alex_counties
 
-for(x in ike_counties){
-        county_weather <- readRDS(paste0(ike_dir, x, ".rds"))#$averaged
+for(x in alex_counties){
+        county_weather <- readRDS(paste0(alex_dir, x, ".rds"))#$averaged
         county_weather <- county_weather %>%
-                filter(year(date) == 2008 & month(date) == 9)
+                filter(date %in% seq(from = as.Date("2010-06-01"), to = as.Date("2010-07-01"), by = 1))
+                       #year(date) == 2010 & month(date) == 6 | month(date) == 7)
         county_weather$fips <- x
-        ike_ave[[x]] <- county_weather
+        alex_ave[[x]] <- county_weather
 }
-ike_ave <- do.call("rbind", ike_ave)
+alex_ave <- do.call("rbind", alex_ave)
 
-ike_rain <- county_rain(counties = ike_counties, start_year = 2008,
-                        end_year = 2008, rain_limit = 0, dist_limit = 1000) %>%
-        filter(storm_id == "Ike-2008")
+alex_rain <- county_rain(counties = alex_counties, start_year = 2010,
+                        end_year = 2010, rain_limit = 0, dist_limit = 1000) %>%
+        filter(storm_id == "Alex-2010")
 
 library(ggthemes)
-ike_ave %>%
+alex_ave %>%
         ggplot(aes(x = date, y = prcp, color = prcp_reporting)) +
         geom_line() + geom_point() +
-        geom_segment(data = ike_rain,
+        geom_segment(data = alex_rain,
                      aes(x = ymd(closest_date) - ddays(2),
                          xend = ymd(closest_date) + ddays(1),
                          y = tot_precip, yend = tot_precip), color = "red") +
         facet_wrap(~ fips, ncol = 2) +
         theme_few()
 # Note: different scales on this one-- cumulative rain over four days for
-# `ike_rain`, `ike_ave` is one day at a time
+# `alex_rain`, `alex_ave` is one day at a time
 
-ike_ave %>%
-        left_join(ike_rain, by = "fips") %>%
+alex_ave %>%
+        left_join(alex_rain, by = "fips") %>%
         group_by(fips) %>%
         filter(ymd(closest_date) - ddays(2) <= date &
                        date <= ymd(closest_date) + ddays(1)) %>%
@@ -67,4 +68,5 @@ ike_ave %>%
         scale_size_continuous(guide = "none") +
         xlab("Rainfall (mm) based on \naveraged county monitors") +
         ylab("Rainfall (mm) based on \nNLDAS-2 county data") +
-        ggtitle("Monitor versus NLDAS rainfall estimates \nfor Hurricane Ike (2008)")
+        ggtitle("Monitor versus NLDAS rainfall estimates \nfor Hurricane Alex (2010)")
+#only showing one FIPS, but all FIPS are present in both alex_rain and alex_ave datasets
