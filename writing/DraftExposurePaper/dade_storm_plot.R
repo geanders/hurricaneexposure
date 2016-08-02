@@ -85,7 +85,7 @@ dade_weather$fips <- fips
  #       rename(date = closest_date)
   #      left_join(dade_rain, by = date)
 
-#Join `dade_rain` and `county_weather` datasets by date and create a plot comparing rain by storm (not fips)
+#Join `dade_rain` and `dade_weather` datasets by date and create a plot comparing rain by storm (not fips)
 
 dade_weather %>%
         inner_join(dade_rain, "date") %>%
