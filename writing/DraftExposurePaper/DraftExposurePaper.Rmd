@@ -175,9 +175,9 @@ These wind models use estimates of maximum wind speed from the best tracks datas
 Results
 ============
 
-Our analysis included `r length(storms)` Atlantic basin tropical storms over the years 1988 to 2011. This dataset covers several noteworthy storms, including Hugo (1989), Bob (1991), Andrew (1992), Opal (1995), Fran (1996), Georges (1998), Floyd (1999), Allison (2001), Isabel (2003), Charley (2004), Frances (2004), Ivan (2004), Jeanne (2004), Dennis (2005), Katrina (2005), Rita (2005), Gustav (2008), Ike (2008), and Irene (2011), all of which were severe enough their names were retired.
+Our analysis included `r length(storms)` Atlantic basin tropical storms over the years 1988 to 2011 (Figure \ref{fig:all_storms}). This dataset covers several noteworthy storms, including Hugo (1989), Bob (1991), Andrew (1992), Opal (1995), Fran (1996), Georges (1998), Floyd (1999), Allison (2001), Isabel (2003), Charley (2004), Frances (2004), Ivan (2004), Jeanne (2004), Dennis (2005), Katrina (2005), Rita (2005), Gustav (2008), Ike (2008), and Irene (2011), all of which were severe enough their names were retired.
 
-```{r echo = FALSE, fig.align = 'center', fig.cap = "Tracks of tropical cyclones included in this study. Darker tracks indicate storms whose names were retired."}
+```{r all_storms, echo = FALSE, fig.align = 'center', fig.cap = "Tracks of tropical cyclones included in this study. Darker tracks indicate storms whose names were retired.", message = FALSE}
 # Map of tracks of all storms in study.
 a <- map_tracks(storms, plot_points = FALSE, alpha = 0.3, color = "darkcyan")
 # Add storms whose names were retired
@@ -204,53 +204,80 @@ map_tracks(c("Hugo-1989", "Bob-1991", "Andrew-1992",
 
 #### Are our methods of assessing rainfall reasonable
 
-For rainfall, we are using the cumulative rainfall from two days before to one day after the storm is closest to the county. This is based on analysis of the precipitation data for storms in our study period. If we go larger, there is a danger of picking up rainfall that isn't related to the storm. However, some storms move slowly, so if we limit to just the day the storm is closest to the county, we would miss some of the associated rainfall. 
+For rainfall, we calculate total precipitation within a county during a storm by calculating the cumulative rainfall from two days before to one day after the storm's closest approach to the county. If we go larger, there is a danger of picking up rainfall that isn't related to the storm. However, some storms move slowly or are large, so if we limit to just the day the storm is closest to the county, we are likely to miss some of storm-associated precipitation.
 
-```{r warning = FALSE, message = FALSE, echo = FALSE}
+We explored whether this window was adequate for capturing storm-related precipitation for most storms in most counties. We looked at all storm-county observations for which a county received 150 millimeters or more of precipitation within the window of five days before to three days after the storm's closest approach to a county. 
+
+```{r cumulative_rain, echo = FALSE, fig.align = "center", fig.cap = "Cumulative rainfall within a county for a storm for which the county had 150 mm or more of rain over the period from five days before to three days after the storm's closest approach to the county. The line for any day for which a county received 50 mm or more of precipitation are shown in blue, while the line for any day for which a county received less than 50 mm of precipitation are shown in gray. The red box highlights the days used throughout the rest of the paper to measure total storm precipitation for each county. Numbers at the top of the graph give the total number of county-storm observations on that lag for which total precipitation was 50 mm or more (i.e., number of blue lines for that lag)."}
+# Determine all storm-county pairs with 150 mm or more of rainfall over 
+# lag -5 to 3
 storm_lag <- county_rain(counties = my_fips,
                              start_year = 1988, end_year = 2011,
                              rain_limit = 150, dist_limit = 500,
-                             days_include = -5:3)
-storm_lag <- storm_lag %>%
+                             days_include = -5:3) %>%
         mutate(storm_county = paste0(storm_id, "_", fips))
 
-rain_lag <- rain %>%
+lag_6 <- storm_lag %>%
+        select(fips, storm_id) %>%
+        mutate(lag = -6, precip = 0, precip_max = 0)
+
+# Pull in rain data and limit to storm-county pairs with 150 mm or more 
+# of rainfall over lag -5 to 3. Figure out the cumulative values at each 
+# day within a county-storm for each lag day.
+rain_lag <- rbind(rain, lag_6) %>%
+        arrange(storm_id, fips, lag) %>%
         mutate(storm_county = paste0(storm_id, "_", fips)) %>%
         filter(storm_county %in% storm_lag$storm_county) %>%
         group_by(storm_county) %>%
         mutate(cumulative_rain = cumsum(precip),
-               difference_rain = lead(cumulative_rain) - cumulative_rain,
                next_lag = lead(lag),
                next_cumulative_rain = lead(cumulative_rain),
-               most_rain = difference_rain == max(difference_rain,
-                                                  na.rm = TRUE),
-               over_50 = lead(precip) > 50)
-to_highlight <- data.frame(x = c(-3.1, -3.1, 1.1, 1.1), y = c(0, 500, 500, 0))
+               over_50 = lead(precip) >= 50) %>%
+        filter(lag != 3)
+high_rain <- rain_lag %>%
+        ungroup() %>%
+        group_by(lag) %>%
+        summarize(n_high = sum(over_50)) %>%
+        ungroup() %>%
+        mutate(lag = lag + 1)
+to_highlight <- data.frame(x = c(-3.1, -3.1, 1.1, 1.1) + 0.5, 
+                           y = c(-15, 500, 500, -15))
 
-rain_lag_plot <- ggplot(rain_lag, aes(x = lag, y = cumulative_rain)) +
-        theme_tufte() + 
-        geom_segment(aes(xend = next_lag, yend = next_cumulative_rain,
+# Adding + 0.5 so labels show up centered for the day for which we're showing
+# cumulative rainfall.
+ggplot(rain_lag, aes(x = lag + 0.5, y = cumulative_rain)) +
+        theme_few() + 
+        geom_segment(aes(xend = next_lag + 0.5,
+                         yend = next_cumulative_rain,
                          color = over_50),
                      alpha = 0.1, size = 0.3) +
         geom_polygon(data = to_highlight, aes(x = x, y = y),
                      alpha = 0.2, color = "red", fill = NA) +
-        xlab("Days from storm's closest approach to county") + 
+        geom_text(data = high_rain, 
+                  aes(x = lag, y = 475,
+                      label = prettyNum(n_high, big.mark = ","))) + 
+        xlab("Lag period from storm's closest approach to county") + 
         ylab("Cumulative rainfall in \ncounty from storm (mm)") + 
         scale_color_manual(values = c("darkgray", "blue"),
                            guide = FALSE) 
-rain_lag_plot
 ```
 
-Here is a histogram of the amount of rain per day during a storm for the county-storm pairs with 150 mm or more rain associated with a storm. Although there are outliers with high rainfalls on all days, for most county-storm pairs, the only days with notable rain are one and two days before the storm, the day of the storm, and one day after the storm.
+By far, the majority of days in which precipitation in a county exceeded 50 millimeters were within two days before and one day after the storm's closest approach to the county (Figure \ref{fig:cumulative_rain}); in fact, `r round(100 * high_rain$n_high[high_rain$lag == 0] / sum(high_rain$n_high))`% of these days were the day of the storm's closest approach to the county. By using a period from two days before to one day after the storm's closest approach, we are capturing `r round(100 * sum(high_rain$n_high[high_rain$lag %in% -2:1]) / sum(high_rain$n_high))`% of days with precipitation of 50 millimeters or more within county-storm observations where the county received 150 millimeters or more rain between five days before and three days after the storm's closest approach.
 
-```{r echo = FALSE, fig.width = 6, fig.height = 4}
-ggplot(rain_lag, aes(x = lag, y = precip, group = lag)) + 
-        geom_boxplot() + theme_tufte() + 
-        xlab("Days from storm's closest approach to county") + 
-        ylab("Rainfall in county (mm)") 
+Similarly, a histogram of the amount of rain within a county per day during a storm for the county-storm pairs with 150 mm or more storm-associated rain shows that, although there are outliers with high rainfalls on all days, for most county-storm pairs, the only days with notable rain are one and two days before the storm, the day of the storm, and one day after the storm (Figure \ref{fig:daily_rain}).
+
+```{r daily_rain, echo = FALSE, fig.width = 6, fig.height = 4}
+rain_lag %>%
+        filter(lag != -6) %>%
+        ggplot(aes(x = lag, y = precip, group = lag)) + 
+        geom_boxplot(outlier.size = 0.5) + theme_few() + 
+        xlab("Lag period from storm's closest approach to county") + 
+        ylab("Daily rainfall in county (mm)") 
 ```
 
-To explore if this window (two days before to one day after the storm's closest approach) was adequately large, we also investigated patterns in rainfall by day (from four days before to two days after the storm's closest approach) for a few storms that had the potential to not fit this pattern, Floyd (1999), Irene (2011), Lee (2011), Ike (2008), and Allison (2001) (results shown in "validate_precip.pdf").
+We did a more detailed investigation of some of the storms that were notable for being slow-moving or having a looped pattern, which could result in our window underestimating storm-associated precipitation. For example, [storm example] moved very slowly and was very large, and so if there is significant rainfall outside of our window because of storm size and speed, it should show up for this storm. As another example, Tropical Storm Allison (2001) followed a looped pattern, and so passed near some counties twice, with around [x] days between these two approaches in some cases. Our method of estimating rainfall may not include all rain from both passes of the storm. 
+
+[To explore if this window (two days before to one day after the storm's closest approach) was adequately large, we also investigated patterns in rainfall by day (from four days before to two days after the storm's closest approach) for a few storms that had the potential to not fit this pattern, Floyd (1999), Irene (2011), Lee (2011), Ike (2008), and Allison (2001) (results shown in "validate_precip.pdf").]
 
 ```{r eval = FALSE, echo = FALSE}
 my_hurricanes <- c("Floyd-1999", 
@@ -330,8 +357,7 @@ for(hurricane in my_hurricanes){
 dev.off()
 ```
 
-For the most part, using a four-day window from two days before to one day after a tropical cyclone in assessing precipitation exposure seemed to capture the effects of the storm while excluding potential false positives from precipitation from other weather systems. However, for storms that have tracks that make a loop, such as Allison (2001), this four-day window may not be adequate, and lead to an underestimation of total rainfall associated with the storm relative to estimates for faster-moving storms.
-
+For the most part, using our window (two days before to one day after a storm's closest approach) captured most of the storm-associated precipitation that would have been counted using a wider window from five days before to two days after a storm's closest approach, even for a large, slow storm. However, for a storm that loops and so passes some counties twice, such as Allison (2001), this four-day window may not be adequate, and lead to an underestimation of total rainfall associated with the storm relative to estimates for faster-moving storms. Other storms that looped over or near land and so passed close to US counties twice include Allison (1989), Alberto (1994), Gordon (1994), Dennis (1999), Edouard (2002), Fay (2002), Alex (2004), Ivan (2004), Dennis (2005), and Ophelia (2005).
 
 We compared exposure results based on the NLDAS-2 precipitation data with values from monitors reported for certain storms in the *Monthly Weather Reviews* yearly summary of the Atlantic basin tropical storm season. Here are some of the plots comparing county-level estimates of rain exposure from the NLDAS-2 data to all *MWR*-reported rainfall estimates within the county:
 
