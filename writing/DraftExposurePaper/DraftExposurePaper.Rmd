@@ -836,7 +836,7 @@ countyweather_rain <- function(counties, county_weather, start_year, end_year,
 
 miami_rain <- countyweather_rain(counties = "12086", county_weather = dade_weather,
                                  start_year = 1988, end_year = 2011,
-                                 rain_limit = 0, dist_limit = 1000)
+                                 rain_limit = 0, dist_limit = 2000)
 miami_plot <- ggplot(miami_rain, aes(x = cw_precip, y = tot_precip)) +
         geom_hline(aes(yintercept = 75), color = "lightgray") +
         geom_vline(aes(xintercept = 75), color = "lightgray") +
@@ -853,6 +853,7 @@ miami_plot <- ggplot(miami_rain, aes(x = cw_precip, y = tot_precip)) +
 
 miami_plot
 ```
+
 
 
 #### Are exposure patterns different when using distance-, rain-, and wind-based metrics? In particular, (1) do some exposure metrics result in more "exposed" classifications than others and (2) are geographic patterns of exposure different among the different metrics?
