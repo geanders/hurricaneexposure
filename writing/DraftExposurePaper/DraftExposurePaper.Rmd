@@ -696,8 +696,7 @@ Compare data from `countyweather` and NLDAS-2 data for Miami-Dade county by stor
 ```{r}
 data("closest_dist")
 
-
-# Create a new dataset for precip with lag -5 to 3 for fips 12086 only
+# Create a new dataset for precip with lag -2 to 3 for fips 12086 only
 
 check_dates <- dplyr::select(closest_dist, -storm_dist) %>%
         dplyr::mutate(closest_date = ymd(closest_date)) %>%
@@ -718,7 +717,7 @@ check_dates <- dplyr::select(closest_dist, -storm_dist) %>%
         #dplyr::mutate(day = as.numeric(format(day, "%Y%m%d")))
 
 all_dates <- unique(check_dates$date)
-all_fips <- unique(check_dates$fips) # has Miami as "12086", and is still in check_dates here
+all_fips <- unique(check_dates$fips)
 
 #create timeseries for Dade precipitation data from the `countyweather` package
 
