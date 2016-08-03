@@ -10,7 +10,6 @@ alex_fips <- c("48355", "48061", "48215", "48057", "12087")
 county_timeseries(alex_fips, percent_coverage = 0,
                   date_min = "1988-01-01", date_max = "2011-12-31",
                   var = "PRCP", out_directory = "~/alex_ex/"
-                  #out_directory = "~/Documents/hurricaneexposure/writing/DraftExposurePaper/alex_ex/"
 )
 
 # Check that it worked...
