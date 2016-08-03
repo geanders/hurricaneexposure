@@ -126,15 +126,14 @@ dade_weather <- dade_weather %>%
 #        ylab("Rainfall (mm) based on \nNLDAS-2 county data") +
 #        ggtitle("Monitor versus NLDAS rainfall estimates \nfor Miami-Dade county by Storm")
 
-lag_sum <- function(counties = NULL, county_weather, df2, year_range = NULL,
+lag_sum <- function(counties = NULL, county_weather, year_range = NULL,
                               distance_limit = NULL, rain_limit = NULL,
                               include_rain = FALSE, days_included = NULL,
                               output_vars = c("fips", "cw_precip")){
 
-        county_weather <- as.data.frame(county_weather)
-        df <- inner_join(county_weather, df2, by = "date") %>%
-                arrange(storm_id)
-        df <- rename(df, fips = fips.x)
+#        df <- inner_join(county_weather, df2, by = "date") %>%
+#                arrange(storm_id)
+#        df <- rename(df, fips = fips.x)
 
         closest_dist <- data.table::data.table(hurricaneexposuredata::closest_dist)
 
@@ -161,7 +160,7 @@ lag_sum <- function(counties = NULL, county_weather, df2, year_range = NULL,
         }
 
         if(include_rain){
-                df <- data.table::data.table(df)
+                df <- data.table::data.table(county_weather)
                 df <- df[get("lag") %in% days_included]
                 df <- df[ , .(cw_precip = sum(get("prcp"))),
                               by = .(fips, storm_id)]
@@ -177,13 +176,12 @@ lag_sum <- function(counties = NULL, county_weather, df2, year_range = NULL,
         return(closest_dist)
 }
 
-countyweather_rain <- function(counties, county_weather, df2, start_year, end_year,
+countyweather_rain <- function(counties, county_weather, start_year, end_year,
                         rain_limit, dist_limit,
                         days_included = c(-2, -1, 0, 1)){
 
         county_rain_storm_df <- lag_sum(counties = counties,
                                            county_weather = county_weather,
-                                           df2 = df2,
                                            year_range = c(start_year, end_year),
                                            distance_limit = dist_limit,
                                            rain_limit = rain_limit,
@@ -214,7 +212,7 @@ countyweather_rain <- function(counties, county_weather, df2, start_year, end_ye
 }
 
 miami_rain <- countyweather_rain(counties = "12086", county_weather = dade_weather,
-                                 df2 = dade_rain, start_year = 1988, end_year = 2011,
+                                 start_year = 1988, end_year = 2011,
                                  rain_limit = 0, dist_limit = 1000)
 miami_plot <- ggplot(miami_rain, aes(x = cw_precip, y = tot_precip)) +
         geom_hline(aes(yintercept = 75), color = "lightgray") +
