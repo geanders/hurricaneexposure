@@ -376,7 +376,7 @@ options("noaakey" = Sys.getenv("noaakey"))
 
 allison_gauge <- read.csv("MWR_gauge_rain_data/allison_mwr.csv") 
 allison_fips <- sprintf("%05s", as.character(unique(allison_gauge$fips)))
-allison_fips <- sample(allison_fips, 10)
+# allison_fips <- sample(allison_fips, 10)
 date_range <- closest_dist %>% 
         filter(storm_id == "Allison-2001") %>%
         summarize(earliest_date = min(ymd(closest_date)) - ddays(2),
@@ -388,7 +388,7 @@ county_timeseries(allison_fips, percent_coverage = 0,
 
 load("MWR_gauge_rain_data/frances_gauge.RData")
 frances_fips <- sprintf("%05s", as.character(unique(frances_gauge$fips)))
-frances_fips <- sample(frances_fips, 10)
+# frances_fips <- sample(frances_fips, 10)
 date_range <- closest_dist %>% 
         filter(storm_id == "Frances-2004") %>%
         summarize(earliest_date = min(ymd(closest_date)) - ddays(2),
@@ -400,7 +400,7 @@ county_timeseries(frances_fips, percent_coverage = 0,
 
 load("MWR_gauge_rain_data/ike_gauge.RData")
 ike_fips <- sprintf("%05s", as.character(unique(ike_gauge$fips)))
-ike_fips <- sample(ike_fips, 10)
+# ike_fips <- sample(ike_fips, 10)
 date_range <- closest_dist %>% 
         filter(storm_id == "Ike-2008") %>%
         summarize(earliest_date = min(ymd(closest_date)) - ddays(2),
@@ -412,7 +412,7 @@ county_timeseries(ike_fips, percent_coverage = 0,
 
 load("MWR_gauge_rain_data/alex_gauge.RData")
 alex_fips <- sprintf("%05s", as.character(unique(alex_gauge$fips)))
-alex_fips <- sample(alex_fips, 10)
+# alex_fips <- sample(alex_fips, 10)
 date_range <- closest_dist %>% 
         filter(storm_id == "Alex-2010") %>%
         summarize(earliest_date = min(ymd(closest_date)) - ddays(2),
@@ -469,7 +469,7 @@ plot_county_ave_compare <- function(county_dir, storm_id){
                 geom_abline(aes(intercept = 0, slope = 1), color = "gray",
                     alpha = 0.5) +
                 geom_point(aes(size = prcp_reporting), alpha = 0.3) +
-                geom_text(aes(label = fips)) +
+                # geom_text(aes(label = fips)) +
                 theme_few() +
                 scale_size_continuous(guide = "none") +
                 ylab("Rainfall (mm) based on \naveraged county monitors") +
