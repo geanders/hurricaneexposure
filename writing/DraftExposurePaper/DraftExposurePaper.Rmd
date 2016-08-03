@@ -664,8 +664,8 @@ frances_wind <- frances_wind %>%
         filter(!is.na(wind_sust)) %>%
         mutate(wind_sust = convert_wind_speed(wind_sust, "knots", "mps"))
 frances_wind_mwr <- plot_mwr_compare_wind(frances_wind)
+```
 
-<<<<<<< HEAD
 Compare data from `countyweather` and NLDAS-2 data for Miami-Dade county by storm:
 
 ```{r}
@@ -829,13 +829,12 @@ miami_plot <- ggplot(miami_rain, aes(x = cw_precip, y = tot_precip)) +
 miami_plot
 ```
 
-=======
+```{r}
 load("MWR_gauge_wind_data/ike_wind.RData")
 ike_wind <- ike_wind %>%
         filter(!is.na(max_sust_kt)) %>%
         mutate(wind_sust = convert_wind_speed(max_sust_kt, "knots", "mps"))
 ike_wind_mwr <- plot_mwr_compare_wind(ike_wind)
->>>>>>> 9ffbab203c329167a03d4b96c5e00d7be83af2fe
 
 # load("MWR_gauge_rain_data/alex_gauge.Rdata")
 # alex_mwr <- plot_mwr_compare(alex_gauge)
