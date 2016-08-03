@@ -37,8 +37,8 @@ all_fips <- c(all_fips, as.integer(12025))
 check_dates[check_dates$fips == 12086, "fips"] <- 12025
 
 dade_rain <- data.table::fread(
-        "/Users/joshuaferreri/Documents/nasa_precip_export_2.txt",
-        #"~/Documents/CSU2016/hurricaneproject/hurricaneexposuredata/data-raw/nasa_precip_export_2.txt",
+        #"/Users/joshuaferreri/Documents/nasa_precip_export_2.txt",
+        "~/Documents/CSU2016/hurricaneproject/hurricaneexposuredata/data-raw/nasa_precip_export_2.txt",
         header = TRUE,
         select = c("county", "year_month_day", "precip", "precip_max")) %>%
         dplyr::filter(county %in% all_fips,
@@ -64,17 +64,19 @@ dade_rain <- dade_rain %>%
 #create timeseries for Dade precipitation data from the `countyweather` package
 
 fips <- "12086"
-county_timeseries(fips, percent_coverage = 0,
-                  date_min = "1988-01-01", date_max = "2011-12-31",
-                  var = "PRCP",
-                  out_directory = "dade_data/")
-                  #out_directory = "~/Documents/hurricaneexposure/writing/DraftExposurePaper/dade_data/")
+# I've commented this out because we're saving the data, so we only need
+# to run it once.
+# county_timeseries(fips, percent_coverage = 0,
+#                   date_min = "1988-01-01", date_max = "2011-12-31",
+#                   var = "PRCP",
+#                   out_directory = "dade_data/")
+#                   #out_directory = "~/Documents/hurricaneexposure/writing/DraftExposurePaper/dade_data/")
 
 # miami_dade_dir <- "~/Documents/hurricaneexposure/writing/DraftExposurePaper/dade_data/"
 dade_dir <- "dade_data/"
 dade_weather <- readRDS(paste0(dade_dir, fips, ".rds"))
 
-dade_weather <- dade_weather %>%
+dade_weather <- dade_weather$averaged %>%
         filter(date %in% seq(from = as.Date("1988-01-01"), to = as.Date("2011-12-31"), by = 1))
 
 dade_weather$fips <- fips
@@ -213,5 +215,5 @@ miami_plot <- ggplot(miami_rain, aes(x = cw_precip, y = tot_precip)) +
         scale_size_continuous(guide = "none") +
         xlab("Rainfall (mm) based on \naveraged county monitors") +
         ylab("Rainfall (mm) based on \nNLDAS-2 county data") +
-        ggtitle("Monitor versus NLDAS rainfall estimates \nfor Miami-Dade county by Storm")
+        ggtitle("Monitor versus NLDAS rainfall estimates \nfor Miami-Dade County, FL, by storm")
 
