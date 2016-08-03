@@ -33,53 +33,28 @@ check_dates <- dplyr::select(closest_dist, -storm_dist) %>%
 
 all_dates <- unique(check_dates$date)
 all_fips <- unique(check_dates$fips) # has Miami as "12086", and is still in check_dates here
-#all_fips <- c(all_fips, as.integer(12025))
-#check_dates[check_dates$fips == 12086, "fips"] <- 12025
-
-#dade_rain <- data.table::fread(
-#        "/Users/joshuaferreri/Documents/nasa_precip_export_2.txt",
-#        #"~/Documents/CSU2016/hurricaneproject/hurricaneexposuredata/data-raw/nasa_precip_export_2.txt",
-#        header = TRUE,
-#        select = c("county", "year_month_day", "precip", "precip_max")) %>%
-#        dplyr::filter(county %in% all_fips,
-#                      year_month_day %in% all_dates) %>%
-#        dplyr::rename(fips = county, day = year_month_day) %>%
-#        dplyr::right_join(data.table(check_dates),
-#                          by = c("fips" = "fips", "day" = "day")) %>%
-#        dplyr::filter(!is.na(precip) & !is.na(precip_max)) %>%
-#        dplyr::arrange(storm_id, fips) %>%
-#        dplyr::select(fips, storm_id, day, lag, precip, precip_max) %>%
-#        dplyr::mutate(fips = sprintf("%05d", fips),
-#                      lag = gsub("day_", "", lag),
-#                      lag = gsub("b", "-", lag),
-#                      lag = gsub("a", "", lag),
-#                      lag = as.numeric(lag)) %>%
-#        dplyr::filter(fips == "12025")
-#dade_rain[dade_rain$fips == 12025, "fips"] <- 12086
-#dade_rain <- dade_rain %>%
-#        rename(date = day) %>%
-#        mutate(date = as.character(date)) %>%
-#        mutate(date = as.Date(date, format = "%Y%m%d"))
 
 #create timeseries for Dade precipitation data from the `countyweather` package
 
 fips <- "12086"
-county_timeseries(fips, percent_coverage = 0,
-                  date_min = "1988-01-01", date_max = "2011-12-31",
-                  var = "PRCP",
-                  out_directory = "dade_data/")
-                  #out_directory = "~/Documents/hurricaneexposure/writing/DraftExposurePaper/dade_data/")
+# I've commented this out because we're saving the data, so we only need
+# to run it once.
+# county_timeseries(fips, percent_coverage = 0,
+#                   date_min = "1988-01-01", date_max = "2011-12-31",
+#                   var = "PRCP",
+#                   out_directory = "dade_data/")
+#                   #out_directory = "~/Documents/hurricaneexposure/writing/DraftExposurePaper/dade_data/")
 
 # miami_dade_dir <- "~/Documents/hurricaneexposure/writing/DraftExposurePaper/dade_data/"
 dade_dir <- "dade_data/"
 dade_weather <- readRDS(paste0(dade_dir, fips, ".rds"))
 
-dade_weather <- dade_weather %>%
+dade_weather <- dade_weather$averaged %>%
         filter(date %in% seq(from = as.Date("1988-01-01"), to = as.Date("2011-12-31"), by = 1))
 
 dade_weather$fips <- fips
 dade_weather <- as.data.frame(dade_weather)
-#check_dates$fips <- as.character(check_dates$fips)
+
 dade_weather <- dade_weather %>%
         dplyr::filter(date %in% all_dates) %>%
         dplyr::right_join(data.table(check_dates),
@@ -93,47 +68,10 @@ dade_weather <- dade_weather %>%
                       lag = gsub("a", "", lag),
                       lag = as.numeric(lag))
 
-#dade_rain <- county_rain(counties = fips, start_year = 1988, end_year = 2011,
- #                        rain_limit = 0, dist_limit = 1000) %>%
-  #      filter(fips == "12086")
-#dade_rain <- dade_rain %>%
- #       rename(date = closest_date)
-  #      left_join(dade_rain, by = date)
-
-#Join `dade_rain` and `dade_weather` datasets by date and create a plot comparing rain by storm (not fips)
-
-#dade_weather %>%
-#        inner_join(dade_rain, "date") %>%
-#        group_by(storm_id) %>%
-#        filter(lag == -3 | lag == -2 | lag == -1 |lag == 0 | lag == 1) %>%
-#        arrange(storm_id) %>%
-#        #filter(ymd(closest_dist$closest_date) - ddays(2) <= date &
-#         #              date <= ymd(closest_dist$closest_date) + ddays(1)) %>%
-#        summarize(monitor_rain = sum(prcp),
-#                  tot_precip = sum(precip),
-#                  prcp_reporting = mean(prcp_reporting)) %>%
-#        ggplot(aes(x = monitor_rain, y = tot_precip)) +
-#        geom_hline(aes(yintercept = 75), color = "lightgray") +
-#        geom_vline(aes(xintercept = 75), color = "lightgray") +
-#        geom_abline(aes(intercept = 0, slope = 1), color = "gray", alpha = 0.5) +
-#        # geom_point(aes(size = prcp_reporting), alpha = 0.2) +
-#        geom_point(alpha = 0.5) +
-#        # geom_text(aes(x = monitor_rain + 100, label = storm_id)) +
-#        xlim(c(0, 275)) + ylim(c(0, 275)) +
-#        theme_few() +
-#        scale_size_continuous(guide = "none") +
-#        xlab("Rainfall (mm) based on \naveraged county monitors") +
-#        ylab("Rainfall (mm) based on \nNLDAS-2 county data") +
-#        ggtitle("Monitor versus NLDAS rainfall estimates \nfor Miami-Dade county by Storm")
-
 lag_sum <- function(counties = NULL, county_weather, year_range = NULL,
                               distance_limit = NULL, rain_limit = NULL,
                               include_rain = FALSE, days_included = NULL,
                               output_vars = c("fips", "cw_precip")){
-
-#        df <- inner_join(county_weather, df2, by = "date") %>%
-#                arrange(storm_id)
-#        df <- rename(df, fips = fips.x)
 
         closest_dist <- data.table::data.table(hurricaneexposuredata::closest_dist)
 
@@ -226,5 +164,5 @@ miami_plot <- ggplot(miami_rain, aes(x = cw_precip, y = tot_precip)) +
         scale_size_continuous(guide = "none") +
         xlab("Rainfall (mm) based on \naveraged county monitors") +
         ylab("Rainfall (mm) based on \nNLDAS-2 county data") +
-        ggtitle("Monitor versus NLDAS rainfall estimates \nfor Miami-Dade county by Storm")
+        ggtitle("Monitor versus NLDAS rainfall estimates \nfor Miami-Dade County, FL, by storm")
 

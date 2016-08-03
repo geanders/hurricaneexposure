@@ -1,67 +1,67 @@
 "storm_id", "location", "fips", "rain_mm"
-"Allison-2011", "Dover, DE", "10001", 100.1
-"Allison-2011", "Greenwood, DE", "10005", 103.6
-"Allison-2011", "Tallahassee, FL", "12073", 257.3
-"Allison-2011", "Siloam, GA", "13133", 146.1
-"Allison-2011", "Grand Pass, LA", "22075", 395.7
-"Allison-2011", "Lafayette, LA", "22055", 532.4
-"Allison-2011", "Salt Point, LA", "22101", 699.8
-"Allison-2011", "Slidell, LA", "22103", 542.3
-"Allison-2011", "Thibodaux, LA", "22057", 758.4
-"Allison-2011", "Denton, MD", "24011", 190.5
-"Allison-2011", "Gulfport, MS", "28047", 304.5
-"Allison-2011", "Absecon, NJ", "34001", 116.8
-"Allison-2011", "Chatham, NJ", "34027", 109.2
-"Allison-2011", "Howell, NJ", "34025", 123.4
-"Allison-2011", "Margate, NJ", "34001", 101.6
-"Allison-2011", "Verga, NJ", "34015", 111.8
-"Allison-2011", "Wertzville, NJ", "34019", 110.0
-"Allison-2011", "Askewville, NC", "37015", 215.9
-"Allison-2011", "Abington, PA", "42091", 228.6
-"Allison-2011", "Chanfont, PA", "42017", 258.3
-"Allison-2011", "Doylestown, PA", "42017", 237.5
-"Allison-2011", "Horsham, PA", "42091", 203.2
-"Allison-2011", "Willow Grove, PA", "42091", 258.1
-"Allison-2011", "Columbia, SC", "45079", 305
-"Allison-2011", "Alvin, TX", "48039", 285.2
-"Allison-2011", "Anahuac, TX", "48071", 317.5
-"Allison-2011", "Bellaire, TX", "48201", 285.8
-"Allison-2011", "Buffalo Bayou, TX", "48201", 597.9
-"Allison-2011", "Chigger Creek, TX", "48167", 477.0
-"Allison-2011", "Clear Creek, TX", "48201", 509.0
-"Allison-2011", "Conroe, TX", "48339", 459.2
-"Allison-2011", "Conroe, TX", "48339", 444.0
-"Allison-2011", "Deer Park, TX", "48201", 584.0
-"Allison-2011", "Coward Creek, TX", "48167", 709.9
-"Allison-2011", "Dickinson, TX", "48167", 367.8
-"Allison-2011", "Freeport, TX", "48039", 307.8
-"Allison-2011", "Friendswood, TX", "48167", 659.9
-"Allison-2011", "Harris County, TX", "48201", 892.6
-"Allison-2011", "Galveston, TX", "48167", 248.1
-"Allison-2011", "Garners Bayou, TX", "48201", 625.1
-"Allison-2011", "Grant, TX", "48051", 543.8
-"Allison-2011", "Greens Bayou, TX", "48201", 908.3
-"Allison-2011", "Harris County, TX", "48201", 529.1
-"Allison-2011", "Houston, TX", "48201", 476.8
-"Allison-2011", "Houston, TX", "48201", 418.6
-"Allison-2011", "Hunting Bayou, TX", "48201", 908.1
-"Allison-2011", "Huntsville, TX", "48471", 308.9
-"Allison-2011", "Imperial Sugar, TX", "48157", 395.5
-"Allison-2011", "Jamaica Beach, TX", "48167", 308.1
-"Allison-2011", "Kingwood, TX", "48201", 533.4
-"Allison-2011", "La Porte, TX", "48201", 479.0
-"Allison-2011", "League City, TX", "48167", 493.0
-"Allison-2011", "Missouri City, TX", "48157", 278.9
-"Allison-2011", "Pearland, TX", "48039", 543.8
-"Allison-2011", "Pennington, TX", "48225", 396.2
-"Allison-2011", "Port of Houston, TX", "48201", 939.5
-"Allison-2011", "Stella Link, TX", "48201", 500.9
-"Allison-2011", "Sugarland, TX", "48157", 244.1
-"Allison-2011", "Sugarland, TX", "48157", 388.9
-"Allison-2011", "Tomball, TX", "48201", 411.5
-"Allison-2011", "Tomball, TX", "48201", 333.8
-"Allison-2011", "Vince Bayou, TX", "48201", 642.9
-"Allison-2011", "Westheimer, TX", "48201", 838.2
-"Allison-2011", "Westbury, TX", "48201", 496.1
-"Allison-2011", "White Oak Bayou, TX", "48201", 462.0
-"Allison-2011", "Winnie, TX", "48071", 421.1
+"Allison-2001", "Dover, DE", "10001", 100.1
+"Allison-2001", "Greenwood, DE", "10005", 103.6
+"Allison-2001", "Tallahassee, FL", "12073", 257.3
+"Allison-2001", "Siloam, GA", "13133", 146.1
+"Allison-2001", "Grand Pass, LA", "22075", 395.7
+"Allison-2001", "Lafayette, LA", "22055", 532.4
+"Allison-2001", "Salt Point, LA", "22101", 699.8
+"Allison-2001", "Slidell, LA", "22103", 542.3
+"Allison-2001", "Thibodaux, LA", "22057", 758.4
+"Allison-2001", "Denton, MD", "24011", 190.5
+"Allison-2001", "Gulfport, MS", "28047", 304.5
+"Allison-2001", "Absecon, NJ", "34001", 116.8
+"Allison-2001", "Chatham, NJ", "34027", 109.2
+"Allison-2001", "Howell, NJ", "34025", 123.4
+"Allison-2001", "Margate, NJ", "34001", 101.6
+"Allison-2001", "Verga, NJ", "34015", 111.8
+"Allison-2001", "Wertzville, NJ", "34019", 110.0
+"Allison-2001", "Askewville, NC", "37015", 215.9
+"Allison-2001", "Abington, PA", "42091", 228.6
+"Allison-2001", "Chanfont, PA", "42017", 258.3
+"Allison-2001", "Doylestown, PA", "42017", 237.5
+"Allison-2001", "Horsham, PA", "42091", 203.2
+"Allison-2001", "Willow Grove, PA", "42091", 258.1
+"Allison-2001", "Columbia, SC", "45079", 305
+"Allison-2001", "Alvin, TX", "48039", 285.2
+"Allison-2001", "Anahuac, TX", "48071", 317.5
+"Allison-2001", "Bellaire, TX", "48201", 285.8
+"Allison-2001", "Buffalo Bayou, TX", "48201", 597.9
+"Allison-2001", "Chigger Creek, TX", "48167", 477.0
+"Allison-2001", "Clear Creek, TX", "48201", 509.0
+"Allison-2001", "Conroe, TX", "48339", 459.2
+"Allison-2001", "Conroe, TX", "48339", 444.0
+"Allison-2001", "Deer Park, TX", "48201", 584.0
+"Allison-2001", "Coward Creek, TX", "48167", 709.9
+"Allison-2001", "Dickinson, TX", "48167", 367.8
+"Allison-2001", "Freeport, TX", "48039", 307.8
+"Allison-2001", "Friendswood, TX", "48167", 659.9
+"Allison-2001", "Harris County, TX", "48201", 892.6
+"Allison-2001", "Galveston, TX", "48167", 248.1
+"Allison-2001", "Garners Bayou, TX", "48201", 625.1
+"Allison-2001", "Grant, TX", "48051", 543.8
+"Allison-2001", "Greens Bayou, TX", "48201", 908.3
+"Allison-2001", "Harris County, TX", "48201", 529.1
+"Allison-2001", "Houston, TX", "48201", 476.8
+"Allison-2001", "Houston, TX", "48201", 418.6
+"Allison-2001", "Hunting Bayou, TX", "48201", 908.1
+"Allison-2001", "Huntsville, TX", "48471", 308.9
+"Allison-2001", "Imperial Sugar, TX", "48157", 395.5
+"Allison-2001", "Jamaica Beach, TX", "48167", 308.1
+"Allison-2001", "Kingwood, TX", "48201", 533.4
+"Allison-2001", "La Porte, TX", "48201", 479.0
+"Allison-2001", "League City, TX", "48167", 493.0
+"Allison-2001", "Missouri City, TX", "48157", 278.9
+"Allison-2001", "Pearland, TX", "48039", 543.8
+"Allison-2001", "Pennington, TX", "48225", 396.2
+"Allison-2001", "Port of Houston, TX", "48201", 939.5
+"Allison-2001", "Stella Link, TX", "48201", 500.9
+"Allison-2001", "Sugarland, TX", "48157", 244.1
+"Allison-2001", "Sugarland, TX", "48157", 388.9
+"Allison-2001", "Tomball, TX", "48201", 411.5
+"Allison-2001", "Tomball, TX", "48201", 333.8
+"Allison-2001", "Vince Bayou, TX", "48201", 642.9
+"Allison-2001", "Westheimer, TX", "48201", 838.2
+"Allison-2001", "Westbury, TX", "48201", 496.1
+"Allison-2001", "White Oak Bayou, TX", "48201", 462.0
+"Allison-2001", "Winnie, TX", "48071", 421.1
