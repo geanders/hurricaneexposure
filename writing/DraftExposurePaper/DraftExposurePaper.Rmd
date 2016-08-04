@@ -56,6 +56,7 @@ library(choroplethr)
 library(RColorBrewer)
 library(weathermetrics)
 library(lubridate)
+library(xtable)
 
 #devtools::install_github("ropenscilabs/rnoaa")
 library(rnoaa)
@@ -792,100 +793,178 @@ map_total_hits(tornado_exposure, my_fips = my_fips,
                start_year = 1996, end_year = 2011)
 ```
 
-Map of the count of county exposures to the top 2,000 county-storm pairs by distance-based exposure, based on "exposed" = distance of 100 kilometers or less:
+We first investigated whether different exposure metrics resulted in similar numbers of counties classified as "exposed" to a storm (Figure \ref{fig:county_number_cor}, Table \ref{tab:county_number}).
 
-```{r echo = FALSE, warning=FALSE, message=FALSE}
-distance_2000 <- distance_exposure %>%
+```{r county_number_cor, echo = FALSE, fig.width = 8, fig.height = 8, fig.align = "center", fig.cap = "Association between the number of counties classified as `exposed` for a storm using different exposure metrics. Each small plot shows this association, with each point representing a storm, with positions on the x- and y-axes showing the number of counties classified as `exposed` for that storm based on one of the exposure metrics considered in this study. Study storms from 1996 to 2011 are included in each plot."}
+dist_exp <- distance_exposure %>%
+        select(storm_id, fips) %>%
+        mutate(dist_exposed = 1)
+rain_exp <- rain_exposure %>%
+        select(storm_id, fips) %>%
+        mutate(rain_exposed = 1)
+wind_exp <- wind_exposure %>%
+        select(storm_id, fips) %>%
+        mutate(wind_exposed = 1)
+flood_exp <- flood_exposure %>%
+        select(storm_id, fips) %>%
+        mutate(flood_exposed = 1,
+               storm_id = as.character(storm_id))
+tornado_exp <- tornado_exposure %>%
+        select(storm_id, fips) %>%
+        mutate(tornado_exposed = 1,
+               storm_id = as.character(storm_id))
+
+all_exp <- dist_exp %>%
+        full_join(rain_exp, by = c("storm_id", "fips")) %>%
+        full_join(wind_exp, by = c("storm_id", "fips")) %>%
+        filter(as.numeric(gsub(".+-", "", storm_id)) >= 1996) %>%
+        full_join(flood_exp, by = c("storm_id", "fips")) %>%
+        full_join(tornado_exp, by = c("storm_id", "fips")) %>%
+        mutate(dist_exposed = !is.na(dist_exposed),
+               rain_exposed = !is.na(rain_exposed),
+               wind_exposed = !is.na(wind_exposed),
+               flood_exposed = !is.na(flood_exposed),
+               tornado_exposed = !is.na(tornado_exposed)) %>%
+        group_by(storm_id) %>%
+        summarize(any_exposed = n(),
+                  Distance = sum(dist_exposed),
+                  Rain = sum(rain_exposed),
+                  Wind = sum(wind_exposed),
+                  Flood = sum(flood_exposed),
+                  Tornado = sum(tornado_exposed)) %>%
+        arrange(desc(any_exposed))
+
+GGally::ggpairs(select(all_exp, -storm_id, -any_exposed),
+                aes(alpha = 0.5)) + theme_few()
+```
+
+```{r county_number, echo = FALSE, results = "asis"}
+a <- all_exp %>% 
+        mutate(storm_id = paste0(gsub("-", " (", storm_id), ")")) %>%
+        slice(1:20) %>%
+        rename(Storm = storm_id, 
+               "At least one metric" = any_exposed) %>%
+        xtable(caption = "Top 10 storms in terms of numbers of counties assessed as `exposed` based on at least one of the exposure metrics, for storms between 1996 and 2011.",
+                       label = "tab:county_number")
+print(a, include.rownames = FALSE, floating = TRUE,
+      table.placement = "p", caption.placement = "top", 
+      booktabs = TRUE, comment = FALSE, timestamp = NULL)
+```
+
+We also mapped geographic patterns in the number of hits per county for distance, rain, and wind exposure when we incorporated the intensity of exposure for each county-storm pair (Figures \ref{fip:top_dist_map}, \ref{fip:top_rain_map}, \ref{fip:top_wind_map}); Tables \ref{tab:top_distance}, \ref{tab:top_rain}, \ref{tab:top_wind}). For these maps, we only plotted "hits" for the top 2,000 county-storm pairs (i.e., the 2,000 storm-county pairs with smallest distance to storm's closest approach, in the case of distance-based exposure, or the 2,000 storm-county pairs with highest precipitation, in the case of rain-based exposure).
+
+```{r top_distance, echo = FALSE, results = "asis"}
+a <- distance_exposure %>%
         arrange(storm_dist) %>% 
-        slice(1:2000) %>% 
-        group_by(fips) %>%
-        summarise(count = n()) %>%
-        rename(region = fips) %>%
-        mutate(region = as.numeric(region), count = as.numeric(count))
-
-distance_2000$value <- cut(distance_2000$count, c(0, 1, 3, 5, 7, 9, 11, 13, 15), 
-                   labels = c("0-1", "2-3", "4-5", "6-7", "8-9", "10-11", "12-13", "14-15"), 
-                   include.lowest = TRUE)
-exposure_palette <- brewer.pal(8, name = "YlGnBu")
-
-
-
-map_dist_2000 <- CountyChoropleth$new(distance_2000)
-map_dist_2000$set_zoom(eastern_states)
-map_dist_2000$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
-                                                values = exposure_palette,
-                                                na.value = "white")
-map_dist_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor Distance Metric"
-a <- map_dist_2000$render()
+        slice(1:20) %>%
+        left_join(county_centers, by = "fips") %>%
+        select(storm_id, name, storm_dist) %>%
+        mutate(storm_id = paste0(gsub("-", " (", storm_id), ")")) %>%
+        rename(Storm = storm_id,
+               County = name,
+               "Distance (km)" = storm_dist) %>%
+        xtable(caption = "Top storm-county pairs in terms of closest distance between county's population mean center and storm's closest approach.", 
+               label = "tab:top_distance")
+print(a, include.rownames = FALSE, floating = TRUE,
+      table.placement = "p", caption.placement = "top", 
+      booktabs = TRUE, comment = FALSE, timestamp = NULL)
 ```
 
+```{r top_rain, echo = FALSE, results = "asis"}
+a <- rain_exposure %>%
+        arrange(desc(tot_precip)) %>% 
+        slice(1:20) %>%
+        left_join(county_centers, by = "fips") %>%
+        select(storm_id, name, tot_precip) %>%
+        mutate(storm_id = paste0(gsub("-", " (", storm_id), ")")) %>%
+        rename(Storm = storm_id,
+               County = name,
+               "Rainfall (mm)" = tot_precip) %>%
+        xtable(caption = "Top storm-county pairs in terms of most cumulative precipitation in the window from two days before to one day after a storm's closest approach to the county.", 
+               label = "tab:top_rain")
+print(a, include.rownames = FALSE, floating = TRUE,
+      table.placement = "p", caption.placement = "top", 
+      booktabs = TRUE, comment = FALSE, timestamp = NULL)
+```
+
+```{r top_wind, echo = FALSE, results = "asis"}
+a <- wind_exposure %>%
+        arrange(desc(max_sust)) %>% 
+        slice(1:20) %>%
+        left_join(county_centers, by = "fips") %>%
+        select(storm_id, name, max_sust) %>%
+        mutate(storm_id = paste0(gsub("-", " (", storm_id), ")"),
+               max_sust = round(max_sust)) %>%
+        rename(Storm = storm_id,
+               County = name,
+               "Maximum sustained wind (m / s)" = max_sust) %>%
+        xtable(caption = "Top storm-county pairs in terms of most intense sustained winds.", 
+               label = "tab:top_wind")
+print(a, include.rownames = FALSE, floating = TRUE,
+      table.placement = "p", caption.placement = "top", 
+      booktabs = TRUE, comment = FALSE, timestamp = NULL)
+```
 
 ```{r echo = FALSE, warning=FALSE, message=FALSE}
-# Get the rain-based exposure for all counties over the study period, 
-# using a rain limit of 75 mm and a distance limit of 500 km
-rain_exposure <- county_rain(counties = my_fips,
-                             start_year = 1988, end_year = 2011,
-                             rain_limit = 75, dist_limit = 500,
-                             days_include = c(-1, 0, 1))
-
-rain_2000 <- rain_exposure %>%
-        arrange(desc(tot_precip)) %>%
-        slice(1:2000) %>%
-        group_by(fips) %>%
-        summarise(count = n()) %>%
-        rename(region = fips) %>%
-        mutate(region = as.numeric(region), count = as.numeric(count))
-
-rain_2000$value <- cut(rain_2000$count, c(0, 1, 3, 5, 7, 9, 11, 13, 15), 
-                   labels = c("0-1", "2-3", "4-5", "6-7", "8-9", "10-11", "12-13", "14-15"), 
+plot_top_x <- function(exposure_data, x = 2000, desc = TRUE,
+                       exposure_var, eastern_states = eastern_states,
+                       my_fips = my_fips, title){
+        missing_fips <- my_fips[!(my_fips %in% exposure_data$fips)]
+        missing_counties <- data.frame(fips = as.numeric(missing_fips),
+                                       count = 0)
+        
+        exposure_data <- as.data.frame(exposure_data)
+        exposure_data$exp_var <- exposure_data[ , exposure_var]
+        if(!desc){ exposure_data$exp_var <- -1 * exposure_data$exp_var}
+        
+        exposure_x <- exposure_data %>%
+                arrange(desc(exp_var)) %>%
+                slice(1:x) %>% 
+                group_by(fips) %>%
+                summarise(count = n()) %>%
+                rbind(missing_counties) %>%
+                rename(region = fips) %>%
+                mutate(region = as.numeric(region),
+                       count = as.numeric(count))
+        
+        exposure_x$value <- cut(exposure_x$count,
+                                c(0, 1, 3, 5, 7, 9, 11, 13, 100), 
+                   labels = c("0", "1-2", "3-4", "5-6", "7-8",
+                              "9-10", "11-12", "13+"), 
                    include.lowest = TRUE)
-exposure_palette <- brewer.pal(8, name = "YlGnBu")
-
-map_rain_2000 <- CountyChoropleth$new(rain_2000)
-map_rain_2000$set_zoom(eastern_states)
-map_rain_2000$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
+        exposure_palette <- c("#FFFFFF", brewer.pal(8, name = "YlGnBu"))
+        
+        map_top_x <- CountyChoropleth$new(exposure_x)
+        map_top_x$set_zoom(eastern_states)
+        map_top_x$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
                                                 values = exposure_palette,
                                                 na.value = "white")
-map_rain_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor Rain Metric"
-b <- map_rain_2000$render()
+        map_top_x$title <- title
+        out <- map_top_x$render()
+        return(out)
+}
 ```
 
-```{r fig.width = 6, fig.height = 8, echo = FALSE, message = FALSE, warning = FALSE}
-grid.arrange(a, b, ncol = 1)
+```{r top_dist_map, echo = FALSE, fig.width = 8, fig.height = 6, fig.align = "center", fig.cap = "Number of storms for which each county experienced one of the top 2,000 intensities for distance."}
+plot_top_x(distance_exposure, desc = FALSE, exposure_var = "storm_dist",
+           eastern_states = eastern_states, my_fips = my_fips,
+           title = "Hits for top 2,000 Storm-County Pairs\nfor Distance Metric")
+```
+
+```{r top_rain_map, echo = FALSE, fig.width = 8, fig.height = 6, fig.align = "center", fig.cap = "Number of storms for which each county experienced one of the top 2,000 intensities for rain."}
+plot_top_x(rain_exposure, exposure_var = "tot_precip",
+           eastern_states = eastern_states, my_fips = my_fips,
+           title = "Hits for top 2,000 Storm-County Pairs\nfor Rain Metric")
+```
+
+```{r top_wind_map, echo = FALSE, fig.width = 8, fig.height = 6, fig.align = "center", fig.cap = "Number of storms for which each county experienced one of the top 2,000 intensities for distance"}
+plot_top_x(wind_exposure, exposure_var = "max_sust",
+           eastern_states = eastern_states, my_fips = my_fips,
+           title = "Hits for top 2,000 Storm-County Pairs\nfor Wind Metric")
 ```
 
 
-Map of county exposures to the top 2,000 county-storm pairs by wind-based exposure:
 
-```{r fig.width = 6, fig.height = 8, echo = FALSE, message = FALSE, warning = FALSE}
-#TS winds and above
-TS_wind_exposure <- county_wind(counties = my_fips,
-                             start_year = 1988,
-                             end_year = 2011,
-                             wind_limit = 18,
-                             wind_var = "max_sust")
-
-TS_wind_2000 <- TS_wind_exposure %>% 
-        arrange(desc(max_sust)) %>%
-        slice (1:2000) %>%
-        group_by(fips) %>%
-        summarise(count = n()) %>%
-        rename(region = fips) %>%
-        mutate(region = as.numeric(region), count = as.numeric(count)) # Max count of 178 is a NA value
-TS_wind_2000 <- subset(TS_wind_2000, !is.na(TS_wind_2000$region)) # Remove NA observation
-                                                                       # County pairs
-TS_wind_2000$value <- cut(TS_wind_2000$count, c(0, 1, 3, 5, 7, 9, 11, 13, 15), 
-                   labels = c("0-1", "2-3", "4-5", "6-7", "8-9", "10-11", "12-13", "14-15"), 
-                   include.lowest = TRUE)
-exposure_palette <- brewer.pal(8, name = "YlGnBu")
-map_TS_2000 <- CountyChoropleth$new(TS_wind_2000)
-map_TS_2000$set_zoom(eastern_states)
-map_TS_2000$ggplot_scale <- scale_fill_manual(name = "Hits per\nCounty",
-                                                values = exposure_palette,
-                                                na.value = "white")
-map_TS_2000$title <- "Hits for top 2,000 Storm-County Pairs\nfor TS Wind Metric"
-map_TS_2000$render()
-```
 
 ```{r echo = FALSE, warning = FALSE, message = FALSE}
 distance_count <- distance_exposure %>%
