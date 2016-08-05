@@ -377,9 +377,98 @@ The method we use to assess storm-related rain exposure is spatially and tempora
 
 Second, researchers from the [NWS? Hurricane Center?] publish yearly tropical cyclone season summaries in the journal *Monthly Weather Review*. For some storms, this report includes multiple ground-based measurements of total precipitation and wind speeds (both sustained and gusts). We picked a few storms with multiple ground-based measurements included in the *Monthly Weather Review* report, and compared assessments using our method to these reported storm-related measurements.
 
-Here are results for comparing our method to using ground-based monitors. First, we looked at several counties, comparing estimates of storm-associated rain using NLDAS-2 versus ground-based monitors (Figure [x]).
+Here are results for comparing our method to using ground-based monitors. First, we looked at several counties, comparing estimates of storm-associated rain using NLDAS-2 versus ground-based monitors (Figure \ref{fig:compare_rain_ex_counties}).
 
-[Add in figures by county here for county averages of ground-based monitors versus our method. (for example, Miami-Dade figure)]
+```{r compare_rain_ex_counties, echo = FALSE, fig.width = 10, fig.height = 10, efig.align = "center", fig.cap = "Comparison of rain estimates for example counties."}
+plot_county_rain_compare <- function(ex_fips, ex_dir, ex_title, 
+                                     get_data = FALSE){
+        if(get_data){
+                county_timeseries(ex_fips, percent_coverage = 0,
+                                  date_min = "1988-01-01",
+                                  date_max = "2011-12-31",
+                                  var = "PRCP",
+                                  out_directory = ex_dir)
+        }
+        
+        check_dates <- closest_dist %>%
+                dplyr::filter(fips == ex_fips) %>%
+                dplyr::select(-storm_dist) %>%
+                dplyr::mutate(closest_date = ymd(closest_date)) %>%
+                dplyr::rename(day_0 = closest_date) %>%
+                dplyr::mutate(fips = as.integer(fips),
+                              day_0 = day_0 + days(0),
+                              day_b1 = day_0 - days(1),
+                              day_b2 = day_0 - days(2),
+                              day_a1 = day_0 + days(1)) %>%
+                dplyr::select(storm_id, day_b2, day_b1, day_0, day_a1) %>%
+                tidyr::gather(key = lag, value = day, -storm_id) %>%
+                dplyr::rename(date = day)
+        all_dates <- unique(check_dates$date)
+        
+        ex_weather <- readRDS(paste0(ex_dir, ex_fips, ".rds"))
+        ex_weather <- as.data.frame(ex_weather$averaged)
+        
+        ex_weather <- ex_weather %>%
+                dplyr::filter(date %in% all_dates) %>%
+                dplyr::right_join(check_dates, by = "date") %>%
+                dplyr::group_by(storm_id) %>%
+                dplyr::summarize(prcp = sum(prcp),
+                                ave_n = mean(prcp_reporting))
+        
+        ex_rain <- county_rain(counties = ex_fips,
+                               start_year = 1988, end_year = 2011,
+                               rain_limit = 0, dist_limit = 2000) %>%
+                full_join(ex_weather, by = "storm_id") %>%
+                filter(!is.na(prcp) & !is.na(tot_precip))
+        
+        plot_range <- range(ex_rain[ , c("prcp", "tot_precip")],
+                            na.rm = TRUE)
+        
+        ex_plot <- ggplot(ex_rain, aes(x = tot_precip, y = prcp)) +
+                geom_hline(aes(yintercept = 75), color = "lightgray") +
+                geom_vline(aes(xintercept = 75), color = "lightgray") +
+                geom_abline(aes(intercept = 0, slope = 1), color = "gray",
+                    alpha = 0.5) +
+                geom_point(alpha = 0.5) +
+                theme_few() +
+                scale_size_continuous(guide = "none") +
+                xlab("Rainfall (mm)  from\nNLDAS-2 data") +
+                ylab("Rainfall (mm)\nfrom monitors") +
+                xlim(plot_range) + ylim(plot_range) + 
+                ggtitle(ex_title)
+        return(ex_plot)
+}
+
+a <- plot_county_rain_compare(ex_fips = "12086", ex_dir = "dade_data/",
+                         ex_title = "Miami-Dade, FL")
+
+b <- plot_county_rain_compare(ex_fips = "22071", ex_dir = "orleans_data/",
+                         ex_title = "Orleans Parish, LA")
+
+c <- plot_county_rain_compare(ex_fips = "45019", ex_dir = "charleston_data/",
+                         ex_title = "Charleston County, SC")
+
+d <- plot_county_rain_compare(ex_fips = "37183", ex_dir = "wake_data/",
+                         ex_title = "Wake County, NC")
+
+e <- plot_county_rain_compare(ex_fips = "13121", ex_dir = "fulton_data/",
+                         ex_title = "Fulton County, GA")
+
+f <- plot_county_rain_compare(ex_fips = "24005", ex_dir = "baltimore_data/",
+                         ex_title = "Baltimore County, MD")
+
+g <- plot_county_rain_compare(ex_fips = "42101",
+                              ex_dir = "philadelphia_data/",
+                         ex_title = "Philadelphia County, PA")
+
+h <- plot_county_rain_compare(ex_fips = "48201", ex_dir = "harris_data/",
+                         ex_title = "Harris County, TX")
+
+i <- plot_county_rain_compare(ex_fips = "01097", ex_dir = "mobile_data/",
+                         ex_title = "Mobile County, AL", get_data = TRUE)
+
+grid.arrange(a, b, c, d, e, f, g, h, i, ncol = 3)
+```
 
 Next, we looked at several different counties within a few notable storms, to compare county-averaged ground-based monitor values with our estimates (Figure \ref{fig:county_ave_comparison}). These storms were picked based on storms that had a large number of ground-based precipitation observations in either the main text or supplemental material of the *Monthly Weather Review* report.
 
@@ -665,587 +754,28 @@ frances_wind <- frances_wind %>%
         filter(!is.na(wind_sust)) %>%
         mutate(wind_sust = convert_wind_speed(wind_sust, "knots", "mps"))
 frances_wind_mwr <- plot_mwr_compare_wind(frances_wind)
-```
 
-
-```{r}
 load("MWR_gauge_wind_data/ike_wind.RData")
 ike_wind <- ike_wind %>%
         filter(!is.na(max_sust_kt)) %>%
         mutate(wind_sust = convert_wind_speed(max_sust_kt, "knots", "mps"))
 ike_wind_mwr <- plot_mwr_compare_wind(ike_wind)
 
-# load("MWR_gauge_rain_data/alex_gauge.Rdata")
-# alex_mwr <- plot_mwr_compare(alex_gauge)
+load("MWR_gauge_wind_data/alex_wind.Rdata")
+alex_wind <- alex_wind %>%
+        filter(!is.na(max_sust)) %>%
+        mutate(wind_sust = convert_wind_speed(max_sust, "knots", "mps")) %>%
+        select(storm_id, fips, wind_sust)
+alex_wind_mwr <- plot_mwr_compare_wind(alex_wind)
 
-# grid.arrange(allison_mwr, frances_mwr, ike_mwr, alex_mwr, ncol = 2)
 grid.arrange(frances_wind_mwr, ike_wind_mwr,
-             frances_wind_mwr, ike_wind_mwr, ncol = 2)
+             frances_wind_mwr, alex_wind_mwr, ncol = 2)
 ```
 
-Compare data from `countyweather` and NLDAS-2 data for Miami-Dade county by storm:
-
-```{r}
-data("closest_dist")
-
-# Create a new dataset for precip with lag -2 to 3 for fips 12086 only
-
-check_dates <- dplyr::select(closest_dist, -storm_dist) %>%
-        dplyr::mutate(closest_date = ymd(closest_date)) %>%
-        dplyr::rename(day_0 = closest_date) %>%
-        dplyr::mutate(fips = as.integer(fips),
-                      day_0 = day_0 + days(0),
-                      day_b1 = day_0 - days(1),
-                      day_b2 = day_0 - days(2),
-                      day_a1 = day_0 + days(1),
-                      day_a2 = day_0 + days(2),
-                      day_a3 = day_0 + days(3)) %>%
-        dplyr::select(storm_id, fips, day_b2, day_b1,
-                      day_0, day_a1, day_a2, day_a3) %>%
-        tidyr::gather(key = lag, value = day, -storm_id, -fips) %>%
-        dplyr::rename(date = day) %>%
-        dplyr::filter(fips == "12086") %>%
-        dplyr::mutate(fips = as.character(fips))
-        #dplyr::mutate(day = as.numeric(format(day, "%Y%m%d")))
-
-all_dates <- unique(check_dates$date)
-all_fips <- unique(check_dates$fips)
-
-#create timeseries for Dade precipitation data from the `countyweather` package
-
-fips <- "12086"
-# I've commented this out because we're saving the data, so we only need
-# to run it once.
-# county_timeseries(fips, percent_coverage = 0,
-#                   date_min = "1988-01-01", date_max = "2011-12-31",
-#                   var = "PRCP",
-#                   out_directory = "dade_data/")
-#                   #out_directory = "~/Documents/hurricaneexposure/writing/DraftExposurePaper/dade_data/")
-
-# miami_dade_dir <- "~/Documents/hurricaneexposure/writing/DraftExposurePaper/dade_data/"
-dade_dir <- "dade_data/"
-dade_weather <- readRDS(paste0(dade_dir, fips, ".rds"))
-
-dade_weather <- dade_weather$averaged %>%
-        filter(date %in% seq(from = as.Date("1988-01-01"), to = as.Date("2011-12-31"), by = 1))
-
-dade_weather$fips <- fips
-dade_weather <- as.data.frame(dade_weather)
-
-dade_weather <- dade_weather %>%
-        dplyr::filter(date %in% all_dates) %>%
-        dplyr::right_join(data.table(check_dates),
-                          by = c("fips" = "fips", "date" = "date")) %>%
-        dplyr::filter(!is.na(prcp)) %>%
-        dplyr::arrange(storm_id, fips) %>%
-        dplyr::mutate(fips = as.integer(fips)) %>%
-        dplyr::mutate(fips = sprintf("%05d", fips),
-                      lag = gsub("day_", "", lag),
-                      lag = gsub("b", "-", lag),
-                      lag = gsub("a", "", lag),
-                      lag = as.numeric(lag))
-
-lag_sum <- function(counties = NULL, county_weather, year_range = NULL,
-                              distance_limit = NULL, rain_limit = NULL,
-                              include_rain = FALSE, days_included = NULL,
-                              output_vars = c("fips", "cw_precip")){
-
-        closest_dist <- data.table::data.table(hurricaneexposuredata::closest_dist)
-
-        if(!is.null(counties)){
-                closest_dist <- closest_dist[get("fips") %in% counties]
-        }
-
-        if(!is.null(year_range)){
-                closest_dist <- closest_dist[ , .(storm_id,
-                                                  fips,
-                                                  closest_date, storm_dist,
-                                                  local_time,
-                                                  closest_time_utc,
-                                                  year = substring(get("closest_date"),
-                                                                   1, 4)), ][
-                                                                           get("year") %in%
-                                                                                   year_range[1]:year_range[2]
-                                                                           ]
-        }
-
-        if(!is.null(distance_limit)){
-                closest_dist <- closest_dist[get("storm_dist") <=
-                                                     distance_limit]
-        }
-
-        if(include_rain){
-                df <- data.table::data.table(county_weather)
-                df <- df[get("lag") %in% days_included]
-                df <- df[ , .(cw_precip = sum(get("prcp"))),
-                              by = .(fips, storm_id)]
-                closest_dist <- merge(closest_dist, df, all.x = TRUE,
-                                      by = c("storm_id", "fips"))
-                if(!is.null(rain_limit)){
-                        closest_dist <- closest_dist[get("cw_precip") >=
-                                                             rain_limit]
-                }
-        }
-
-        closest_dist <- closest_dist[ , .SD, , .SDcols = output_vars]
-        return(closest_dist)
-}
-
-countyweather_rain <- function(counties, county_weather, start_year, end_year,
-                        rain_limit, dist_limit,
-                        days_included = c(-2, -1, 0, 1)){
-
-        county_rain_storm_df <- lag_sum(counties = counties,
-                                           county_weather = county_weather,
-                                           year_range = c(start_year, end_year),
-                                           distance_limit = dist_limit,
-                                           rain_limit = rain_limit,
-                                           include_rain = TRUE,
-                                           days_included = days_included,
-                                           output_vars = c("storm_id", "fips",
-                                                           "closest_date",
-                                                           "storm_dist",
-                                                           "cw_precip",
-                                                           "local_time",
-                                                           "closest_time_utc"))
-        rain_storm_df <- filter_storm_data(counties = counties,
-                                           year_range = c(start_year, end_year),
-                                           distance_limit = dist_limit,
-                                           rain_limit = rain_limit,
-                                           include_rain = TRUE,
-                                           days_included = days_included,
-                                           output_vars = c("storm_id", "fips",
-                                                           "closest_date",
-                                                           "storm_dist",
-                                                           "tot_precip",
-                                                           "local_time",
-                                                           "closest_time_utc"))
-        rain_df <- merge(county_rain_storm_df, rain_storm_df, all.x = TRUE,
-                         by = c("fips", "storm_id", "closest_date", "storm_dist",
-                                "local_time", "closest_time_utc"))
-        return(rain_df)
-}
-
-miami_rain <- countyweather_rain(counties = "12086", county_weather = dade_weather,
-                                 start_year = 1988, end_year = 2011,
-                                 rain_limit = 0, dist_limit = 2000)
-miami_plot <- ggplot(miami_rain, aes(x = cw_precip, y = tot_precip)) +
-        geom_hline(aes(yintercept = 75), color = "lightgray") +
-        geom_vline(aes(xintercept = 75), color = "lightgray") +
-        geom_abline(aes(intercept = 0, slope = 1), color = "gray", alpha = 0.5) +
-        # geom_point(aes(size = prcp_reporting), alpha = 0.2) +
-        geom_point(alpha = 0.5) +
-        # geom_text(aes(x = monitor_rain + 100, label = storm_id)) +
-        xlim(c(0, 275)) + ylim(c(0, 275)) +
-        theme_few() +
-        scale_size_continuous(guide = "none") +
-        xlab("Rainfall (mm) based on \naveraged county monitors") +
-        ylab("Rainfall (mm) based on \nNLDAS-2 county data") +
-        ggtitle("Monitor versus NLDAS rainfall estimates \nfor Miami-Dade County, FL, by storm")
-
-miami_plot
-```
-
-Compare data from `countyweather` and NLDAS-2 data for Orleans perish by storm:
-
-```{r}
-check_dates <- dplyr::select(closest_dist, -storm_dist) %>%
-        dplyr::mutate(closest_date = ymd(closest_date)) %>%
-        dplyr::rename(day_0 = closest_date) %>%
-        dplyr::mutate(fips = as.integer(fips),
-                      day_0 = day_0 + days(0),
-                      day_b1 = day_0 - days(1),
-                      day_b2 = day_0 - days(2),
-                      day_a1 = day_0 + days(1),
-                      day_a2 = day_0 + days(2),
-                      day_a3 = day_0 + days(3)) %>%
-        dplyr::select(storm_id, fips, day_b2, day_b1,
-                      day_0, day_a1, day_a2, day_a3) %>%
-        tidyr::gather(key = lag, value = day, -storm_id, -fips) %>%
-        dplyr::rename(date = day) %>%
-        dplyr::filter(fips == "22071") %>%
-        dplyr::mutate(fips = as.character(fips))
-        #dplyr::mutate(day = as.numeric(format(day, "%Y%m%d")))
-
-all_dates <- unique(check_dates$date)
-all_fips <- unique(check_dates$fips)
-
-#create timeseries for Dade precipitation data from the `countyweather` package
-
-fips <- "22071"
-# I've commented this out because we're saving the data, so we only need
-# to run it once.
-# county_timeseries(fips, percent_coverage = 0,
-#                   date_min = "1988-01-01", date_max = "2011-12-31",
-#                   var = "PRCP",
-#                   out_directory = "orleans_data/")
-
-# miami_dade_dir <- "~/Documents/hurricaneexposure/writing/DraftExposurePaper/dade_data/"
-orleans_dir <- "orleans_data/"
-orleans_weather <- readRDS(paste0(orleans_dir, fips, ".rds"))
-
-#orleans_weather <- orleans_weather$averaged %>%
-#        filter(date %in% seq(from = as.Date("1988-01-01"), to = as.Date("2011-12-31"), by = 1))
-
-orleans_weather <- orleans_weather %>%
-        filter(date %in% seq(from = as.Date("1988-01-01"), to = as.Date("2011-12-31"), by = 1))
-
-orleans_weather$fips <- fips
-orleans_weather <- as.data.frame(orleans_weather)
-
-orleans_weather <- orleans_weather %>%
-        dplyr::filter(date %in% all_dates) %>%
-        dplyr::right_join(data.table(check_dates),
-                          by = c("fips" = "fips", "date" = "date")) %>%
-        dplyr::filter(!is.na(prcp)) %>%
-        dplyr::arrange(storm_id, fips) %>%
-        dplyr::mutate(fips = as.integer(fips)) %>%
-        dplyr::mutate(fips = sprintf("%05d", fips),
-                      lag = gsub("day_", "", lag),
-                      lag = gsub("b", "-", lag),
-                      lag = gsub("a", "", lag),
-                      lag = as.numeric(lag))
-
-orleans_rain <- countyweather_rain(counties = fips, county_weather = orleans_weather,
-                                 start_year = 1988, end_year = 2011,
-                                 rain_limit = 0, dist_limit = 2000)
-orleans_plot <- ggplot(orleans_rain, aes(x = cw_precip, y = tot_precip)) +
-        geom_hline(aes(yintercept = 75), color = "lightgray") +
-        geom_vline(aes(xintercept = 75), color = "lightgray") +
-        geom_abline(aes(intercept = 0, slope = 1), color = "gray", alpha = 0.5) +
-        # geom_point(aes(size = prcp_reporting), alpha = 0.2) +
-        geom_point(alpha = 0.5) +
-        # geom_text(aes(x = monitor_rain + 100, label = storm_id)) +
-        xlim(c(0, 275)) + ylim(c(0, 275)) +
-        theme_few() +
-        scale_size_continuous(guide = "none") +
-        xlab("Rainfall (mm) based on \naveraged county monitors") +
-        ylab("Rainfall (mm) based on \nNLDAS-2 county data") +
-        ggtitle("Monitor versus NLDAS rainfall estimates \nfor Orleans perish, LA, by storm")
-
-orleans_plot
-```
-
-Compare data from `countyweather` and NLDAS-2 data for Charleston county by storm:
-
-```{r}
-check_dates <- dplyr::select(closest_dist, -storm_dist) %>%
-        dplyr::mutate(closest_date = ymd(closest_date)) %>%
-        dplyr::rename(day_0 = closest_date) %>%
-        dplyr::mutate(fips = as.integer(fips),
-                      day_0 = day_0 + days(0),
-                      day_b1 = day_0 - days(1),
-                      day_b2 = day_0 - days(2),
-                      day_a1 = day_0 + days(1),
-                      day_a2 = day_0 + days(2),
-                      day_a3 = day_0 + days(3)) %>%
-        dplyr::select(storm_id, fips, day_b2, day_b1,
-                      day_0, day_a1, day_a2, day_a3) %>%
-        tidyr::gather(key = lag, value = day, -storm_id, -fips) %>%
-        dplyr::rename(date = day) %>%
-        dplyr::filter(fips == "45019") %>%
-        dplyr::mutate(fips = as.character(fips))
-        #dplyr::mutate(day = as.numeric(format(day, "%Y%m%d")))
-
-all_dates <- unique(check_dates$date)
-all_fips <- unique(check_dates$fips)
-
-#create timeseries for Dade precipitation data from the `countyweather` package
-
-fips <- "45019"
-# I've commented this out because we're saving the data, so we only need
-# to run it once.
-# county_timeseries(fips, percent_coverage = 0,
-#                   date_min = "1988-01-01", date_max = "2011-12-31",
-#                   var = "PRCP",
-#                   out_directory = "charleston_data/")
-
-# miami_dade_dir <- "~/Documents/hurricaneexposure/writing/DraftExposurePaper/dade_data/"
-charleston_dir <- "charleston_data/"
-charleston_weather <- readRDS(paste0(charleston_dir, fips, ".rds"))
-
-#orleans_weather <- orleans_weather$averaged %>%
-#        filter(date %in% seq(from = as.Date("1988-01-01"), to = as.Date("2011-12-31"), by = 1))
-
-charleston_weather <- charleston_weather %>%
-        filter(date %in% seq(from = as.Date("1988-01-01"), to = as.Date("2011-12-31"), by = 1))
-
-charleston_weather$fips <- fips
-charleston_weather <- as.data.frame(charleston_weather)
-
-charleston_weather <- charleston_weather %>%
-        dplyr::filter(date %in% all_dates) %>%
-        dplyr::right_join(data.table(check_dates),
-                          by = c("fips" = "fips", "date" = "date")) %>%
-        dplyr::filter(!is.na(prcp)) %>%
-        dplyr::arrange(storm_id, fips) %>%
-        dplyr::mutate(fips = as.integer(fips)) %>%
-        dplyr::mutate(fips = sprintf("%05d", fips),
-                      lag = gsub("day_", "", lag),
-                      lag = gsub("b", "-", lag),
-                      lag = gsub("a", "", lag),
-                      lag = as.numeric(lag))
-
-charleston_rain <- countyweather_rain(counties = fips, county_weather = charleston_weather,
-                                 start_year = 1988, end_year = 2011,
-                                 rain_limit = 0, dist_limit = 2000)
-charleston_plot <- ggplot(charleston_rain, aes(x = cw_precip, y = tot_precip)) +
-        geom_hline(aes(yintercept = 75), color = "lightgray") +
-        geom_vline(aes(xintercept = 75), color = "lightgray") +
-        geom_abline(aes(intercept = 0, slope = 1), color = "gray", alpha = 0.5) +
-        # geom_point(aes(size = prcp_reporting), alpha = 0.2) +
-        geom_point(alpha = 0.5) +
-        # geom_text(aes(x = monitor_rain + 100, label = storm_id)) +
-        xlim(c(0, 275)) + ylim(c(0, 275)) +
-        theme_few() +
-        scale_size_continuous(guide = "none") +
-        xlab("Rainfall (mm) based on \naveraged county monitors") +
-        ylab("Rainfall (mm) based on \nNLDAS-2 county data") +
-        ggtitle("Monitor versus NLDAS rainfall estimates \nfor Charleston county, SC, by storm")
-
-charleston_plot
-```
-
-Compare data from `countyweather` and NLDAS-2 data for Floyd county by storm:
-
-```{r}
-check_dates <- dplyr::select(closest_dist, -storm_dist) %>%
-        dplyr::mutate(closest_date = ymd(closest_date)) %>%
-        dplyr::rename(day_0 = closest_date) %>%
-        dplyr::mutate(fips = as.integer(fips),
-                      day_0 = day_0 + days(0),
-                      day_b1 = day_0 - days(1),
-                      day_b2 = day_0 - days(2),
-                      day_a1 = day_0 + days(1),
-                      day_a2 = day_0 + days(2),
-                      day_a3 = day_0 + days(3)) %>%
-        dplyr::select(storm_id, fips, day_b2, day_b1,
-                      day_0, day_a1, day_a2, day_a3) %>%
-        tidyr::gather(key = lag, value = day, -storm_id, -fips) %>%
-        dplyr::rename(date = day) %>%
-        dplyr::filter(fips == "51063") %>%
-        dplyr::mutate(fips = as.character(fips))
-        #dplyr::mutate(day = as.numeric(format(day, "%Y%m%d")))
-
-all_dates <- unique(check_dates$date)
-all_fips <- unique(check_dates$fips)
-
-#create timeseries for Dade precipitation data from the `countyweather` package
-
-fips <- "51063"
-# I've commented this out because we're saving the data, so we only need
-# to run it once.
-# county_timeseries(fips, percent_coverage = 0,
-#                   date_min = "1988-01-01", date_max = "2011-12-31",
-#                   var = "PRCP",
-#                   out_directory = "floyd_data/")
-
-floyd_dir <- "floyd_data/"
-floyd_weather <- readRDS(paste0(floyd_dir, fips, ".rds"))
-
-#orleans_weather <- orleans_weather$averaged %>%
-#        filter(date %in% seq(from = as.Date("1988-01-01"), to = as.Date("2011-12-31"), by = 1))
-
-floyd_weather <- floyd_weather %>%
-        filter(date %in% seq(from = as.Date("1988-01-01"), to = as.Date("2011-12-31"), by = 1))
-
-floyd_weather$fips <- fips
-floyd_weather <- as.data.frame(floyd_weather)
-
-floyd_weather <- floyd_weather %>%
-        dplyr::filter(date %in% all_dates) %>%
-        dplyr::right_join(data.table(check_dates),
-                          by = c("fips" = "fips", "date" = "date")) %>%
-        dplyr::filter(!is.na(prcp)) %>%
-        dplyr::arrange(storm_id, fips) %>%
-        dplyr::mutate(fips = as.integer(fips)) %>%
-        dplyr::mutate(fips = sprintf("%05d", fips),
-                      lag = gsub("day_", "", lag),
-                      lag = gsub("b", "-", lag),
-                      lag = gsub("a", "", lag),
-                      lag = as.numeric(lag))
-
-floyd_rain <- countyweather_rain(counties = fips, county_weather = floyd_weather,
-                                 start_year = 1988, end_year = 2011,
-                                 rain_limit = 0, dist_limit = 2000)
-floyd_plot <- ggplot(floyd_rain, aes(x = cw_precip, y = tot_precip)) +
-        geom_hline(aes(yintercept = 75), color = "lightgray") +
-        geom_vline(aes(xintercept = 75), color = "lightgray") +
-        geom_abline(aes(intercept = 0, slope = 1), color = "gray", alpha = 0.5) +
-        # geom_point(aes(size = prcp_reporting), alpha = 0.2) +
-        geom_point(alpha = 0.5) +
-        # geom_text(aes(x = monitor_rain + 100, label = storm_id)) +
-        xlim(c(0, 275)) + ylim(c(0, 275)) +
-        theme_few() +
-        scale_size_continuous(guide = "none") +
-        xlab("Rainfall (mm) based on \naveraged county monitors") +
-        ylab("Rainfall (mm) based on \nNLDAS-2 county data") +
-        ggtitle("Monitor versus NLDAS rainfall estimates \nfor Floyd county, VA, by storm")
-
-floyd_plot
-```
-
-Compare data from `countyweather` and NLDAS-2 data for Fulton county by storm:
-
-```{r}
-check_dates <- dplyr::select(closest_dist, -storm_dist) %>%
-        dplyr::mutate(closest_date = ymd(closest_date)) %>%
-        dplyr::rename(day_0 = closest_date) %>%
-        dplyr::mutate(fips = as.integer(fips),
-                      day_0 = day_0 + days(0),
-                      day_b1 = day_0 - days(1),
-                      day_b2 = day_0 - days(2),
-                      day_a1 = day_0 + days(1),
-                      day_a2 = day_0 + days(2),
-                      day_a3 = day_0 + days(3)) %>%
-        dplyr::select(storm_id, fips, day_b2, day_b1,
-                      day_0, day_a1, day_a2, day_a3) %>%
-        tidyr::gather(key = lag, value = day, -storm_id, -fips) %>%
-        dplyr::rename(date = day) %>%
-        dplyr::filter(fips == "13121") %>%
-        dplyr::mutate(fips = as.character(fips))
-        #dplyr::mutate(day = as.numeric(format(day, "%Y%m%d")))
-
-all_dates <- unique(check_dates$date)
-all_fips <- unique(check_dates$fips)
-
-#create timeseries for Dade precipitation data from the `countyweather` package
-
-fips <- "13121"
-# I've commented this out because we're saving the data, so we only need
-# to run it once.
-# county_timeseries(fips, percent_coverage = 0,
-#                   date_min = "1988-01-01", date_max = "2011-12-31",
-#                   var = "PRCP",
-#                   out_directory = "fulton_data/")
-
-fulton_dir <- "fulton_data/"
-fulton_weather <- readRDS(paste0(fulton_dir, fips, ".rds"))
-
-#orleans_weather <- orleans_weather$averaged %>%
-#        filter(date %in% seq(from = as.Date("1988-01-01"), to = as.Date("2011-12-31"), by = 1))
-
-fulton_weather <- fulton_weather %>%
-        filter(date %in% seq(from = as.Date("1988-01-01"), to = as.Date("2011-12-31"), by = 1))
-
-fulton_weather$fips <- fips
-fulton_weather <- as.data.frame(fulton_weather)
-
-fulton_weather <- fulton_weather %>%
-        dplyr::filter(date %in% all_dates) %>%
-        dplyr::right_join(data.table(check_dates),
-                          by = c("fips" = "fips", "date" = "date")) %>%
-        dplyr::filter(!is.na(prcp)) %>%
-        dplyr::arrange(storm_id, fips) %>%
-        dplyr::mutate(fips = as.integer(fips)) %>%
-        dplyr::mutate(fips = sprintf("%05d", fips),
-                      lag = gsub("day_", "", lag),
-                      lag = gsub("b", "-", lag),
-                      lag = gsub("a", "", lag),
-                      lag = as.numeric(lag))
-
-fulton_rain <- countyweather_rain(counties = fips, county_weather = fulton_weather,
-                                 start_year = 1988, end_year = 2011,
-                                 rain_limit = 0, dist_limit = 2000)
-fulton_plot <- ggplot(fulton_rain, aes(x = cw_precip, y = tot_precip)) +
-        geom_hline(aes(yintercept = 75), color = "lightgray") +
-        geom_vline(aes(xintercept = 75), color = "lightgray") +
-        geom_abline(aes(intercept = 0, slope = 1), color = "gray", alpha = 0.5) +
-        # geom_point(aes(size = prcp_reporting), alpha = 0.2) +
-        geom_point(alpha = 0.5) +
-        # geom_text(aes(x = monitor_rain + 100, label = storm_id)) +
-        xlim(c(0, 275)) + ylim(c(0, 275)) +
-        theme_few() +
-        scale_size_continuous(guide = "none") +
-        xlab("Rainfall (mm) based on \naveraged county monitors") +
-        ylab("Rainfall (mm) based on \nNLDAS-2 county data") +
-        ggtitle("Monitor versus NLDAS rainfall estimates \nfor Fulton county, GA, by storm")
-
-fulton_plot
-```
-
-Compare data from `countyweather` and NLDAS-2 data for Baltimore county by storm:
-
-```{r}
-check_dates <- dplyr::select(closest_dist, -storm_dist) %>%
-        dplyr::mutate(closest_date = ymd(closest_date)) %>%
-        dplyr::rename(day_0 = closest_date) %>%
-        dplyr::mutate(fips = as.integer(fips),
-                      day_0 = day_0 + days(0),
-                      day_b1 = day_0 - days(1),
-                      day_b2 = day_0 - days(2),
-                      day_a1 = day_0 + days(1),
-                      day_a2 = day_0 + days(2),
-                      day_a3 = day_0 + days(3)) %>%
-        dplyr::select(storm_id, fips, day_b2, day_b1,
-                      day_0, day_a1, day_a2, day_a3) %>%
-        tidyr::gather(key = lag, value = day, -storm_id, -fips) %>%
-        dplyr::rename(date = day) %>%
-        dplyr::filter(fips == "24005") %>%
-        dplyr::mutate(fips = as.character(fips))
-        #dplyr::mutate(day = as.numeric(format(day, "%Y%m%d")))
-
-all_dates <- unique(check_dates$date)
-all_fips <- unique(check_dates$fips)
-
-#create timeseries for Dade precipitation data from the `countyweather` package
-
-fips <- "24005"
-# I've commented this out because we're saving the data, so we only need
-# to run it once.
-# county_timeseries(fips, percent_coverage = 0,
-#                   date_min = "1988-01-01", date_max = "2011-12-31",
-#                   var = "PRCP",
-#                   out_directory = "baltimore_data/")
-
-baltimore_dir <- "baltimore_data/"
-baltimore_weather <- readRDS(paste0(baltimore_dir, fips, ".rds"))
-
-#orleans_weather <- orleans_weather$averaged %>%
-#        filter(date %in% seq(from = as.Date("1988-01-01"), to = as.Date("2011-12-31"), by = 1))
-
-baltimore_weather <- baltimore_weather %>%
-        filter(date %in% seq(from = as.Date("1988-01-01"), to = as.Date("2011-12-31"), by = 1))
-
-baltimore_weather$fips <- fips
-baltimore_weather <- as.data.frame(baltimore_weather)
-
-baltimore_weather <- baltimore_weather %>%
-        dplyr::filter(date %in% all_dates) %>%
-        dplyr::right_join(data.table(check_dates),
-                          by = c("fips" = "fips", "date" = "date")) %>%
-        dplyr::filter(!is.na(prcp)) %>%
-        dplyr::arrange(storm_id, fips) %>%
-        dplyr::mutate(fips = as.integer(fips)) %>%
-        dplyr::mutate(fips = sprintf("%05d", fips),
-                      lag = gsub("day_", "", lag),
-                      lag = gsub("b", "-", lag),
-                      lag = gsub("a", "", lag),
-                      lag = as.numeric(lag))
-
-baltimore_rain <- countyweather_rain(counties = fips, county_weather = baltimore_weather,
-                                 start_year = 1988, end_year = 2011,
-                                 rain_limit = 0, dist_limit = 2000)
-baltimore_plot <- ggplot(baltimore_rain, aes(x = cw_precip, y = tot_precip)) +
-        geom_hline(aes(yintercept = 75), color = "lightgray") +
-        geom_vline(aes(xintercept = 75), color = "lightgray") +
-        geom_abline(aes(intercept = 0, slope = 1), color = "gray", alpha = 0.5) +
-        # geom_point(aes(size = prcp_reporting), alpha = 0.2) +
-        geom_point(alpha = 0.5) +
-        # geom_text(aes(x = monitor_rain + 100, label = storm_id)) +
-        xlim(c(0, 275)) + ylim(c(0, 275)) +
-        theme_few() +
-        scale_size_continuous(guide = "none") +
-        xlab("Rainfall (mm) based on \naveraged county monitors") +
-        ylab("Rainfall (mm) based on \nNLDAS-2 county data") +
-        ggtitle("Monitor versus NLDAS rainfall estimates \nfor Baltimore county, MD, by storm")
-
-baltimore_plot
-```
 
 #### Are exposure patterns different when using different exposure metrics? In particular, (1) do some exposure metrics result in more "exposed" classifications than others and (2) are geographic patterns of exposure different among the different metrics?
 
-We determined the average number of hits per year for each eastern US county for the exposure criteria based on distance (Figure \ref{fig:distance_hits}), rain (Figure \ref{fig:rain_hits}), and wind (Figure \ref{fig:wind_hits}), as well as the total number of hits based on storm-associated events listed in the NOAA Storm Events database for flood events (Figure \ref{fig:flood_hits}), wind events (Figure \ref{fig:wind_event_hits}), and tornado events (Figure \ref{fig:tornado_hits}) (all of these maps based on NOAA Storm Events are restricted to storms between 1996 and 2011).
+We determined the average number of hits per year for each eastern US county for the exposure criteria based on distance (Figure \ref{fig:distance_hits}), rain (Figure \ref{fig:rain_hits}), and wind (Figure \ref{fig:wind_hits}), as well as the total number of hits based on storm-associated events listed in the NOAA Storm Events database for flood events (Figure \ref{fig:flood_hits}) and tornado events (Figure \ref{fig:tornado_hits}) (all of these maps based on NOAA Storm Events are restricted to storms between 1996 and 2011).
 
 ```{r echo = FALSE}
 # Map number of hits per county based on exposure data
@@ -1337,15 +867,6 @@ map_total_hits(flood_exposure, my_fips = my_fips,
                start_year = 1996, end_year = 2011)
 ```
 
-```{r wind_event_hits, echo = FALSE, fig.width = 8, fig.height = 6, fig.align = "center", fig.cap = "Average number of hits per year for eastern US counties based on the county having a storm-associated wind event listed in the NOAA Storm Events database, for storms from 1996 to 2011. Light red lines show the storm tracks over the same period. Red lines show the storm tracks for the top 5 storms in terms of number of counties classified as 'exposed' to the storm based on this criterion over the same period (Allison, 2001: 435 counties; Arlene, 2005: 360 counties; Danny, 1997: 310 counties; Cindy, 2005: 189 counties; Cristobal, 2008: 183 counties)."}
-wind_event_exposure <- county_events(counties = my_fips,
-                              start_year = 1996, end_year = 2011,
-                              event_type = "wind")
-map_total_hits(wind_event_exposure, my_fips = my_fips, 
-               eastern_states = eastern_states,
-               title = "Hits per county based on wind events")
-```
-
 ```{r tornado_hits, echo = FALSE, fig.width = 8, fig.height = 6, fig.align = "center", fig.cap = "Average number of hits per year for eastern US counties based on the county having a storm-associated tornado event listed in the NOAA Storm Events database, for storms from 1996 to 2011. Light red lines show the storm tracks over the same period. Red lines show the storm tracks for the top 5 storms in terms of number of counties classified as 'exposed' to the storm based on this criterion over the same period (Ivan, 2004: 95 counties; Frances, 2004: 72 counties; Rita, 2005: 52 counties; Katrina, 2005: 45 counties; Fay, 2008: 43 counties)."}
 tornado_exposure <- county_events(counties = my_fips,
                               start_year = 1996, end_year = 2011,
@@ -1414,7 +935,73 @@ print(a, include.rownames = FALSE, floating = TRUE,
       booktabs = TRUE, comment = FALSE, timestamp = NULL)
 ```
 
-We also mapped geographic patterns in the number of hits per county for distance, rain, and wind exposure when we incorporated the intensity of exposure for each county-storm pair (Figures \ref{fip:top_dist_map}, \ref{fip:top_rain_map}, \ref{fip:top_wind_map}); Tables \ref{tab:top_distance}, \ref{tab:top_rain}, \ref{tab:top_wind}). For these maps, we only plotted "hits" for the top 2,000 county-storm pairs (i.e., the 2,000 storm-county pairs with smallest distance to storm's closest approach, in the case of distance-based exposure, or the 2,000 storm-county pairs with highest precipitation, in the case of rain-based exposure).
+Some storms can very substantially in their exposure patterns when different metrics are used. For example, Tropical Storm Allison (2001) was notable for its rainfall rather than wind intensity; as a result, many more counties are classified as "exposed" to that storm when the exposure classification is based on rainfall rather than wind (Figure \ref{fig:allison_wind_rain_exp}). Conversely, Hurricane Hugo (1989) was more notable for wind than rainfall, which is reflected in more counties assessed as "exposed" based on wind than rain (Figure \ref{fig:hugo_wind_rain_exp}). 
+
+[One interesting contrast is between storms that were noteworthy for direct wind-related deaths (Anderew in 1992, Hugo in 1989) versus storms noteworthy for direct freshwater flooding-related deaths (Floyd in 1999, Alberto in 1994, Charley in 1998) for the 1970--1999 period [@Rappaport2000]. (Another study notes the following storms were notable for inland impacts-- Hugo, 1989 (wind and rain); Floyd, 1999 (flooding); Allison, 2001 (flooding); Fran, 1996 (wind) [@Kruk2010].) Here are two examples, one of each of these two types:]
+
+```{r allison_wind_rain_exp, fig.width = 6, fig.height = 8, echo = FALSE, fig.align = "center", fig.cap = "Counties that were classified as 'exposed' to Tropical Storm Allison (2001) based on rain (top) and wind (bottom) exposure criteria. Rain-based exposure was assessed based on storm-associated rainfall of 75 millimeters or more in the county and a distance of 500 kilometers or less between the county's population mean center and the storm's closest approach. Wind-based exposure was based on maximum sustained winds of 15 meters per second or more in the county during the storm."}
+storm <- "Allison-2001"
+a <- map_tracks(storms = storm, plot_points = FALSE, 
+                plot_object = map_rain_exposure(storm = storm, 
+                                          rain_limit = 75,
+                                          dist_limit = 500)) + 
+        ggtitle(paste0(storm, ", Rain-based exposure"))
+b <- map_tracks(storms = storm, plot_points = FALSE, 
+                plot_object = map_wind_exposure(storm = storm, 
+                                           wind_limit = 15)) + 
+        ggtitle(paste0(storm, ", Wind-based exposure")) 
+
+grid.arrange(a, b, ncol = 1)
+```
+
+```{r hugo_wind_rain_exp, fig.width = 6, fig.height = 8, echo = FALSE, fig.align = "center", fig.cap = "Counties that were classified as 'exposed' to Hurricane Hugo (1989) based on rain (top) and wind (bottom) exposure criteria. Rain-based exposure was assessed based on storm-associated rainfall of 75 millimeters or more in the county and a distance of 500 kilometers or less between the county's population mean center and the storm's closest approach. Wind-based exposure was based on maximum sustained winds of 15 meters per second or more in the county during the storm."}
+storm <- "Hugo-1989"
+a <- map_tracks(storms = storm, plot_points = FALSE, 
+                plot_object = map_rain_exposure(storm = storm, 
+                                          rain_limit = 75,
+                                          dist_limit = 500)) + 
+        ggtitle(paste0(storm, ", Rain-based exposure"))
+b <- map_tracks(storms = storm, plot_points = FALSE, 
+                plot_object = map_wind_exposure(storm = storm, 
+                                           wind_limit = 15)) + 
+        ggtitle(paste0(storm, ", Wind-based exposure")) 
+
+grid.arrange(a, b, ncol = 1)
+```
+
+As another example, exposure classifications based on flood events in some cases align well with rain-based classifications (e.g., for Hurricane Floyd in 1999; Figure \ref{fig:floyd_rain_flood_exp}) but for other storms only a small percent of the counties assessed as "exposed" based on rain criteria are also assessed as "exposed" based on flood exposure (e.g., Hurricane Frances, 2004; Figure \ref{fig:frances_rain_flood_exp}).
+
+[For storms in 1996 or later, when flooding reports are included in NOAA's Storm Events data, exposure patterns based on floods reports generally pick up similar regions as rain-based exposure, and in some cases (e.g., Floyd, 1999), counties classified as exposed using rain-based exposure are very similar to the counties in which flood events were recorded. For example, here are comparisons for some of the worst storms in terms of rain-based exposures:]
+
+```{r frances_rain_flood_exp, echo = FALSE, fig.width = 6, fig.height = 8, fig.align = "center", fig.cap = "Counties that were classified as 'exposed' to Hurricane Frances (2004) based on rain (top) and flood event (bottom) exposure criteria. Rain-based exposure was assessed based on storm-associated rainfall of 75 millimeters or more in the county and a distance of 500 kilometers or less between the county's population mean center and the storm's closest approach. Flood event-based exposure was based on the county have a flood event listing in the NOAA Storm Events database and being within [x] kilometers of the storm's track."}
+storm <- "Frances-2004"
+a <- map_tracks(storms = storm, plot_points = FALSE, 
+                plot_object = map_rain_exposure(storm = storm, 
+                                           dist_limit = 500,
+                                           rain_limit = 75)) + 
+        ggtitle("Rain-based exposure during Frances, 2004")
+b <- map_tracks(storms = storm, plot_points = FALSE, 
+                plot_object = map_event_exposure(storm = storm, 
+                                           event_type = "flood")) + 
+        ggtitle("Flood events during Frances, 2004")
+grid.arrange(a, b, ncol = 1)
+```
+
+```{r floyd_rain_flood_exp, echo = FALSE, fig.width = 6, fig.height = 8, fig.align = "center", fig.cap = "Counties that were classified as 'exposed' to Hurricane Floyd (1999) based on rain (top) and flood event (bottom) exposure criteria. Rain-based exposure was assessed based on storm-associated rainfall of 75 millimeters or more in the county and a distance of 500 kilometers or less between the county's population mean center and the storm's closest approach. Flood event-based exposure was based on the county have a flood event listing in the NOAA Storm Events database and being within [x] kilometers of the storm's track."}
+storm <- "Floyd-1999"
+a <- map_tracks(storms = storm, plot_points = FALSE, 
+                plot_object = map_rain_exposure(storm = storm, 
+                                           dist_limit = 500,
+                                           rain_limit = 75)) + 
+        ggtitle("Rain-based exposure during Floyd, 1999")
+b <- map_tracks(storms = storm, plot_points = FALSE, 
+                plot_object = map_event_exposure(storm = storm, 
+                                           event_type = "flood")) + 
+        ggtitle("Flood events during Floyd, 1999")
+grid.arrange(a, b, ncol = 1)
+```
+
+We mapped geographic patterns in the number of hits per county for distance, rain, and wind exposure when we incorporated the intensity of exposure for each county-storm pair (Figures \ref{fig:top_dist_map}, \ref{fig:top_rain_map}, \ref{fig:top_wind_map}); Tables \ref{tab:top_distance}, \ref{tab:top_rain}, \ref{tab:top_wind}). For these maps, we only plotted "hits" for the top 2,000 county-storm pairs (i.e., the 2,000 storm-county pairs with smallest distance to storm's closest approach, in the case of distance-based exposure, or the 2,000 storm-county pairs with highest precipitation, in the case of rain-based exposure).
 
 ```{r top_distance, echo = FALSE, results = "asis"}
 a <- distance_exposure %>%
@@ -1472,9 +1059,6 @@ print(a, include.rownames = FALSE, floating = TRUE,
 plot_top_x <- function(exposure_data, x = 2000, desc = TRUE,
                        exposure_var, eastern_states = eastern_states,
                        my_fips = my_fips, title){
-        missing_fips <- my_fips[!(my_fips %in% exposure_data$fips)]
-        missing_counties <- data.frame(fips = as.numeric(missing_fips),
-                                       count = 0)
         
         exposure_data <- as.data.frame(exposure_data)
         exposure_data$exp_var <- exposure_data[ , exposure_var]
@@ -1484,8 +1068,14 @@ plot_top_x <- function(exposure_data, x = 2000, desc = TRUE,
                 arrange(desc(exp_var)) %>%
                 slice(1:x) %>% 
                 group_by(fips) %>%
-                summarise(count = n()) %>%
-                rbind(missing_counties) %>%
+                summarise(count = n()) 
+        
+        zero_fips <- my_fips[!(my_fips %in% exposure_x$fips)]
+        zero_counties <- data.frame(fips = as.numeric(zero_fips),
+                                       count = 0)
+        
+        exposure_x <- exposure_x %>%
+                rbind(zero_counties) %>%
                 rename(region = fips) %>%
                 mutate(region = as.numeric(region),
                        count = as.numeric(count))
@@ -1526,9 +1116,6 @@ plot_top_x(wind_exposure, exposure_var = "max_sust",
            title = "Hits for top 2,000 Storm-County Pairs\nfor Wind Metric")
 ```
 
-
-
-
 ```{r echo = FALSE, warning = FALSE, message = FALSE}
 distance_count <- distance_exposure %>%
                 dplyr::group_by(fips) %>%
@@ -1561,7 +1148,7 @@ exposure_table %>%
               caption = "Total number of county hits based on rain, distance, and wind exposures")
 ```
 
-```{r}
+```{r echo = FALSE}
 rain_exposure$county_storm <- transmute(rain_exposure,
                                         county_storm = paste0(fips, " ",
                                                               storm_id))
@@ -1622,38 +1209,6 @@ sum(distance_rain_exposure$tot_precip < 75 & distance_rain_exposure$storm_dist <
 ``` 
 
 JMF-- In the above, using the `distance_rain_exposure` data frame, I found that there were 7103 storm-county pairs that did not meet the precipitation criteria ($\leq 75 mm$) but did meet the distance createria ($\leq 100 km$), contrary to the 0 I found in the code before this with the `all_exposure` data frame.
-
-One interesting contrast is between storms that were noteworthy for direct wind-related deaths (Anderew in 1992, Hugo in 1989) versus storms noteworthy for direct freshwater flooding-related deaths (Floyd in 1999, Alberto in 1994, Charley in 1998) for the 1970--1999 period [@Rappaport2000]. (Another study notes the following storms were notable for inland impacts-- Hugo, 1989 (wind and rain); Floyd, 1999 (flooding); Allison, 2001 (flooding); Fran, 1996 (wind) [@Kruk2010].) Here are two examples, one of each of these two types:
-
-```{r fig.width = 6, fig.height = 8, echo = FALSE}
-storm <- "Hugo-1989"
-a <- map_tracks(storms = storm, plot_points = FALSE, 
-                plot_object = map_rain_exposure(storm = storm, 
-                                          rain_limit = 75,
-                                          dist_limit = 500)) + 
-        ggtitle(paste0(storm, ", Rain-based exposure"))
-b <- map_tracks(storms = storm, plot_points = FALSE, 
-                plot_object = map_wind_exposure(storm = storm, 
-                                           wind_limit = 15)) + 
-        ggtitle(paste0(storm, ", Wind-based exposure")) 
-
-grid.arrange(a, b, ncol = 1)
-```
-
-```{r fig.width = 6, fig.height = 8, echo = FALSE}
-storm <- "Allison-2001"
-a <- map_tracks(storms = storm, plot_points = FALSE, 
-                plot_object = map_rain_exposure(storm = storm, 
-                                          rain_limit = 75,
-                                          dist_limit = 500)) + 
-        ggtitle(paste0(storm, ", Rain-based exposure"))
-b <- map_tracks(storms = storm, plot_points = FALSE, 
-                plot_object = map_wind_exposure(storm = storm, 
-                                           wind_limit = 15)) + 
-        ggtitle(paste0(storm, ", Wind-based exposure")) 
-
-grid.arrange(a, b, ncol = 1)
-```
 
 #### Which storms exposed the most counties when using distance-, rain-, and wind-based metrics? What were the top county-storm exposures for rain- and wind-based metrics?
 
@@ -1747,20 +1302,11 @@ rain_exposure %>%
               caption = "Top 10 storms based on summed rainfall across all eastern US counties within 500 km of the storm track.")
 ```
 
-Here is a map of the rain totals for Frances: 
-
-```{r echo = FALSE}
-map_tracks(storms = "Frances-2004", plot_points = FALSE, 
-                plot_object = map_counties(storm = "Frances-2004", 
-                                           metric = "rainfall")) + 
-        ggtitle(paste("Frances-2004", "rainfall"))
-```
-
-Here is a table of the top 10 storms by number of counties exposed, based on a wind metric of 18 m/s or greater (e.g., tropical storm strength or greater): 
+Here is a table of the top 10 storms by number of counties exposed, based on maximum sustained winds of 15 m / s or greater (e.g., tropical storm strength or greater): 
 
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
 all_wind <- county_wind(counties = my_fips, start_year = 1988, 
-                        end_year = 2011, wind_limit = 18)
+                        end_year = 2011, wind_limit = 15)
 
 wind_exposed <- all_wind %>%
         group_by(storm_id) %>%
@@ -1792,77 +1338,7 @@ grid.arrange(wind_plots$a, wind_plots$b, wind_plots$c,
              wind_plots$d, ncol = 2)
 ```
 
-Here is a table of the top 10 storms by number of counties exposed, based on a wind metric of 33 m/s or greater (e.g., Hurricane strength, category 1 or greater):
-
-```{r echo = FALSE, message = FALSE, warning = FALSE}
-all_wind <- county_wind(counties = my_fips, start_year = 1988, 
-                        end_year = 2011, wind_limit = 33)
-
-hu_exposed <- all_wind %>%
-        group_by(storm_id) %>%
-        summarize(number_of_counties_exposed = n()) %>%
-        arrange(desc(number_of_counties_exposed)) %>%
-        top_n(10) 
-
-hu_exposed %>%
-        mutate(storm_id = gsub("-", " (", storm_id),
-               storm_id = paste0(storm_id, ")")) %>%
-        kable(col.names = c("Storm", "# of exposed counties"),
-              caption = "Top 10 storms based on the number of counties exposed, using a metric of wind.")
-```
-
-Here is a table of the top 10 storms by number of counties exposed, based on a wind metric of 50 m/s or greater (e.g., Intense Hurricane strength, category 3 or greater):
-
-```{r echo = FALSE, message = FALSE, warning = FALSE}
-all_wind <- county_wind(counties = my_fips, start_year = 1988, 
-                        end_year = 2011, wind_limit = 50)
-
-cat3_exposed <- all_wind %>%
-        group_by(storm_id) %>%
-        summarize(number_of_counties_exposed = n()) %>%
-        arrange(desc(number_of_counties_exposed)) %>%
-        top_n(10) 
-
-cat3_exposed %>%
-        mutate(storm_id = gsub("-", " (", storm_id),
-               storm_id = paste0(storm_id, ")")) %>%
-        kable(col.names = c("Storm", "# of exposed counties"),
-              caption = "Top 10 storms based on the number of counties exposed, using a metric of wind.")
-```
-
-For all of the above exposure categories, Lili (1996), Karl (2004), and Ophelia (2005) remained the top 3 storms by number of counties exposed based on the various wind exposure metrics, each with 2396 counties exposed [JMF-- I think something weird is going on here].
-
 #### Comparing across all exposure metrics
-
-For storms in 1996 or later, when flooding reports are included in NOAA's Storm Events data, exposure patterns based on floods reports generally pick up similar regions as rain-based exposure, and in some cases (e.g., Floyd, 1999), counties classified as exposed using rain-based exposure are very similar to the counties in which flood events were recorded. For example, here are comparisons for some of the worst storms in terms of rain-based exposures:
-
-```{r echo = FALSE, fig.width = 6, fig.height = 8}
-storm <- "Frances-2004"
-a <- map_tracks(storms = storm, plot_points = FALSE, 
-                plot_object = map_rain_exposure(storm = storm, 
-                                           dist_limit = 500,
-                                           rain_limit = 75)) + 
-        ggtitle("Rain-based exposure during Frances, 2004")
-b <- map_tracks(storms = storm, plot_points = FALSE, 
-                plot_object = map_event_exposure(storm = storm, 
-                                           event_type = "flood")) + 
-        ggtitle("Flood events during Frances, 2004")
-grid.arrange(a, b, ncol = 1)
-```
-
-```{r echo = FALSE, fig.width = 6, fig.height = 8}
-storm <- "Floyd-1999"
-a <- map_tracks(storms = storm, plot_points = FALSE, 
-                plot_object = map_rain_exposure(storm = storm, 
-                                           dist_limit = 500,
-                                           rain_limit = 75)) + 
-        ggtitle("Rain-based exposure during Floyd, 1999")
-b <- map_tracks(storms = storm, plot_points = FALSE, 
-                plot_object = map_event_exposure(storm = storm, 
-                                           event_type = "flood")) + 
-        ggtitle("Flood events during Floyd, 1999")
-grid.arrange(a, b, ncol = 1)
-```
 
 For all storms, we divided counties into four categories: 
 
