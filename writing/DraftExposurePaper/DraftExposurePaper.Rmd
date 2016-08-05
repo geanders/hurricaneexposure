@@ -1212,9 +1212,16 @@ JMF-- In the above, using the `distance_rain_exposure` data frame, I found that 
 
 #### Which storms exposed the most counties when using distance-, rain-, and wind-based metrics? What were the top county-storm exposures for rain- and wind-based metrics?
 
-Here is a table of the top 10 storms by number of counties exposed, based on a distance metric of within 100 kilometers or less of the storm track:
+We created plots of the top four storms, in terms of the number of counties classified as exposed, for exposure metrics of distance (Figure \ref{fig:top_four_distance}), rain (Figure \ref{fig:top_four_rain}), wind (Figure \ref{fig:top_four_wind}), flood events (Figure \ref{fig:top_four_flood}), and tornado events (Figure \ref{fig:top_four_tornado}).
 
-```{r echo = FALSE, message = FALSE, warning = FALSE}
+```{r top_four_distance, echo = FALSE, fig.width = 10, fig.height = 8, fig.align = "center", fig.cap = "Counties exposed for the top four storms over the study period, in terms of distance-based exposure."}
+top_distance_exposed <- function(storm_id){
+        my_map <- map_distance_exposure(storm_id, dist_limit = 100)
+        my_map <- map_tracks(storm = storm_id, plot_object = my_map, 
+                             plot_points = FALSE) + 
+                ggtitle(paste0(gsub("-", " (", storm_id), ")"))
+}
+
 all_distance <- county_distance(counties = my_fips, start_year = 1988, 
                         end_year = 2011, dist_limit =100)
 
@@ -1224,23 +1231,6 @@ distance_exposed <- all_distance %>%
         arrange(desc(number_of_counties_exposed)) %>%
         top_n(10) 
 
-distance_exposed %>%
-        mutate(storm_id = gsub("-", " (", storm_id),
-               storm_id = paste0(storm_id, ")")) %>%
-        kable(col.names = c("Storm", "# of exposed counties"),
-              caption = "Top 10 storms based on the number of counties exposed, using a metric of distance.")
-```
-
-Here are plots of the top four storms based on number of counties exposed by distance:
-
-```{r echo = FALSE, fig.width = 10, fig.height = 8}
-top_distance_exposed <- function(storm_id){
-        my_map <- map_distance_exposure(storm_id, dist_limit = 100)
-        my_map <- map_tracks(storm = storm_id, plot_object = my_map, 
-                             plot_points = FALSE) + 
-                ggtitle(paste0(gsub("-", " (", storm_id), ")"))
-}
-
 n <- 4
 distance_plots <- lapply(distance_exposed$storm_id[1:n], top_distance_exposed)
 names(distance_plots) <- letters[1:n]
@@ -1248,9 +1238,15 @@ grid.arrange(distance_plots$a, distance_plots$b, distance_plots$c,
              distance_plots$d, ncol = 2)
 ```
 
-Here is a table of the top 10 storms by number of counties exposed, based on a rain metric of 75 millimeters or more and within 500 kilometers or less of the storm track:
+```{r top_four_rain, echo = FALSE, fig.width = 10, fig.height = 8, fig.align = "center", fig.cap = "Counties exposed for the top four storms over the study period, in terms of distance-based exposure."}
+top_rain_exposed <- function(storm_id){
+        my_map <- map_rain_exposure(storm_id, rain_limit = 75, 
+                                    dist_limit = 500)
+        my_map <- map_tracks(storm = storm_id, plot_object = my_map, 
+                             plot_points = FALSE) + 
+                ggtitle(paste0(gsub("-", " (", storm_id), ")"))
+}
 
-```{r echo = FALSE, message = FALSE, warning = FALSE}
 all_rain <- county_rain(counties = my_fips, start_year = 1988, 
                         end_year = 2011, rain_limit = 75, dist_limit = 500,
                         days_included = -1:1)
@@ -1261,28 +1257,107 @@ rain_exposed <- all_rain %>%
         arrange(desc(number_of_counties_exposed)) %>%
         top_n(10) 
 
-rain_exposed %>%
-        mutate(storm_id = gsub("-", " (", storm_id),
-               storm_id = paste0(storm_id, ")")) %>%
-        kable(col.names = c("Storm", "# of exposed counties"),
-              caption = "Top 10 storms based on the number of counties exposed, using a metric of rainfall.")
+n <- 4
+rain_plots <- lapply(rain_exposed$storm_id[1:n], top_rain_exposed)
+names(rain_plots) <- letters[1:n]
+grid.arrange(rain_plots$a, rain_plots$b, rain_plots$c, rain_plots$d, ncol = 2)
 ```
 
-Here are plots of the exposed counties for the top 4 storms based on that rain metric: 
-
-```{r echo = FALSE, fig.width = 10, fig.height = 8}
-top_rain_exposed <- function(storm_id){
-        my_map <- map_rain_exposure(storm_id, rain_limit = 75, 
-                                    dist_limit = 500)
+```{r top_four_wind, echo = FALSE, fig.width = 10, fig.height = 8, fig.align = "center", fig.cap = "Counties exposed for the top four storms over the study period, in terms of distance-based exposure."}
+top_wind_exposed <- function(storm_id){
+        my_map <- map_wind_exposure(storm_id, wind_limit = 15)
         my_map <- map_tracks(storm = storm_id, plot_object = my_map, 
                              plot_points = FALSE) + 
                 ggtitle(paste0(gsub("-", " (", storm_id), ")"))
 }
 
+all_wind <- county_wind(counties = my_fips, start_year = 1988, 
+                        end_year = 2011, wind_limit = 15)
+
+wind_exposed <- all_wind %>%
+        group_by(storm_id) %>%
+        summarize(number_of_counties_exposed = n()) %>%
+        arrange(desc(number_of_counties_exposed)) %>%
+        top_n(10) 
+
+
 n <- 4
-rain_plots <- lapply(rain_exposed$storm_id[1:n], top_rain_exposed)
-names(rain_plots) <- letters[1:n]
-grid.arrange(rain_plots$a, rain_plots$b, rain_plots$c, rain_plots$d, ncol = 2)
+wind_plots <- lapply(wind_exposed$storm_id[1:n], top_wind_exposed)
+names(wind_plots) <- letters[1:n]
+grid.arrange(wind_plots$a, wind_plots$b, wind_plots$c,
+             wind_plots$d, ncol = 2)
+```
+
+```{r top_four_flood, echo = FALSE, fig.width = 10, fig.height = 8, fig.align = "center", fig.cap = "Counties exposed for the top four storms over the study period, in terms of flood event-based exposure."}
+top_flood_exposed <- function(storm_id){
+        my_map <- map_event_exposure(storm_id, event_type = "flood")
+        my_map <- map_tracks(storm = storm_id, plot_object = my_map, 
+                             plot_points = FALSE) + 
+                ggtitle(paste0(gsub("-", " (", storm_id), ")"))
+}
+
+all_flood <- county_events(counties = my_fips, start_year = 1996, 
+                        end_year = 2011, event_type = "flood")
+
+flood_exposed <- all_flood %>%
+        group_by(storm_id) %>%
+        summarize(number_of_counties_exposed = n()) %>%
+        arrange(desc(number_of_counties_exposed)) %>%
+        top_n(10) %>%
+        ungroup() %>%
+        mutate(storm_id = as.character(storm_id))
+
+n <- 4
+flood_plots <- lapply(flood_exposed$storm_id[1:n], top_flood_exposed)
+names(flood_plots) <- letters[1:n]
+grid.arrange(flood_plots$a, flood_plots$b, flood_plots$c,
+             flood_plots$d, ncol = 2)
+```
+
+```{r top_four_tornado, echo = FALSE, fig.width = 10, fig.height = 8, fig.align = "center", fig.cap = "Counties exposed for the top four storms over the study period, in terms of tornado event-based exposure."}
+top_tornado_exposed <- function(storm_id){
+        my_map <- map_event_exposure(storm_id, event_type = "tornado")
+        my_map <- map_tracks(storm = storm_id, plot_object = my_map, 
+                             plot_points = FALSE) + 
+                ggtitle(paste0(gsub("-", " (", storm_id), ")"))
+}
+
+all_tornado <- county_events(counties = my_fips, start_year = 1996, 
+                        end_year = 2011, event_type = "tornado")
+
+tornado_exposed <- all_tornado %>%
+        group_by(storm_id) %>%
+        summarize(number_of_counties_exposed = n()) %>%
+        arrange(desc(number_of_counties_exposed)) %>%
+        top_n(10) %>%
+        ungroup() %>%
+        mutate(storm_id = as.character(storm_id))
+
+n <- 4
+tornado_plots <- lapply(tornado_exposed$storm_id[1:n], top_tornado_exposed)
+names(tornado_plots) <- letters[1:n]
+grid.arrange(tornado_plots$a, tornado_plots$b, tornado_plots$c,
+             tornado_plots$d, ncol = 2)
+```
+
+Here is a table of the top 10 storms by number of counties exposed, based on a distance metric of within 100 kilometers or less of the storm track:
+
+```{r echo = FALSE}
+distance_exposed %>%
+        mutate(storm_id = gsub("-", " (", storm_id),
+               storm_id = paste0(storm_id, ")")) %>%
+        kable(col.names = c("Storm", "# of exposed counties"),
+              caption = "Top 10 storms based on the number of counties exposed, using a metric of distance.")
+```
+
+Here is a table of the top 10 storms by number of counties exposed, based on a rain metric of 75 millimeters or more and within 500 kilometers or less of the storm track:
+
+```{r echo = FALSE}
+rain_exposed %>%
+        mutate(storm_id = gsub("-", " (", storm_id),
+               storm_id = paste0(storm_id, ")")) %>%
+        kable(col.names = c("Storm", "# of exposed counties"),
+              caption = "Top 10 storms based on the number of counties exposed, using a metric of rainfall.")
 ```
 
 Here are the top storms when measured by summing all rainfall for all eastern US counties exposed within 500 km of the storm track (rainfall totals are for the three-day window when the storm was closest to each county).
@@ -1304,38 +1379,12 @@ rain_exposure %>%
 
 Here is a table of the top 10 storms by number of counties exposed, based on maximum sustained winds of 15 m / s or greater (e.g., tropical storm strength or greater): 
 
-```{r echo = FALSE, message = FALSE, warning = FALSE}
-all_wind <- county_wind(counties = my_fips, start_year = 1988, 
-                        end_year = 2011, wind_limit = 15)
-
-wind_exposed <- all_wind %>%
-        group_by(storm_id) %>%
-        summarize(number_of_counties_exposed = n()) %>%
-        arrange(desc(number_of_counties_exposed)) %>%
-        top_n(10) 
-
+```{r echo = FALSE}
 wind_exposed %>%
         mutate(storm_id = gsub("-", " (", storm_id),
                storm_id = paste0(storm_id, ")")) %>%
         kable(col.names = c("Storm", "# of exposed counties"),
               caption = "Top 10 storms based on the number of counties exposed, using a metric of wind.")
-```
-
-Here are plots of the top four storms based on number of counties exposed by wind:
-
-```{r echo = FALSE, fig.width = 10, fig.height = 8}
-top_wind_exposed <- function(storm_id){
-        my_map <- map_wind_exposure(storm_id, wind_limit = 18)
-        my_map <- map_tracks(storm = storm_id, plot_object = my_map, 
-                             plot_points = FALSE) + 
-                ggtitle(paste0(gsub("-", " (", storm_id), ")"))
-}
-
-n <- 4
-wind_plots <- lapply(wind_exposed$storm_id[1:n], top_wind_exposed)
-names(wind_plots) <- letters[1:n]
-grid.arrange(wind_plots$a, wind_plots$b, wind_plots$c,
-             wind_plots$d, ncol = 2)
 ```
 
 #### Comparing across all exposure metrics
