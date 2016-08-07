@@ -1011,6 +1011,96 @@ all_exp %>%
               booktabs = TRUE, comment = FALSE, timestamp = NULL)
 ```
 
+Here is some analysis of agreement and disagreement among different metrics:
+
+```{r echo = FALSE, results = "asis"}
+all_exp <- dist_exp %>%
+        full_join(rain_exp, by = c("storm_id", "fips")) %>%
+        full_join(wind_exp, by = c("storm_id", "fips")) %>%
+        gather(metric, exposure, -storm_id, -fips) %>%
+        mutate(exposure = !is.na(exposure)) %>%
+        spread(metric, exposure)
+
+check_agreement <- function(data, x1, x2, n_counties = 2396){
+        data$x1 <- data[ , x1]
+        data$x2 <- data[ , x2]
+        agreement <- data %>%
+                dplyr::select(storm_id, x1, x2) %>%
+                dplyr::mutate(agree_exp = x1 & x2,
+                              x1_exp_x2_unexp = x1 & !x2,
+                              x1_unexp_x2_exp = !x1 & x2,
+                              any_exp = x1 | x2) %>%
+                dplyr::group_by(storm_id) %>%
+                dplyr::summarize(disagree = sum(!agree_exp),
+                                 agree = (n_counties - disagree),
+                                 agree_exp = sum(agree_exp),
+                                 agree_unexp = (n_counties - disagree - agree_exp),
+                                 disagree_x1_exp = sum(x1_exp_x2_unexp),
+                                 disagree_x2_exp = sum(x1_unexp_x2_exp),
+                                 agree_any = round(100 * agree_exp / sum(any_exp), 1),
+                                 disagree_any_x1_exp = round(100 * disagree_x1_exp /
+                                                                     sum(any_exp), 1),
+                                 disagree_any_x2_exp = round(100 * disagree_x2_exp /
+                                                                     sum(any_exp), 1))
+        agreement[ , 2:7] <- round(100 * agreement[ , 2:7] / n_counties, 1)
+        return(agreement)
+}
+
+summarize_agreement <- function(agreement){
+        med_val <- apply(agreement[ , -1], MARGIN = 2, FUN = median, na.rm = TRUE)
+        min_val <- apply(agreement[ , -1], MARGIN = 2, FUN = min, na.rm = TRUE)
+        max_val <- apply(agreement[ , -1], MARGIN = 2, FUN = max, na.rm = TRUE)
+        min_storm <- apply(agreement[ , -1], MARGIN = 2,
+                           FUN = function(x){
+                                   i <- which.min(x)
+                                   out <- agreement$storm_id[i]
+                                   return(out)
+                                   })
+        max_storm <- apply(agreement[ , -1], MARGIN = 2,
+                           FUN = function(x){
+                                   i <- which.max(x)
+                                   out <- agreement$storm_id[i]
+                                   return(out)
+                           })
+        out <- rbind(t(as.data.frame(med_val)), t(as.data.frame(min_val)),
+                     t(as.data.frame(max_val)), t(as.data.frame(min_storm)),
+                     t(as.data.frame(max_storm)))
+        out <- as.data.frame(out)
+        out$metric <- row.names(out)
+        return(out)
+}
+
+exp_metrics <- c("dist_exposed", "rain_exposed", "wind_exposed")
+
+agg_exp_matrix <- matrix(NA, ncol = length(exp_metrics), nrow = length(exp_metrics))
+colnames(agg_exp_matrix) <- rownames(agg_exp_matrix) <- exp_metrics
+agg_unexp_matrix <- x1_exp_matrix <- x2_exp_matrix <- agg_exp_matrix
+for(i in 1:length(exp_metrics)){
+        for(j in 1:length(exp_metrics)){
+                x1 <- exp_metrics[i]
+                x2 <- exp_metrics[j]
+                # if(x1 == x2) next
+                
+                agreement <- check_agreement(all_exp, x1 = x1, x2 = x2)
+                agg_exp_matrix[i, j] <- median(agreement$agree_exp, na.rm = TRUE)
+                agg_unexp_matrix[i, j] <- median(agreement$agree_unexp, na.rm = TRUE)
+                x1_exp_matrix[i, j] <- median(agreement$disagree_x1_exp, na.rm = TRUE)
+                x2_exp_matrix[i, j] <- median(agreement$disagree_x2_exp, na.rm = TRUE)
+        }
+}
+
+out <- rbind(cbind(agg_exp_matrix, x1_exp_matrix),
+             cbind(x2_exp_matrix, agg_unexp_matrix)) 
+row.names(out) <- NULL
+colnames(out) <- NULL
+out <- xtable(as.data.frame(out), caption = "Agreement between metrics.",
+              align = rep("c", 7), digits = 1)
+print(out, include.rownames = FALSE, floating = TRUE,
+      table.placement = "p", caption.placement = "top", 
+      booktabs = TRUE, comment = FALSE, timestamp = NULL)
+```
+
+
 We first investigated whether different exposure metrics resulted in similar numbers of counties classified as "exposed" to a storm (Figure \ref{fig:county_number_cor}, Table \ref{tab:county_number}).
 
 ```{r county_number_cor, echo = FALSE, fig.width = 8, fig.height = 8, fig.align = "center", fig.cap = "Association between the number of counties classified as `exposed` for a storm using different exposure metrics. Each small plot shows this association, with each point representing a storm, with positions on the x- and y-axes showing the number of counties classified as `exposed` for that storm based on one of the exposure metrics considered in this study. Study storms from 1996 to 2011 are included in each plot."}
