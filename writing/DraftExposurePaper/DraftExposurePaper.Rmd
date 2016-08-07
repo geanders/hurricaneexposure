@@ -788,26 +788,26 @@ map_total_hits <- function(exposure_data, my_fips = my_fips,
         
         exposure_count <- exposure_data %>%
                 dplyr::group_by(fips) %>%
-                dplyr::summarize(count = n() /(end_year - start_year + 1)) %>%
+                dplyr::summarize(count = 10 * n() /(end_year - start_year + 1)) %>%
                 dplyr::rename(region = fips) %>%
                 dplyr::mutate(region = as.numeric(region),
                               count = as.numeric(count)) %>%
                 rbind(missing_counties)
         
         exposure_count$value <- cut(exposure_count$count, c(0, 
-                                                            0.11,
-                                                            0.22,
-                                                            0.33,
-                                                            0.44,
-                                                            0.56,
-                                                            0.67,
-                                                            0.78,
-                                                            0.89,
-                                                            10),
-                           labels = c("0-.10", ".11-.21",
-                                      ".22-.32", ".33-.43",
-                                      ".44-.55", ".56-.66",
-                                      ".67-.77", ".78-.88", ".89+"),
+                                                            1,
+                                                            2,
+                                                            3,
+                                                            4,
+                                                            5,
+                                                            6,
+                                                            7,
+                                                            8,
+                                                            20),
+                           labels = c("0-1", "1-2",
+                                      "2-3", "3-4",
+                                      "4-5", "5-6",
+                                      "6-7", "7-8", "8+"),
                            include.lowest = TRUE)
         exposure_palette <- c("#FFFFFF", brewer.pal(8, name = "YlGnBu"))
         
@@ -875,6 +875,140 @@ map_total_hits(tornado_exposure, my_fips = my_fips,
                eastern_states = eastern_states,
                title = "Hits per county based on tornado events",
                start_year = 1996, end_year = 2011)
+```
+
+We assessed some statistics on the number of counties exposed to storms under different exposure metrics (Table \ref{tab:num_counties_exposed}).
+
+```{r echo = FALSE, results = "asis"}
+distance_exposure_50 <- county_distance(counties = my_fips, start_year = 1988,
+                                     end_year = 2011, dist_limit = 50)
+distance_exposure_75 <- county_distance(counties = my_fips, start_year = 1988,
+                                     end_year = 2011, dist_limit = 75)
+rain_exposure_125 <- county_rain(counties = my_fips,
+                             start_year = 1988, end_year = 2011,
+                             rain_limit = 125, dist_limit = 500)
+rain_exposure_175 <- county_rain(counties = my_fips,
+                             start_year = 1988, end_year = 2011,
+                             rain_limit = 175, dist_limit = 500)
+wind_exposure_20 <- county_wind(counties = my_fips, start_year = 1988,
+                             end_year = 2011, wind_limit = 20)
+wind_exposure_25 <- county_wind(counties = my_fips, start_year = 1988,
+                             end_year = 2011, wind_limit = 25)
+
+dist_exp <- distance_exposure %>%
+        select(storm_id, fips) %>%
+        mutate(dist_exposed = 1)
+dist_exp_50 <- distance_exposure_50 %>%
+        select(storm_id, fips) %>%
+        mutate(dist_exposed_50 = 1)
+dist_exp_75 <- distance_exposure_75 %>%
+        select(storm_id, fips) %>%
+        mutate(dist_exposed_75 = 1)
+rain_exp <- rain_exposure %>%
+        select(storm_id, fips) %>%
+        mutate(rain_exposed = 1)
+rain_exp <- rain_exposure %>%
+        select(storm_id, fips) %>%
+        mutate(rain_exposed = 1)
+rain_exp_125 <- rain_exposure_125 %>%
+        select(storm_id, fips) %>%
+        mutate(rain_exposed_125 = 1)
+rain_exp_175 <- rain_exposure_175 %>%
+        select(storm_id, fips) %>%
+        mutate(rain_exposed_175 = 1)
+wind_exp <- wind_exposure %>%
+        select(storm_id, fips) %>%
+        mutate(wind_exposed = 1)
+wind_exp_20 <- wind_exposure_20 %>%
+        select(storm_id, fips) %>%
+        mutate(wind_exposed_20 = 1)
+wind_exp_25 <- wind_exposure_25 %>%
+        select(storm_id, fips) %>%
+        mutate(wind_exposed_25 = 1)
+
+all_exp <- dist_exp %>%
+        full_join(dist_exp_75, by = c("storm_id", "fips")) %>%
+        full_join(dist_exp_50, by = c("storm_id", "fips")) %>%
+        full_join(rain_exp, by = c("storm_id", "fips")) %>%
+        full_join(rain_exp_125, by = c("storm_id", "fips")) %>%
+        full_join(rain_exp_175, by = c("storm_id", "fips")) %>%
+        full_join(wind_exp, by = c("storm_id", "fips")) %>%
+        full_join(wind_exp_20, by = c("storm_id", "fips")) %>%
+        full_join(wind_exp_25, by = c("storm_id", "fips")) %>%
+        gather(metric, exposure, -storm_id, -fips) %>%
+        mutate(exposure = !is.na(exposure)) 
+      
+flood_exposure <- county_events(counties = my_fips,
+                              start_year = 1996, end_year = 2011,
+                              event_type = "flood")
+tornado_exposure <- county_events(counties = my_fips,
+                              start_year = 1996, end_year = 2011,
+                              event_type = "tornado")
+
+flood_exp <- flood_exposure %>%
+        select(storm_id, fips) %>%
+        mutate(flood_exposed = 1)
+tornado_exp <- tornado_exposure %>%
+        select(storm_id, fips) %>%
+        mutate(tornado_exposed = 1)
+
+all_exp_2 <- flood_exp %>%
+        full_join(tornado_exp, by = c("storm_id", "fips")) %>%
+        gather(metric, exposure, -storm_id, -fips) %>%
+        mutate(exposure = !is.na(exposure),
+               storm_id = as.character(storm_id))  %>%
+        dplyr::group_by(storm_id, metric) %>%
+        dplyr::summarize(n_exposed = sum(exposure)) %>%
+        dplyr::ungroup() %>%
+        dplyr::group_by(metric) %>%
+        dplyr::summarize(median_exposure = median(n_exposed),
+                         iqr_exposure = paste(quantile(n_exposed, c(0.25, 0.75)),
+                                              collapse = ", "), 
+                         median_exposure = paste0(median_exposure, " (",
+                                                  iqr_exposure, ")"),
+                         max_exposure = max(n_exposed),
+                         which_max_exposure = storm_id[which.max(n_exposed)],
+                         which_max_exposure = gsub("-", ", ", which_max_exposure),
+                         max_exposure = paste0(max_exposure, " (",
+                                               which_max_exposure, ")"), 
+                         n_100_plus = sum(n_exposed >= 100) / 10) %>%
+        dplyr::select(-iqr_exposure, -which_max_exposure)
+  
+all_exp %>%
+        dplyr::group_by(storm_id, metric) %>%
+        dplyr::summarize(n_exposed = sum(exposure)) %>%
+        dplyr::ungroup() %>%
+        dplyr::group_by(metric) %>%
+        dplyr::summarize(median_exposure = median(n_exposed),
+                         iqr_exposure = paste(quantile(n_exposed, c(0.25, 0.75)),
+                                              collapse = ", "), 
+                         median_exposure = paste0(median_exposure, " (",
+                                                  iqr_exposure, ")"),
+                         max_exposure = max(n_exposed),
+                         which_max_exposure = storm_id[which.max(n_exposed)],
+                         which_max_exposure = gsub("-", ", ", which_max_exposure),
+                         max_exposure = paste0(max_exposure, " (",
+                                               which_max_exposure, ")"), 
+                         n_100_plus = sum(n_exposed >= 100) / 10) %>%
+        dplyr::select(-iqr_exposure, -which_max_exposure) %>%
+        rbind(all_exp_2) %>%
+        dplyr::mutate(metric = c("Distance (100 km or less)",
+                                 "Distance (75 km or less)",
+                                 "Distance (50 km or less)",
+                                 "Rainfall (75 mm or more)",
+                                 "Rainfall (125 mm or more)",
+                                 "Rainfall (175 mm or more)",
+                                 "Wind (15 m/s or more)",
+                                 "Wind (20 m/s or more)",
+                                 "Wind (25 m/s or more)",
+                                 "Flood event",
+                                 "Tornado event")) %>%
+        xtable(caption = "County-level exposure statistics for different exposure metrics",
+               label = "tab:num_counties_exposed",
+               digits = c(0, 0, 0, 0, 1)) %>%
+        print(include.rownames = FALSE, floating = TRUE,
+              table.placement = "p", caption.placement = "top", 
+              booktabs = TRUE, comment = FALSE, timestamp = NULL)
 ```
 
 We first investigated whether different exposure metrics resulted in similar numbers of counties classified as "exposed" to a storm (Figure \ref{fig:county_number_cor}, Table \ref{tab:county_number}).
