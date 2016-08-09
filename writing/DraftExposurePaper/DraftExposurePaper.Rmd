@@ -877,6 +877,121 @@ map_total_hits(tornado_exposure, my_fips = my_fips,
                start_year = 1996, end_year = 2011)
 ```
 
+Here are time trends for some different metrics: 
+
+```{r echo = FALSE}
+tornado_events <- county_events(counties = my_fips, event_type = "tornado",
+                                start_year = 1988, end_year = 2011) %>%
+        dplyr::group_by(storm_id) %>%
+        dplyr::summarize(n_counties = n()) %>%
+        dplyr::mutate(year = as.numeric(gsub(".+-", "", storm_id)))
+
+tornado_year_mean <- tornado_events %>%
+        dplyr::group_by(year) %>%
+        dplyr::summarize(year_mean = mean(n_counties),
+                         year_tot = sum(n_counties))
+
+a <- ggplot(tornado_events, aes(x = year, y = n_counties)) + 
+        geom_point(alpha = 0.5) + 
+        geom_line(data = tornado_year_mean, aes(y = year_tot), 
+                   color = "blue", alpha = 0.2, size = 1) + 
+        geom_point(data = tornado_year_mean, aes(y = year_tot), 
+                   color = "blue", alpha = 0.2, size = 3) + 
+        theme_few() + 
+        xlab("Year") + ylab("Number of exposed counties")+ 
+        ggtitle("Patterns in county exposure to tornado events")
+
+
+flood_events <- county_events(counties = my_fips, event_type = "flood",
+                                start_year = 1988, end_year = 2011) %>%
+        dplyr::group_by(storm_id) %>%
+        dplyr::summarize(n_counties = n()) %>%
+        dplyr::mutate(year = as.numeric(gsub(".+-", "", storm_id)))
+
+flood_year_mean <- flood_events %>%
+        dplyr::group_by(year) %>%
+        dplyr::summarize(year_mean = mean(n_counties),
+                         year_tot = sum(n_counties))
+
+b <- ggplot(flood_events, aes(x = year, y = n_counties)) + 
+        geom_point(alpha = 0.5) + 
+        geom_line(data = flood_year_mean, aes(y = year_tot), 
+                  color = "blue", alpha = 0.2, size = 1) + 
+        geom_point(data = flood_year_mean, aes(y = year_tot), 
+                   color = "blue", alpha = 0.2, size = 3) + 
+        theme_few() + 
+        xlab("Year") + ylab("Number of exposed counties") + 
+        ggtitle("Patterns in county exposure to flood events")
+
+rain_events <- county_rain(counties = my_fips, rain_limit = 75, dist_limit = 500,
+                              start_year = 1988, end_year = 2011) %>%
+        dplyr::group_by(storm_id) %>%
+        dplyr::summarize(n_counties = n()) %>%
+        dplyr::mutate(year = as.numeric(gsub(".+-", "", storm_id)))
+
+rain_year_mean <- rain_events %>%
+        dplyr::group_by(year) %>%
+        dplyr::summarize(year_mean = mean(n_counties),
+                         year_tot = sum(n_counties))
+
+c <- ggplot(rain_events, aes(x = year, y = n_counties)) + 
+        geom_point(alpha = 0.5) + 
+        geom_line(data = rain_year_mean, aes(y = year_tot), 
+                  color = "blue", alpha = 0.2, size = 1) + 
+        geom_point(data = rain_year_mean, aes(y = year_tot), 
+                   color = "blue", alpha = 0.2, size = 3) + 
+        theme_few() + 
+        xlab("Year") + ylab("Number of exposed counties") + 
+        ggtitle("Patterns in county exposure to rain")
+
+
+wind_events <- county_wind(counties = my_fips, wind_limit = 15, 
+                           start_year = 1988, end_year = 2011) %>%
+        dplyr::group_by(storm_id) %>%
+        dplyr::summarize(n_counties = n()) %>%
+        dplyr::mutate(year = as.numeric(gsub(".+-", "", storm_id)))
+
+wind_year_mean <- wind_events %>%
+        dplyr::group_by(year) %>%
+        dplyr::summarize(year_mean = mean(n_counties),
+                         year_tot = sum(n_counties))
+
+d <- ggplot(wind_events, aes(x = year, y = n_counties)) + 
+        geom_point(alpha = 0.5) + 
+        geom_line(data = wind_year_mean, aes(y = year_tot), 
+                  color = "blue", alpha = 0.2, size = 1) + 
+        geom_point(data = wind_year_mean, aes(y = year_tot), 
+                   color = "blue", alpha = 0.2, size = 3) + 
+        theme_few() + 
+        xlab("Year") + ylab("Number of exposed counties") + 
+        ggtitle("Patterns in county exposure to wind")
+
+
+
+distance_events <- county_distance(counties = my_fips, dist_limit = 100, 
+                           start_year = 1988, end_year = 2011) %>%
+        dplyr::group_by(storm_id) %>%
+        dplyr::summarize(n_counties = n()) %>%
+        dplyr::mutate(year = as.numeric(gsub(".+-", "", storm_id)))
+
+distance_year_mean <- distance_events %>%
+        dplyr::group_by(year) %>%
+        dplyr::summarize(year_mean = mean(n_counties),
+                         year_tot = sum(n_counties))
+
+e <- ggplot(distance_events, aes(x = year, y = n_counties)) + 
+        geom_point(alpha = 0.5) + 
+        geom_line(data = distance_year_mean, aes(y = year_tot), 
+                  color = "blue", alpha = 0.2, size = 1) + 
+        geom_point(data = distance_year_mean, aes(y = year_tot), 
+                   color = "blue", alpha = 0.2, size = 3) + 
+        theme_few() + 
+        xlab("Year") + ylab("Number of exposed counties") + 
+        ggtitle("Patterns in county exposure to distance")
+
+grid.arrange(a, c, d, e, ncol = 1)
+```
+
 We assessed some statistics on the number of counties exposed to storms under different exposure metrics (Table \ref{tab:num_counties_exposed}).
 
 ```{r echo = FALSE, results = "asis"}
