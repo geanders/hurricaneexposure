@@ -155,8 +155,7 @@ wind_exposure <- function(locations, start_year, end_year,
         locs <- as.character(unique(df$loc))
 
         for(i in 1:length(locs)){
-                out_df <- dplyr::filter_(df, ~ loc == locs[i]) %>%
-                        dplyr::select_('-loc')
+                out_df <- dplyr::filter_(df, ~ loc == locs[i])
                 out_file <- paste0(out_dir, "/", locs[i], ".", out_type)
                 if(out_type == "rds"){
                         saveRDS(out_df, file = out_file)
