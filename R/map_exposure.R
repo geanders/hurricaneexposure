@@ -67,7 +67,7 @@ default_map <- function(){
 #'
 #' @examples
 #' map_tracks(storms = "Sandy-2012")
-#' map_tracks(storms = "Floyd-1999", plot_points = FALSE)
+#' map_tracks(storms = "Floyd-1999", plot_points = TRUE)
 #' a <- map_tracks(storms = "Sandy-2012")
 #' b <- map_tracks(storms = "Floyd-1999", plot_object = a, plot_points = FALSE)
 #' b
@@ -75,7 +75,7 @@ default_map <- function(){
 #' @importFrom dplyr %>%
 map_tracks <- function(storms, plot_object = NULL,
                       padding = 2,
-                      plot_points = TRUE,
+                      plot_points = FALSE,
                       alpha = 1,
                       color = "firebrick"){
         if(is.null(plot_object)){
