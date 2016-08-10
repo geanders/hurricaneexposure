@@ -4,7 +4,7 @@
 \alias{map_tracks}
 \title{Plot Atlantic basin hurricane tracks}
 \usage{
-map_tracks(storms, plot_object = NULL, padding = 2, plot_points = TRUE,
+map_tracks(storms, plot_object = NULL, padding = 2, plot_points = FALSE,
   alpha = 1, color = "firebrick")
 }
 \arguments{
@@ -40,9 +40,10 @@ Plot the tracks of any selected storms in the hurricane tracking
 }
 \examples{
 map_tracks(storms = "Sandy-2012")
-map_tracks(storms = "Floyd-1999", plot_points = FALSE)
-a <- map_tracks(storms = "Sandy-2012")
-b <- map_tracks(storms = "Floyd-1999", plot_object = a, plot_points = FALSE)
+map_tracks(storms = "Floyd-1999", plot_points = TRUE)
+map_tracks(storms = c("Sandy-2012", "Floyd-1999"))
+a <- map_tracks(storms = "Sandy-2012", color = "blue", alpha = 0.3)
+b <- map_tracks(storms = "Floyd-1999", plot_object = a)
 b
 
 }

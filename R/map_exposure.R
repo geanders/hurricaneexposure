@@ -68,8 +68,9 @@ default_map <- function(){
 #' @examples
 #' map_tracks(storms = "Sandy-2012")
 #' map_tracks(storms = "Floyd-1999", plot_points = TRUE)
-#' a <- map_tracks(storms = "Sandy-2012")
-#' b <- map_tracks(storms = "Floyd-1999", plot_object = a, plot_points = FALSE)
+#' map_tracks(storms = c("Sandy-2012", "Floyd-1999"))
+#' a <- map_tracks(storms = "Sandy-2012", color = "blue", alpha = 0.3)
+#' b <- map_tracks(storms = "Floyd-1999", plot_object = a)
 #' b
 #'
 #' @importFrom dplyr %>%
@@ -87,14 +88,21 @@ map_tracks <- function(storms, plot_object = NULL,
                          MARGIN = 2,
                          function(x) range(x) + c(-1, 1) * padding)
         tracks <- hurricaneexposuredata::hurr_tracks %>%
-                dplyr::select_(~ latitude, ~ longitude, ~ storm_id) %>%
+                dplyr::select_(~ latitude, ~ longitude, ~ storm_id,
+                               ~ date) %>%
                 dplyr::filter_(~ as.character(storm_id) %in% storms &
                               longitude > map_dim[1, 1] &
                               longitude < map_dim[2, 1] &
                               latitude > map_dim[1, 2] &
-                              latitude < map_dim[2, 2])
+                              latitude < map_dim[2, 2]) %>%
+                dplyr::mutate_(date = ~ lubridate::ymd_hm(date))
+
+        splt_tracks <- split(tracks, tracks$storm_id)
+        full_tracks <- lapply(splt_tracks, interp_track)
+        full_tracks <- do.call("rbind", full_tracks)
+
         out <- plot_object +
-                        ggplot2::geom_path(data = tracks,
+                        ggplot2::geom_path(data = full_tracks,
                                            ggplot2::aes_(x = ~ longitude,
                                                         y = ~ latitude,
                                                         group = ~ storm_id),
@@ -109,6 +117,43 @@ map_tracks <- function(storms, plot_object = NULL,
                                                     alpha = alpha)
         }
         return(out)
+}
+
+#' Interpolate a storm track
+#'
+#' This function takes a wider-spaced storm track (e.g., every 6 hours) and
+#' interpolates to a finer interval (e.g., every 15 minutes). To do this, it
+#' fits GLMs of latitude and longitude regressed on natural cubic splines of
+#' date-time, and then predicts these splines to new intervals. These
+#' splines use degrees of freedom equal to the number of original observations
+#' divided by two.
+#'
+#' @param track A dataframe with hurricane track data for a single storm
+#' @param tint A numeric vector giving the time interval to impute to, in units
+#'    of hours (e.g., 0.25, the default, interpolates to 15 minute-intervals).
+#'
+#' @return A dataframe with hurricane track data for a single storm,
+#'    interpolated to the interval specified by \code{tint}.
+interp_track <- function(track, tint = 0.25){
+        interp_df <- floor(nrow(track) / 2)
+        interp_date <- seq(from = min(track$date),
+                           to = max(track$date),
+                           by = 900) # interpolate to 15 minutes
+        interp_date <- data.frame(date = interp_date)
+
+        lat_spline <- stats::glm(latitude ~ splines::ns(date, df = interp_df),
+                                 data = track)
+        interp_lat <- stats::predict.glm(lat_spline,
+                                         newdata = as.data.frame(interp_date))
+        lon_spline <- stats::glm(longitude ~ splines::ns(date, df = interp_df),
+                                 data = track)
+        interp_lon <- stats::predict.glm(lon_spline, newdata = interp_date)
+
+        full_track <- data.frame(storm_id = track$storm_id[1],
+                                 date = interp_date,
+                                 latitude = interp_lat,
+                                 longitude = interp_lon)
+        return(full_track)
 }
 
 #' Map counties
