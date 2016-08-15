@@ -44,7 +44,9 @@ county_wind <- function(counties, start_year, end_year, wind_limit,
                                          wind_limit = wind_limit,
                                          output_vars = c("storm_id", "fips",
                                                          "max_sust",
-                                                         "max_gust"))
+                                                         "max_gust")) %>%
+                dplyr::left_join(hurricaneexposuredata::closest_dist,
+                                 by = c("storm_id", "fips"))
 
         return(wind_df)
 }
@@ -86,10 +88,18 @@ multi_county_wind <- function(communities, start_year, end_year,
                                        year >= start_year &
                                        year <= end_year) %>%
                 dplyr::left_join(communities, by = "fips") %>%
+                dplyr::left_join(hurricaneexposuredata::closest_dist,
+                                 by = c("storm_id", "fips")) %>%
                 dplyr::group_by_(~ commun, ~ storm_id) %>%
-                dplyr::mutate_(max_wind = ~ max(max_sust)) %>%
+                dplyr::mutate_(max_wind = ~ max(max_sust),
+                               min_dist = ~ min(storm_dist)) %>%
                 dplyr::filter_(~ max_wind >= wind_limit) %>%
-                dplyr::summarize_(mean_wind = ~ mean(max_sust),
+                dplyr::summarize_(closest_date = ~ dplyr::first(closest_date),
+                                  local_time = ~ dplyr::first(local_time),
+                                  closest_time_utc = ~ dplyr::first(closest_time_utc),
+                                  mean_dist = ~ mean(storm_dist),
+                                  mean_wind = ~ mean(max_sust),
+                                  min_dist = ~ dplyr::first(min_dist),
                                   max_wind = ~ dplyr::first(max_wind))
         return(wind_df)
 }
