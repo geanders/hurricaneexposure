@@ -57,9 +57,8 @@ library(RColorBrewer)
 library(weathermetrics)
 library(lubridate)
 library(xtable)
-
-#devtools::install_github("ropenscilabs/rnoaa")
 library(rnoaa)
+
 #devtools::install_github("leighseverson/countyweather")
 options("noaakey" = Sys.getenv("noaakey"))
 library(countyweather)
@@ -410,7 +409,7 @@ plot_county_rain_compare <- function(ex_fips, ex_dir, ex_title,
         all_dates <- unique(check_dates$date)
         
         ex_weather <- readRDS(paste0(ex_dir, ex_fips, ".rds"))
-        ex_weather <- as.data.frame(ex_weather$averaged)
+        ex_weather <- as.data.frame(ex_weather$daily_weather)
         
         ex_weather <- ex_weather %>%
                 dplyr::filter(date %in% all_dates) %>%
@@ -421,9 +420,13 @@ plot_county_rain_compare <- function(ex_fips, ex_dir, ex_title,
         
         ex_rain <- county_rain(counties = ex_fips,
                                start_year = 1988, end_year = 2011,
-                               rain_limit = 0, dist_limit = 2000) %>%
+                               rain_limit = 0, dist_limit = 500) %>%
                 full_join(ex_weather, by = "storm_id") %>%
                 filter(!is.na(prcp) & !is.na(tot_precip))
+        
+        ave_n <- round(mean(ex_rain$ave_n, na.rm = TRUE))
+        n_storms <- nrow(ex_rain)
+        ex_title <- paste0(ex_title, "\n(", n_storms, "; ", ave_n, ")")
         
         plot_range <- range(ex_rain[ , c("prcp", "tot_precip")],
                             na.rm = TRUE)
@@ -469,7 +472,7 @@ h <- plot_county_rain_compare(ex_fips = "48201", ex_dir = "harris_data/",
                          ex_title = "Harris County, TX")
 
 i <- plot_county_rain_compare(ex_fips = "01097", ex_dir = "mobile_data/",
-                         ex_title = "Mobile County, AL", get_data = TRUE)
+                         ex_title = "Mobile County, AL")
 
 grid.arrange(a, b, c, d, e, f, g, h, i, ncol = 3)
 ```
