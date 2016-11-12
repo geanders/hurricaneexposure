@@ -31,20 +31,20 @@
 #' @examples
 #' county_wind(counties = c("22071", "51700"),
 #'             start_year = 1988, end_year = 2005,
-#'             wind_limit = 20, wind_var = "max_sust")
+#'             wind_limit = 20, wind_var = "vmax_sust")
 #'
 #' @export
 #'
 #' @importFrom dplyr %>%
 county_wind <- function(counties, start_year, end_year, wind_limit,
-                        wind_var = "max_sust"){
+                        wind_var = "vmax_sust"){
 
         wind_df <- filter_wind_data(counties = counties,
                                          year_range = c(start_year, end_year),
                                          wind_limit = wind_limit,
                                          output_vars = c("storm_id", "fips",
-                                                         "max_sust",
-                                                         "max_gust")) %>%
+                                                         "vmax_sust",
+                                                         "vmax_gust")) %>%
                 dplyr::left_join(hurricaneexposuredata::closest_dist,
                                  by = c("storm_id", "fips"))
 
@@ -91,14 +91,14 @@ multi_county_wind <- function(communities, start_year, end_year,
                 dplyr::left_join(hurricaneexposuredata::closest_dist,
                                  by = c("storm_id", "fips")) %>%
                 dplyr::group_by_(~ commun, ~ storm_id) %>%
-                dplyr::mutate_(max_wind = ~ max(max_sust),
+                dplyr::mutate_(max_wind = ~ max(vmax_sust),
                                min_dist = ~ min(storm_dist)) %>%
                 dplyr::filter_(~ max_wind >= wind_limit) %>%
                 dplyr::summarize_(closest_date = ~ dplyr::first(closest_date),
                                   local_time = ~ dplyr::first(local_time),
                                   closest_time_utc = ~ dplyr::first(closest_time_utc),
                                   mean_dist = ~ mean(storm_dist),
-                                  mean_wind = ~ mean(max_sust),
+                                  mean_wind = ~ mean(vmax_sust),
                                   min_dist = ~ dplyr::first(min_dist),
                                   max_wind = ~ dplyr::first(max_wind))
         return(wind_df)

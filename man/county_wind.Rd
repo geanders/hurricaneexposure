@@ -4,7 +4,8 @@
 \alias{county_wind}
 \title{Hurricane exposure by wind for counties}
 \usage{
-county_wind(counties, start_year, end_year, wind_limit, wind_var = "max_sust")
+county_wind(counties, start_year, end_year, wind_limit,
+  wind_var = "vmax_sust")
 }
 \arguments{
 \item{counties}{Character vector of the five-digit Federal Information
@@ -19,7 +20,7 @@ determine storm exposure.}
 wind speed (in meters per second) to use in the filter}
 
 \item{wind_var}{A character string giving the wind variable to use. Choices
-are "max_sust" (maximum sustained winds; default) or "max_gust" (maximum
+are "vmax_sust" (maximum sustained winds; default) or "vmax_gust" (maximum
 gust winds).}
 }
 \value{
@@ -55,7 +56,7 @@ Only counties in states in the eastern half of the United States can
 \examples{
 county_wind(counties = c("22071", "51700"),
             start_year = 1988, end_year = 2005,
-            wind_limit = 20, wind_var = "max_sust")
+            wind_limit = 20, wind_var = "vmax_sust")
 
 }
 

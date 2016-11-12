@@ -98,7 +98,7 @@ filter_storm_data <- function(counties = NULL, storm = NULL, year_range = NULL,
 #' @param wind_limit A numeric vector of length one giving the minimum
 #'    wind speed (in meters per second) to use in the filter
 #' @param wind_var A character string giving the wind variable to use. Choices
-#'    are "max_sust" (maximum sustained winds; default) or "max_gust" (maximum
+#'    are "vmax_sust" (maximum sustained winds; default) or "vmax_gust" (maximum
 #'    gust winds).
 #'
 #' @return A dataframe with storms filtered based on the input criteria to the
@@ -108,17 +108,14 @@ filter_storm_data <- function(counties = NULL, storm = NULL, year_range = NULL,
 #' @examples
 #' filter_wind_data(counties = c("22071", "51700"), year_range = c(1988, 2011),
 #'                  wind_limit = 20,
-#'                  output_vars = c("fips", "storm_id", "max_sust"))
-#' filter_wind_data(storm = "Floyd-1999", include_rain = TRUE,
-#'                  days_included = c(-1, 0, 1),
-#'                  output_vars = c("fips", "tot_precip"))
+#'                  output_vars = c("fips", "storm_id", "vmax_sust"))
 #'
 #' @import data.table
 #'
 #' @export
 filter_wind_data <- function(counties = NULL, storm = NULL, year_range = NULL,
                              wind_limit = NULL, output_vars = "fips",
-                             wind_var = "max_sust"){
+                             wind_var = "vmax_sust"){
         storm_winds <- data.table::data.table(hurricaneexposuredata::storm_winds)
 
         if(!is.null(counties)){
@@ -132,7 +129,7 @@ filter_wind_data <- function(counties = NULL, storm = NULL, year_range = NULL,
         if(!is.null(year_range)){
                 storm_winds <- storm_winds[ , .(storm_id,
                                                 fips,
-                                                max_gust, max_sust,
+                                                vmax_gust, vmax_sust,
                                                 year = gsub("*.+-", "", get("storm_id"))), ][
                                                         get("year") %in%
                                                                 year_range[1]:year_range[2]
@@ -140,11 +137,11 @@ filter_wind_data <- function(counties = NULL, storm = NULL, year_range = NULL,
         }
 
         if(!is.null(wind_limit)){
-                if(wind_var == "max_sust"){
-                        storm_winds <- storm_winds[get("max_sust") >=
+                if(wind_var == "vmax_sust"){
+                        storm_winds <- storm_winds[get("vmax_sust") >=
                                                            wind_limit]
-                } else if (wind_var == "max_gust"){
-                        storm_winds <- storm_winds[get("max_gust") >=
+                } else if (wind_var == "vmax_gust"){
+                        storm_winds <- storm_winds[get("vmax_gust") >=
                                                            wind_limit]
                 }
         }

@@ -63,8 +63,6 @@ default_map <- function(){
 #'    of the selected storms. This object can be printed directly or added
 #'    on to with other ggplot commands.
 #'
-#' @export
-#'
 #' @examples
 #' map_tracks(storms = "Sandy-2012")
 #' map_tracks(storms = "Floyd-1999", plot_points = TRUE)
@@ -74,6 +72,8 @@ default_map <- function(){
 #' b
 #'
 #' @importFrom dplyr %>%
+#'
+#' @export
 map_tracks <- function(storms, plot_object = NULL,
                       padding = 2,
                       plot_points = FALSE,
@@ -135,24 +135,32 @@ map_tracks <- function(storms, plot_object = NULL,
 #' @return A dataframe with hurricane track data for a single storm,
 #'    interpolated to the interval specified by \code{tint}.
 interp_track <- function(track, tint = 0.25){
-        interp_df <- floor(nrow(track) / 2)
-        interp_date <- seq(from = min(track$date),
-                           to = max(track$date),
-                           by = 900) # interpolate to 15 minutes
-        interp_date <- data.frame(date = interp_date)
 
-        lat_spline <- stats::glm(latitude ~ splines::ns(date, df = interp_df),
-                                 data = track)
-        interp_lat <- stats::predict.glm(lat_spline,
+        if(nrow(track) < 3){
+                return(track)
+        } else {
+                interp_df <- floor(nrow(track) / 2)
+                interp_date <- seq(from = min(track$date),
+                                to = max(track$date),
+                                by = 900) # interpolate to 15 minutes
+                interp_date <- data.frame(date = interp_date)
+
+                lat_spline <- stats::glm(latitude ~ splines::ns(date,
+                                                                df = interp_df),
+                                        data = track)
+                interp_lat <- stats::predict.glm(lat_spline,
                                          newdata = as.data.frame(interp_date))
-        lon_spline <- stats::glm(longitude ~ splines::ns(date, df = interp_df),
-                                 data = track)
-        interp_lon <- stats::predict.glm(lon_spline, newdata = interp_date)
+                lon_spline <- stats::glm(longitude ~ splines::ns(date,
+                                                                 df = interp_df),
+                                        data = track)
+                interp_lon <- stats::predict.glm(lon_spline,
+                                                 newdata = interp_date)
 
-        full_track <- data.frame(storm_id = track$storm_id[1],
-                                 date = interp_date,
-                                 latitude = interp_lat,
-                                 longitude = interp_lon)
+                full_track <- data.frame(storm_id = track$storm_id[1],
+                                        date = interp_date,
+                                        latitude = interp_lat,
+                                        longitude = interp_lon)
+        }
         return(full_track)
 }
 
@@ -196,8 +204,8 @@ map_counties <-function(storm, metric = "distance",
         } else if (metric == "wind") {
                 map_data <- filter_wind_data(storm = storm,
                                              output_vars = c("fips",
-                                                             "max_sust")) %>%
-                        dplyr::rename_(region = ~ fips, value = ~ max_sust)
+                                                             "vmax_sust")) %>%
+                        dplyr::rename_(region = ~ fips, value = ~ vmax_sust)
         } else{
                 stop("`metric` must be either `distance`, `rainfall`, or `wind`")
         }
@@ -348,9 +356,9 @@ map_distance_exposure <- function(storm, dist_limit){
 map_wind_exposure <- function(storm, wind_limit){
 
         map_data <- filter_wind_data(storm = storm,
-                                      output_vars = c("fips", "max_gust",
-                                                      "max_sust")) %>%
-                dplyr::mutate_(exposed = ~ max_sust >= wind_limit) %>%
+                                      output_vars = c("fips", "vmax_gust",
+                                                      "vmax_sust")) %>%
+                dplyr::mutate_(exposed = ~ vmax_sust >= wind_limit) %>%
                 dplyr::mutate_(value = ~ factor(exposed,
                                                 levels = c("FALSE", "TRUE"))) %>%
                 dplyr::mutate_(region = ~ as.numeric(fips)) %>%

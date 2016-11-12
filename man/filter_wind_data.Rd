@@ -5,7 +5,7 @@
 \title{Filter hurricane wind dataset}
 \usage{
 filter_wind_data(counties = NULL, storm = NULL, year_range = NULL,
-  wind_limit = NULL, output_vars = "fips", wind_var = "max_sust")
+  wind_limit = NULL, output_vars = "fips", wind_var = "vmax_sust")
 }
 \arguments{
 \item{counties}{A character vector listing all 5-digit county FIPS codes
@@ -23,7 +23,7 @@ wind speed (in meters per second) to use in the filter}
 in the output.}
 
 \item{wind_var}{A character string giving the wind variable to use. Choices
-are "max_sust" (maximum sustained winds; default) or "max_gust" (maximum
+are "vmax_sust" (maximum sustained winds; default) or "vmax_gust" (maximum
 gust winds).}
 }
 \value{
@@ -38,10 +38,7 @@ this package that measure wind exposure.
 \examples{
 filter_wind_data(counties = c("22071", "51700"), year_range = c(1988, 2011),
                  wind_limit = 20,
-                 output_vars = c("fips", "storm_id", "max_sust"))
-filter_wind_data(storm = "Floyd-1999", include_rain = TRUE,
-                 days_included = c(-1, 0, 1),
-                 output_vars = c("fips", "tot_precip"))
+                 output_vars = c("fips", "storm_id", "vmax_sust"))
 
 }
 
