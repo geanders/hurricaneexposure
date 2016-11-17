@@ -51,23 +51,21 @@ county_rain(counties = c("22071", "51700"),
             rain_limit = 100, dist_limit = 100,
             days_included = c(-1, 0, 1))
 #>        storm_id  fips closest_date storm_dist tot_precip       local_time
-#> 1: Allison-2001 22071   2001-06-10   27.87770      109.2 2001-06-10 20:30
-#> 2:    Bill-2003 22071   2003-06-30   41.67038      141.1 2003-06-30 11:45
-#> 3: Charley-2004 51700   2004-08-14   55.21439      136.2 2004-08-14 13:45
-#> 4:   Cindy-2005 22071   2005-07-05   29.76580      110.0 2005-07-05 20:00
-#> 5:   Floyd-1999 51700   1999-09-16   47.77641      207.5 1999-09-16 05:00
-#> 6: Isidore-2002 22071   2002-09-26   12.68783      249.0 2002-09-26 00:30
-#> 7: Katrina-2005 22071   2005-08-29   43.71121      196.2 2005-08-29 02:45
-#> 8: Matthew-2004 22071   2004-10-10   81.76565      123.2 2004-10-10 04:30
+#> 1:    Bill-2003 22071   2003-06-30   38.78412      141.1 2003-06-30 18:00
+#> 2: Charley-2004 51700   2004-08-14   43.01152      136.2 2004-08-14 19:45
+#> 3:   Cindy-2005 22071   2005-07-06   32.21758      113.2 2005-07-06 02:15
+#> 4:   Floyd-1999 51700   1999-09-16   46.50729      207.5 1999-09-16 11:15
+#> 5: Isidore-2002 22071   2002-09-26    6.37844      249.0 2002-09-26 05:45
+#> 6: Katrina-2005 22071   2005-08-29   36.88933      196.2 2005-08-29 08:45
+#> 7: Matthew-2004 22071   2004-10-10   71.76937      123.2 2004-10-10 11:00
 #>    closest_time_utc
-#> 1: 2001-06-11 01:30
-#> 2: 2003-06-30 16:45
-#> 3: 2004-08-14 17:45
-#> 4: 2005-07-06 01:00
-#> 5: 1999-09-16 09:00
-#> 6: 2002-09-26 05:30
-#> 7: 2005-08-29 07:45
-#> 8: 2004-10-10 09:30
+#> 1: 2003-06-30 23:00
+#> 2: 2004-08-14 23:45
+#> 3: 2005-07-06 07:15
+#> 4: 1999-09-16 15:15
+#> 5: 2002-09-26 10:45
+#> 6: 2005-08-29 13:45
+#> 7: 2004-10-10 16:00
 ```
 
 In addition to giving you the names and closest dates of each storm for each county (`closest_date`-- note, this is given using the UTC timezone), this function also gives you the distance between the county and the storm's track at the time when the storm was closest to the county's population weighted center (`storm_dist`, in kilometers) and the total precipitation over the included days (`tot_precip`).
@@ -127,7 +125,7 @@ map_1 <- map_counties(storm = "Floyd-1999", metric = "rainfall")
 map_1
 ```
 
-![](README-unnamed-chunk-9-1.png)
+![](README-unnamed-chunk-10-1.png)
 
 You can also use this function to plot the closest distance between the storm and each county. For this, you use the argument `metric = "distance"`.
 
@@ -136,7 +134,7 @@ map_2 <- map_counties(storm = "Sandy-2012", metric = "distance")
 map_2
 ```
 
-![](README-unnamed-chunk-10-1.png)
+![](README-unnamed-chunk-11-1.png)
 
 You can map a binary variable of distance-based exposure using `map_distance_exposure`:
 
@@ -146,7 +144,7 @@ allison_map <- map_distance_exposure(storm = "Allison-2001",
 plot(allison_map)
 ```
 
-![](README-unnamed-chunk-11-1.png)
+![](README-unnamed-chunk-12-1.png)
 
 You can also map a binary variable of rain exposure for the communities that were exposed, based on a certain rainfall limit and distance limit:
 
@@ -157,7 +155,7 @@ map_3 <- map_rain_exposure(storm = "Floyd-1999", rain_limit = 125,
 plot(map_3)
 ```
 
-![](README-unnamed-chunk-12-1.png)
+![](README-unnamed-chunk-13-1.png)
 
 ### Plotting storm tracks
 
@@ -165,13 +163,10 @@ The `map_tracks` function will map the hurricane tracks for one or more storms. 
 
 ``` r
 map_4 <- map_tracks(storms = "Floyd-1999")
-#> 
-#>  # maps v3.1: updated 'world': all lakes moved to separate new #
-#>  # 'lakes' database. Type '?world' or 'news(package="maps")'.  #
 map_4
 ```
 
-![](README-unnamed-chunk-13-1.png)
+![](README-unnamed-chunk-14-1.png)
 
 There are some different options you can use for the tracks' appearance. For example, if you wanted to plot the tracks of several storms, not plot each point when the track locations were measured (typically every six hours), and use some transparency so you can see all the lines, you can use:
 
@@ -183,7 +178,7 @@ map_5 <- map_tracks(storms = c("Floyd-1999", "Sandy-2012",
 map_5
 ```
 
-![](README-unnamed-chunk-14-1.png)
+![](README-unnamed-chunk-15-1.png)
 
 You can also add these tracks to an existing `ggplot`-created US map. You do this through the `plot_object` argument. For example, to add the storm track to the plot of distance exposure for Sandy or rain exposure for Floyd, you could run:
 
@@ -193,7 +188,7 @@ map_6 <- map_tracks(storms = "Sandy-2012", plot_object = map_2,
 map_6
 ```
 
-![](README-unnamed-chunk-15-1.png)
+![](README-unnamed-chunk-16-1.png)
 
 ``` r
 map_7 <- map_tracks(storms = "Floyd-1999", plot_object = map_3,
@@ -201,4 +196,4 @@ map_7 <- map_tracks(storms = "Floyd-1999", plot_object = map_3,
 map_7
 ```
 
-![](README-unnamed-chunk-16-1.png)
+![](README-unnamed-chunk-17-1.png)

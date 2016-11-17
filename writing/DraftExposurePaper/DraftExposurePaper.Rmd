@@ -390,7 +390,8 @@ plot_county_rain_compare <- function(ex_fips, ex_dir, ex_title,
                                   date_min = "1988-01-01",
                                   date_max = "2011-12-31",
                                   var = "PRCP",
-                                  out_directory = ex_dir)
+                                  out_directory = ex_dir,
+                                  keep_map = FALSE)
         }
         
         check_dates <- closest_dist %>%
@@ -429,7 +430,7 @@ plot_county_rain_compare <- function(ex_fips, ex_dir, ex_title,
         ave_n <- round(mean(ex_rain$ave_n, na.rm = TRUE))
         n_storms <- nrow(ex_rain)
         ex_title <- paste0(ex_title, "\n(storms: ", n_storms,
-                           "; monitors:", ave_n, ")")
+                           "; monitors: ", ave_n, ")")
         
         plot_range <- range(ex_rain[ , c("prcp", "tot_precip")],
                             na.rm = TRUE)
@@ -450,32 +451,41 @@ plot_county_rain_compare <- function(ex_fips, ex_dir, ex_title,
 }
 
 a <- plot_county_rain_compare(ex_fips = "12086", ex_dir = "dade_data/",
-                         ex_title = "Miami-Dade, FL")
+                         ex_title = "Miami-Dade, FL",
+                         get_data = FALSE)
 
 b <- plot_county_rain_compare(ex_fips = "22071", ex_dir = "orleans_data/",
-                         ex_title = "Orleans Parish, LA")
+                         ex_title = "Orleans Parish, LA",
+                         get_data = FALSE)
 
 c <- plot_county_rain_compare(ex_fips = "45019", ex_dir = "charleston_data/",
-                         ex_title = "Charleston County, SC")
+                         ex_title = "Charleston County, SC",
+                         get_data = FALSE)
 
 d <- plot_county_rain_compare(ex_fips = "37183", ex_dir = "wake_data/",
-                         ex_title = "Wake County, NC")
+                         ex_title = "Wake County, NC",
+                         get_data = FALSE)
 
 e <- plot_county_rain_compare(ex_fips = "13121", ex_dir = "fulton_data/",
-                         ex_title = "Fulton County, GA")
+                         ex_title = "Fulton County, GA",
+                         get_data = FALSE)
 
 f <- plot_county_rain_compare(ex_fips = "24005", ex_dir = "baltimore_data/",
-                         ex_title = "Baltimore County, MD")
+                         ex_title = "Baltimore County, MD",
+                         get_data = FALSE)
 
 g <- plot_county_rain_compare(ex_fips = "42101",
                               ex_dir = "philadelphia_data/",
-                         ex_title = "Philadelphia County, PA")
+                         ex_title = "Philadelphia County, PA",
+                         get_data = FALSE)
 
 h <- plot_county_rain_compare(ex_fips = "48201", ex_dir = "harris_data/",
-                         ex_title = "Harris County, TX")
+                         ex_title = "Harris County, TX",
+                         get_data = FALSE)
 
 i <- plot_county_rain_compare(ex_fips = "01097", ex_dir = "mobile_data/",
-                         ex_title = "Mobile County, AL")
+                         ex_title = "Mobile County, AL",
+                         get_data = FALSE)
 
 grid.arrange(a, b, c, d, e, f, g, h, i, ncol = 3)
 ```
@@ -483,8 +493,6 @@ grid.arrange(a, b, c, d, e, f, g, h, i, ncol = 3)
 Next, we looked at several different counties within a few notable storms, to compare county-averaged ground-based monitor values with our estimates (Figure \ref{fig:county_ave_comparison}). These storms were picked based on storms that had a large number of ground-based precipitation observations in either the main text or supplemental material of the *Monthly Weather Review* report.
 
 ```{r echo = FALSE, eval = FALSE}
-options("noaakey" = Sys.getenv("noaakey"))
-
 allison_gauge <- read.csv("MWR_gauge_rain_data/allison_mwr.csv") 
 allison_fips <- sprintf("%05s", as.character(unique(allison_gauge$fips)))
 # allison_fips <- sample(allison_fips, 10)
@@ -492,10 +500,11 @@ date_range <- closest_dist %>%
         filter(storm_id == "Allison-2001") %>%
         summarize(earliest_date = min(ymd(closest_date)) - ddays(2),
                   latest_date = max(ymd(closest_date)) + ddays(2))
-county_timeseries(allison_fips, percent_coverage = 0,
+daily_timeseries(allison_fips, coverage = 0,
                   date_min = format(date_range[1, 1], "%Y-%m-%d"),
                   date_max = format(date_range[1, 2], "%Y-%m-%d"),
-                  var = "PRCP", out_directory = "county_ave/allison/")
+                  var = "PRCP", out_directory = "county_ave/allison/",
+                 keep_map = FALSE)
 
 load("MWR_gauge_rain_data/frances_gauge.RData")
 frances_fips <- sprintf("%05s", as.character(unique(frances_gauge$fips)))
@@ -504,10 +513,11 @@ date_range <- closest_dist %>%
         filter(storm_id == "Frances-2004") %>%
         summarize(earliest_date = min(ymd(closest_date)) - ddays(2),
                   latest_date = max(ymd(closest_date)) + ddays(2))
-county_timeseries(frances_fips, percent_coverage = 0,
+daily_timeseries(frances_fips, coverage = 0,
                   date_min = format(date_range[1, 1], "%Y-%m-%d"),
                   date_max = format(date_range[1, 2], "%Y-%m-%d"),
-                  var = "PRCP", out_directory = "county_ave/frances/")
+                  var = "PRCP", out_directory = "county_ave/frances/",
+                 keep_map = FALSE)
 
 load("MWR_gauge_rain_data/ike_gauge.RData")
 ike_fips <- sprintf("%05s", as.character(unique(ike_gauge$fips)))
@@ -516,10 +526,11 @@ date_range <- closest_dist %>%
         filter(storm_id == "Ike-2008") %>%
         summarize(earliest_date = min(ymd(closest_date)) - ddays(2),
                   latest_date = max(ymd(closest_date)) + ddays(2))
-county_timeseries(ike_fips, percent_coverage = 0,
+daily_timeseries(ike_fips, coverage = 0,
                   date_min = format(date_range[1, 1], "%Y-%m-%d"),
                   date_max = format(date_range[1, 2], "%Y-%m-%d"),
-                  var = "PRCP", out_directory = "county_ave/ike/")
+                  var = "PRCP", out_directory = "county_ave/ike/",
+                 keep_map = FALSE)
 
 load("MWR_gauge_rain_data/alex_gauge.RData")
 alex_fips <- sprintf("%05s", as.character(unique(alex_gauge$fips)))
@@ -528,10 +539,11 @@ date_range <- closest_dist %>%
         filter(storm_id == "Alex-2010") %>%
         summarize(earliest_date = min(ymd(closest_date)) - ddays(2),
                   latest_date = max(ymd(closest_date)) + ddays(2))
-county_timeseries(alex_fips, percent_coverage = 0,
+daily_timeseries(alex_fips, coverage = 0,
                   date_min = format(date_range[1, 1], "%Y-%m-%d"),
                   date_max = format(date_range[1, 2], "%Y-%m-%d"),
-                  var = "PRCP", out_directory = "county_ave/alex/")
+                  var = "PRCP", out_directory = "county_ave/alex/",
+                 keep_map = FALSE)
 ```
 
 ```{r county_ave_comparison, echo = FALSE, fig.width = 10, fig.height = 10, fig.align = "center", fig.cap = "Comparison of county-level average cumulative rainfall for the period from two days before to one day after the storm's closest approach to a county, using NLDAS-2 versus ground-based monitors, for counties with both estimates available for four example storms. The size of each point indicates the average number of monitors reporting from that county during the window (larger size indicates more monitors). The text over each point gives the FIPS county identifier."}
@@ -542,6 +554,9 @@ plot_county_ave_compare <- function(county_dir, storm_id){
         storm_year <- gsub(".+-", "", storm_id)
         counties <- gsub(".rds", "",
                          list.files(paste0("county_ave/", county_dir)))
+        if(county_dir == "frances"){
+                counties <- counties[counties != "51019"] # Missing all data
+        }
         
         storm_ave <- vector("list", length = length(counties))
         names(storm_ave) <- counties
@@ -549,9 +564,9 @@ plot_county_ave_compare <- function(county_dir, storm_id){
         for(x in counties){
                 county_weather <- readRDS(paste0("county_ave/", 
                                                  county_dir, "/", x,
-                                                 ".rds"))$averaged %>%
-                        dplyr::ungroup() %>%
-                        dplyr::mutate(date = ymd(date)) %>%
+                                                 ".rds"))$daily_data %>%
+                        dplyr::mutate(date = ymd(date),
+                                      prcp = prcp / 10) %>%
                         dplyr::mutate(fips = x)
                 storm_ave[[x]] <- county_weather
                 }
@@ -571,7 +586,8 @@ plot_county_ave_compare <- function(county_dir, storm_id){
                 dplyr::summarize(monitor_rain = sum(prcp),
                   tot_precip = first(tot_precip),
                   prcp_reporting = mean(prcp_reporting))
-        plot_range <- range(county_ave[ , c("monitor_rain", "tot_precip")]) + 
+        plot_range <- range(county_ave[ , c("monitor_rain", "tot_precip")], 
+                            na.rm = TRUE) + 
                 c(-15, 15)
         
         county_ave_plot <- ggplot(county_ave, 
@@ -604,7 +620,8 @@ alex_county_ave <- plot_county_ave_compare("alex",
                                            storm_id = "Alex-2010")
 
 
-grid.arrange(allison_county_ave, frances_county_ave,
+grid.arrange(allison_county_ave,
+             frances_county_ave,
              ike_county_ave, alex_county_ave, ncol = 2)
 ```
 
@@ -1950,6 +1967,247 @@ grid.arrange(a, b, c, d, e,
              p, q, r, s, t, 
              u, v, w, x, y,
              ncol = 5)
+```
+
+
+```{r pareto_1, echo = FALSE, fig.width = 10, fig.height = 8, fig.align = "center", fig.cap = "Number of total county exposures summed across percentile bins of storms"}
+my_pareto_1 <- function(data, title = "Rain exposure"){
+        data <- data %>%
+                select(storm_id, fips) %>%
+                group_by(storm_id) %>%
+                summarize(n = n()) %>%
+                mutate(cat = ntile(n, 10)) %>%
+                group_by(cat) %>%
+                summarize(n = sum(n)) %>%
+                ungroup() %>%
+                arrange(desc(n)) %>%
+                mutate(cumulative = cumsum(n),
+                       group = 1:n(),
+                       cat_labs = c("90-100th", "80-90th", "70-80th",
+                               "60-70th", "50-60th", "40-50th",
+                               "30-40th", "20-30th", "10-20th",
+                               "0-10th")) %>%
+                mutate(percent = paste0(round(100 * cumulative / sum(n)), "%"))
+        my_pareto_plot <- ggplot(data, aes(x = group, y = n)) + 
+                geom_bar(stat = "identity") + 
+                geom_point(aes(x = group, y = cumulative), alpha = 0.25) + 
+                geom_line(aes(x = group, y = cumulative), alpha = 0.25) + 
+                geom_text(aes(y = cumulative, label = percent), 
+                        hjust = "inward", vjust = "inward") + 
+                theme_few() + 
+                ylab("Number of\nexposed counties") + 
+                ggtitle(title) + 
+                scale_x_continuous(name = "", breaks = 1:10,
+                                labels = data$cat_labs, 
+                                trans = "reverse") +
+                coord_flip()
+        return(my_pareto_plot)
+}
+
+data <- county_distance(my_fips, start_year = 1988, end_year = 2011,
+                               dist_limit = 100) 
+a <- my_pareto_1(data, title = "Distance")
+
+data <- county_rain(my_fips, start_year = 1988, end_year = 2011,
+                               rain_limit = 75, dist_limit = 500) 
+b <- my_pareto_1(data, title = "Rain")
+
+data <- county_wind(my_fips, start_year = 1988, end_year = 2011,
+                               wind_limit = 15) 
+c <- my_pareto_1(data, title = "Wind")
+
+data <- county_events(my_fips, start_year = 1996, end_year = 2011,
+                      event_type = "flood") 
+d <- my_pareto_1(data, title = "Floods")
+
+data <- county_events(my_fips, start_year = 1996, end_year = 2011,
+                      event_type = "tornado") 
+e <- my_pareto_1(data, title = "Tornadoes")
+
+grid.arrange(a, b, c, d, e, nrow = 2)
+```
+
+
+
+```{r pareto_2, echo = FALSE, fig.width = 10, fig.height = 8, fig.align = "center", fig.cap = "Number of total storm hits summed across percentile bins of counties"}
+my_pareto_2 <- function(data, title = "Rain exposure"){
+        data <- data %>%
+                select(storm_id, fips) %>%
+                group_by(fips) %>%
+                summarize(n = n()) %>%
+                mutate(cat = ntile(n, 10)) %>%
+                group_by(cat) %>%
+                summarize(n = sum(n)) %>%
+                ungroup() %>%
+                arrange(desc(n)) %>%
+                mutate(cumulative = cumsum(n),
+                       group = 1:n(),
+                       cat_labs = c("90-100th", "80-90th", "70-80th",
+                               "60-70th", "50-60th", "40-50th",
+                               "30-40th", "20-30th", "10-20th",
+                               "0-10th")) %>%
+                mutate(percent = paste0(round(100 * cumulative / sum(n)), "%"))
+        my_pareto_plot <- ggplot(data, aes(x = group, y = n)) + 
+                geom_bar(stat = "identity") + 
+                geom_point(aes(x = group, y = cumulative), alpha = 0.25) + 
+                geom_line(aes(x = group, y = cumulative), alpha = 0.25) + 
+                geom_text(aes(y = cumulative, label = percent), 
+                        hjust = "inward", vjust = "inward") + 
+                theme_few() + 
+                ylab("Number of storm hits") + 
+                ggtitle(title) + 
+                scale_x_continuous(name = "", breaks = 1:10,
+                                labels = data$cat_labs, 
+                                trans = "reverse") +
+                coord_flip()
+        return(my_pareto_plot)
+}
+
+data <- county_distance(my_fips, start_year = 1988, end_year = 2011,
+                               dist_limit = 100) 
+a <- my_pareto_2(data, title = "Distance")
+
+data <- county_rain(my_fips, start_year = 1988, end_year = 2011,
+                               rain_limit = 75, dist_limit = 500) 
+b <- my_pareto_2(data, title = "Rain")
+
+data <- county_wind(my_fips, start_year = 1988, end_year = 2011,
+                               wind_limit = 15) 
+c <- my_pareto_2(data, title = "Wind")
+
+data <- county_events(my_fips, start_year = 1996, end_year = 2011,
+                      event_type = "flood") 
+d <- my_pareto_2(data, title = "Floods")
+
+data <- county_events(my_fips, start_year = 1996, end_year = 2011,
+                      event_type = "tornado") 
+e <- my_pareto_2(data, title = "Tornadoes")
+
+grid.arrange(a, b, c, d, e, nrow = 2)
+```
+
+```{r power_1, echo = FALSE, fig.width = 10, fig.height = 8, fig.align = "center", fig.cap = "Distribution of number of exposed counties by rank of storm"}
+my_power_1 <- function(data, title){
+        data <- data %>%
+                select(storm_id, fips) %>%
+                group_by(storm_id) %>%
+                summarize(n = n()) %>%
+                ungroup() %>%
+                arrange(desc(n)) %>%
+                mutate(rank = 1:n())
+        power_plot <- ggplot(data, aes(x = rank, y = n)) + 
+                geom_point(alpha = 0.5) + 
+                scale_y_continuous(trans = "log", breaks = c(1, 10, 100)) + 
+                theme_few() + 
+                ggtitle(title) + 
+                xlab("Rank of storm") + ylab("# of counties exposed")
+        return(power_plot)
+}
+        
+data <- county_distance(my_fips, start_year = 1988, end_year = 2011,
+                               dist_limit = 100) 
+a <- my_power_1(data, title = "Distance")
+
+data <- county_rain(my_fips, start_year = 1988, end_year = 2011,
+                               rain_limit = 75, dist_limit = 500) 
+b <- my_power_1(data, title = "Rain")
+
+data <- county_wind(my_fips, start_year = 1988, end_year = 2011,
+                               wind_limit = 15) 
+c <- my_power_1(data, title = "Wind")
+
+data <- county_events(my_fips, start_year = 1996, end_year = 2011,
+                      event_type = "flood") 
+d <- my_power_1(data, title = "Floods")
+
+data <- county_events(my_fips, start_year = 1996, end_year = 2011,
+                      event_type = "tornado") 
+e <- my_power_1(data, title = "Tornadoes")
+
+grid.arrange(a, b, c, d, e, nrow = 2)
+```
+
+
+
+```{r power_2, echo = FALSE, fig.width = 10, fig.height = 8, fig.align = "center", fig.cap = "Distribution of number of storm hits by rank of county"}
+my_power_2 <- function(data, title){
+        data <- data %>%
+                select(storm_id, fips) %>%
+                group_by(fips) %>%
+                summarize(n = n()) %>%
+                ungroup() %>%
+                arrange(desc(n)) %>%
+                mutate(rank = 1:n())
+        power_plot <- ggplot(data, aes(x = rank, y = n)) + 
+                geom_point(alpha = 0.5) + 
+                scale_y_continuous(trans = "log", breaks = c(1, 10, 100)) + 
+                theme_few() + 
+                ggtitle(title) + 
+                xlab("Rank of county") + ylab("# of storm hits")
+        return(power_plot)
+}
+        
+data <- county_distance(my_fips, start_year = 1988, end_year = 2011,
+                               dist_limit = 100) 
+a <- my_power_2(data, title = "Distance")
+
+data <- county_rain(my_fips, start_year = 1988, end_year = 2011,
+                               rain_limit = 75, dist_limit = 500) 
+b <- my_power_2(data, title = "Rain")
+
+data <- county_wind(my_fips, start_year = 1988, end_year = 2011,
+                               wind_limit = 15) 
+c <- my_power_2(data, title = "Wind")
+
+data <- county_events(my_fips, start_year = 1996, end_year = 2011,
+                      event_type = "flood") 
+d <- my_power_2(data, title = "Floods")
+
+data <- county_events(my_fips, start_year = 1996, end_year = 2011,
+                      event_type = "tornado") 
+e <- my_power_2(data, title = "Tornadoes")
+
+grid.arrange(a, b, c, d, e, nrow = 2)
+```
+
+```{r message = FALSE}
+all_storm_counties <- closest_dist %>%
+        dplyr::select(storm_id, fips)
+metric_a <- county_rain(my_fips, start_year = 1988, end_year = 2011,
+                               rain_limit = 75, dist_limit = 500) %>%
+        select(storm_id, fips) %>%
+        mutate(exposed_a = 1)
+metric_b <- county_wind(my_fips, start_year = 1988, end_year = 2011,
+                               wind_limit = 15) %>%
+        select(storm_id, fips) %>%
+        mutate(exposed_b = 1)
+two_metrics <- metric_a %>%
+        full_join(metric_b, by = c("storm_id", "fips")) %>%
+        full_join(all_storm_counties, by = c("storm_id", "fips")) %>%
+        mutate(exposed_a = ifelse(is.na(exposed_a), 0, 1),
+               exposed_b = ifelse(is.na(exposed_b), 0, 1)) %>%
+        group_by(storm_id) %>%
+        summarize(a = sum(exposed_a & exposed_b),
+                  b = sum(exposed_a & !exposed_b),
+                  c = sum(!exposed_a & exposed_b),
+                  d = sum(!exposed_a & !exposed_b),
+                  f1 = sum(exposed_b),
+                  f2 = sum(!exposed_b),
+                  g1 = sum(exposed_a),
+                  g2 = sum(!exposed_a),
+                  n = n(),
+                  no_exposure = a + b + c == 0,
+                  prev = abs(a - d) / n,
+                  bias = abs(b - c) / n,
+                  prop_agree = (a + d) / n,
+                  exp_agree = (f1 * g1 + f2 * g2) / n^2,
+                  kappa = (prop_agree - exp_agree) / 
+                                         (1 - exp_agree),
+                  kappa = ifelse(is.nan(kappa) | is.infinite(kappa),
+                                 0, kappa))
+
+ggplot(two_metrics, aes(x = kappa, fill = no_exposure)) + 
+        geom_histogram(color = "black")
 ```
 
 
