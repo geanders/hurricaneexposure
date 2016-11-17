@@ -40,21 +40,27 @@ library(hurricaneexposuredata)
 library(hurricaneexposure)
 ```
 
-Once you've loaded the dataframe, you can load the included data using the `data` function. For example:
+The following datasets are included with the `hurricaneexposuredata` package: 
+
+- `closest_dist`: A dataframe that gives the distance and date-time for the closest approach of each tropical storm to the mean population center of each US county in states in the eastern half of the United States.
+- `county_centers`: A dataset containing the latitude and longitude of the center of population of every United State county, based on population as of the 2010 US Census.
+- `hurr_tracks`: A dataset containing the storm tracks for Atlantic basin tropical storms between 1988 and 2012, from the Extended Best Track Dataset for the Atlantic basin.
+- `rain`: A dataframe that gives the total rainfall in US counties for a one-week window centered at the date on which the tropical storm was closest to the county for Atlantic basin storms between 1988 and 2011.
+- `storm_winds`: A dataframe that gives modeled windspeeds in US counties for all eastern US counties for Atlantic basin tropical storms between 1988 and 2011.
+- `storm_events`: A dataframe that gives county-specific severe storm events listed in US counties temporally and spatially close to storm tracks for all eastern US counties for Atlantic basin tropical storms between 1988 and 2011.
+
+Once you've loaded the `hurricaneexposuredata` package, you can load the included data using the `data` function. For example:
 
 ```{r}
 data("hurr_tracks")
 head(hurr_tracks)
 ```
 
-The following datasets are included with the package: 
+For each dataset, you can see the helpfiles for the data for more information. For example: 
 
-- `closest_dist`
-- `county_centers`
-- `hurr_tracks`
-- `rain`
-
-For each, you can see the helpfiles for the data for more information about the data included in each. 
+```{r eval = FALSE}
+?hurr_tracks
+```
 
 ## Creating time series datasets of exposure
 

@@ -13,7 +13,16 @@ library(hurricaneexposuredata)
 library(hurricaneexposure)
 ```
 
-Once you've loaded the dataframe, you can load the included data using the `data` function. For example:
+The following datasets are included with the `hurricaneexposuredata` package:
+
+-   `closest_dist`: A dataframe that gives the distance and date-time for the closest approach of each tropical storm to the mean population center of each US county in states in the eastern half of the United States.
+-   `county_centers`: A dataset containing the latitude and longitude of the center of population of every United State county, based on population as of the 2010 US Census.
+-   `hurr_tracks`: A dataset containing the storm tracks for Atlantic basin tropical storms between 1988 and 2012, from the Extended Best Track Dataset for the Atlantic basin.
+-   `rain`: A dataframe that gives the total rainfall in US counties for a one-week window centered at the date on which the tropical storm was closest to the county for Atlantic basin storms between 1988 and 2011.
+-   `storm_winds`: A dataframe that gives modeled windspeeds in US counties for all eastern US counties for Atlantic basin tropical storms between 1988 and 2011.
+-   `storm_events`: A dataframe that gives county-specific severe storm events listed in US counties temporally and spatially close to storm tracks for all eastern US counties for Atlantic basin tropical storms between 1988 and 2011.
+
+Once you've loaded the `hurricaneexposuredata` package, you can load the included data using the `data` function. For example:
 
 ``` r
 data("hurr_tracks")
@@ -27,14 +36,11 @@ head(hurr_tracks)
 #> 6 Alberto-1988 198808070000     38.7     -72.4   25
 ```
 
-The following datasets are included with the package:
+For each dataset, you can see the helpfiles for the data for more information. For example:
 
--   `closest_dist`
--   `county_centers`
--   `hurr_tracks`
--   `rain`
-
-For each, you can see the helpfiles for the data for more information about the data included in each.
+``` r
+?hurr_tracks
+```
 
 Creating time series datasets of exposure
 -----------------------------------------
@@ -125,7 +131,7 @@ map_1 <- map_counties(storm = "Floyd-1999", metric = "rainfall")
 map_1
 ```
 
-![](README-unnamed-chunk-10-1.png)
+![](README-unnamed-chunk-11-1.png)
 
 You can also use this function to plot the closest distance between the storm and each county. For this, you use the argument `metric = "distance"`.
 
@@ -134,7 +140,7 @@ map_2 <- map_counties(storm = "Sandy-2012", metric = "distance")
 map_2
 ```
 
-![](README-unnamed-chunk-11-1.png)
+![](README-unnamed-chunk-12-1.png)
 
 You can map a binary variable of distance-based exposure using `map_distance_exposure`:
 
@@ -144,7 +150,7 @@ allison_map <- map_distance_exposure(storm = "Allison-2001",
 plot(allison_map)
 ```
 
-![](README-unnamed-chunk-12-1.png)
+![](README-unnamed-chunk-13-1.png)
 
 You can also map a binary variable of rain exposure for the communities that were exposed, based on a certain rainfall limit and distance limit:
 
@@ -155,7 +161,7 @@ map_3 <- map_rain_exposure(storm = "Floyd-1999", rain_limit = 125,
 plot(map_3)
 ```
 
-![](README-unnamed-chunk-13-1.png)
+![](README-unnamed-chunk-14-1.png)
 
 ### Plotting storm tracks
 
@@ -166,7 +172,7 @@ map_4 <- map_tracks(storms = "Floyd-1999")
 map_4
 ```
 
-![](README-unnamed-chunk-14-1.png)
+![](README-unnamed-chunk-15-1.png)
 
 There are some different options you can use for the tracks' appearance. For example, if you wanted to plot the tracks of several storms, not plot each point when the track locations were measured (typically every six hours), and use some transparency so you can see all the lines, you can use:
 
@@ -178,7 +184,7 @@ map_5 <- map_tracks(storms = c("Floyd-1999", "Sandy-2012",
 map_5
 ```
 
-![](README-unnamed-chunk-15-1.png)
+![](README-unnamed-chunk-16-1.png)
 
 You can also add these tracks to an existing `ggplot`-created US map. You do this through the `plot_object` argument. For example, to add the storm track to the plot of distance exposure for Sandy or rain exposure for Floyd, you could run:
 
@@ -188,7 +194,7 @@ map_6 <- map_tracks(storms = "Sandy-2012", plot_object = map_2,
 map_6
 ```
 
-![](README-unnamed-chunk-16-1.png)
+![](README-unnamed-chunk-17-1.png)
 
 ``` r
 map_7 <- map_tracks(storms = "Floyd-1999", plot_object = map_3,
@@ -196,4 +202,4 @@ map_7 <- map_tracks(storms = "Floyd-1999", plot_object = map_3,
 map_7
 ```
 
-![](README-unnamed-chunk-17-1.png)
+![](README-unnamed-chunk-18-1.png)
