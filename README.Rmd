@@ -178,6 +178,18 @@ map_rain_exposure(storm = "Floyd-1999", rain_limit = 75,
                   dist_limit = 500, days_included = c(-1, 0, 1))
 ```
 
+Here is a map of all counties with flood events listed in the NOAA Storm Events database near the time and location of Hurricane Floyd:
+
+```{r}
+map_event_exposure(storm_id = "Floyd-1999", event_type = "flood")
+```
+
+Here are all the counties with tornado events listed for the same storm:
+
+```{r}
+map_event_exposure(storm_id = "Floyd-1999", event_type = "tornado")
+```
+
 ### Plotting storm tracks 
 
 The `map_tracks` function will map the hurricane tracks for one or more storms. For example, to plot the tracks of Hurricane Floyd in 1999 (the ID for this storm is "Floyd-2012"):

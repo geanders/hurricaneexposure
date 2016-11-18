@@ -227,6 +227,22 @@ map_rain_exposure(storm = "Floyd-1999", rain_limit = 75,
 
 ![](README-unnamed-chunk-17-1.png)
 
+Here is a map of all counties with flood events listed in the NOAA Storm Events database near the time and location of Hurricane Floyd:
+
+``` r
+map_event_exposure(storm_id = "Floyd-1999", event_type = "flood")
+```
+
+![](README-unnamed-chunk-18-1.png)
+
+Here are all the counties with tornado events listed for the same storm:
+
+``` r
+map_event_exposure(storm_id = "Floyd-1999", event_type = "tornado")
+```
+
+![](README-unnamed-chunk-19-1.png)
+
 ### Plotting storm tracks
 
 The `map_tracks` function will map the hurricane tracks for one or more storms. For example, to plot the tracks of Hurricane Floyd in 1999 (the ID for this storm is "Floyd-2012"):
@@ -235,7 +251,7 @@ The `map_tracks` function will map the hurricane tracks for one or more storms. 
 map_tracks(storms = "Floyd-1999")
 ```
 
-![](README-unnamed-chunk-18-1.png)
+![](README-unnamed-chunk-20-1.png)
 
 There are some different options you can use for the tracks' appearance. For example, if you wanted to plot the tracks of several storms, plot a point each time the track locations were measured (typically every six hours), and use some transparency so you can see all the lines, you can use:
 
@@ -245,7 +261,7 @@ map_tracks(storms = c("Floyd-1999", "Sandy-2012",
            plot_points = TRUE, alpha = 0.5)
 ```
 
-![](README-unnamed-chunk-19-1.png)
+![](README-unnamed-chunk-21-1.png)
 
 You can also add these tracks to an existing `ggplot`-created US map. You do this through the `plot_object` argument. For example, to add the storm track to the plot of distance exposure for Sandy or rain exposure for Floyd, you could run:
 
@@ -254,4 +270,4 @@ floyd_map <- map_counties(storm = "Floyd-1999", metric = "rainfall")
 map_tracks(storms = "Floyd-1999", plot_object = floyd_map)
 ```
 
-![](README-unnamed-chunk-20-1.png)
+![](README-unnamed-chunk-22-1.png)
