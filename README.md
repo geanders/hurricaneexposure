@@ -181,79 +181,77 @@ This package allows you to create some different maps of hurricane exposures bas
 The `map_counties` function creates county choropleths of different storm exposure variables (right now, rainfall and distance from the storm tracks). For example, to plot rain exposure for Hurricane Floyd in 1999 (the ID for this storm is "Floyd-2012"):
 
 ``` r
-map_1 <- map_counties(storm = "Floyd-1999", metric = "rainfall")
-map_1
+map_counties(storm = "Floyd-1999", metric = "rainfall")
 ```
 
 ![](README-unnamed-chunk-12-1.png)
 
-You can also use this function to plot the closest distance between the storm and each county. For this, you use the argument `metric = "distance"`.
+You can also use this function to plot the closest distance between the storm and each county. For this, you use the argument `metric`, which you can set equal to "rainfall", "wind", or "distance". For example, here is a map of wind-based exposure to Hurricane Katrina:
 
 ``` r
-map_2 <- map_counties(storm = "Sandy-2012", metric = "distance")
-map_2
+map_counties(storm = "Katrina-2005", metric = "wind")
 ```
 
 ![](README-unnamed-chunk-13-1.png)
 
-You can map a binary variable of distance-based exposure using `map_distance_exposure`:
+Here is a map of distance-based exposure to the same storm:
 
 ``` r
-allison_map <- map_distance_exposure(storm = "Allison-2001",
-                                     dist_limit = 75)
-plot(allison_map)
+map_counties(storm = "Katrina-2005", metric = "distance")
 ```
 
 ![](README-unnamed-chunk-14-1.png)
 
-You can also map a binary variable of rain exposure for the communities that were exposed, based on a certain rainfall limit and distance limit:
+You can also create maps that show binary classification of exposure for each county--- whether that county exceeded a threshold used to define tropical storm exposure based on one of the hazards. For example, here is a map of all counties within 75 kilometers of the track of Tropical Storm Allison in 2001:
 
 ``` r
-map_3 <- map_rain_exposure(storm = "Floyd-1999", rain_limit = 125,
-                           dist_limit = 500, 
-                           days_included = c(-1, 0, 1))
-plot(map_3)
+map_distance_exposure(storm = "Allison-2001", dist_limit = 75)
 ```
 
 ![](README-unnamed-chunk-15-1.png)
+
+Similarly, here is a map of all counties with sustained winds of 20 m / s or higher during Katrina:
+
+``` r
+map_wind_exposure(storm = "Katrina-2005", wind_limit = 20)
+```
+
+![](README-unnamed-chunk-16-1.png)
+
+Here is a map of all counties with 75 mm or more or rainfall over the day of, day before, and day after Hurricane Floyd, constrained to counties within 500 km of Floyd's track:
+
+``` r
+map_rain_exposure(storm = "Floyd-1999", rain_limit = 75,
+                  dist_limit = 500, days_included = c(-1, 0, 1))
+```
+
+![](README-unnamed-chunk-17-1.png)
 
 ### Plotting storm tracks
 
 The `map_tracks` function will map the hurricane tracks for one or more storms. For example, to plot the tracks of Hurricane Floyd in 1999 (the ID for this storm is "Floyd-2012"):
 
 ``` r
-map_4 <- map_tracks(storms = "Floyd-1999")
-map_4
-```
-
-![](README-unnamed-chunk-16-1.png)
-
-There are some different options you can use for the tracks' appearance. For example, if you wanted to plot the tracks of several storms, not plot each point when the track locations were measured (typically every six hours), and use some transparency so you can see all the lines, you can use:
-
-``` r
-map_5 <- map_tracks(storms = c("Floyd-1999", "Sandy-2012",
-                               "Katrina-2005"),
-                    plot_points = FALSE,
-                    alpha = 0.5)
-map_5
-```
-
-![](README-unnamed-chunk-17-1.png)
-
-You can also add these tracks to an existing `ggplot`-created US map. You do this through the `plot_object` argument. For example, to add the storm track to the plot of distance exposure for Sandy or rain exposure for Floyd, you could run:
-
-``` r
-map_6 <- map_tracks(storms = "Sandy-2012", plot_object = map_2,
-                    plot_points = FALSE)
-map_6
+map_tracks(storms = "Floyd-1999")
 ```
 
 ![](README-unnamed-chunk-18-1.png)
 
+There are some different options you can use for the tracks' appearance. For example, if you wanted to plot the tracks of several storms, plot a point each time the track locations were measured (typically every six hours), and use some transparency so you can see all the lines, you can use:
+
 ``` r
-map_7 <- map_tracks(storms = "Floyd-1999", plot_object = map_3,
-                    plot_points = FALSE)
-map_7
+map_tracks(storms = c("Floyd-1999", "Sandy-2012",
+                               "Katrina-2005"), 
+           plot_points = TRUE, alpha = 0.5)
 ```
 
 ![](README-unnamed-chunk-19-1.png)
+
+You can also add these tracks to an existing `ggplot`-created US map. You do this through the `plot_object` argument. For example, to add the storm track to the plot of distance exposure for Sandy or rain exposure for Floyd, you could run:
+
+``` r
+floyd_map <- map_counties(storm = "Floyd-1999", metric = "rainfall")
+map_tracks(storms = "Floyd-1999", plot_object = floyd_map)
+```
+
+![](README-unnamed-chunk-20-1.png)
