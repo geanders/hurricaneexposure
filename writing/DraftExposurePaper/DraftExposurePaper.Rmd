@@ -2385,10 +2385,9 @@ exposure_parameters <- data.frame(studies, distance_km, rain_mm, wind_kt)
 kable(exposure_parameters, "markdown")
 
 #studies <- c("Davidson 2001", "Atallah 2007", "Kinney 2008", "Zandbergen 2009", "Czajkowski 2010", "Zaharan #2010", "Kruk 2010", "Villarini 2011", "Rezempour 2014", "Currie 2013", "Grabich 2015", "Grabich 2016")
-#distance_km <- c("120", "", "Buffer", "25, 30, 60, 75", "30, 60, 100", 
-                 "2 counties", "Radial Max Wind", "100-500", "")
-#rain_mm <- c("", "2/hr, 48/d", "", "", "", "", "", "", "200-500 (Floyd)")
-#wind_kt <- c("", "", "SSWS", "", "SSWS", "", "34, 50, 64", "", "")
+#distance_km <- c("Hurricane Disaster Risk Index (HDRI)", "", "County Center",)
+#rain_mm <- c("HDRI", "", "", "2/hr, 48/d", "", "", "", "", "", "", "200-500 (Floyd)")
+#wind_kt <- c("HDRI", "", "SSWS", "", "SSWS", "", "34, 50, 64", "", "")
 #exposure_parameters <- data.frame(studies, distance_km, rain_mm, wind_kt)
 #kable(exposure_parameters, "markdown")
 ```
