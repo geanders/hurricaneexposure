@@ -2374,22 +2374,15 @@ Data on storm impacts, including property damage or insurance claims data, are s
 #### Table including various exposure papers and the parameters used
 
 ```{r echo = FALSE}
-studies <- c("Czajkowski 2010", "Rezempour 2014", "Zandbergen 2009", 
-             "Currie 2013", "Grabich 2016", "Zaharan 2010", "Kruk 2010", 
-             "Villarini 2011", "Atallah 2007")
-distance_km <- c("120", "", "Buffer", "25, 30, 60, 75", "30, 60, 100", 
-                 "2 counties", "Radial Max Wind", "100-500", "")
-rain_mm <- c("", "2/hr, 48/d", "", "", "", "", "", "", "200-500 (Floyd)")
-wind_kt <- c("", "", "SSWS", "", "SSWS", "", "34, 50, 64", "", "")
+studies <- c("Davidson 2001", "Atallah 2007", "Kinney 2008", "Zandbergen 2009", "Czajkowski 2010", 
+             "Zaharan 2010", "Kruk 2010", "Villarini 2011", "Rezempour 2014", "Currie 2013", "Grabich 2015", 
+             "Grabich 2016")
+distance_km <- c("Hurricane Disaster Risk Index (HDRI)", "", "County Center", "30 Buffer and Decay", "120", 
+                 "2 counties", "Radial Max Wind", "100-500", "", "25, 30, 60, 75", "60", "30, 60, 100")
+rain_mm <- c("HDRI", "200-500 (Floyd)", "", "", "", "", "", "", "2/hr, 48/d", "", "", "")
+wind_kt <- c("HDRI", "", "", "SSWS", "", "", "34, 50, 64", "", "", "", "64", "SSWS")
 exposure_parameters <- data.frame(studies, distance_km, rain_mm, wind_kt)
 kable(exposure_parameters, "markdown")
-
-#studies <- c("Davidson 2001", "Atallah 2007", "Kinney 2008", "Zandbergen 2009", "Czajkowski 2010", "Zaharan #2010", "Kruk 2010", "Villarini 2011", "Rezempour 2014", "Currie 2013", "Grabich 2015", "Grabich 2016")
-#distance_km <- c("Hurricane Disaster Risk Index (HDRI)", "", "County Center",)
-#rain_mm <- c("HDRI", "", "", "2/hr, 48/d", "", "", "", "", "", "", "200-500 (Floyd)")
-#wind_kt <- c("HDRI", "", "SSWS", "", "SSWS", "", "34, 50, 64", "", "")
-#exposure_parameters <- data.frame(studies, distance_km, rain_mm, wind_kt)
-#kable(exposure_parameters, "markdown")
 ```
 
 SSWS = Staffir-Simpson Hurricane Wind Scale (TS, 1, 2, 3, 4, and 5). Wind Cutoffs at 34, 64, 83, 96, 113, and 137 kt.  
