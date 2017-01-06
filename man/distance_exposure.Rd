@@ -41,6 +41,7 @@ giving the dates and exposures for all storms meeting the given
 storm distance criteria.
 }
 \examples{
+\dontrun{
 # By county
 distance_exposure(locations = c("22071", "51700"),
               start_year = 1995, end_year = 2005,
@@ -56,6 +57,6 @@ distance_exposure(locations = communities,
               start_year = 1995, end_year = 2005,
               dist_limit = 75,
               out_dir = "~/tmp/storms")
-
+}
 }
 

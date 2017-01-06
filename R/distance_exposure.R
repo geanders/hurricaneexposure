@@ -153,7 +153,7 @@ multi_county_distance <- function(communities, start_year, end_year,
 #'               start_year = 1995, end_year = 2005,
 #'               dist_limit = 75,
 #'               out_dir = "~/tmp/storms")
-#'}
+#' }
 #' @export
 #'
 #' @importFrom dplyr %>%
