@@ -82,7 +82,7 @@ This output includes columns for the average closest distance for any of the cou
 
 To create time series of hurricane exposure for all of the storms that meet the exposure definition for study communities, you can use the function `rain_exposure`. If you have counties for your study, you can run this with a vector of the county FIPS as the `locations` argument (specify the directory path to write the files with `out_dir`):
 
-```{r}
+```{r eval = FALSE}
 rain_exposure(locations = c("22071", "51700"),
               start_year = 1995, end_year = 2005,
               rain_limit = 100, dist_limit = 100,
