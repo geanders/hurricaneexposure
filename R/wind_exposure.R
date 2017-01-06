@@ -121,7 +121,7 @@ multi_county_wind <- function(communities, start_year, end_year,
 #'    documentation for \code{\link{county_wind}} and
 #'    \code{\link{multi_county_wind}}.
 #'
-#' @examples
+#' @examples \dontrun{
 #' # By county
 #' wind_exposure(locations = c("22071", "51700"),
 #'               start_year = 1988, end_year = 2005,
@@ -137,7 +137,7 @@ multi_county_wind <- function(communities, start_year, end_year,
 #'               start_year = 1988, end_year = 2005,
 #'               wind_limit = 10,
 #'               out_dir = "~/tmp/storms")
-#'
+#'}
 #' @export
 #'
 #' @importFrom dplyr %>%

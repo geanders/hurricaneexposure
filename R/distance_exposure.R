@@ -137,7 +137,7 @@ multi_county_distance <- function(communities, start_year, end_year,
 #'    documentation for \code{\link{county_rain}} and
 #'    \code{\link{multi_county_rain}}.
 #'
-#' @examples
+#' @examples \dontrun{
 #' # By county
 #' distance_exposure(locations = c("22071", "51700"),
 #'               start_year = 1995, end_year = 2005,
@@ -153,7 +153,7 @@ multi_county_distance <- function(communities, start_year, end_year,
 #'               start_year = 1995, end_year = 2005,
 #'               dist_limit = 75,
 #'               out_dir = "~/tmp/storms")
-#'
+#'}
 #' @export
 #'
 #' @importFrom dplyr %>%
