@@ -2,7 +2,7 @@ Package: hurricaneexposure
 Type: Package
 Title: Functions to Create County-level Time Series of Hurricane Exposure
 Version: 0.0.0.9000
-Date: 2016-05-19
+Date: 2017-12-06
 Authors@R: c(person("Brooke", "Anderson",
     email = "brooke.anderson@colostate.edu", role = c("aut", "cre")),
     person("Meilin", "Yan",
@@ -26,13 +26,13 @@ Imports:
     dplyr (>= 0.4.3),
     ggmap (>= 2.6.1),
     ggplot2 (>= 2.1.0),
-    hurricaneexposuredata,
+    hurricaneexposuredata (>= 0.0.0.9000),
     lazyeval (>= 0.1.10),
     lubridate (>= 1.5.6),
     repmis (>= 0.5.0),
     RColorBrewer (>= 1.1.2),
-    splines,
-    stats,
+    splines (>= 3.3.2),
+    stats (>= 3.3.2),
     tidyr (>= 0.4.1)
 RoxygenNote: 5.0.1
 Depends:
