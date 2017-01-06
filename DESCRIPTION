@@ -33,8 +33,8 @@ Imports:
     purrr (>= 0.2.2), 
     repmis (>= 0.5.0),
     RColorBrewer (>= 1.1.2),
-    splines (>= 3.3.2),
-    stats (>= 3.3.2),
+    splines,
+    stats,
     tidyr (>= 0.4.1)
 RoxygenNote: 5.0.1
 Depends:
