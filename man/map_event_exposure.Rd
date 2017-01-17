@@ -6,6 +6,14 @@
 \usage{
 map_event_exposure(storm_id, event_type)
 }
+\arguments{
+\item{storm_id}{Character vector with the storm for which to map events
+(e.g., \code{"Katrina-2005"})}
+
+\item{event_type}{Character string with the type of event to use to identify
+county exposures. Options include \code{"flood"}, \code{"tornado"},
+\code{"wind"}, and \code{"tropical storm"}.}
+}
 \description{
 Map county-level exposure based on reported events
 }

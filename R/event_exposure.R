@@ -45,6 +45,8 @@ county_events <- function(counties, start_year, end_year, event_type){
 
 #' Map county-level exposure based on reported events
 #'
+#' @param storm_id Character vector with the storm for which to map events
+#'    (e.g., \code{"Katrina-2005"})
 #' @inheritParams county_distance
 #' @inheritParams county_events
 #'

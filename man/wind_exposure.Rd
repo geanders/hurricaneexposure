@@ -17,6 +17,9 @@ See the examples for the proper format for this argument.}
 
 \item{end_year}{Four-digit integer with last year to consider.}
 
+\item{wind_limit}{Vector giving the wind speed (in m / s) to use as a
+threshold for classifying a county as "exposed" to a specific storm.}
+
 \item{out_dir}{Character string giving the pathname of the directory in which
 to write output. This directory should already exist on your computer.}
 

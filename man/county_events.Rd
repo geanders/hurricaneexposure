@@ -6,6 +6,19 @@
 \usage{
 county_events(counties, start_year, end_year, event_type)
 }
+\arguments{
+\item{counties}{Character vector of the five-digit Federal Information
+Processing Standard (FIPS) codes for counties for which the user wants to
+determine storm exposure.}
+
+\item{start_year}{Four-digit integer with first year to consider.}
+
+\item{end_year}{Four-digit integer with last year to consider.}
+
+\item{event_type}{Character string with the type of event to use to identify
+county exposures. Options include \code{"flood"}, \code{"tornado"},
+\code{"wind"}, and \code{"tropical storm"}.}
+}
 \description{
 Find events for storms by county
 }
