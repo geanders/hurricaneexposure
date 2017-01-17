@@ -27,7 +27,7 @@ Imports:
     dplyr (>= 0.4.3),
     ggmap (>= 2.6.1),
     ggplot2 (>= 2.1.0),
-    hurricaneexposuredata (>= 0.0.1),
+    hurricaneexposuredata (>= 0.0.0.9000),
     lazyeval (>= 0.1.10),
     lubridate (>= 1.5.6),
     purrr (>= 0.2.2), 
