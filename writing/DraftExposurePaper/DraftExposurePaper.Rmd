@@ -59,7 +59,6 @@ library(lubridate)
 library(xtable)
 library(rnoaa)
 
-#devtools::install_github("leighseverson/countyweather")
 options("noaakey" = Sys.getenv("noaakey"))
 library(countyweather)
 
@@ -212,7 +211,8 @@ map_tracks(c("Hugo-1989", "Bob-1991", "Andrew-1992",
            plot_object = a, plot_points = FALSE, color = "darkcyan") + 
         theme(panel.grid.major = element_blank(),
            panel.grid.minor = element_blank(),
-           panel.background = element_rect(colour = "black", size = 1))
+           panel.background = element_rect(colour = "black", size = 1)) + 
+        coord_map()
 ```
 
 #### Are our methods of assessing distance reasonable
@@ -1339,7 +1339,7 @@ As another example, exposure classifications based on flood events in some cases
 
 [For storms in 1996 or later, when flooding reports are included in NOAA's Storm Events data, exposure patterns based on floods reports generally pick up similar regions as rain-based exposure, and in some cases (e.g., Floyd, 1999), counties classified as exposed using rain-based exposure are very similar to the counties in which flood events were recorded. For example, here are comparisons for some of the worst storms in terms of rain-based exposures:]
 
-```{r frances_rain_flood_exp, echo = FALSE, fig.width = 6, fig.height = 8, fig.align = "center", fig.cap = "Counties that were classified as 'exposed' to Hurricane Frances (2004) based on rain (top) and flood event (bottom) exposure criteria. Rain-based exposure was assessed based on storm-associated rainfall of 75 millimeters or more in the county and a distance of 500 kilometers or less between the county's population mean center and the storm's closest approach. Flood event-based exposure was based on the county have a flood event listing in the NOAA Storm Events database and being within [x] kilometers of the storm's track."}
+```{r frances_rain_flood_exp, echo = FALSE, fig.width = 6, fig.height = 8, fig.align = "center", fig.cap = "Counties that were classified as 'exposed' to Hurricane Frances (2004) based on rain (top) and flood event (bottom) exposure criteria. Rain-based exposure was assessed based on storm-associated rainfall of 75 millimeters or more in the county and a distance of 500 kilometers or less between the county's population mean center and the storm's closest approach. Flood event-based exposure was based on the county have a flood event listing in the NOAA Storm Events database and being within 500 kilometers of the storm's track."}
 storm <- "Frances-2004"
 a <- map_tracks(storms = storm, plot_points = FALSE, 
                 plot_object = map_rain_exposure(storm = storm, 
@@ -1353,7 +1353,7 @@ b <- map_tracks(storms = storm, plot_points = FALSE,
 grid.arrange(a, b, ncol = 1)
 ```
 
-```{r floyd_rain_flood_exp, echo = FALSE, fig.width = 6, fig.height = 8, fig.align = "center", fig.cap = "Counties that were classified as 'exposed' to Hurricane Floyd (1999) based on rain (top) and flood event (bottom) exposure criteria. Rain-based exposure was assessed based on storm-associated rainfall of 75 millimeters or more in the county and a distance of 500 kilometers or less between the county's population mean center and the storm's closest approach. Flood event-based exposure was based on the county have a flood event listing in the NOAA Storm Events database and being within [x] kilometers of the storm's track."}
+```{r floyd_rain_flood_exp, echo = FALSE, fig.width = 6, fig.height = 8, fig.align = "center", fig.cap = "Counties that were classified as 'exposed' to Hurricane Floyd (1999) based on rain (top) and flood event (bottom) exposure criteria. Rain-based exposure was assessed based on storm-associated rainfall of 75 millimeters or more in the county and a distance of 500 kilometers or less between the county's population mean center and the storm's closest approach. Flood event-based exposure was based on the county have a flood event listing in the NOAA Storm Events database and being within 500 kilometers of the storm's track."}
 storm <- "Floyd-1999"
 a <- map_tracks(storms = storm, plot_points = FALSE, 
                 plot_object = map_rain_exposure(storm = storm, 
