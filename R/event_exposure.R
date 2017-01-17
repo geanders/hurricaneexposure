@@ -11,6 +11,8 @@
 #'               start_year = 1988, end_year = 1999,
 #'               event_type = "flood")
 #'
+#' @importFrom dplyr %>%
+#'
 #' @export
 county_events <- function(counties, start_year, end_year, event_type){
         events <- hurricaneexposuredata::storm_events
@@ -29,7 +31,10 @@ county_events <- function(counties, start_year, end_year, event_type){
                                       grepl("Tropical Storm", events) |
                                       grepl("Tropical Depression", events),
                               wind = tropical_storm | grepl("Wind", events))
-        events <- events[events[ , event_type], c("fips", "storm_id")]
+        events <- events[events[ , event_type], c("fips", "storm_id")] %>%
+                dplyr::mutate(storm_id = as.character(storm_id)) %>%
+                dplyr::left_join(hurricaneexposuredata::closest_dist,
+                                 by = c("storm_id", "fips"))
         return(events)
 }
 
