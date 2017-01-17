@@ -129,7 +129,8 @@ filter_wind_data <- function(counties = NULL, storm = NULL, year_range = NULL,
         if(!is.null(year_range)){
                 storm_winds <- storm_winds[ , .(storm_id,
                                                 fips,
-                                                vmax_gust, vmax_sust,
+                                                vmax_gust = get("vmax_gust"),
+                                                vmax_sust = get("vmax_sust"),
                                                 year = gsub("*.+-", "", get("storm_id"))), ][
                                                         get("year") %in%
                                                                 year_range[1]:year_range[2]

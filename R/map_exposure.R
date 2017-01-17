@@ -213,7 +213,7 @@ map_counties <-function(storm, metric = "distance",
                 dplyr::mutate_(region = ~ as.numeric(region)) %>%
                 dplyr::tbl_df()
         out <- hurr_choroplethr(map_data, metric = metric)
-        return(out$render())
+        return(suppressWarnings(out$render()))
 }
 
 #' Map counties with rain exposure
@@ -273,7 +273,7 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
                                                                   "navy"),
                                                        labels = c("Unexposed",
                                                                   "Exposed"))
-        return(out$render())
+        return(suppressWarnings(out$render()))
 }
 
 #' Map counties with distance exposure
@@ -329,7 +329,7 @@ map_distance_exposure <- function(storm, dist_limit){
                                                                   "forestgreen"),
                                                        labels = c("Unexposed",
                                                                   "Exposed"))
-        return(out$render())
+        return(suppressWarnings(out$render()))
 }
 
 #' Map counties with wind exposure
@@ -382,7 +382,7 @@ map_wind_exposure <- function(storm, wind_limit){
                                                                   "darkorange"),
                                                        labels = c("Unexposed",
                                                                   "Exposed"))
-        return(out$render())
+        return(suppressWarnings(out$render()))
 }
 
 #' Create a map customized for this package

@@ -1,5 +1,10 @@
 #' Find events for storms by county
 #'
+#' @param event_type Character string with the type of event to use to identify
+#'    county exposures. Options include \code{"flood"}, \code{"tornado"},
+#'    \code{"wind"}, and \code{"tropical storm"}.
+#' @inheritParams county_distance
+#'
 #' @note Of the event types that this function can pull, only "tornado" and
 #'    "wind" are available for years before 1996. Therefore, this function will
 #'    pull listed tornado events or wind events for all years, but for any other
@@ -25,20 +30,23 @@ county_events <- function(counties, start_year, end_year, event_type){
         events <- lapply(events, function(x) subset(x, x$fips %in% counties))
 
         events <- do.call("rbind", events) %>%
-                dplyr::mutate(flood = grepl("Flood", events),
-                              tornado = grepl("Tornado", events) ,
-                              tropical_storm = grepl("Hurricane", events) |
+                dplyr::mutate_(flood = ~ grepl("Flood", events),
+                               tornado = ~ grepl("Tornado", events),
+                               tropical_storm = ~ grepl("Hurricane", events) |
                                       grepl("Tropical Storm", events) |
                                       grepl("Tropical Depression", events),
-                              wind = tropical_storm | grepl("Wind", events))
+                               wind = ~ tropical_storm | grepl("Wind", events))
         events <- events[events[ , event_type], c("fips", "storm_id")] %>%
-                dplyr::mutate(storm_id = as.character(storm_id)) %>%
+                dplyr::mutate_(storm_id = ~ as.character(storm_id)) %>%
                 dplyr::left_join(hurricaneexposuredata::closest_dist,
                                  by = c("storm_id", "fips"))
         return(events)
 }
 
 #' Map county-level exposure based on reported events
+#'
+#' @inheritParams county_distance
+#' @inheritParams county_events
 #'
 #' @examples
 #' map_event_exposure(storm_id = "Floyd-1999", event_type = "flood")
@@ -51,20 +59,20 @@ map_event_exposure <- function(storm_id, event_type){
         storm <- storm_id
         storm_year <- gsub("*.+-", "", storm_id)
         counties <- hurricaneexposuredata::closest_dist %>%
-                dplyr::filter(storm_id == storm) %>%
-                dplyr::select(fips, storm_dist)
+                dplyr::filter_(~ storm_id == storm) %>%
+                dplyr::select_(quote(fips), quote(storm_dist))
         map_data <- county_events(counties = counties$fips,
                                 start_year = storm_year,
                                 end_year = storm_year,
                                 event_type = event_type) %>%
-                dplyr::filter(storm_id == storm) %>%
-                dplyr::select(fips) %>%
-                dplyr::mutate(event = 1) %>%
+                dplyr::filter_(~ storm_id == storm) %>%
+                dplyr::select_(quote(fips)) %>%
+                dplyr::mutate_(event = ~ 1) %>%
                 dplyr::right_join(counties, by = "fips") %>%
-                dplyr::mutate(event = !is.na(event),
-                              fips = as.numeric(fips)) %>%
-                dplyr::rename(region = fips, value = event) %>%
-                dplyr::select(-storm_dist)
+                dplyr::mutate_(event = ~ !is.na(event),
+                               fips = ~ as.numeric(fips)) %>%
+                dplyr::rename_(region = ~ fips, value = ~ event) %>%
+                dplyr::select_(quote(-storm_dist))
 
         eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
                             "district of columbia", "florida", "georgia", "illinois",
@@ -83,5 +91,5 @@ map_event_exposure <- function(storm_id, event_type){
                                                                   "red"),
                                                        labels = c("Unexposed",
                                                                   "Exposed"))
-        return(out$render())
+        return(suppressWarnings(out$render()))
 }

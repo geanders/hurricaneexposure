@@ -112,6 +112,8 @@ multi_county_wind <- function(communities, start_year, end_year,
 #' giving the dates and exposures for all storms meeting the given
 #' storm wind criteria.
 #'
+#' @param wind_limit Vector giving the wind speed (in m / s) to use as a
+#'    threshold for classifying a county as "exposed" to a specific storm.
 #' @inheritParams county_distance
 #' @inheritParams county_rain
 #' @inheritParams rain_exposure
