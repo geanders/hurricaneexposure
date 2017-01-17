@@ -7,3 +7,4 @@ writing/DraftExposurePaper/DraftExposurePaper_files
 *.pdf
 *.tex
 writing/pnas_draft
+.DS_Store
