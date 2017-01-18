@@ -1,6 +1,6 @@
 Package: hurricaneexposure
 Type: Package
-Title: Functions to Create County-level Time Series of Hurricane Exposure
+Title: Functions to Create County-Level Time Series of Hurricane Exposure
 Version: 0.0.0.9000
 Date: 2017-01-17
 Authors@R: c(person("Brooke", "Anderson",
