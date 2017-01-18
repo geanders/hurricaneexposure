@@ -178,13 +178,13 @@ interp_track <- function(track, tint = 0.25){
 #'    part of the United States, showing distance from a storm track or total
 #'    rainfall over a given window of one or more days.
 #'
-#' @examples
+#' @examples \dontrun{
 #' floyd_map <- map_counties("Floyd-1999", metric = "rainfall",
 #'                            days_included = c(-2, -1, 0, 1))
 #' floyd_map
 #'
 #' beryl_map <- map_counties("Beryl-1988", metric = "wind")
-#'
+#'}
 #' @export
 #'
 #' @importFrom dplyr %>%
