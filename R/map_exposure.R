@@ -79,6 +79,13 @@ map_tracks <- function(storms, plot_object = NULL,
                       plot_points = FALSE,
                       alpha = 1,
                       color = "firebrick"){
+
+        if(!.pkgglobalenv$has_data){
+                stop(paste("To use this function, you must have the",
+                           "`hurricaneexposuredata` package installed. See the",
+                           "`hurricaneexposure` package vignette for more details."))
+        }
+
         if(is.null(plot_object)){
                 plot_object <- default_map()
         }

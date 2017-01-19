@@ -99,6 +99,12 @@ multi_county_distance <- function(communities, start_year, end_year,
 
         communities <- dplyr::mutate_(communities, fips = ~ as.character(fips))
 
+        if(!.pkgglobalenv$has_data){
+          stop(paste("To use this function, you must have the",
+                     "`hurricaneexposuredata` package installed. See the",
+                     "`hurricaneexposure` package vignette for more details."))
+        }
+
         distance_df <- hurricaneexposuredata::closest_dist %>%
                 dplyr::mutate_(closest_date =
                                        ~ lubridate::ymd(closest_date)) %>%

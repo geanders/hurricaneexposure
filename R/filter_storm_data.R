@@ -44,6 +44,12 @@ filter_storm_data <- function(counties = NULL, storm = NULL, year_range = NULL,
                               include_rain = FALSE, days_included = NULL,
                               output_vars = c("fips")){
 
+        if(!.pkgglobalenv$has_data){
+                stop(paste("To use this function, you must have the",
+                           "`hurricaneexposuredata` package installed. See the",
+                           "`hurricaneexposure` package vignette for more details."))
+        }
+
         closest_dist <- data.table::data.table(hurricaneexposuredata::closest_dist)
 
         if(!is.null(counties)){
@@ -116,6 +122,13 @@ filter_storm_data <- function(counties = NULL, storm = NULL, year_range = NULL,
 filter_wind_data <- function(counties = NULL, storm = NULL, year_range = NULL,
                              wind_limit = NULL, output_vars = "fips",
                              wind_var = "vmax_sust"){
+
+        if(!.pkgglobalenv$has_data){
+                stop(paste("To use this function, you must have the",
+                           "`hurricaneexposuredata` package installed. See the",
+                           "`hurricaneexposure` package vignette for more details."))
+        }
+
         storm_winds <- data.table::data.table(hurricaneexposuredata::storm_winds)
 
         if(!is.null(counties)){

@@ -20,6 +20,13 @@
 #'
 #' @export
 county_events <- function(counties, start_year, end_year, event_type){
+
+        if(!.pkgglobalenv$has_data){
+                stop(paste("To use this function, you must have the",
+                           "`hurricaneexposuredata` package installed. See the",
+                           "`hurricaneexposure` package vignette for more details."))
+        }
+
         events <- hurricaneexposuredata::storm_events
 
         event_years <- as.numeric(gsub(".+-", "", names(events)))
@@ -58,6 +65,13 @@ county_events <- function(counties, start_year, end_year, event_type){
 #'
 #' @export
 map_event_exposure <- function(storm_id, event_type){
+
+        if(!.pkgglobalenv$has_data){
+                stop(paste("To use this function, you must have the",
+                           "`hurricaneexposuredata` package installed. See the",
+                           "`hurricaneexposure` package vignette for more details."))
+        }
+
         storm <- storm_id
         storm_year <- gsub("*.+-", "", storm_id)
         counties <- hurricaneexposuredata::closest_dist %>%
