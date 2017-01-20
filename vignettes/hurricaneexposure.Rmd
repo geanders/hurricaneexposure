@@ -13,7 +13,7 @@ vignette: >
 # If you need to install the hurricaneexposuredata package: 
 # library(devtools)
 # install_github("geanders/hurricaneexposuredata")
-hasData <- requireNamespace("hurricaneexposuredata")
+library(hurricaneexposuredata)
 library(hurricaneexposure)
 ```
 
@@ -33,10 +33,8 @@ library(hurricaneexposure)
 Once you've loaded the dataframe, you can load the included data using the `data` function. For example:
 
 ```{r}
-if (hasData) {
-    data("hurr_tracks")
-    head(hurr_tracks)
-}
+data("hurr_tracks")
+head(hurr_tracks)
 ```
 
 The following datasets are included with the package: 
@@ -57,12 +55,10 @@ First, the `county_rain` function takes a list of county FIPS codes, bounds on t
 For example, to get a dataset of all the storms to which Orleans Parish (FIPS 22071), and Newport News, Virginia (FIPS 51700), were exposed between 1995 and 2005, where "exposed" means that the storm passed within 100 kilometers of the county center and the rainfall over three days was 100 millimeters or more, you could run:
 
 ```{r}
-if (hasData) {
 county_rain(counties = c("22071", "51700"),
             start_year = 1995, end_year = 2005,
             rain_limit = 100, dist_limit = 100,
             days_included = c(-1, 0, 1))
-}
 ```
 
 In addition to giving you the names and closest dates of each storm for each county (`closest_date`-- note, this is given using the UTC timezone), this function also gives you the distance between the county and the storm's track at the time when the storm was closest to the county's population weighted center (`storm_dist`, in kilometers) and the total precipitation over the included days (`tot_precip`).
@@ -70,7 +66,6 @@ In addition to giving you the names and closest dates of each storm for each cou
 To get a dataframe listing the relevant storms for multi-county communities, you can use the `multi_county_rain` function in a similar way:
 
 ```{r warning = FALSE}
-if (hasData) {
 communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
                          fips = c("36005", "36047", "36061",
                                   "36085", "36081", "36119",
@@ -79,7 +74,6 @@ rain_storm_df <- multi_county_rain(communities = communities,
                                    start_year = 1995, end_year = 2005,
                                    rain_limit = 100, dist_limit = 100,
                                    days_included = c(-1, 0, 1))
-}
 ```
 
 This output includes columns for the average closest distance for any of the counties in the community (`mean_dist`), the average precipitation for all the counties (`mean_precip`), the highest precipitation for any of the counties (`max_rain`), and the smallest distance between the storm track and any of the county population-weighted centers (`min_dist`).
@@ -89,18 +83,15 @@ This output includes columns for the average closest distance for any of the cou
 To create time series of hurricane exposure for all of the storms that meet the exposure definition for study communities, you can use the function `rain_exposure`. If you have counties for your study, you can run this with a vector of the county FIPS as the `locations` argument (specify the directory path to write the files with `out_dir`):
 
 ```{r eval = FALSE}
-if (hasData) {
 rain_exposure(locations = c("22071", "51700"),
               start_year = 1995, end_year = 2005,
               rain_limit = 100, dist_limit = 100,
               out_dir = "~/tmp/storms")
-}
 ```
 
 If you have multi-county communities, set `locations` instead to be a dataframe with community names (`commun` column) and FIPS codes (`fips` column):
 
 ```{r message = FALSE, warning = FALSE, eval = FALSE}
-if (hasData) {
 communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
                           fips = c("36005", "36047", "36061",
                           "36085", "36081", "36119",
@@ -108,7 +99,6 @@ communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
 rain_exposure(locations = communities,
               start_year = 1995, end_year = 2005,
               rain_limit = 100, dist_limit = 100, out_dir = "~/tmp/storms")
-}
 ```
 
 Both functions will output one file of exposure per county or community into the directory that you specify using the `out_dir` argument.
@@ -122,10 +112,8 @@ This package allows you to create some different maps of hurricane exposures bas
 The `map_counties` function creates county choropleths of different storm exposure variables (right now, rainfall and distance from the storm tracks). For example, to plot rain exposure for Hurricane Floyd in 1999 (the ID for this storm is "Floyd-2012"):
 
 ```{r fig.width = 7, fig.height = 4, message = FALSE}
-if (hasData) {
 map_1 <- map_counties(storm = "Floyd-1999", metric = "rainfall")
 map_1
-}
 ```
 
 You can also use this function to plot the closest distance between the storm and each county. For this, you use the argument `metric = "distance"`.
@@ -138,22 +126,18 @@ map_2
 You can map a binary variable of distance-based exposure using `map_distance_exposure`: 
 
 ```{r fig.width = 7, fig.height = 4}
-if (hasData) {
 allison_map <- map_distance_exposure(storm = "Allison-2001",
                                      dist_limit = 75)
 plot(allison_map)
-}
 ```
 
 You can also map a binary variable of rain exposure for the communities that were exposed, based on a certain rainfall limit and distance limit:
 
 ```{r fig.width = 7, fig.height = 4}
-if (hasData) {
 map_3 <- map_rain_exposure(storm = "Floyd-1999", rain_limit = 125,
                            dist_limit = 500, 
                            days_included = c(-1, 0, 1))
 plot(map_3)
-}
 ```
 
 ### Plotting storm tracks 
@@ -161,40 +145,32 @@ plot(map_3)
 The `map_tracks` function will map the hurricane tracks for one or more storms. For example, to plot the tracks of Hurricane Floyd in 1999 (the ID for this storm is "Floyd-2012"):
 
 ```{r fig.width = 5.5, fig.height = 4}
-if (hasData) {
 map_4 <- map_tracks(storms = "Floyd-1999")
 map_4
-}
 ```
 
 There are some different options you can use for the tracks' appearance. For example, if you wanted to plot the tracks of several storms, not plot each point when the track locations were measured (typically every six hours), and use some transparency so you can see all the lines, you can use: 
 
 ```{r fig.width = 5.5, fig.height = 4}
-if (hasData) {
 map_5 <- map_tracks(storms = c("Floyd-1999", "Sandy-2012",
                                "Katrina-2005"),
                     plot_points = FALSE,
                     alpha = 0.5)
 map_5
-}
 ```
 
 You can also add these tracks to an existing `ggplot`-created US map. You do this through the `plot_object` argument. For example, to add the storm track to the plot of distance exposure for Sandy or rain exposure for Floyd, you could run:
 
 ```{r fig.width = 7, fig.height = 4}
-if (hasData) {
 map_6 <- map_tracks(storms = "Sandy-2012", plot_object = map_2,
                     plot_points = FALSE)
 map_6
-}
 ```
 
 ```{r fig.width = 7, fig.height = 4}
-if (hasData) {
 map_7 <- map_tracks(storms = "Floyd-1999", plot_object = map_3,
                     plot_points = FALSE)
 map_7
-}
 ```
 
 
