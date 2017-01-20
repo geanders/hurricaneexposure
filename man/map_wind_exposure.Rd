@@ -22,10 +22,11 @@ storm had a certain wind speed (specified by \code{wind_limit}, in meters
 per second).
 }
 \examples{
+\dontrun{
 
 beryl_map <- map_wind_exposure(storm = "Beryl-1988", wind_limit = 15)
 beryl_map
 map_tracks("Beryl-1988", plot_points = FALSE, plot_object = beryl_map)
-
+}
 }
 

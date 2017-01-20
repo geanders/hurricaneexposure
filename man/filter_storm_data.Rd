@@ -45,6 +45,7 @@ This function is a helper function for many of the the other functions in
 this package that measure exposure.
 }
 \examples{
+\dontrun{
 filter_storm_data(counties = c("22071", "51700"), year_range = c(1988, 2011),
                   distance_limit = 250, rain_limit = 150,
                  include_rain = TRUE, days_included = c(-1, 0, 1),
@@ -53,6 +54,6 @@ filter_storm_data(counties = c("22071", "51700"), year_range = c(1988, 2011),
 filter_storm_data(storm = "Floyd-1999", include_rain = TRUE,
                  days_included = c(-1, 0, 1),
                  output_vars = c("fips", "tot_precip"))
-
+}
 }
 

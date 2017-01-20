@@ -29,6 +29,7 @@ community-level dataframe of "exposed" storms, based on the highest of the
 maximum sustained wind speed for each county in the community.
 }
 \examples{
+\dontrun{
 communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
                          fips = c("36005", "36047", "36061",
                                   "36085", "36081", "36119",
@@ -36,6 +37,6 @@ communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
 wind_df <- multi_county_wind(communities = communities,
                                      start_year = 1988, end_year = 2005,
                                      wind_limit = 20)
-
+}
 }
 
