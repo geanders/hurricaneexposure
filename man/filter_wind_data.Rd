@@ -35,11 +35,4 @@ A dataframe with storms filtered based on the input criteria to the
 This function is a helper function for many of the the other functions in
 this package that measure wind exposure.
 }
-\examples{
-\dontrun{
-filter_wind_data(counties = c("22071", "51700"), year_range = c(1988, 2011),
-                 wind_limit = 20,
-                 output_vars = c("fips", "storm_id", "vmax_sust"))
-}
-}
 

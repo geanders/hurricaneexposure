@@ -56,24 +56,4 @@ for all storms meeting the given rainfall and storm distance criteria. These
 exposure time series can then be merged with other time series (e.g.,
 community-specific daily counts of health outcomes).
 }
-\examples{
-\dontrun{
-#' # By county
-rain_exposure(locations = c("22071", "51700"),
-              start_year = 1995, end_year = 2005,
-              rain_limit = 100, dist_limit = 100,
-              out_dir = "~/tmp/storms")
-
-# For multi-county communities
-communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
-                          fips = c("36005", "36047", "36061",
-                          "36085", "36081", "36119",
-                          "22071", "51700"))
-rain_exposure(locations = communities,
-              start_year = 1995, end_year = 2005,
-              rain_limit = 100, dist_limit = 100,
-              out_dir = "~/tmp/storms")
-}
-
-}
 

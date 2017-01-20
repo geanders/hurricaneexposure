@@ -11,7 +11,7 @@
 #'    event type, you should not use a start year prior to 1996, as events of
 #'    other types were not recorded in the database before 1996.
 #'
-#' @examples \dontrun{
+#' @examples if (requireNamespace(""hurricandataexposuredata")) {
 #' county_events(counties = c("37031", "37053", "37055"),
 #'               start_year = 1988, end_year = 1999,
 #'               event_type = "flood")
@@ -57,7 +57,7 @@ county_events <- function(counties, start_year, end_year, event_type){
 #' @inheritParams county_distance
 #' @inheritParams county_events
 #'
-#' @examples \dontrun{
+#' @examples if (requireNamespace(""hurricandataexposuredata")) {
 #' map_event_exposure(storm_id = "Floyd-1999", event_type = "flood")
 #' map_event_exposure(storm_id = "Floyd-1999", event_type = "tornado")
 #' map_event_exposure(storm_id = "Floyd-1999", event_type = "wind")

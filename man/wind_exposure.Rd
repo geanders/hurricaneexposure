@@ -39,23 +39,4 @@ and creates time series dataframes that can be merged with health time series,
 giving the dates and exposures for all storms meeting the given
 storm wind criteria.
 }
-\examples{
-\dontrun{
-# By county
-wind_exposure(locations = c("22071", "51700"),
-              start_year = 1988, end_year = 2005,
-              wind_limit = 10,
-              out_dir = "~/tmp/storms")
-
-# For multi-county communities
-communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
-                          fips = c("36005", "36047", "36061",
-                          "36085", "36081", "36119",
-                          "22071", "51700"))
-wind_exposure(locations = communities,
-              start_year = 1988, end_year = 2005,
-              wind_limit = 10,
-              out_dir = "~/tmp/storms")
-}
-}
 

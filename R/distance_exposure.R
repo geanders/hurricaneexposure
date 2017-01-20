@@ -46,7 +46,7 @@
 #' @note Only counties in states in the eastern half of the United States can
 #'    be processed by this function.
 #'
-#' @examples \dontrun{
+#' @examples if (requireNamespace(""hurricandataexposuredata")) {
 #'
 #' county_distance(counties = c("22071", "51700"),
 #'             start_year = 1995, end_year = 2005,
@@ -86,7 +86,7 @@ county_distance <- function(counties, start_year, end_year, dist_limit){
 #'
 #' @export
 #'
-#' @examples \dontrun{
+#' @examples if (requireNamespace(""hurricandataexposuredata")) {
 #' communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
 #'                          fips = c("36005", "36047", "36061",
 #'                                   "36085", "36081", "36119",
@@ -145,7 +145,7 @@ multi_county_distance <- function(communities, start_year, end_year,
 #'    documentation for \code{\link{county_rain}} and
 #'    \code{\link{multi_county_rain}}.
 #'
-#' @examples \dontrun{
+#' @examples if (requireNamespace(""hurricandataexposuredata")) {
 #' # By county
 #' distance_exposure(locations = c("22071", "51700"),
 #'               start_year = 1995, end_year = 2005,

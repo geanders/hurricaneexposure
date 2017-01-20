@@ -63,7 +63,7 @@ default_map <- function(){
 #'    of the selected storms. This object can be printed directly or added
 #'    on to with other ggplot commands.
 #'
-#' @examples \dontrun{
+#' @examples if (requireNamespace(""hurricandataexposuredata")) {
 #' map_tracks(storms = "Sandy-2012")
 #' map_tracks(storms = "Floyd-1999", plot_points = TRUE)
 #' map_tracks(storms = c("Sandy-2012", "Floyd-1999"))
@@ -185,7 +185,7 @@ interp_track <- function(track, tint = 0.25){
 #'    part of the United States, showing distance from a storm track or total
 #'    rainfall over a given window of one or more days.
 #'
-#' @examples \dontrun{
+#' @examples if (requireNamespace(""hurricandataexposuredata")) {
 #' floyd_map <- map_counties("Floyd-1999", metric = "rainfall",
 #'                            days_included = c(-2, -1, 0, 1))
 #' floyd_map
@@ -235,7 +235,7 @@ map_counties <-function(storm, metric = "distance",
 #' @inheritParams map_counties
 #'
 #' @examples
-#'\dontrun{
+#'if (requireNamespace(""hurricandataexposuredata")) {
 #' floyd_map <- map_rain_exposure(storm = "Floyd-1999", rain_limit = 50,
 #'                                dist_limit = 100)
 #' floyd_map
@@ -296,7 +296,7 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
 #' @return Plots a map showing whether eastern US counties were exposed or
 #'    unexposed to a specific storm based on a distance criterion.
 #'
-#' @examples \dontrun{
+#' @examples if (requireNamespace(""hurricandataexposuredata")) {
 #'
 #' floyd_map <- map_distance_exposure(storm = "Floyd-1999", dist_limit = 75)
 #' floyd_map
@@ -351,7 +351,7 @@ map_distance_exposure <- function(storm, dist_limit){
 #' @return Plots a map showing whether eastern US counties were exposed or
 #'    unexposed to a specific storm based on a wind criterion.
 #'
-#' @examples \dontrun{
+#' @examples if (requireNamespace(""hurricandataexposuredata")) {
 #'
 #' beryl_map <- map_wind_exposure(storm = "Beryl-1988", wind_limit = 15)
 #' beryl_map
