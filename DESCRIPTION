@@ -49,4 +49,4 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-Additional_repositories: http://geanders.github.io/drat
+Additional_repositories: https://geanders.github.io/drat
