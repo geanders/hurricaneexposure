@@ -9,6 +9,15 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r echo = FALSE, message = FALSE, results='hide'}
+knitr_require <- purrr::safely(require)
+hasData <- knitr_require("hurricaneexposuredata")
+if(!hasData$result){
+        knitr::opts_chunk$set(eval = FALSE)
+        print("Note: Examples in this vignette require that the `hurricaneexposuredata` package be installed. The system currently running this vignette does not have that package installed, so code examples will not be evaluated.")
+}
+```
+
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
 # If you need to install the hurricaneexposuredata package: 
 # library(devtools)
