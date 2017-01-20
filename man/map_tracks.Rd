@@ -38,14 +38,4 @@ Plot the tracks of any selected storms in the hurricane tracking
    dataset for the Atlantic basin. This function allows you to
    plot a new map or add the tracks to an existing ggplot object.
 }
-\examples{
-\dontrun{
-map_tracks(storms = "Sandy-2012")
-map_tracks(storms = "Floyd-1999", plot_points = TRUE)
-map_tracks(storms = c("Sandy-2012", "Floyd-1999"))
-a <- map_tracks(storms = "Sandy-2012", color = "blue", alpha = 0.3)
-b <- map_tracks(storms = "Floyd-1999", plot_object = a)
-b
-}
-}
 
