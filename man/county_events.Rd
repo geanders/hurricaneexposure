@@ -30,9 +30,10 @@ Of the event types that this function can pull, only "tornado" and
    other types were not recorded in the database before 1996.
 }
 \examples{
+\dontrun{
 county_events(counties = c("37031", "37053", "37055"),
               start_year = 1988, end_year = 1999,
               event_type = "flood")
-
+}
 }
 

@@ -31,6 +31,7 @@ between the storm's track and the population-based centers of each county
 in the community.
 }
 \examples{
+\dontrun{
 communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
                          fips = c("36005", "36047", "36061",
                                   "36085", "36081", "36119",
@@ -38,6 +39,6 @@ communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
 distance_df <- multi_county_distance(communities = communities,
                                      start_year = 1995, end_year = 2005,
                                      dist_limit = 75)
-
+}
 }
 

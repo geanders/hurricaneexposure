@@ -46,11 +46,13 @@
 #' @note Only counties in states in the eastern half of the United States can
 #'    be processed by this function.
 #'
-#' @examples
+#' @examples \dontrun{
+#'
 #' county_distance(counties = c("22071", "51700"),
 #'             start_year = 1995, end_year = 2005,
 #'             dist_limit = 75)
 #'
+#'}
 #' @export
 #'
 #' @importFrom dplyr %>%
@@ -84,7 +86,7 @@ county_distance <- function(counties, start_year, end_year, dist_limit){
 #'
 #' @export
 #'
-#' @examples
+#' @examples \dontrun{
 #' communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
 #'                          fips = c("36005", "36047", "36061",
 #'                                   "36085", "36081", "36119",
@@ -92,7 +94,7 @@ county_distance <- function(counties, start_year, end_year, dist_limit){
 #' distance_df <- multi_county_distance(communities = communities,
 #'                                      start_year = 1995, end_year = 2005,
 #'                                      dist_limit = 75)
-#'
+#'}
 #' @importFrom dplyr %>%
 multi_county_distance <- function(communities, start_year, end_year,
                          dist_limit){

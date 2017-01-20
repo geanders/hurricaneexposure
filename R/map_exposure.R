@@ -63,14 +63,14 @@ default_map <- function(){
 #'    of the selected storms. This object can be printed directly or added
 #'    on to with other ggplot commands.
 #'
-#' @examples
+#' @examples \dontrun{
 #' map_tracks(storms = "Sandy-2012")
 #' map_tracks(storms = "Floyd-1999", plot_points = TRUE)
 #' map_tracks(storms = c("Sandy-2012", "Floyd-1999"))
 #' a <- map_tracks(storms = "Sandy-2012", color = "blue", alpha = 0.3)
 #' b <- map_tracks(storms = "Floyd-1999", plot_object = a)
 #' b
-#'
+#' }
 #' @importFrom dplyr %>%
 #'
 #' @export
@@ -296,7 +296,7 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
 #' @return Plots a map showing whether eastern US counties were exposed or
 #'    unexposed to a specific storm based on a distance criterion.
 #'
-#' @examples
+#' @examples \dontrun{
 #'
 #' floyd_map <- map_distance_exposure(storm = "Floyd-1999", dist_limit = 75)
 #' floyd_map
@@ -304,7 +304,7 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
 #' allison_map <- map_distance_exposure(storm = "Allison-2001",
 #'                                      dist_limit = 75)
 #' map_tracks("Allison-2001", plot_points = FALSE, plot_object = allison_map)
-#'
+#' }
 #' @importFrom dplyr %>%
 #'
 #' @export
@@ -351,12 +351,12 @@ map_distance_exposure <- function(storm, dist_limit){
 #' @return Plots a map showing whether eastern US counties were exposed or
 #'    unexposed to a specific storm based on a wind criterion.
 #'
-#' @examples
+#' @examples \dontrun{
 #'
 #' beryl_map <- map_wind_exposure(storm = "Beryl-1988", wind_limit = 15)
 #' beryl_map
 #' map_tracks("Beryl-1988", plot_points = FALSE, plot_object = beryl_map)
-#'
+#' }
 #' @importFrom dplyr %>%
 #'
 #' @export

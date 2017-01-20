@@ -18,10 +18,11 @@ county exposures. Options include \code{"flood"}, \code{"tornado"},
 Map county-level exposure based on reported events
 }
 \examples{
+\dontrun{
 map_event_exposure(storm_id = "Floyd-1999", event_type = "flood")
 map_event_exposure(storm_id = "Floyd-1999", event_type = "tornado")
 map_event_exposure(storm_id = "Floyd-1999", event_type = "wind")
 map_event_exposure(storm_id = "Floyd-1999", event_type = "tropical_storm")
-
+}
 }
 
