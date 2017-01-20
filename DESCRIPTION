@@ -35,7 +35,6 @@ Imports:
     ggplot2 (>= 2.1.0),
     lazyeval (>= 0.1.10),
     lubridate (>= 1.5.6),
-    purrr (>= 0.2.2), 
     repmis (>= 0.5.0),
     RColorBrewer (>= 1.1.2),
     splines,
@@ -47,7 +46,6 @@ Depends:
 Suggests: 
     hurricaneexposuredata (>= 0.0.1),
     knitr,
-    purrr,
     rmarkdown
 VignetteBuilder: knitr
 Additional_repositories: https://geanders.github.io/drat
