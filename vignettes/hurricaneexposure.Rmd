@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r echo = FALSE, message = FALSE, results='hide'}
+```{r echo = FALSE, message = FALSE}
 knitr_require <- purrr::safely(require)
 hasData <- knitr_require("hurricaneexposuredata")
 if(!hasData$result){
