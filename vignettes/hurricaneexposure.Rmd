@@ -10,11 +10,12 @@ vignette: >
 ---
 
 ```{r echo = FALSE, message = FALSE}
-knitr_require <- purrr::safely(require)
-hasData <- knitr_require("hurricaneexposuredata")
-if(!hasData$result){
-        knitr::opts_chunk$set(eval = FALSE)
-        print("Note: Examples in this vignette require that the `hurricaneexposuredata` package be installed. The system currently running this vignette does not have that package installed, so code examples will not be evaluated.")
+hasData <- requireNamespace("hurricaneexposuredata", quietly=TRUE)
+if (!hasData) {
+    knitr::opts_chunk$set(eval = FALSE)
+    print(paste("Note: Examples in this vignette require that the `hurricaneexposuredata` package",
+                "be installed. The system currently running this vignette does not have that package",
+                "installed, so code examples will not be evaluated."))
 }
 ```
 
