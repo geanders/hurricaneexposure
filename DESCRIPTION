@@ -1,8 +1,8 @@
 Package: hurricaneexposure
 Type: Package
 Title: Functions to Create County-Level Time Series of Hurricane Exposure
-Version: 0.0.0.9000
-Date: 2017-01-17
+Version: 0.0.1
+Date: 2017-01-23
 Authors@R: c(person("Brooke", "Anderson",
     email = "brooke.anderson@colostate.edu", role = c("aut", "cre")),
     person("Meilin", "Yan",
@@ -10,18 +10,15 @@ Authors@R: c(person("Brooke", "Anderson",
     person("Joshua", "Ferreri",
     email = "joshua.m.ferreri@gmail.com", role = "aut")
     )
-Description: Allows users to create time series of daily binary hurricane
-    exposure histories for chosen counties based on specified thresholds
-    of distance to storm track and rainfall during a the week
-    centered on the storm date. This package interacts with data available 
-    through the "hurricaneexposuredata" package, which is available in a "drat"
-    repository. To access this data package, run 
-    install.packages("hurricaneexposuredata", 
-    repos = "https://geanders.github.io/drat/", type = "source"). The 
-    size of the "hurricaneexposuredata" package is approximately 15 MB. This 
-    work was supported in part by grants from the National Institute of 
-    Environmental Health Sciences (R00ES022631) and the National Science 
-    Foundation (1331399).
+Description: Allows users to create time series of tropical storm
+    exposure histories for chosen counties for a number of hazard metrics (wind, 
+    rain, distance from the storm, etc.). This package interacts with data available 
+    through the 'hurricaneexposuredata' package, which is available in a 'drat'
+    repository. To access this data package, run install.packages('hurricaneexposuredata', 
+    repos = 'https://geanders.github.io/drat/', type = 'source'). The size of the 
+    'hurricaneexposuredata' package is approximately 25 MB. This work was supported in 
+    part by grants from the National Institute of Environmental Health Sciences 
+    (R00ES022631) and the National Science Foundation (1331399).
 URL: https://github.com/geanders/hurricaneexposure
 BugReports: https://github.com/geanders/hurricaneexposure/issues
 License: GPL-2
