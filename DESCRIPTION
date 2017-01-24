@@ -33,11 +33,9 @@ Imports:
     lazyeval (>= 0.1.10),
     lubridate (>= 1.5.6),
     purrr,
-    repmis (>= 0.5.0),
     RColorBrewer (>= 1.1.2),
     splines,
-    stats,
-    tidyr (>= 0.4.1)
+    stats
 RoxygenNote: 5.0.1
 Depends:
     R (>= 2.10)
