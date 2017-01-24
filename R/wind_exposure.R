@@ -44,11 +44,7 @@
 county_wind <- function(counties, start_year, end_year, wind_limit,
                         wind_var = "vmax_sust"){
 
-        if(!.pkgglobalenv$has_data){
-                stop(paste("To use this function, you must have the",
-                           "`hurricaneexposuredata` package installed. See the",
-                           "`hurricaneexposure` package vignette for more details."))
-        }
+        hasData()
 
         wind_df <- filter_wind_data(counties = counties,
                                          year_range = c(start_year, end_year),
@@ -96,11 +92,7 @@ county_wind <- function(counties, start_year, end_year, wind_limit,
 multi_county_wind <- function(communities, start_year, end_year,
                               wind_limit){
 
-        if(!.pkgglobalenv$has_data){
-                stop(paste("To use this function, you must have the",
-                           "`hurricaneexposuredata` package installed. See the",
-                           "`hurricaneexposure` package vignette for more details."))
-        }
+        hasData()
 
         communities <- dplyr::mutate_(communities, fips = ~ as.character(fips))
 

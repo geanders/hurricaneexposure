@@ -13,3 +13,11 @@
   }
   assign("has_data", has_data_package, envir = .pkgglobalenv)
 }
+
+hasData <- function(has_data = .pkgglobalenv$has_data){
+        if(!has_data){
+                stop(paste("To use this function, you must have the",
+                           "`hurricaneexposuredata` package installed. See the",
+                           "`hurricaneexposure` package vignette for more details."))
+        }
+}

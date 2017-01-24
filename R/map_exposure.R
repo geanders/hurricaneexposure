@@ -85,11 +85,7 @@ map_tracks <- function(storms, plot_object = NULL,
                       alpha = 1,
                       color = "firebrick"){
 
-        if(!.pkgglobalenv$has_data){
-                stop(paste("To use this function, you must have the",
-                           "`hurricaneexposuredata` package installed. See the",
-                           "`hurricaneexposure` package vignette for more details."))
-        }
+        hasData()
 
         if(is.null(plot_object)){
                 plot_object <- default_map()
@@ -119,7 +115,8 @@ map_tracks <- function(storms, plot_object = NULL,
                                                         y = ~ latitude,
                                                         group = ~ storm_id),
                                            alpha = alpha,
-                                           color = color)
+                                           color = color) +
+                ggplot2::coord_map()
 
         if(plot_points){
                 out <- out + ggplot2::geom_point(data = tracks,
