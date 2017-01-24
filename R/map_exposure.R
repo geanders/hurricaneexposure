@@ -378,7 +378,8 @@ map_distance_exposure <- function(storm, dist_limit){
 #' map_tracks("Beryl-1988", plot_points = FALSE, plot_object = beryl_map)
 #' }
 #' @importFrom dplyr %>%
-#'
+#' @import choroplethrMaps
+#' 
 #' @export
 map_wind_exposure <- function(storm, wind_limit){
 
