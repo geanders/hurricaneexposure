@@ -32,6 +32,7 @@ Imports:
     ggplot2 (>= 2.1.0),
     lazyeval (>= 0.1.10),
     lubridate (>= 1.5.6),
+    purrr,
     repmis (>= 0.5.0),
     RColorBrewer (>= 1.1.2),
     splines,
