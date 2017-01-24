@@ -22,6 +22,7 @@
 #'               event_type = "flood")
 #' }
 #' @importFrom dplyr %>%
+#' @importFrom purrr map2
 #'
 #' @export
 county_events <- function(counties, start_year, end_year, event_type){
