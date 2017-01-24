@@ -26,7 +26,12 @@
 #'    function. Columns in the output will vary depending on the user's
 #'    selections for the \code{output_vars} argument.
 #'
-#' @examples if (requireNamespace(""hurricandataexposuredata")) {
+#' @examples
+#' # Ensure that data package is available before running the example.
+#' #  If it is not, see the `hurricaneexposure` package vignette for details
+#' # on installing the required data package.
+#' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
+#'
 #' filter_storm_data(counties = c("22071", "51700"), year_range = c(1988, 2011),
 #'                   distance_limit = 250, rain_limit = 150,
 #'                  include_rain = TRUE, days_included = c(-1, 0, 1),
@@ -111,7 +116,12 @@ filter_storm_data <- function(counties = NULL, storm = NULL, year_range = NULL,
 #'    function. Columns in the output will vary depending on the user's
 #'    selections for the \code{output_vars} argument.
 #'
-#' @examples if (requireNamespace(""hurricandataexposuredata")) {
+#' @examples
+#' # Ensure that data package is available before running the example.
+#' #  If it is not, see the `hurricaneexposure` package vignette for details
+#' # on installing the required data package.
+#' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
+#'
 #' filter_wind_data(counties = c("22071", "51700"), year_range = c(1988, 2011),
 #'                  wind_limit = 20,
 #'                  output_vars = c("fips", "storm_id", "vmax_sust"))

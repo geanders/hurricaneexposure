@@ -63,7 +63,12 @@
 #' Assimilation System Phase 2 (NLDAS-2) Products. Goddard Earth Sciences
 #' Data and Information Services Center.
 #'
-#' @examples if (requireNamespace(""hurricandataexposuredata")) {
+#' @examples
+#' # Ensure that data package is available before running the example.
+#' #  If it is not, see the `hurricaneexposure` package vignette for details
+#' # on installing the required data package.
+#' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
+#'
 #' county_rain(counties = c("22071", "51700"),
 #'             start_year = 1995, end_year = 2005,
 #'             rain_limit = 100, dist_limit = 100)
@@ -139,7 +144,12 @@ county_rain <- function(counties, start_year, end_year,
 #'                                option.}
 #'    }
 #'
-#' @examples if (requireNamespace(""hurricandataexposuredata")) {
+#' @examples
+#' # Ensure that data package is available before running the example.
+#' #  If it is not, see the `hurricaneexposure` package vignette for details
+#' # on installing the required data package.
+#' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
+#'
 #' communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
 #'                          fips = c("36005", "36047", "36061",
 #'                                   "36085", "36081", "36119",
@@ -240,8 +250,12 @@ multi_county_rain <- function(communities, start_year, end_year,
 #'    \code{\link{multi_county_rain}}.
 #'
 #' @examples
-#' if (requireNamespace(""hurricandataexposuredata")) {
-#' #' # By county
+#' # Ensure that data package is available before running the example.
+#' #  If it is not, see the `hurricaneexposure` package vignette for details
+#' # on installing the required data package.
+#' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
+#'
+#' # By county
 #' rain_exposure(locations = c("22071", "51700"),
 #'               start_year = 1995, end_year = 2005,
 #'               rain_limit = 100, dist_limit = 100,

@@ -40,4 +40,27 @@ and creates time series dataframes that can be merged with health time series,
 giving the dates and exposures for all storms meeting the given
 storm distance criteria.
 }
+\examples{
+# Ensure that data package is available before running the example.
+#  If it is not, see the `hurricaneexposure` package vignette for details
+# on installing the required data package.
+if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
+
+# By county
+distance_exposure(locations = c("22071", "51700"),
+              start_year = 1995, end_year = 2005,
+              dist_limit = 75,
+              out_dir = "~/tmp/storms")
+
+# For multi-county communities
+communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
+                          fips = c("36005", "36047", "36061",
+                          "36085", "36081", "36119",
+                          "22071", "51700"))
+distance_exposure(locations = communities,
+              start_year = 1995, end_year = 2005,
+              dist_limit = 75,
+              out_dir = "~/tmp/storms")
+}
+}
 

@@ -60,4 +60,16 @@ For more information on how distances between counties and storm
 Only counties in states in the eastern half of the United States can
    be processed by this function.
 }
+\examples{
+# Ensure that data package is available before running the example.
+#  If it is not, see the `hurricaneexposure` package vignette for details
+# on installing the required data package.
+if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
+
+  county_distance(counties = c("22071", "51700"),
+              start_year = 1995, end_year = 2005,
+              dist_limit = 75)
+
+}
+}
 

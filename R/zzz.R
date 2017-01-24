@@ -1,7 +1,7 @@
 .pkgglobalenv <- new.env(parent=emptyenv())
 
 .onAttach <- function(libname, pkgname) {
-  has_data_package <- requireNamespace("hurricaneexposuredata")
+  has_data_package <- requireNamespace("hurricaneexposuredata", quietly = TRUE)
   if(!has_data_package){
     packageStartupMessage(paste("To use this package, you must install the",
                                 "hurricaneexposuredata package."))

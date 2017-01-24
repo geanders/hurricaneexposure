@@ -21,4 +21,15 @@ Map counties as "exposed" or "unexposed" based on the criterion that the
 storm had a certain wind speed (specified by \code{wind_limit}, in meters
 per second).
 }
+\examples{
+# Ensure that data package is available before running the example.
+#  If it is not, see the `hurricaneexposure` package vignette for details
+# on installing the required data package.
+if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
+
+beryl_map <- map_wind_exposure(storm = "Beryl-1988", wind_limit = 15)
+beryl_map
+map_tracks("Beryl-1988", plot_points = FALSE, plot_object = beryl_map)
+}
+}
 

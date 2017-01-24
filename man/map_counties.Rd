@@ -33,4 +33,17 @@ This function creates a choropleth map of counties in the eastern
 \description{
 Map counties
 }
+\examples{
+# Ensure that data package is available before running the example.
+#  If it is not, see the `hurricaneexposure` package vignette for details
+# on installing the required data package.
+if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
+
+floyd_map <- map_counties("Floyd-1999", metric = "rainfall",
+                           days_included = c(-2, -1, 0, 1))
+floyd_map
+
+beryl_map <- map_counties("Beryl-1988", metric = "wind")
+}
+}
 

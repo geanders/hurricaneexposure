@@ -53,4 +53,15 @@ For more information on how wind speeds are modeled in this data,
 Only counties in states in the eastern half of the United States can
    be processed by this function.
 }
+\examples{
+# Ensure that data package is available before running the example.
+#  If it is not, see the `hurricaneexposure` package vignette for details
+# on installing the required data package.
+if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
+
+county_wind(counties = c("22071", "51700"),
+            start_year = 1988, end_year = 2005,
+            wind_limit = 20, wind_var = "vmax_sust")
+}
+}
 

@@ -28,7 +28,12 @@
 #' @note Only counties in states in the eastern half of the United States can
 #'    be processed by this function.
 #'
-#' @examples if (requireNamespace(""hurricandataexposuredata")) {
+#' @examples
+#' # Ensure that data package is available before running the example.
+#' #  If it is not, see the `hurricaneexposure` package vignette for details
+#' # on installing the required data package.
+#' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
+#'
 #' county_wind(counties = c("22071", "51700"),
 #'             start_year = 1988, end_year = 2005,
 #'             wind_limit = 20, wind_var = "vmax_sust")
@@ -73,7 +78,12 @@ county_wind <- function(counties, start_year, end_year, wind_limit,
 #'
 #' @export
 #'
-#' @examples if (requireNamespace(""hurricandataexposuredata")) {
+#' @examples
+#' # Ensure that data package is available before running the example.
+#' #  If it is not, see the `hurricaneexposure` package vignette for details
+#' # on installing the required data package.
+#' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
+#'
 #' communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
 #'                          fips = c("36005", "36047", "36061",
 #'                                   "36085", "36081", "36119",
@@ -135,7 +145,12 @@ multi_county_wind <- function(communities, start_year, end_year,
 #'    documentation for \code{\link{county_wind}} and
 #'    \code{\link{multi_county_wind}}.
 #'
-#' @examples if (requireNamespace(""hurricandataexposuredata")) {
+#' @examples
+#' # Ensure that data package is available before running the example.
+#' #  If it is not, see the `hurricaneexposure` package vignette for details
+#' # on installing the required data package.
+#' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
+#'
 #' # By county
 #' wind_exposure(locations = c("22071", "51700"),
 #'               start_year = 1988, end_year = 2005,
