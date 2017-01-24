@@ -5,7 +5,8 @@ sudo: false
 cache: packages
 warnings_are_errors: false
 
+r_check_args: --no-examples
+
 r_github_packages:
   - cran/survival
-
-#  - geanders/hurricaneexposuredata
+  - geanders/hurricaneexposuredata
