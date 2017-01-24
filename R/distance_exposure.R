@@ -150,7 +150,7 @@ multi_county_distance <- function(communities, start_year, end_year,
 #'    documentation for \code{\link{county_rain}} and
 #'    \code{\link{multi_county_rain}}.
 #'
-#' @examples
+#' @examples \dontrun{
 #' # Ensure that data package is available before running the example.
 #' #  If it is not, see the `hurricaneexposure` package vignette for details
 #' # on installing the required data package.
@@ -171,6 +171,7 @@ multi_county_distance <- function(communities, start_year, end_year,
 #'               start_year = 1995, end_year = 2005,
 #'               dist_limit = 75,
 #'               out_dir = "~/tmp/storms")
+#' }
 #' }
 #' @export
 #'

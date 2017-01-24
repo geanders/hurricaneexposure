@@ -245,7 +245,7 @@ multi_county_rain <- function(communities, start_year, end_year,
 #'    documentation for \code{\link{county_rain}} and
 #'    \code{\link{multi_county_rain}}.
 #'
-#' @examples
+#' @examples \dontrun{
 #' # Ensure that data package is available before running the example.
 #' #  If it is not, see the `hurricaneexposure` package vignette for details
 #' # on installing the required data package.
@@ -267,7 +267,7 @@ multi_county_rain <- function(communities, start_year, end_year,
 #'               rain_limit = 100, dist_limit = 100,
 #'               out_dir = "~/tmp/storms")
 #' }
-#'
+#' }
 #' @importFrom dplyr %>%
 #'
 #' @export

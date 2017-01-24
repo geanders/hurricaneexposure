@@ -57,6 +57,7 @@ exposure time series can then be merged with other time series (e.g.,
 community-specific daily counts of health outcomes).
 }
 \examples{
+\dontrun{
 # Ensure that data package is available before running the example.
 #  If it is not, see the `hurricaneexposure` package vignette for details
 # on installing the required data package.
@@ -78,6 +79,6 @@ rain_exposure(locations = communities,
               rain_limit = 100, dist_limit = 100,
               out_dir = "~/tmp/storms")
 }
-
+}
 }
 

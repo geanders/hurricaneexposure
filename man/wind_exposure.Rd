@@ -40,6 +40,7 @@ giving the dates and exposures for all storms meeting the given
 storm wind criteria.
 }
 \examples{
+\dontrun{
 # Ensure that data package is available before running the example.
 #  If it is not, see the `hurricaneexposure` package vignette for details
 # on installing the required data package.
@@ -60,6 +61,7 @@ wind_exposure(locations = communities,
               start_year = 1988, end_year = 2005,
               wind_limit = 10,
               out_dir = "~/tmp/storms")
+}
 }
 }
 

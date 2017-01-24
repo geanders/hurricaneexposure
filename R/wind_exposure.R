@@ -137,7 +137,7 @@ multi_county_wind <- function(communities, start_year, end_year,
 #'    documentation for \code{\link{county_wind}} and
 #'    \code{\link{multi_county_wind}}.
 #'
-#' @examples
+#' @examples \dontrun{
 #' # Ensure that data package is available before running the example.
 #' #  If it is not, see the `hurricaneexposure` package vignette for details
 #' # on installing the required data package.
@@ -158,6 +158,7 @@ multi_county_wind <- function(communities, start_year, end_year,
 #'               start_year = 1988, end_year = 2005,
 #'               wind_limit = 10,
 #'               out_dir = "~/tmp/storms")
+#'}
 #'}
 #' @export
 #'
