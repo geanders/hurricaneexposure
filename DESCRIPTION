@@ -8,7 +8,13 @@ Authors@R: c(person("Brooke", "Anderson",
     person("Meilin", "Yan",
     email = "meilin.yan@colostate.edu", role = "aut"),
     person("Joshua", "Ferreri",
-    email = "joshua.m.ferreri@gmail.com", role = "aut")
+    email = "joshua.m.ferreri@gmail.com", role = "aut"),
+    person("William", "Crosson", 
+    email = "bill.crosson@nasa.gov", role = "ctb"),
+    person("Mohammad", "Al-Hamdan", 
+    email = "mohammad.alhamdan@nasa.gov", role = "ctb"),
+    person("Dirk", "Eddelbuettel", 
+    email = "edd@debian.org", role = "ctb")
     )
 Description: Allows users to create time series of tropical storm
     exposure histories for chosen counties for a number of hazard metrics (wind, 
