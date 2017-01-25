@@ -17,6 +17,27 @@
 #' default_map()
 default_map <- function(){
 
+        map_data <- get_eastern_map("state")
+
+        out <- ggplot2::ggplot(map_data,
+                               ggplot2::aes_(x = ~ long, y = ~ lat,
+                                             group = ~ group)) +
+                ggplot2::geom_polygon(fill = "lightgray", color = "white") +
+                ggmap::theme_nothing(legend = TRUE) +
+                ggplot2::coord_map()
+        return(out)
+}
+
+#' Get map data for eastern US states
+#'
+#' @param map A character string giving the map database from which to pull
+#'
+#' @return A dataframe with map data pulled using the \code{map_data} function in
+#'    \code{ggplot2}, filtered to states in the eastern half of the United States.
+#'
+#' @importFrom dplyr %>%
+get_eastern_map <- function(map  = "county"){
+
         eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
                             "district of columbia", "florida", "georgia", "illinois",
                             "indiana", "iowa", "kansas", "kentucky", "louisiana",
@@ -27,15 +48,23 @@ default_map <- function(){
                             "tennessee", "texas", "vermont", "virginia",
                             "west virginia", "wisconsin")
 
-        map_data <- ggplot2::map_data("state")
-        map_data <- map_data %>%
+        map_data <- ggplot2::map_data(map = map) %>%
                 dplyr::filter_(~ region %in% eastern_states)
-        out <- ggplot2::ggplot(map_data,
-                               ggplot2::aes_(x = ~ long, y = ~ lat,
-                                             group = ~ group)) +
-                ggplot2::geom_polygon(fill = "lightgray", color = "white") +
-                ggmap::theme_nothing(legend = TRUE)
-        return(out)
+
+        if(map == "county"){
+                county.fips <- maps::county.fips %>%
+                        dplyr::mutate_(polyname = ~ as.character(polyname)) %>%
+                        dplyr::mutate_(polyname = ~ stringr::str_replace(polyname,
+                                                                         ":.+", ""))
+                map_data <- map_data %>%
+                        tidyr::unite_(col = "polyname", from = c("region", "subregion"),
+                                      sep = ",") %>%
+                        dplyr::left_join(county.fips, by = "polyname") %>%
+                        dplyr::mutate_(fips = ~ stringr::str_pad(fips, 5,
+                                                                 side = "left", pad = "0"))
+        }
+
+        return(map_data)
 }
 
 #' Plot Atlantic basin hurricane tracks
@@ -79,11 +108,8 @@ default_map <- function(){
 #' @importFrom dplyr %>%
 #'
 #' @export
-map_tracks <- function(storms, plot_object = NULL,
-                      padding = 2,
-                      plot_points = FALSE,
-                      alpha = 1,
-                      color = "firebrick"){
+map_tracks <- function(storms, plot_object = NULL, padding = 2, plot_points = FALSE,
+                       alpha = 1, color = "firebrick"){
 
         hasData()
 
@@ -91,8 +117,8 @@ map_tracks <- function(storms, plot_object = NULL,
                 plot_object <- default_map()
         }
 
-        map_data <- plot_object$data
-        map_dim <- apply(map_data[ , c("long", "lat")],
+        map_dim <- apply(matrix(c(-106.65037, 25.12993, -67.00742, 47.48101),
+                                byrow = TRUE, ncol = 2),
                          MARGIN = 2,
                          function(x) range(x) + c(-1, 1) * padding)
         tracks <- hurricaneexposuredata::hurr_tracks %>%
@@ -173,63 +199,6 @@ interp_track <- function(track, tint = 0.25){
         return(full_track)
 }
 
-#' Map counties
-#'
-#' @param storm Character string giving the name of the storm to plot (e.g.,
-#'    "Floyd-1999")
-#' @param metric Character string giving the metric to plot. Current options are
-#'    \code{"distance"} (default) and \code{"rainfall"}. These options are used
-#'    to customize the color palette and scale of the choropleth map produced
-#'    by this function.
-#' @inheritParams county_rain
-#'
-#' @return This function creates a choropleth map of counties in the eastern
-#'    part of the United States, showing distance from a storm track or total
-#'    rainfall over a given window of one or more days.
-#'
-#' @examples
-#' # Ensure that data package is available before running the example.
-#' #  If it is not, see the `hurricaneexposure` package vignette for details
-#' # on installing the required data package.
-#' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
-#'
-#' floyd_map <- map_counties("Floyd-1999", metric = "rainfall",
-#'                            days_included = c(-2, -1, 0, 1))
-#' floyd_map
-#'
-#' beryl_map <- map_counties("Beryl-1988", metric = "wind")
-#'}
-#' @export
-#'
-#' @importFrom dplyr %>%
-map_counties <-function(storm, metric = "distance",
-                        days_included = c(-2, -1, 0, 1)){
-        if(metric == "distance"){
-                map_data <- filter_storm_data(storm = storm,
-                                              output_vars = c("fips",
-                                                              "storm_dist")) %>%
-                        dplyr::rename_(region = ~ fips, value = ~ storm_dist)
-        } else if(metric == "rainfall"){
-                map_data <- filter_storm_data(storm = storm, include_rain = TRUE,
-                                              days_included = days_included,
-                                              output_vars = c("fips",
-                                                              "tot_precip")) %>%
-                        dplyr::rename_(region = ~ fips, value = ~ tot_precip)
-        } else if (metric == "wind") {
-                map_data <- filter_wind_data(storm = storm,
-                                             output_vars = c("fips",
-                                                             "vmax_sust")) %>%
-                        dplyr::rename_(region = ~ fips, value = ~ vmax_sust)
-        } else{
-                stop("`metric` must be either `distance`, `rainfall`, or `wind`")
-        }
-        map_data <- map_data %>%
-                dplyr::mutate_(region = ~ as.numeric(region)) %>%
-                dplyr::tbl_df()
-        out <- hurr_choroplethr(map_data, metric = metric)
-        return(suppressWarnings(out$render()))
-}
-
 #' Map counties with rain exposure
 #'
 #' Map counties as "exposed" or "unexposed" based on the criteria that the
@@ -247,9 +216,7 @@ map_counties <-function(storm, metric = "distance",
 #' # on installing the required data package.
 #' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
 #'
-#' floyd_map <- map_rain_exposure(storm = "Floyd-1999", rain_limit = 50,
-#'                                dist_limit = 100)
-#' floyd_map
+#' map_rain_exposure(storm = "Floyd-1999", rain_limit = 50, dist_limit = 100)
 #'
 #' allison_map <- map_rain_exposure(storm = "Allison-2001", rain_limit = 20,
 #'                                  dist_limit = 100, days_included = 0)
@@ -270,28 +237,32 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
                                        storm_dist <= dist_limit) %>%
                 dplyr::mutate_(value = ~ factor(exposed,
                                                 levels = c("FALSE", "TRUE"))) %>%
-                dplyr::mutate_(region = ~ as.numeric(fips)) %>%
-                dplyr::select_(~ region, ~ value) %>%
                 dplyr::tbl_df()
 
-        eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
-                            "district of columbia", "florida", "georgia", "illinois",
-                            "indiana", "iowa", "kansas", "kentucky", "louisiana",
-                            "maine", "maryland", "massachusetts", "michigan",
-                            "mississippi", "missouri", "new hampshire", "new jersey",
-                            "new york", "north carolina", "ohio", "oklahoma",
-                            "pennsylvania", "rhode island", "south carolina",
-                            "tennessee", "texas", "vermont", "virginia",
-                            "west virginia", "wisconsin")
-
-        out <- choroplethr::CountyChoropleth$new(map_data)
-        out$set_zoom(eastern_states)
-        out$ggplot_scale <- ggplot2::scale_fill_manual(name = "",
-                                                       values = c("white",
-                                                                  "navy"),
-                                                       labels = c("Unexposed",
-                                                                  "Exposed"))
-        return(suppressWarnings(out$render()))
+        out_data <- get_eastern_map() %>%
+                dplyr::left_join(map_data, by = "fips")
+        out <- ggplot2::ggplot() +
+                ggplot2::geom_polygon(data = out_data,
+                                      ggplot2::aes_(x = ~ long, y = ~ lat, group = ~ group,
+                                                    fill = ~ value),
+                                      color = "lightgray", size = 0.2) +
+                ggplot2::borders("state", regions = c("virginia", "north carolina", "south carolina",
+                                                      "georgia", "florida", "alabama", "kentucky",
+                                                      "tennessee", "maryland", "west virginia",
+                                                      "district of columbia", "pennsylvania",
+                                                      "new jersey", "delaware", "mississippi",
+                                                      "louisiana", "texas", "oklahoma", "arkansas",
+                                                      "new york", "connecticut", "rhode island",
+                                                      "massachusetts", "new hampshire", "vermont",
+                                                      "maine", "kansas", "missouri", "iowa", "michigan",
+                                                      "illinois", "ohio", "wisconsin", "indiana"),
+                                 colour = "black", fill = NA, size = 0.2, alpha = 0.5) +
+                ggplot2::theme_void() +
+                ggplot2::coord_map() +
+                ggplot2::scale_fill_manual(name = paste("Rain >", rain_limit, "mm"),
+                                           values = c("white", "navy"),
+                                           labels = c("Unexposed", "Exposed"))
+        return(out)
 }
 
 #' Map counties with distance exposure
@@ -331,28 +302,33 @@ map_distance_exposure <- function(storm, dist_limit){
                 dplyr::mutate_(exposed = ~ storm_dist <= dist_limit) %>%
                 dplyr::mutate_(value = ~ factor(exposed,
                                                 levels = c("FALSE", "TRUE"))) %>%
-                dplyr::mutate_(region = ~ as.numeric(fips)) %>%
-                dplyr::select_(~ region, ~ value) %>%
                 dplyr::tbl_df()
 
-        eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
-                            "district of columbia", "florida", "georgia", "illinois",
-                            "indiana", "iowa", "kansas", "kentucky", "louisiana",
-                            "maine", "maryland", "massachusetts", "michigan",
-                            "mississippi", "missouri", "new hampshire", "new jersey",
-                            "new york", "north carolina", "ohio", "oklahoma",
-                            "pennsylvania", "rhode island", "south carolina",
-                            "tennessee", "texas", "vermont", "virginia",
-                            "west virginia", "wisconsin")
+        out_data <- get_eastern_map() %>%
+                dplyr::left_join(map_data, by = "fips")
+        out <- ggplot2::ggplot() +
+                ggplot2::geom_polygon(data = out_data,
+                                      ggplot2::aes_(x = ~ long, y = ~ lat, group = ~ group,
+                                                    fill = ~ value),
+                                      color = "lightgray", size = 0.2) +
+                ggplot2::borders("state", regions = c("virginia", "north carolina", "south carolina",
+                                                      "georgia", "florida", "alabama", "kentucky",
+                                                      "tennessee", "maryland", "west virginia",
+                                                      "district of columbia", "pennsylvania",
+                                                      "new jersey", "delaware", "mississippi",
+                                                      "louisiana", "texas", "oklahoma", "arkansas",
+                                                      "new york", "connecticut", "rhode island",
+                                                      "massachusetts", "new hampshire", "vermont",
+                                                      "maine", "kansas", "missouri", "iowa", "michigan",
+                                                      "illinois", "ohio", "wisconsin", "indiana"),
+                                 colour = "black", fill = NA, size = 0.2, alpha = 0.5) +
+                ggplot2::theme_void() +
+                ggplot2::coord_map() +
+                ggplot2::scale_fill_manual(name = paste("Distance <", dist_limit, "km"),
+                                           values = c("white", "forestgreen"),
+                                           labels = c("Unexposed", "Exposed"))
 
-        out <- choroplethr::CountyChoropleth$new(map_data)
-        out$set_zoom(eastern_states)
-        out$ggplot_scale <- ggplot2::scale_fill_manual(name = "",
-                                                       values = c("white",
-                                                                  "forestgreen"),
-                                                       labels = c("Unexposed",
-                                                                  "Exposed"))
-        return(suppressWarnings(out$render()))
+        return(out)
 }
 
 #' Map counties with wind exposure
@@ -378,7 +354,6 @@ map_distance_exposure <- function(storm, dist_limit){
 #' map_tracks("Beryl-1988", plot_points = FALSE, plot_object = beryl_map)
 #' }
 #' @importFrom dplyr %>%
-#' @import choroplethrMaps
 #'
 #' @export
 map_wind_exposure <- function(storm, wind_limit){
@@ -389,28 +364,33 @@ map_wind_exposure <- function(storm, wind_limit){
                 dplyr::mutate_(exposed = ~ vmax_sust >= wind_limit) %>%
                 dplyr::mutate_(value = ~ factor(exposed,
                                                 levels = c("FALSE", "TRUE"))) %>%
-                dplyr::mutate_(region = ~ as.numeric(fips)) %>%
-                dplyr::select_(~ region, ~ value) %>%
                 dplyr::tbl_df()
 
-        eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
-                            "district of columbia", "florida", "georgia", "illinois",
-                            "indiana", "iowa", "kansas", "kentucky", "louisiana",
-                            "maine", "maryland", "massachusetts", "michigan",
-                            "mississippi", "missouri", "new hampshire", "new jersey",
-                            "new york", "north carolina", "ohio", "oklahoma",
-                            "pennsylvania", "rhode island", "south carolina",
-                            "tennessee", "texas", "vermont", "virginia",
-                            "west virginia", "wisconsin")
+        out_data <- get_eastern_map() %>%
+                dplyr::left_join(map_data, by = "fips")
+        out <- ggplot2::ggplot() +
+                ggplot2::geom_polygon(data = out_data,
+                                      ggplot2::aes_(x = ~ long, y = ~ lat, group = ~ group,
+                                                    fill = ~ value),
+                                      color = "lightgray", size = 0.2) +
+                ggplot2::borders("state", regions = c("virginia", "north carolina", "south carolina",
+                                                      "georgia", "florida", "alabama", "kentucky",
+                                                      "tennessee", "maryland", "west virginia",
+                                                      "district of columbia", "pennsylvania",
+                                                      "new jersey", "delaware", "mississippi",
+                                                      "louisiana", "texas", "oklahoma", "arkansas",
+                                                      "new york", "connecticut", "rhode island",
+                                                      "massachusetts", "new hampshire", "vermont",
+                                                      "maine", "kansas", "missouri", "iowa", "michigan",
+                                                      "illinois", "ohio", "wisconsin", "indiana"),
+                                 colour = "black", fill = NA, size = 0.2, alpha = 0.5) +
+                ggplot2::theme_void() +
+                ggplot2::coord_map() +
+                ggplot2::scale_fill_manual(name = paste("Wind >", wind_limit, "m/s"),
+                                           values = c("white", "darkorange"),
+                                           labels = c("Unexposed", "Exposed"))
 
-        out <- choroplethr::CountyChoropleth$new(map_data)
-        out$set_zoom(eastern_states)
-        out$ggplot_scale <- ggplot2::scale_fill_manual(name = "",
-                                                       values = c("white",
-                                                                  "darkorange"),
-                                                       labels = c("Unexposed",
-                                                                  "Exposed"))
-        return(suppressWarnings(out$render()))
+        return(out)
 }
 
 #' Map county-level exposure based on reported events
@@ -449,49 +429,110 @@ map_event_exposure <- function(storm_id, event_type){
                 dplyr::select_(quote(fips)) %>%
                 dplyr::mutate_(event = ~ 1) %>%
                 dplyr::right_join(counties, by = "fips") %>%
-                dplyr::mutate_(event = ~ !is.na(event),
-                               fips = ~ as.numeric(fips)) %>%
-                dplyr::rename_(region = ~ fips, value = ~ event) %>%
+                dplyr::mutate_(event = ~ !is.na(event)) %>%
+                dplyr::rename_(value = ~ event) %>%
                 dplyr::select_(quote(-storm_dist))
 
-        eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
-                            "district of columbia", "florida", "georgia", "illinois",
-                            "indiana", "iowa", "kansas", "kentucky", "louisiana",
-                            "maine", "maryland", "massachusetts", "michigan",
-                            "mississippi", "missouri", "new hampshire", "new jersey",
-                            "new york", "north carolina", "ohio", "oklahoma",
-                            "pennsylvania", "rhode island", "south carolina",
-                            "tennessee", "texas", "vermont", "virginia",
-                            "west virginia", "wisconsin")
+        out_data <- get_eastern_map() %>%
+                dplyr::left_join(map_data, by = "fips")
+        out <- ggplot2::ggplot() +
+                ggplot2::geom_polygon(data = out_data,
+                                      ggplot2::aes_(x = ~ long, y = ~ lat, group = ~ group,
+                                                    fill = ~ value),
+                                      color = "lightgray", size = 0.2) +
+                ggplot2::borders("state", regions = c("virginia", "north carolina", "south carolina",
+                                                      "georgia", "florida", "alabama", "kentucky",
+                                                      "tennessee", "maryland", "west virginia",
+                                                      "district of columbia", "pennsylvania",
+                                                      "new jersey", "delaware", "mississippi",
+                                                      "louisiana", "texas", "oklahoma", "arkansas",
+                                                      "new york", "connecticut", "rhode island",
+                                                      "massachusetts", "new hampshire", "vermont",
+                                                      "maine", "kansas", "missouri", "iowa", "michigan",
+                                                      "illinois", "ohio", "wisconsin", "indiana"),
+                                 colour = "black", fill = NA, size = 0.2, alpha = 0.5) +
+                ggplot2::theme_void() +
+                ggplot2::coord_map() +
+                ggplot2::scale_fill_manual(name = paste(stringr::str_to_title(event_type),
+                                                        "event"),
+                                           values = c("white", "red"),
+                                           labels = c("Unexposed", "Exposed"))
 
-        out <- choroplethr::CountyChoropleth$new(map_data)
-        out$set_zoom(eastern_states)
-        out$ggplot_scale <- ggplot2::scale_fill_manual(name = "",
-                                                       values = c("white",
-                                                                  "red"),
-                                                       labels = c("Unexposed",
-                                                                  "Exposed"))
-        return(suppressWarnings(out$render()))
+        return(out)
+}
+
+#' Map counties
+#'
+#' @param storm Character string giving the name of the storm to plot (e.g.,
+#'    "Floyd-1999")
+#' @param metric Character string giving the metric to plot. Current options are
+#'    \code{"distance"} (default) and \code{"rainfall"}. These options are used
+#'    to customize the color palette and scale of the choropleth map produced
+#'    by this function.
+#' @inheritParams county_rain
+#'
+#' @return This function creates a choropleth map of counties in the eastern
+#'    part of the United States, showing distance from a storm track or total
+#'    rainfall over a given window of one or more days.
+#'
+#' @examples
+#' # Ensure that data package is available before running the example.
+#' #  If it is not, see the `hurricaneexposure` package vignette for details
+#' # on installing the required data package.
+#' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
+#'
+#' floyd_map <- map_counties("Floyd-1999", metric = "rainfall",
+#'                            days_included = c(-2, -1, 0, 1))
+#' floyd_map
+#'
+#' beryl_map <- map_counties("Beryl-1988", metric = "wind")
+#'}
+#' @export
+#'
+#' @importFrom dplyr %>%
+map_counties <- function(storm, metric = "distance",
+                        days_included = c(-2, -1, 0, 1)){
+        if(metric == "distance"){
+                map_data <- filter_storm_data(storm = storm,
+                                              output_vars = c("fips",
+                                                              "storm_dist")) %>%
+                        dplyr::rename_(value = ~ storm_dist)
+        } else if(metric == "rainfall"){
+                map_data <- filter_storm_data(storm = storm, include_rain = TRUE,
+                                              days_included = days_included,
+                                              output_vars = c("fips",
+                                                              "tot_precip")) %>%
+                        dplyr::rename_(value = ~ tot_precip)
+        } else if (metric == "wind") {
+                map_data <- filter_wind_data(storm = storm,
+                                             output_vars = c("fips",
+                                                             "vmax_sust")) %>%
+                        dplyr::rename_(value = ~ vmax_sust)
+        } else{
+                stop("`metric` must be either `distance`, `rainfall`, or `wind`")
+        }
+        map_data <- map_data %>%
+                dplyr::tbl_df()
+        out <- hurr_choropleth(map_data, metric = metric)
+        return(out)
 }
 
 #' Create a map customized for this package
 #'
-#' This function creates a county choropleth map customized for displaying
-#' hurricane exposure. It provides a wrapper for the \code{CountyChoropleth}
-#' function from the \code{choroplethr} package, with customization for the
-#' purposes of the maps created for this package.
+#' Creates a county choropleth map customized for displaying
+#' hurricane exposure.
 #'
 #' @param map_data A dataframe with columns with FIPS numbers (in numeric
 #'    class) for all counties in the eastern US (\code{region}) and the
 #'    exposure value (\code{value})
 #' @inheritParams map_counties
 #'
-#' @return A \code{choroplethr} object. To plot the map, use the \code{render}
-#'    method.
+#' @return A \code{ggplot} object with a map of hurricane exposure in eastern
+#'    US counties
 #'
 #' @details The function only maps counties in states likely to be exposed
 #' to Atlantic basin tropical storms.
-hurr_choroplethr <- function(map_data, metric = "distance"){
+hurr_choropleth <- function(map_data, metric = "distance"){
 
         if(metric == "rainfall"){
                 breaks <- seq(0, 200, by = 25)
@@ -533,19 +574,28 @@ hurr_choroplethr <- function(map_data, metric = "distance"){
                                          length(unique(map_data$value)))
         }
 
-        eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
-                            "district of columbia", "florida", "georgia", "illinois",
-                            "indiana", "iowa", "kansas", "kentucky", "louisiana",
-                            "maine", "maryland", "massachusetts", "michigan",
-                            "mississippi", "missouri", "new hampshire", "new jersey",
-                            "new york", "north carolina", "ohio", "oklahoma",
-                            "pennsylvania", "rhode island", "south carolina",
-                            "tennessee", "texas", "vermont", "virginia",
-                            "west virginia", "wisconsin")
+        out_data <- get_eastern_map() %>%
+                dplyr::left_join(map_data, by = "fips")
+        out <- ggplot2::ggplot() +
+                ggplot2::geom_polygon(data = out_data,
+                                      ggplot2::aes_(x = ~ long, y = ~ lat, group = ~ group,
+                                                    fill = ~ value),
+                                      color = "lightgray", size = 0.2) +
+                ggplot2::borders("state", regions = c("virginia", "north carolina", "south carolina",
+                                                      "georgia", "florida", "alabama", "kentucky",
+                                                      "tennessee", "maryland", "west virginia",
+                                                      "district of columbia", "pennsylvania",
+                                                      "new jersey", "delaware", "mississippi",
+                                                      "louisiana", "texas", "oklahoma", "arkansas",
+                                                      "new york", "connecticut", "rhode island",
+                                                      "massachusetts", "new hampshire", "vermont",
+                                                      "maine", "kansas", "missouri", "iowa", "michigan",
+                                                      "illinois", "ohio", "wisconsin", "indiana"),
+                                 colour = "black", fill = NA, size = 0.2, alpha = 0.5) +
+                ggplot2::theme_void() +
+                ggplot2::coord_map() +
+                ggplot2::scale_fill_manual(name = exposure_legend,
+                                           values = exposure_palette)
 
-        out <- choroplethr::CountyChoropleth$new(map_data)
-        out$set_zoom(eastern_states)
-        out$ggplot_scale <- ggplot2::scale_fill_manual(name = exposure_legend,
-                                                       values = exposure_palette)
         return(out)
 }

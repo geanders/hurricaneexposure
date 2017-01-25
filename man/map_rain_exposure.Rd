@@ -41,9 +41,7 @@ the county's population mean center and a certain amount of rain
 # on installing the required data package.
 if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
 
-floyd_map <- map_rain_exposure(storm = "Floyd-1999", rain_limit = 50,
-                               dist_limit = 100)
-floyd_map
+map_rain_exposure(storm = "Floyd-1999", rain_limit = 50, dist_limit = 100)
 
 allison_map <- map_rain_exposure(storm = "Allison-2001", rain_limit = 20,
                                  dist_limit = 100, days_included = 0)
