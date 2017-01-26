@@ -52,6 +52,7 @@ Depends:
 Suggests: 
     hurricaneexposuredata (>= 0.0.1),
     knitr,
+    pander,
     rmarkdown
 VignetteBuilder: knitr
 Additional_repositories: https://geanders.github.io/drat
