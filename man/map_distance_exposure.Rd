@@ -4,7 +4,7 @@
 \alias{map_distance_exposure}
 \title{Map counties with distance exposure}
 \usage{
-map_distance_exposure(storm, dist_limit)
+map_distance_exposure(storm, dist_limit, add_track = TRUE)
 }
 \arguments{
 \item{storm}{Character string giving the name of the storm to plot (e.g.,
@@ -13,6 +13,9 @@ map_distance_exposure(storm, dist_limit)
 \item{dist_limit}{Maximum distance, in kilometers, of how close the storm
 track must come to the county's population mean center to classify
 the county as "exposed" to the storm.}
+
+\item{add_track}{TRUE / FALSE of whether to add the storm's track to the map. The
+default is TRUE.}
 }
 \value{
 Plots a map showing whether eastern US counties were exposed or

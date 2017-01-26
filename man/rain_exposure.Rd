@@ -31,8 +31,8 @@ closest date of the storm to a county. For example,
 \code{c(-1, 0, 1)} would calculate rain for a county as the sum of the
 rainfall for the day before, the day of, and the day after the date when
 the storm center was closest to the county center. Values can range from
--3 to 3 (i.e., at most, you can calculate the total rainfall for the
-seven-day window centered on the day when the storm is closest to the
+-5 to 3 (i.e., at most, you can calculate the total rainfall from five days
+to three days after the day when the storm is closest to the
 county).}
 
 \item{out_dir}{Character string giving the pathname of the directory in which

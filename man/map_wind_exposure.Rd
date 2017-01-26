@@ -4,13 +4,16 @@
 \alias{map_wind_exposure}
 \title{Map counties with wind exposure}
 \usage{
-map_wind_exposure(storm, wind_limit)
+map_wind_exposure(storm, wind_limit, add_track = TRUE)
 }
 \arguments{
 \item{storm}{A character string giving the storm ID (e.g., "Floyd-1999")}
 
 \item{wind_limit}{A numeric vector of length one giving the minimum
 wind speed (in meters per second) to use in the filter}
+
+\item{add_track}{TRUE / FALSE of whether to add the storm's track to the map. The
+default is TRUE.}
 }
 \value{
 Plots a map showing whether eastern US counties were exposed or

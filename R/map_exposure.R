@@ -206,6 +206,8 @@ interp_track <- function(track, tint = 0.25){
 #' the county's population mean center and a certain amount of rain
 #' \code{rain_limit} fell during a specified window of days (\code{days_included}).
 #'
+#' @param add_track TRUE / FALSE of whether to add the storm's track to the map. The
+#'    default is TRUE.
 #' @inheritParams county_distance
 #' @inheritParams county_rain
 #' @inheritParams map_counties
@@ -218,15 +220,17 @@ interp_track <- function(track, tint = 0.25){
 #'
 #' map_rain_exposure(storm = "Floyd-1999", rain_limit = 50, dist_limit = 100)
 #'
-#' allison_map <- map_rain_exposure(storm = "Allison-2001", rain_limit = 20,
-#'                                  dist_limit = 100, days_included = 0)
-#' map_tracks("Allison-2001", plot_points = FALSE, plot_object = allison_map)
+#' # Example of customizine track appearance
+#' allison_map <- map_rain_exposure(storm = "Allison-2001", rain_limit = 125,
+#'                                  dist_limit = 100, days_included = -5:3,
+#'                                  add_track = FALSE)
+#' map_tracks("Allison-2001", plot_object = allison_map, plot_points = TRUE)
 #'}
 #' @importFrom dplyr %>%
 #'
 #' @export
 map_rain_exposure <- function(storm, rain_limit, dist_limit,
-                              days_included = c(-2, -1, 0, 1)){
+                              days_included = c(-2, -1, 0, 1), add_track = TRUE){
 
         map_data <- filter_storm_data(storm = storm,
                                            days_included = days_included,
@@ -262,6 +266,11 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
                 ggplot2::scale_fill_manual(name = paste("Rain >", rain_limit, "mm"),
                                            values = c("white", "navy"),
                                            labels = c("Unexposed", "Exposed"))
+
+        if(add_track){
+                out <- map_tracks(storm, plot_object = out)
+        }
+
         return(out)
 }
 
@@ -274,6 +283,7 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
 #' @inheritParams county_distance
 #' @inheritParams county_rain
 #' @inheritParams map_counties
+#' @inheritParams map_rain_exposure
 #'
 #' @return Plots a map showing whether eastern US counties were exposed or
 #'    unexposed to a specific storm based on a distance criterion.
@@ -295,7 +305,7 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
 #' @importFrom dplyr %>%
 #'
 #' @export
-map_distance_exposure <- function(storm, dist_limit){
+map_distance_exposure <- function(storm, dist_limit, add_track = TRUE){
 
         map_data <- filter_storm_data(storm = storm,
                                       output_vars = c("fips", "storm_dist")) %>%
@@ -328,6 +338,10 @@ map_distance_exposure <- function(storm, dist_limit){
                                            values = c("white", "forestgreen"),
                                            labels = c("Unexposed", "Exposed"))
 
+        if(add_track){
+                out <- map_tracks(storm, plot_object = out)
+        }
+
         return(out)
 }
 
@@ -339,6 +353,7 @@ map_distance_exposure <- function(storm, dist_limit){
 #'
 #' @inheritParams filter_wind_data
 #' @inheritParams county_rain
+#' @inheritParams map_rain_exposure
 #'
 #' @return Plots a map showing whether eastern US counties were exposed or
 #'    unexposed to a specific storm based on a wind criterion.
@@ -356,7 +371,7 @@ map_distance_exposure <- function(storm, dist_limit){
 #' @importFrom dplyr %>%
 #'
 #' @export
-map_wind_exposure <- function(storm, wind_limit){
+map_wind_exposure <- function(storm, wind_limit, add_track = TRUE){
 
         map_data <- filter_wind_data(storm = storm,
                                       output_vars = c("fips", "vmax_gust",
@@ -390,6 +405,10 @@ map_wind_exposure <- function(storm, wind_limit){
                                            values = c("white", "darkorange"),
                                            labels = c("Unexposed", "Exposed"))
 
+        if(add_track){
+                out <- map_tracks(storm, plot_object = out)
+        }
+
         return(out)
 }
 
@@ -399,6 +418,7 @@ map_wind_exposure <- function(storm, wind_limit){
 #'    (e.g., \code{"Katrina-2005"})
 #' @inheritParams county_distance
 #' @inheritParams county_events
+#' @inheritParams map_rain_exposure
 #'
 #' @examples
 #' # Ensure that data package is available before running the example.
@@ -412,7 +432,7 @@ map_wind_exposure <- function(storm, wind_limit){
 #' map_event_exposure(storm_id = "Floyd-1999", event_type = "tropical_storm")
 #' }
 #' @export
-map_event_exposure <- function(storm_id, event_type){
+map_event_exposure <- function(storm_id, event_type, add_track = TRUE){
 
         hasData()
 
@@ -458,6 +478,10 @@ map_event_exposure <- function(storm_id, event_type){
                                            values = c("white", "red"),
                                            labels = c("Unexposed", "Exposed"))
 
+        if(add_track){
+                out <- map_tracks(storm, plot_object = out)
+        }
+
         return(out)
 }
 
@@ -470,6 +494,7 @@ map_event_exposure <- function(storm_id, event_type){
 #'    to customize the color palette and scale of the choropleth map produced
 #'    by this function.
 #' @inheritParams county_rain
+#' @inheritParams map_rain_exposure
 #'
 #' @return This function creates a choropleth map of counties in the eastern
 #'    part of the United States, showing distance from a storm track or total
@@ -491,7 +516,7 @@ map_event_exposure <- function(storm_id, event_type){
 #'
 #' @importFrom dplyr %>%
 map_counties <- function(storm, metric = "distance",
-                        days_included = c(-2, -1, 0, 1)){
+                        days_included = c(-2, -1, 0, 1), add_track = TRUE){
         if(metric == "distance"){
                 map_data <- filter_storm_data(storm = storm,
                                               output_vars = c("fips",
@@ -514,6 +539,11 @@ map_counties <- function(storm, metric = "distance",
         map_data <- map_data %>%
                 dplyr::tbl_df()
         out <- hurr_choropleth(map_data, metric = metric)
+
+        if(add_track){
+                out <- map_tracks(storm, plot_object = out)
+        }
+
         return(out)
 }
 

@@ -4,7 +4,8 @@
 \alias{map_counties}
 \title{Map counties}
 \usage{
-map_counties(storm, metric = "distance", days_included = c(-2, -1, 0, 1))
+map_counties(storm, metric = "distance", days_included = c(-2, -1, 0, 1),
+  add_track = TRUE)
 }
 \arguments{
 \item{storm}{Character string giving the name of the storm to plot (e.g.,
@@ -21,9 +22,12 @@ closest date of the storm to a county. For example,
 \code{c(-1, 0, 1)} would calculate rain for a county as the sum of the
 rainfall for the day before, the day of, and the day after the date when
 the storm center was closest to the county center. Values can range from
--3 to 3 (i.e., at most, you can calculate the total rainfall for the
-seven-day window centered on the day when the storm is closest to the
+-5 to 3 (i.e., at most, you can calculate the total rainfall from five days
+to three days after the day when the storm is closest to the
 county).}
+
+\item{add_track}{TRUE / FALSE of whether to add the storm's track to the map. The
+default is TRUE.}
 }
 \value{
 This function creates a choropleth map of counties in the eastern

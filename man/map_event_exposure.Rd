@@ -4,7 +4,7 @@
 \alias{map_event_exposure}
 \title{Map county-level exposure based on reported events}
 \usage{
-map_event_exposure(storm_id, event_type)
+map_event_exposure(storm_id, event_type, add_track = TRUE)
 }
 \arguments{
 \item{storm_id}{Character vector with the storm for which to map events
@@ -13,6 +13,9 @@ map_event_exposure(storm_id, event_type)
 \item{event_type}{Character string with the type of event to use to identify
 county exposures. Options include \code{"flood"}, \code{"tornado"},
 \code{"wind"}, and \code{"tropical storm"}.}
+
+\item{add_track}{TRUE / FALSE of whether to add the storm's track to the map. The
+default is TRUE.}
 }
 \description{
 Map county-level exposure based on reported events
