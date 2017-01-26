@@ -32,7 +32,21 @@ library(hurricaneexposure)
 
 This package allows you to explore and map data on county-level exposures to Atlantic-basin tropical storms between 1988 and 2015 for a number of storm hazards (e.g., wind, rain, flood events, distance from the storm track) for counties in the eastern half of the United States. This package allows the user to map exposures by county for a selected storm or to identify all storms to which selected counties were exposed, based on user-specified thresholds (for example, the package allows the user to identify all storms that brought wind of 34 knots or higher to Miami-Dade County in Florida).
 
-## Loading the package
+If you use this package and the data in the associated data package (`hurricaneexposuredata`) for research, please cite both packages. In particular, be sure to include the version of the packages that you used, as this will make your research project more reproducible, and the data will likely be updated as we get further years of data and find improved ways to measure tropical storm exposure. The two packages can be cited as: 
+
+- Anderson B, Yan M, Ferreri J, Crosson W, Al-Hamdan M, Schumacher A and
+ Eddelbuettel D (2017). _hurricaneexposure: Explore and Map County-Level
+ Hurricane Exposure in the United States_. R package version 0.0.1, <URL:
+ http://CRAN.R-project.org/package=hurricaneexposure>.
+
+- Anderson B, Schumacher A, Crosson W, Al-Hamdan M, Yan M, Ferreri J, Chen Z,
+ Quiring S and Guikema S (2017). _hurricaneexposuredata: Data Characterizing
+ Exposure to Hurricanes in United States Counties_. R package version 0.0.1,
+ <URL: https://github.com/geanders/hurricaneexposuredata>.
+  
+To generate BibTex entries for the packages, you can use the `citation` function in R.
+
+## Required set-up to use this package
 
 This package depends on data in a data package (`hurricaneexposuredata`) that is available through a `drat` repository on GitHub. To use the `hurricaneexposure` package, you will need to install `hurricaneexposuredata` on your computer. You can do that by adding the `drat` repository to your repositories; once you do this, you can install the `hurricaneexposuredata` using the `install.packages` function (and later update it using the `update.packages` function):
 
