@@ -76,7 +76,26 @@ head(hurr_tracks)
 
 For each dataset included in `hurricaneexposuredata`, you can see the helpfiles for the data for more information about the data included in each (e.g., `?hurr_tracks` to read documentation on the hurricane tracks data shown above). This data documentation includes both explanations of how the dataset was created, definitions of the variables included in each dataset, and the sources of data included. 
 
-[Something about storms included in the data and the storm ids used in function calls.]
+The following table shows the storms covered by the `hurricaneexposuredata` data package, as well as which hazard metrics are available for each year. All storms passed within 250 km of at least one U.S. county.
+
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+library(dplyr)
+library(tidyr)
+hurr_tracks %>%
+        select(storm_id) %>%
+        distinct() %>%
+        separate(storm_id, into = c("storm_name", "Year"), sep = "-") %>%
+        group_by(Year) %>%
+        summarize(Storms = paste(storm_name, collapse = ", ")) %>%
+        mutate(Distance = "x",
+               Wind = "x",
+               Rain = ifelse(Year <= 2011, "x", ""),
+               Flood = ifelse(Year >= 1996, "x", ""),
+               Tornado = "x") %>%
+        pander::pander(justify = "clccccc")
+```
+
+In functions throughout the `hurricaneexposure` package, storms are identified based on their name and year (e.g., Hurricane Floyd in 1999 is identified as "Floyd-1999"). Note that a few storms satisfied this criteria but were unnamed (e.g., "Notnamed" in 1991, "Subtrop" in 1997, etc.). These storms are identified in functions in the `hurricaneexposure` package based on the identifying name listed in the above table (e.g., "Notnamed-1991"), although for many applications you may want to consider excluding these unnamed storms from the full analysis.
 
 ## Mapping hurricane exposure
 
@@ -84,15 +103,13 @@ The `hurricaneexposure` package has functions to interact with the data in the `
 
 ### Plotting county-level continuous exposure 
 
-First, for several of the storm hazard measurements (currently rain, wind, and distance), you can use the `map_counties` function in `hurricaneexposure` to plot a map for a specific storm showing the continuous value of that metric for all eastern U.S. counties. 
-
-For example, you can map county-level rain during Hurricane Floyd (1999) using the following call: 
+First, for several of the storm hazard measurements (currently rain, wind, and distance), you can use the `map_counties` function in `hurricaneexposure` to plot a map for a specific storm showing the continuous value of that metric for all eastern U.S. counties. For example, you can map county-level rain during Hurricane Floyd (1999) using the following call: 
 
 ```{r fig.width = 7, fig.height = 4}
 map_counties(storm = "Floyd-1999", metric = "rainfall")
 ```
 
-By default, this map shows the cumulative rain in each county for two days before to one day after the date that the storm passed closest to the county. The period used to calculate cumulative rainfall for the map can be customized using the `days_included` option in the `map_counties` function. The two following examples show the difference in rain maps for Tropical Storm Allison (2001) when using rain only from the day before and the day the storm was closest to each county (`days_included = -1:0`) versus from five days before to three days after the storm's closest approach (`days_included = -5:3`):
+By default, this map shows the cumulative rain in each county for two days before to one day after the date that the storm passed closest to the county (see the help file for the `closest_dist` dataset in `hurricaneexposuredata` to find out more about how this date was determined for each county-storm combination). The period used to calculate cumulative rainfall for the map can be customized using the `days_included` option in the `map_counties` function. The two following examples show the difference in rain maps for Tropical Storm Allison (2001) when using rain only from the day before and the day the storm was closest to each county (`days_included = -1:0`) versus from five days before to three days after the storm's closest approach (`days_included = -5:3`):
 
 ```{r fig.width = 7, fig.height = 4}
 map_counties(storm = "Allison-2001", metric = "rainfall", days_included = -1:0) + 
@@ -104,13 +121,15 @@ map_counties(storm = "Allison-2001", metric = "rainfall", days_included = -5:3) 
         ggplot2::ggtitle("Rain during Allison (2001) for five days before to three days\nafter the day of closest approach")
 ```
 
-You can also use this function to plot the maximum wind during the storm for each county. For this, you use the argument `metric = "wind"`. For example, you can plot county-specific storm winds during Hurricane Katrina (2005) with the call:
+You can also use the `map_counties` function to plot the maximum wind during the storm for each county. For this, you use the argument `metric = "wind"`. For example, you can plot county-specific storm winds during Hurricane Katrina (2005) with the call:
 
 ```{r fig.width = 7, fig.height = 4}
 map_counties(storm = "Katrina-2005", metric = "wind")
 ```
 
-These county winds are determined based on a model of wind speeds from Best Tracks data. See the documentation for the `storm_winds` dataset (`?storm_winds`) to find out more about this data; further details on the wind model are available in the vignettes for the [`stormwindmodel` package](https://cran.r-project.org/web/packages/stormwindmodel/index.html). 
+These county winds are determined based on a model of wind speeds from Best Tracks hurricane data. See the documentation for the `storm_winds` dataset (`?storm_winds`) to find out more about this data; further details on the wind model are available in the vignettes for the [`stormwindmodel` package](https://cran.r-project.org/web/packages/stormwindmodel/index.html). 
+
+[Add details about how to map this from the wind radii estimates, instead]
 
 Finally, you can also use this function to plot the closest distance between the storm and each county. For this, you use the argument `metric = "distance"`. For example, the following call plots county-level distances from the track of Hurricane Sandy (2012):
 
@@ -118,47 +137,75 @@ Finally, you can also use this function to plot the closest distance between the
 map_counties(storm = "Sandy-2012", metric = "distance")
 ```
 
-See the documentation for the `closest_dist` dataset (`?closest_dist`) to get more details on how distances from the storm track were calculated for each county.
+See the documentation for the `closest_dist` dataset (`?closest_dist`) for more details on how distances from the storm track were calculated for each county.
 
 ### Mapping county-level binary exposure 
 
-You can map a binary variable of distance-based exposure using `map_distance_exposure`: 
+You can also map binary county-level exposures, where each county is classified as "exposed" based on whether it meets a threshold for one of the hazard-based metrics. These maps can be created for the metrics shown in the continuous exposure maps above (wind, rain, and distance from the storm track). In addition, binary classification maps can also be created based on storm event listings for flood events and tornado events from the NOAA Storm Events database. 
+
+For example, you can map a binary variable of distance-based exposure using `map_distance_exposure`, with "exposure" defined as the county being within the number of kilometers given in `dist_limit` of the storm track. For example, you can map the counties that were within 75 km of Hurricane Sandy's storm track with the call: 
 
 ```{r fig.width = 7, fig.height = 4}
-allison_map <- map_distance_exposure(storm = "Allison-2001",
-                                     dist_limit = 75)
-plot(allison_map)
+map_distance_exposure(storm = "Sandy-2012", dist_limit = 75)
 ```
 
-You can also map a binary variable of rain exposure for the communities that were exposed, based on a certain rainfall limit and distance limit:
+Similarly, you can map a binary variable county exposure based on rain using `map_rain_exposure`. In the case of rain, you must define exposure thresholds for both rainfall and distance. This is because the rain data is observed data, so neglecting to limit "exposed" counties to those close to the storm track may pick up counties far from the storm that experienced a lot of rain over the same period. For example, you can use the following call to map rain exposure to Tropical Storm Allison (2001), where exposure is defined as a county where cumulative rainfall from fives days before to three days after the storm's closest approach was 175 mm or more and where the county was within 500 km of the storm's track:
 
 ```{r fig.width = 7, fig.height = 4}
-map_3 <- map_rain_exposure(storm = "Floyd-1999", rain_limit = 125,
-                           dist_limit = 500, 
-                           days_included = c(-1, 0, 1))
-plot(map_3)
+map_rain_exposure(storm = "Allison-2001", rain_limit = 175, dist_limit = 500,
+                  days_included = -5:3)
 ```
+
+As with the continuous maps of rain exposure, the number of days included to calculate cumulative rain can be adjusted with the `days_included` option in `map_rain_exposure` (see the help file for `map_rain_exposure` for more details).
+
+You can use the `map_wind_exposure` function to map counties exposed to a certain level of wind during a storm. For example, to identify all counties exposed to sustained winds of 20 m / s or higher during Hurricane Katrina, you can run:
+
+```{r fig.width = 7, fig.height = 4}
+map_wind_exposure(storm = "Katrina-2005", wind_limit = 20)
+```
+
+If you would like to base a wind threshold on knots rather than m / s, you can use the `convert_wind_speed` function from the `weathermetrics` package to do that. For example, to map counties in which winds were 34 knots or higher during the storm, you can run: 
+
+```{r fig.width = 7, fig.height = 4}
+library(weathermetrics)
+map_wind_exposure(storm = "Katrina-2005", 
+                  wind_limit = convert_wind_speed(34, "knots", "mps"))
+```
+
+Finally, you can map which counties were exposed to specific types of events, as listed in the NOAA Storm Events Database, using the `map_event_exposure` function. For example, you can map counties for which a flood event was listed for Hurricane Floyd (1999) with the call: 
+
+```{r fig.width = 7, fig.height = 4}
+map_event_exposure(storm = "Floyd-1999", event_type = "flood")
+```
+
+Similarly, you can map which counties were exposed to tornado events during Hurricane Ivan (2004) with: 
+
+```{r fig.width = 7, fig.height = 4}
+map_event_exposure(storm = "Ivan-2004", event_type = "tornado")
+```
+
+When using this function, note that the types of events reported in the NOAA Storm Events Database changed in 1996, so for many event types there will be no listings before 1996. Tornado listings do extend earlier, but flood listings do not. Further, when using this data, the user should be aware of and take into account the limitations of the database, especially for comparing storms across years. Reporting standards likely have changed over time; for example, it is possible that earlier years have more false negatives than more recent years. 
+
+Event listings from the NOAA Storm Events database were linked to storms based on the start date of the event being within a five-day window of the date the storm was closest to the county and the county being within 500 km of the county. The [`noaastormevents` package](https://github.com/zailchen/noaastormevents) was used to create this dataset. For more information on the data, see the help file for the `storm_events` dataset (`?storm_events`) or the vignette for the `noaastormevents` package.
 
 ### Plotting storm tracks 
 
-The `map_tracks` function will map the hurricane tracks for one or more storms. For example, to plot the tracks of Hurricane Floyd in 1999 (the ID for this storm is "Floyd-2012"):
+If you would like to add a storm's track to one of the maps of county-level exposure, you can do so using the `map_tracks` function. This function can be used either to map a storm track on a blank U.S. map or to add a track to an existing map, if it is a `ggplot` object (as are all maps generated in the previous section).
+
+First, the `map_tracks` function can be used to create a map of the hurricane tracks for one or more storms. For example, to plot the tracks of Hurricane Floyd in 1999, you can run:
 
 ```{r fig.width = 5.5, fig.height = 4}
-map_4 <- map_tracks(storms = "Floyd-1999")
-map_4
+map_tracks(storms = "Floyd-1999")
 ```
 
-There are some different options you can use for the tracks' appearance. For example, if you wanted to plot the tracks of several storms, not plot each point when the track locations were measured (typically every six hours), and use some transparency so you can see all the lines, you can use: 
+There are some different options you can use for the tracks' appearance. For example, if you wanted to plot the tracks of several storms, and plot each point when the track locations were measured (typically every six hours), use some transparency so you can see all the tracks, and show the tracks in blue, you can run: 
 
 ```{r fig.width = 5.5, fig.height = 4}
-map_5 <- map_tracks(storms = c("Floyd-1999", "Sandy-2012",
-                               "Katrina-2005"),
-                    plot_points = FALSE,
-                    alpha = 0.5)
-map_5
+map_tracks(storms = c("Andrew-1992", "Katrina-2005", "Rita-2005"),
+           alpha = 0.5, plot_points = TRUE, color = "blue")
 ```
 
-You can also add these tracks to an existing `ggplot`-created US map. You do this through the `plot_object` argument. For example, to add the storm track to the plot of distance exposure for Sandy or rain exposure for Floyd, you could run:
+You can also use the `map_tracks` function to add a storm track to an existing U.S. map, as long as the map is a `ggplot` object. You do this by specifying the map you'd like to use as a base in the `plot_object` argument of `map_tracks`. For example, to add the storm track to the plot of distance exposure for Sandy or rain exposure for Floyd, you can run:
 
 ```{r fig.width = 7, fig.height = 4}
 sandy_map <- map_counties("Sandy-2012", metric = "distance")
@@ -166,9 +213,8 @@ map_tracks(storms = "Sandy-2012", plot_object = sandy_map)
 ```
 
 ```{r fig.width = 7, fig.height = 4}
-map_7 <- map_tracks(storms = "Floyd-1999", plot_object = map_3,
-                    plot_points = FALSE)
-map_7
+floyd_map <- map_rain_exposure(storm = "Floyd-1999", rain_limit = 125, dist_limit = 500)
+map_tracks(storms = "Floyd-1999", plot_object = floyd_map)
 ```
 
 ## Creating time series datasets of exposure
