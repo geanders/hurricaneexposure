@@ -205,82 +205,65 @@ map_tracks(storms = c("Andrew-1992", "Katrina-2005", "Rita-2005"),
            alpha = 0.5, plot_points = TRUE, color = "blue")
 ```
 
-The `map_tracks` function is used in all the mapping functions described in the previous function to add the storm's track to the exposure map. However, if you would like to customize the appearance of the storm's track on the map, you can do so by plotting the exposure map without the storm track (`add_track = FALSE`) and then adding the track yourself with the `map_tracks` function. For example, to change the color of the storm track in a map of rain exposure during Hurricane Floyd (1999) and to add points showing the available observations for the storm in the Best Tracks hurricane tracking data, you can run:
+The `map_tracks` function is used in all the mapping functions described in the previous function to add the storm's track to the exposure map. However, if you would like to customize the appearance of the storm's track on the map, you can do so by plotting the exposure map without the storm track (`add_track = FALSE`) and then adding the track yourself with the `map_tracks` function. For example, to change the color of the storm track in a map of flood event exposure during Hurricane Floyd (1999) and to add points showing the available observations for the storm in the Best Tracks hurricane tracking data, you can run:
 
 ```{r fig.width = 7, fig.height = 4}
-floyd_map <- map_rain_exposure(storm = "Floyd-1999", rain_limit = 125, dist_limit = 500)
+floyd_map <- map_event_exposure(storm = "Floyd-1999", event_type = "flood")
 map_tracks(storms = "Floyd-1999", plot_object = floyd_map, plot_points = TRUE, 
            color = "darkgray")
 ```
 
 ## Creating time series datasets of exposure
 
-The `hurricaneexposure` package also has several functions package that help to take the data on county-level hazards and storm tracks and use them to create listings of exposures to tropical storms that can be easily integrated into time series datasets of, for example, health data. 
+The `hurricaneexposure` package also has several functions that can input a list of counties and output a list of all of the storms each county was exposed to over a certain period, based on one of the hazard metrics. These exposure listings include the storm dates, making them easy to integrate into time series datasets of health or other impact data. 
 
-First, the `county_rain` function takes a list of county FIPS codes, bounds on the starting and ending years of the analysis, and thresholds for distance (storm path must come that close or closer to the county) and rainfall (total rainfall summed over the days you specify-- for example, `days_included = c(-1, 0, 1)` would use the total rainfall summed over the day before, day of, and day after the date when the storm was closest to the county). The function outputs a dataframe with all of the storms to which each of the counties was exposed.
-
-For example, to get a dataset of all the storms to which Orleans Parish (FIPS 22071), and Newport News, Virginia (FIPS 51700), were exposed between 1995 and 2005, where "exposed" means that the storm passed within 100 kilometers of the county center and the rainfall over three days was 100 millimeters or more, you could run:
+For example, the `county_rain` function takes a list of county FIPS codes, bounds on the starting and ending years of the analysis, and thresholds to define rain-based exposure (cumulative rainfall and distance from the storm's track, as explained for the binary rain maps shown in an earlier section) and creates a list of all storms that met these thesholds for the counties. For example, to get a dataset of all the storms to which Orleans Parish (FIPS 22071), and Newport News, Virginia (FIPS 51700), were exposed between 1995 and 2005, where "exposed" means that the storm passed within 100 kilometers of the county center and the rainfall over a three-day window of the date of closest approach was 100 millimeters or more, you can run:
 
 ```{r}
 county_rain(counties = c("22071", "51700"), start_year = 1995, end_year = 2005,
             rain_limit = 100, dist_limit = 100, days_included = c(-1, 0, 1))
 ```
 
-For this function, data is available through this package for tropical storms between 1988 and 2011 and may be updated in the future to include more recent years. The `days_included` option can include any combination of days from five days before the storm's closest approach to the county and three days after. The rainfall data was obtained from a reanalysis dataset (NLDAS-2); extensive details and data sources are included in the help file for the `rain` data, which can be accessed from R with `?rain`. 
+This function draws on the same dataset (`rain`) from the `hurricaneexposuredata` package as the functions for mapping rain exposure shown above. For this and other exposures, see the table earlier in this vignette to see which years of data are available (for rain, data is currently available for storms through 2011).
 
-In addition to giving you the names and closest dates of each storm for each county (`closest_date`-- note, this is given based on local time for the county; see documentation for the [`countytimezones` package](https://cran.r-project.org/web/packages/countytimezones/index.html) to find out more about how local time was calculated from UTC for each county), this function also gives you the distance between the county and the storm's track at the time when the storm was closest to the county's population weighted center (`storm_dist`, in kilometers) and the total precipitation over the included days (`tot_precip`).
+In addition to giving the names and closest dates of each storm for each county (`closest_date`-- note, this is given based on local time for the county; see documentation for the [`countytimezones` package](https://cran.r-project.org/web/packages/countytimezones/index.html) to find out more about how local time was calculated from UTC for each county), this function also gives you the distance between the county and the storm's track at the time when the storm was closest to the county's population weighted center (`storm_dist`, in kilometers) and the total precipitation over the included days (`tot_precip`). The returned dataframe also gives the time of closest approach in both local time (`local_time`) and UTC (`closest_time_utc`), based on 15-minute intervals along the storm's track. 
 
-Similar functions are available in the package to create listings of county exposures to storms based on wind, distance to the storm track, and events listings from the NOAA Storm Events Database (flood and tornado events). For example, 
-
-```{r}
-# county_distance example
-```
+Similar functions are available in the package to create listings of county exposures to storms based on wind, distance to the storm track, and events listings from the NOAA Storm Events Database (flood and tornado events). For example, to get a listing of all storms between 1988 and 2015 for which Miami-Dade county (FIPS: ) has experienced sustained winds of 34 knots or more (17.5 m / s), you can run:
 
 ```{r}
-# county_wind example
+county_wind(counties = "12086", start_year = 1988, end_year = 2015, wind_limit = 17.5)
 ```
+
+The returned dataframe includes the estimated maximum values during the storm for sustained winds (`vmax_sust`) and gust winds (`vmax_gust`), both in m / s. It also includes some of the variables on the date and time of closest approach and the distance at the storm's closest approach.
+
+The `county_distance` function can similarly be used to generate a listing of all storms that came within a certain distance of specified counties. For example, to get a list of all storms that came within 50 km of Orleans Parish (FIPS 22071) between 1988 and 2015, you can run:
 
 ```{r}
-# county_events example
+county_distance(counties = "22071", start_year = 1988, end_year = 2015,
+                dist_limit = 50)
 ```
 
-To get a dataframe listing the relevant storms for multi-county communities, you can use the `multi_county_rain` function in a similar way:
+Finally, you can use the `county_events` function to get a listing of all storms for which a county had a certain type of NOAA Storm Events listing. For example, to get a list of all storms for which Norfolk, Virginia, (FIPS: 51710) had a flood event listing, you can run:
+
+```{r}
+county_events(counties = "51710", start_year = 1996, end_year = 2015, 
+              event_type = "flood")
+```
+
+### Handling multi-county communities
+
+Some datasets covering storm impacts might have communities composed of multiple counties rather than county-specific listings. To get a dataframe listing the relevant storms for multi-county communities, you can use the `multi_county_*` family of functions in a similar way to the `county_*` family of functions. For example, to get rain exposure listings in the case where one of the communities (New York, NY) is comprised of multiple counties, you can run:
 
 ```{r warning = FALSE}
 communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
                          fips = c("36005", "36047", "36061",
                                   "36085", "36081", "36119",
                                   "22071", "51700"))
-rain_storm_df <- multi_county_rain(communities = communities,
-                                   start_year = 1995, end_year = 2005,
-                                   rain_limit = 100, dist_limit = 100,
-                                   days_included = c(-1, 0, 1))
+multi_county_rain(communities = communities, start_year = 1995, end_year = 2005,
+                   rain_limit = 100, dist_limit = 100)
 ```
 
-This output includes columns for the average closest distance for any of the counties in the community (`mean_dist`), the average precipitation for all the counties (`mean_precip`), the highest precipitation for any of the counties (`max_rain`), and the smallest distance between the storm track and any of the county population-weighted centers (`min_dist`).
+The output from this function includes columns for the average closest distance for any of the counties in the community (`mean_dist`), the average precipitation for all the counties (`mean_precip`), the highest precipitation for any of the counties (`max_rain`), and the smallest distance between the storm track and any of the county population-weighted centers (`min_dist`).
 
-## Creating and writing time series of exposure
-
-To create time series of hurricane exposure for all of the storms that meet the exposure definition for study communities, you can use the function `rain_exposure`. If you have counties for your study, you can run this with a vector of the county FIPS as the `locations` argument (specify the directory path to write the files with `out_dir`):
-
-```{r eval = FALSE}
-rain_exposure(locations = c("22071", "51700"),
-              start_year = 1995, end_year = 2005,
-              rain_limit = 100, dist_limit = 100,
-              out_dir = "~/tmp/storms")
-```
-
-If you have multi-county communities, set `locations` instead to be a dataframe with community names (`commun` column) and FIPS codes (`fips` column):
-
-```{r message = FALSE, warning = FALSE, eval = FALSE}
-communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
-                          fips = c("36005", "36047", "36061",
-                          "36085", "36081", "36119",
-                          "22071", "51700"))
-rain_exposure(locations = communities,
-              start_year = 1995, end_year = 2005,
-              rain_limit = 100, dist_limit = 100, out_dir = "~/tmp/storms")
-```
-
-Both functions will output one file of exposure per county or community into the directory that you specify using the `out_dir` argument.
+Similar functions exist for wind exposure (`multi_county_wind`) and distance exposure (`multi_county_distance`).
 
