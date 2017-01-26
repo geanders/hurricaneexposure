@@ -205,16 +205,12 @@ map_tracks(storms = c("Andrew-1992", "Katrina-2005", "Rita-2005"),
            alpha = 0.5, plot_points = TRUE, color = "blue")
 ```
 
-You can also use the `map_tracks` function to add a storm track to an existing U.S. map, as long as the map is a `ggplot` object. You do this by specifying the map you'd like to use as a base in the `plot_object` argument of `map_tracks`. For example, to add the storm track to the plot of distance exposure for Sandy or rain exposure for Floyd, you can run:
-
-```{r fig.width = 7, fig.height = 4}
-sandy_map <- map_counties("Sandy-2012", metric = "distance")
-map_tracks(storms = "Sandy-2012", plot_object = sandy_map)
-```
+The `map_tracks` function is used in all the mapping functions described in the previous function to add the storm's track to the exposure map. However, if you would like to customize the appearance of the storm's track on the map, you can do so by plotting the exposure map without the storm track (`add_track = FALSE`) and then adding the track yourself with the `map_tracks` function. For example, to change the color of the storm track in a map of rain exposure during Hurricane Floyd (1999) and to add points showing the available observations for the storm in the Best Tracks hurricane tracking data, you can run:
 
 ```{r fig.width = 7, fig.height = 4}
 floyd_map <- map_rain_exposure(storm = "Floyd-1999", rain_limit = 125, dist_limit = 500)
-map_tracks(storms = "Floyd-1999", plot_object = floyd_map)
+map_tracks(storms = "Floyd-1999", plot_object = floyd_map, plot_points = TRUE, 
+           color = "darkgray")
 ```
 
 ## Creating time series datasets of exposure
