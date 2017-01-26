@@ -13,6 +13,8 @@ Authors@R: c(person("Brooke", "Anderson",
     email = "bill.crosson@nasa.gov", role = "ctb"),
     person("Mohammad", "Al-Hamdan", 
     email = "mohammad.alhamdan@nasa.gov", role = "ctb"),
+    person("Andrea", "Schumacher",
+    email = "andrea.schumacher@colostate.edu", role = "ctb"),
     person("Dirk", "Eddelbuettel", 
     email = "edd@debian.org", role = "ctb")
     )
@@ -24,7 +26,8 @@ Description: Allows users to create time series of tropical storm
     repos = "https://geanders.github.io/drat/", type = "source")'. The size of the 
     'hurricaneexposuredata' package is approximately 25 MB. This work was supported in 
     part by grants from the National Institute of Environmental Health Sciences 
-    (R00ES022631) and the National Science Foundation (1331399).
+    (R00ES022631), the National Science Foundation (1331399), and a NASA Applied 
+    Sciences Program/Public Health Program Grant (NNX09AV81G).
 URL: https://github.com/geanders/hurricaneexposure
 BugReports: https://github.com/geanders/hurricaneexposure/issues
 License: GPL-2
