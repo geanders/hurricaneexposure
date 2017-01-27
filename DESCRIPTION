@@ -2,7 +2,7 @@ Package: hurricaneexposure
 Type: Package
 Title: Explore and Map County-Level Hurricane Exposure in the United States
 Version: 0.0.1
-Date: 2017-01-23
+Date: 2017-01-27
 Authors@R: c(person("Brooke", "Anderson",
     email = "brooke.anderson@colostate.edu", role = c("aut", "cre")),
     person("Meilin", "Yan",
