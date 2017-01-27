@@ -145,6 +145,7 @@ multi_county_wind <- function(communities, start_year, end_year,
 #' @inheritParams county_distance
 #' @inheritParams county_rain
 #' @inheritParams rain_exposure
+#' @inheritParams filter_wind_data
 #'
 #' @return Writes out a directory with rain exposure files for each county or
 #'    community indicated. For more on the columns in this output, see the

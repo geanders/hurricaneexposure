@@ -20,6 +20,13 @@ See the examples for the proper format for this argument.}
 \item{wind_limit}{Vector giving the wind speed (in m / s) to use as a
 threshold for classifying a county as "exposed" to a specific storm.}
 
+\item{wind_var}{A character string giving the wind variable to use. Choices
+are \code{"vmax_sust"} (maximum sustained winds; default), \code{"vmax_gust"}
+(maximum gust winds), \code{"sust_dur"} (minutes of sustained winds of 20 m / s
+or higher) and \code{"gust_dur"} (minutes of gust winds of 20 m / s or higher).
+If the Extended Best Tracks wind radii are used as the source of wind data,
+the \code{"gust_dur"} option cannot be selected.}
+
 \item{out_dir}{Character string giving the pathname of the directory in which
 to write output. This directory should already exist on your computer.}
 
