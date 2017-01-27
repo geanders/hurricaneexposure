@@ -103,10 +103,28 @@ filter_storm_data <- function(counties = NULL, storm = NULL, year_range = NULL,
 #'
 #' @inheritParams filter_storm_data
 #' @param wind_limit A numeric vector of length one giving the minimum
-#'    wind speed (in meters per second) to use in the filter
+#'    wind speed (in meters per second) or duration of winds of 20 m / s or more
+#'    (in minutes) to use in the filter. The units of this variable will depend on
+#'    the user's choice for the \code{wind_var} parameter. If the Extended Best
+#'    Tracks wind radii are used as the source of the wind data, the sustained
+#'    winds will only be available for cutpoints of 34 knots, 50 knots, and 64
+#'    knots, so these values should be used (e.g., to get all counties with winds of
+#'    34 knots or higher, you could use \code{wind_limit = 17.4}, with the limit
+#'    given as a value just below 34 knots in the units meters per second).
 #' @param wind_var A character string giving the wind variable to use. Choices
-#'    are "vmax_sust" (maximum sustained winds; default) or "vmax_gust" (maximum
-#'    gust winds).
+#'    are \code{"vmax_sust"} (maximum sustained winds; default), \code{"vmax_gust"}
+#'    (maximum gust winds), \code{"sust_dur"} (minutes of sustained winds of 20 m / s
+#'    or higher) and \code{"gust_dur"} (minutes of gust winds of 20 m / s or higher).
+#'    If the Extended Best Tracks wind radii are used as the source of wind data,
+#'    the \code{"gust_dur"} option cannot be selected.
+#' @param wind_source A character string specifying the source to use for the winds. Options
+#'    are \code{"modeled"}, for estimates based on running a wind model from Best
+#'    Tracks data inputs, and \code{"ext_tracks"}, for estimates based on
+#'    the wind radii in the Extended Best Tracks data. See the help files for the
+#'    datasets \code{storm_winds} and \code{ext_tracks_wind} in the
+#'    \code{hurricaneexposuredata} package for more details on each of these sources
+#'    for wind estimates. For the gust wind estimates, these are based on applying
+#'    a gust factor of 1.49 to the sustained wind estimates in both wind data sources.
 #'
 #' @return A dataframe with storms filtered based on the input criteria to the
 #'    function. Columns in the output will vary depending on the user's
@@ -127,11 +145,15 @@ filter_storm_data <- function(counties = NULL, storm = NULL, year_range = NULL,
 #' @export
 filter_wind_data <- function(counties = NULL, storm = NULL, year_range = NULL,
                              wind_limit = NULL, output_vars = "fips",
-                             wind_var = "vmax_sust"){
+                             wind_var = "vmax_sust", wind_source = "modeled"){
 
         hasData()
 
-        storm_winds <- data.table::data.table(hurricaneexposuredata::storm_winds)
+        if(wind_source == "modeled"){
+                storm_winds <- data.table::data.table(hurricaneexposuredata::storm_winds)
+        } else if (wind_source == "ext_tracks"){
+                storm_winds <- data.table::data.table(hurricaneexposuredata::ext_tracks_wind)
+        }
 
         if(!is.null(counties)){
                 storm_winds <- storm_winds[get("fips") %in% counties]
@@ -142,14 +164,29 @@ filter_wind_data <- function(counties = NULL, storm = NULL, year_range = NULL,
         }
 
         if(!is.null(year_range)){
-                storm_winds <- storm_winds[ , .(storm_id,
-                                                fips,
-                                                vmax_gust = get("vmax_gust"),
-                                                vmax_sust = get("vmax_sust"),
-                                                year = gsub("*.+-", "", get("storm_id"))), ][
-                                                        get("year") %in%
-                                                                year_range[1]:year_range[2]
-                                                        ]
+                if(wind_source == "modeled"){
+                        storm_winds <- storm_winds[ , .(storm_id,
+                                                        fips,
+                                                        vmax_gust = get("vmax_gust"),
+                                                        vmax_sust = get("vmax_sust"),
+                                                        gust_dur = get("gust_dur"),
+                                                        sust_dur = get("sust_dur"),
+                                                        year = gsub("*.+-", "", get("storm_id"))), ][
+                                                                get("year") %in%
+                                                                        year_range[1]:year_range[2]
+                                                                ]
+                } else if (wind_source == "ext_tracks"){
+                        storm_winds <- storm_winds[ , .(storm_id,
+                                                        fips,
+                                                        vmax_gust = get("vmax_gust"),
+                                                        vmax_sust = get("vmax_sust"),
+                                                        sust_dur = get("sust_dur"),
+                                                        year = gsub("*.+-", "", get("storm_id"))), ][
+                                                                get("year") %in%
+                                                                        year_range[1]:year_range[2]
+                                                                ]
+                }
+
         }
 
         if(!is.null(wind_limit)){
@@ -158,6 +195,12 @@ filter_wind_data <- function(counties = NULL, storm = NULL, year_range = NULL,
                                                            wind_limit]
                 } else if (wind_var == "vmax_gust"){
                         storm_winds <- storm_winds[get("vmax_gust") >=
+                                                           wind_limit]
+                } else if (wind_var == "sust_dur"){
+                        storm_winds <- storm_winds[get("sust_dur") >=
+                                                           wind_limit]
+                } else if (wind_var == "gust_dur"){
+                        storm_winds <- storm_winds[get("gust_dur") >=
                                                            wind_limit]
                 }
         }

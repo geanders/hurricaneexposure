@@ -4,7 +4,7 @@
 \alias{wind_exposure}
 \title{Write storm wind exposure files}
 \usage{
-wind_exposure(locations, start_year, end_year, wind_limit, out_dir,
+wind_exposure(locations, start_year, end_year, wind_limit, wind_var, out_dir,
   out_type = "csv")
 }
 \arguments{
@@ -38,6 +38,12 @@ or a dataframe of multi-county FIPS, with all FIPS listed for each county)
 and creates time series dataframes that can be merged with health time series,
 giving the dates and exposures for all storms meeting the given
 storm wind criteria.
+}
+\note{
+This function allows you to use different wind variables (sustained winds, which
+   is the default; gust winds; duration of sustained winds; duration of gust winds)
+   when pulling exposures by county. However, if pulling multi-county communities,
+   currently only the sustained winds metric can be used with this function.
 }
 \examples{
 \dontrun{

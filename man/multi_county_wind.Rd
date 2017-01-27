@@ -17,7 +17,14 @@ community (\code{fips}). See the example code.}
 \item{end_year}{Four-digit integer with last year to consider.}
 
 \item{wind_limit}{A numeric vector of length one giving the minimum
-wind speed (in meters per second) to use in the filter}
+wind speed (in meters per second) or duration of winds of 20 m / s or more
+(in minutes) to use in the filter. The units of this variable will depend on
+the user's choice for the \code{wind_var} parameter. If the Extended Best
+Tracks wind radii are used as the source of the wind data, the sustained
+winds will only be available for cutpoints of 34 knots, 50 knots, and 64
+knots, so these values should be used (e.g., to get all counties with winds of
+34 knots or higher, you could use \code{wind_limit = 17.4}, with the limit
+given as a value just below 34 knots in the units meters per second).}
 }
 \value{
 Returns the same type dataframe as \code{county_rain},
@@ -27,6 +34,12 @@ Returns the same type dataframe as \code{county_rain},
 This function takes a dataframe with multi-county communities and returns a
 community-level dataframe of "exposed" storms, based on the highest of the
 maximum sustained wind speed for each county in the community.
+}
+\note{
+This function currently will only input a threshold for the sustained wind
+   metric. If you would like to use gust winds or duration of winds, you will need
+   to use the \code{county_wind} function to pull storms and aggregate to the
+   multi-county community level yourself.
 }
 \examples{
 # Ensure that data package is available before running the example.

@@ -21,12 +21,17 @@
 #'                  (FIPS) code}
 #'      \item{\code{max_sust}: }{Maximum sustained wind speed (in m / s)}
 #'      \item{\code{max_gust}: }{Maximum gust wind speed (in m / s)}
+#'      \item{\code{sust_dur}: }{Minutes sustained wind speed was 20 m / s or higher}
+#'      \item{\code{gust_dur}: }{Minutes gust wind speed was 20 m / s or higher (only
+#'          returned if the modeled winds are requested using \code{wind_source})}
 #'    }
 #'
 #' @details For more information on how wind speeds are modeled in this data,
 #'    see the documentation for the \code{stormwindmodel} R package.
 #' @note Only counties in states in the eastern half of the United States can
-#'    be processed by this function.
+#'    be processed by this function. Winds are modeled at 15-minute increments, so
+#'    all duration estimates (\code{sust_dur} and \code{gust_dur} in the output)
+#'    will be divisible by 15.
 #'
 #' @examples
 #' # Ensure that data package is available before running the example.
@@ -42,16 +47,20 @@
 #'
 #' @importFrom dplyr %>%
 county_wind <- function(counties, start_year, end_year, wind_limit,
-                        wind_var = "vmax_sust"){
+                        wind_var = "vmax_sust", wind_source = "modeled"){
 
         hasData()
 
-        wind_df <- filter_wind_data(counties = counties,
+        output_vars <- c("storm_id", "fips", "vmax_sust", "vmax_gust", "sust_dur")
+        if(wind_source == "modeled") {
+                output_vars <- c(output_vars, "gust_dur")
+        }
+
+        wind_df <- filter_wind_data(counties = counties, wind_var = wind_var,
                                          year_range = c(start_year, end_year),
                                          wind_limit = wind_limit,
-                                         output_vars = c("storm_id", "fips",
-                                                         "vmax_sust",
-                                                         "vmax_gust")) %>%
+                                         wind_source = wind_source,
+                                         output_vars = output_vars) %>%
                 dplyr::left_join(hurricaneexposuredata::closest_dist,
                                  by = c("storm_id", "fips"))
 
@@ -71,6 +80,11 @@ county_wind <- function(counties, start_year, end_year, wind_limit,
 #'
 #' @return Returns the same type dataframe as \code{county_rain},
 #'    but with storms listed by community instead of county.
+#'
+#' @note This function currently will only input a threshold for the sustained wind
+#'    metric. If you would like to use gust winds or duration of winds, you will need
+#'    to use the \code{county_wind} function to pull storms and aggregate to the
+#'    multi-county community level yourself.
 #'
 #' @export
 #'
@@ -137,6 +151,11 @@ multi_county_wind <- function(communities, start_year, end_year,
 #'    documentation for \code{\link{county_wind}} and
 #'    \code{\link{multi_county_wind}}.
 #'
+#' @note This function allows you to use different wind variables (sustained winds, which
+#'    is the default; gust winds; duration of sustained winds; duration of gust winds)
+#'    when pulling exposures by county. However, if pulling multi-county communities,
+#'    currently only the sustained winds metric can be used with this function.
+#'
 #' @examples \dontrun{
 #' # Ensure that data package is available before running the example.
 #' #  If it is not, see the `hurricaneexposure` package vignette for details
@@ -164,7 +183,7 @@ multi_county_wind <- function(communities, start_year, end_year,
 #'
 #' @importFrom dplyr %>%
 wind_exposure <- function(locations, start_year, end_year,
-                              wind_limit, out_dir, out_type = "csv"){
+                              wind_limit, wind_var, out_dir, out_type = "csv"){
 
         if(!dir.exists(out_dir)){
                 dir.create(out_dir)

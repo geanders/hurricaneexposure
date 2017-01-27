@@ -10,7 +10,14 @@ map_wind_exposure(storm, wind_limit, add_track = TRUE)
 \item{storm}{A character string giving the storm ID (e.g., "Floyd-1999")}
 
 \item{wind_limit}{A numeric vector of length one giving the minimum
-wind speed (in meters per second) to use in the filter}
+wind speed (in meters per second) or duration of winds of 20 m / s or more
+(in minutes) to use in the filter. The units of this variable will depend on
+the user's choice for the \code{wind_var} parameter. If the Extended Best
+Tracks wind radii are used as the source of the wind data, the sustained
+winds will only be available for cutpoints of 34 knots, 50 knots, and 64
+knots, so these values should be used (e.g., to get all counties with winds of
+34 knots or higher, you could use \code{wind_limit = 17.4}, with the limit
+given as a value just below 34 knots in the units meters per second).}
 
 \item{add_track}{TRUE / FALSE of whether to add the storm's track to the map. The
 default is TRUE.}
