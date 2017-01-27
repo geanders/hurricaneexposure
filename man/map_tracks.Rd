@@ -21,7 +21,8 @@ outer limits of the plot object (or default map if `plot_object` is
 left as NULL) when cropping hurricane tracks.}
 
 \item{plot_points}{TRUE / FALSE indicator of whether to include points,
-as well as lines, when plotting the hurricane tracks.}
+as well as lines, when plotting the hurricane tracks. These points show
+the times for which observations were recorded in the hurricane track data.}
 
 \item{alpha}{Numerical value designating the amount of transparency to
 use for plotting tracks.}
@@ -31,7 +32,7 @@ use for plotting tracks.}
 \value{
 Returns a ggplot object with plotting data for the storm tracks
    of the selected storms. This object can be printed directly or added
-   on to with other ggplot commands.
+   to with other \code{ggplot2} commands.
 }
 \description{
 Plot the tracks of any selected storms in the hurricane tracking

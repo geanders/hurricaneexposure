@@ -3,13 +3,13 @@
 #' Creates a \code{ggplot} object with the underlying map of all states in the
 #' eastern section of the US that might be prone to hurricane-related
 #' exposure. Other lines and points can be added to the output using
-#' `ggplot2` plotting functions.
+#' \code{ggplot2} plotting functions.
 #'
 #' @details Only states in the eastern half of the United States (i.e., ones
 #' prone to exposure to Atlantic basin tropical storms) are included on this
 #' map.
 #'
-#' @return A ggplot object that maps the states of the Eastern United States
+#' @return A \code{ggplot} object that maps the states of the Eastern United States
 #'
 #' @export
 #'
@@ -83,14 +83,15 @@ get_eastern_map <- function(map  = "county"){
 #'    outer limits of the plot object (or default map if `plot_object` is
 #'    left as NULL) when cropping hurricane tracks.
 #' @param plot_points TRUE / FALSE indicator of whether to include points,
-#'    as well as lines, when plotting the hurricane tracks.
+#'    as well as lines, when plotting the hurricane tracks. These points show
+#'    the times for which observations were recorded in the hurricane track data.
 #' @param alpha Numerical value designating the amount of transparency to
 #'    use for plotting tracks.
 #' @param color Character string giving the color to use to plot the tracks.
 #'
 #' @return Returns a ggplot object with plotting data for the storm tracks
 #'    of the selected storms. This object can be printed directly or added
-#'    on to with other ggplot commands.
+#'    to with other \code{ggplot2} commands.
 #'
 #' @examples
 #' # Ensure that data package is available before running the example.
@@ -419,11 +420,21 @@ map_wind_exposure <- function(storm, wind_var = "vmax_sust", wind_limit,
 
 #' Map county-level exposure based on reported events
 #'
+#' Map counties as "exposed" or "unexposed" based on the criterion that the county
+#' had an event listing of a specified type in the NOAA Storm Events database.
+#' For more information on the underlying data, see the helpfile for the
+#' \code{storm_events} dataset.
+#'
 #' @param storm_id Character vector with the storm for which to map events
 #'    (e.g., \code{"Katrina-2005"})
 #' @inheritParams county_distance
 #' @inheritParams county_events
 #' @inheritParams map_rain_exposure
+#'
+#' @return A map showing whether eastern US counties were exposed or unexposed
+#'    to a specific storm based on event listings.
+#'
+#' @note Note that flood events are not available for any year before 1996.
 #'
 #' @examples
 #' # Ensure that data package is available before running the example.
@@ -495,7 +506,7 @@ map_event_exposure <- function(storm_id, event_type, add_track = TRUE){
 #' @param storm Character string giving the name of the storm to plot (e.g.,
 #'    "Floyd-1999")
 #' @param metric Character string giving the metric to plot. Current options are
-#'    \code{"distance"} (default) and \code{"rainfall"}. These options are used
+#'    \code{"distance"}, \code{"wind"}, and \code{"rainfall"}. These options are used
 #'    to customize the color palette and scale of the choropleth map produced
 #'    by this function.
 #' @inheritParams county_rain
@@ -503,8 +514,10 @@ map_event_exposure <- function(storm_id, event_type, add_track = TRUE){
 #' @inheritParams filter_wind_data
 #'
 #' @return This function creates a choropleth map of counties in the eastern
-#'    part of the United States, showing distance from a storm track or total
-#'    rainfall over a given window of one or more days.
+#'    part of the United States, showing distance from a storm track, maximum
+#'    wind speed (or duration of winds at or above 20 m / s), or total
+#'    rainfall over a given window of one or more days near the date of the storm's
+#'    closest approach.
 #'
 #' @examples
 #' # Ensure that data package is available before running the example.
@@ -559,7 +572,8 @@ map_counties <- function(storm, metric = "distance", wind_var = "vmax_sust",
 #' Create a map customized for this package
 #'
 #' Creates a county choropleth map customized for displaying
-#' hurricane exposure.
+#' hurricane exposure. This function is used as a helper function within other
+#' mapping functions in the package.
 #'
 #' @param map_data A dataframe with columns with FIPS numbers (in numeric
 #'    class) for all counties in the eastern US (\code{region}) and the

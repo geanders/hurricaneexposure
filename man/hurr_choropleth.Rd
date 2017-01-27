@@ -13,7 +13,7 @@ class) for all counties in the eastern US (\code{region}) and the
 exposure value (\code{value})}
 
 \item{metric}{Character string giving the metric to plot. Current options are
-\code{"distance"} (default) and \code{"rainfall"}. These options are used
+\code{"distance"}, \code{"wind"}, and \code{"rainfall"}. These options are used
 to customize the color palette and scale of the choropleth map produced
 by this function.}
 
@@ -39,7 +39,8 @@ A \code{ggplot} object with a map of hurricane exposure in eastern
 }
 \description{
 Creates a county choropleth map customized for displaying
-hurricane exposure.
+hurricane exposure. This function is used as a helper function within other
+mapping functions in the package.
 }
 \details{
 The function only maps counties in states likely to be exposed

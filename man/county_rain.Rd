@@ -61,10 +61,10 @@ Returns a dataframe with a row for each county-storm pair and with
    }
 }
 \description{
-This function takes a list of US counties,based on their 5-digit Federal
+This function takes a list of US counties, based on their 5-digit Federal
 Information Processing Standard (FIPS) codes, boundaries on
 the range of years to be considered, thresholds for distance between each
-county and the storm track as well as minimum rainfall over a certain time
+county and the storm track, as well as minimum rainfall over a certain time
 window for the county to be considered "exposed" to the
 storm. Based on these inputs, the function returns a dataframe with the
 subset of Atlantic basin storms meeting those criteria for each of the listed

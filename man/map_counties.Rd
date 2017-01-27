@@ -13,7 +13,7 @@ map_counties(storm, metric = "distance", wind_var = "vmax_sust",
 "Floyd-1999")}
 
 \item{metric}{Character string giving the metric to plot. Current options are
-\code{"distance"} (default) and \code{"rainfall"}. These options are used
+\code{"distance"}, \code{"wind"}, and \code{"rainfall"}. These options are used
 to customize the color palette and scale of the choropleth map produced
 by this function.}
 
@@ -48,8 +48,10 @@ a gust factor of 1.49 to the sustained wind estimates in both wind data sources.
 }
 \value{
 This function creates a choropleth map of counties in the eastern
-   part of the United States, showing distance from a storm track or total
-   rainfall over a given window of one or more days.
+   part of the United States, showing distance from a storm track, maximum
+   wind speed (or duration of winds at or above 20 m / s), or total
+   rainfall over a given window of one or more days near the date of the storm's
+   closest approach.
 }
 \description{
 Map counties

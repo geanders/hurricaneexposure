@@ -20,7 +20,12 @@ county exposures. Options include \code{"flood"}, \code{"tornado"},
 \code{"wind"}, and \code{"tropical storm"}.}
 }
 \description{
-Find events for storms by county
+Takes a list of US counties, based on their 5-digit Federal Information Processing
+Standard (FIPS) codes, boundaries on the range of years to be considered, and
+the type of event (e.g., "flood", "tornado") and returns a list of all storms with
+listings for that type of event for the counties. This output is based on listings in
+the NOAA Storm Events database. See the help documentation for the \code{storm_events}
+dataset for more information and references on the data source used by this function.
 }
 \note{
 Of the event types that this function can pull, only "tornado" and
@@ -28,6 +33,28 @@ Of the event types that this function can pull, only "tornado" and
    pull listed tornado events or wind events for all years, but for any other
    event type, you should not use a start year prior to 1996, as events of
    other types were not recorded in the database before 1996.
+
+#' @return Returns a dataframe with a row for each county-storm pair and with
+   columns for:
+   \itemize{
+     \item{\code{fips}: }{County's 5-digit Federal Information Processing Standard
+                 (FIPS) code}
+     \item{\code{storm_id}: }{Unique storm identifier with the storm name and year,
+                 separated by a hyphen(e.g., "Alberto-1988",
+                 "Katrina-2005")}
+    \item{\code{closest_time_utc}: }{Time, in UTC, of the closest approach of the
+                            storm to the county's population mean center,
+                            based on storm tracks linearly interpolated to
+                            15-minute increments.}
+     \item{\code{storm_dist}: }{Minimum distance (in kilometers) between the storm's
+                    track and the county's population mean center.}
+     \item{\code{local_time}: }{Local time of the closest approach of the storm to the
+                       county's population mean center, based on storm tracks
+                       linearly interpolated to 15-minute increments.}
+     \item{\code{closest_date}: }{Date (based on local time) of the closest
+                         approach of the storm to the county's population
+                         mean center.}
+   }
 }
 \examples{
 # Ensure that data package is available before running the example.
@@ -36,7 +63,7 @@ Of the event types that this function can pull, only "tornado" and
 if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
 
 county_events(counties = c("37031", "37053", "37055"),
-              start_year = 1988, end_year = 1999,
+              start_year = 1996, end_year = 2015,
               event_type = "flood")
 }
 }

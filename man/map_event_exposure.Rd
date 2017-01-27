@@ -17,8 +17,18 @@ county exposures. Options include \code{"flood"}, \code{"tornado"},
 \item{add_track}{TRUE / FALSE of whether to add the storm's track to the map. The
 default is TRUE.}
 }
+\value{
+A map showing whether eastern US counties were exposed or unexposed
+   to a specific storm based on event listings.
+}
 \description{
-Map county-level exposure based on reported events
+Map counties as "exposed" or "unexposed" based on the criterion that the county
+had an event listing of a specified type in the NOAA Storm Events database.
+For more information on the underlying data, see the helpfile for the
+\code{storm_events} dataset.
+}
+\note{
+Note that flood events are not available for any year before 1996.
 }
 \examples{
 # Ensure that data package is available before running the example.

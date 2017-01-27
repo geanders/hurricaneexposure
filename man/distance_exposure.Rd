@@ -36,9 +36,9 @@ Writes out a directory with rain exposure files for each county or
 \description{
 This function takes an input of locations (either a vector of county FIPS
 or a dataframe of multi-county FIPS, with all FIPS listed for each county)
-and creates time series dataframes that can be merged with health time series,
-giving the dates and exposures for all storms meeting the given
-storm distance criteria.
+and creates a dataframe with storm listings and dates that can be merged with
+time series of health or other outcomes, giving the dates and exposures for all
+storms meeting the given storm distance criteria.
 }
 \examples{
 \dontrun{
