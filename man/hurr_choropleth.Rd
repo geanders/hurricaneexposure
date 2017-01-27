@@ -4,7 +4,8 @@
 \alias{hurr_choropleth}
 \title{Create a map customized for this package}
 \usage{
-hurr_choropleth(map_data, metric = "distance")
+hurr_choropleth(map_data, metric = "distance", wind_var = "vmax_sust",
+  wind_source = "modeled")
 }
 \arguments{
 \item{map_data}{A dataframe with columns with FIPS numbers (in numeric
@@ -15,6 +16,22 @@ exposure value (\code{value})}
 \code{"distance"} (default) and \code{"rainfall"}. These options are used
 to customize the color palette and scale of the choropleth map produced
 by this function.}
+
+\item{wind_var}{A character string giving the wind variable to use. Choices
+are \code{"vmax_sust"} (maximum sustained winds; default), \code{"vmax_gust"}
+(maximum gust winds), \code{"sust_dur"} (minutes of sustained winds of 20 m / s
+or higher) and \code{"gust_dur"} (minutes of gust winds of 20 m / s or higher).
+If the Extended Best Tracks wind radii are used as the source of wind data,
+the \code{"gust_dur"} option cannot be selected.}
+
+\item{wind_source}{A character string specifying the source to use for the winds. Options
+are \code{"modeled"}, for estimates based on running a wind model from Best
+Tracks data inputs, and \code{"ext_tracks"}, for estimates based on
+the wind radii in the Extended Best Tracks data. See the help files for the
+datasets \code{storm_winds} and \code{ext_tracks_wind} in the
+\code{hurricaneexposuredata} package for more details on each of these sources
+for wind estimates. For the gust wind estimates, these are based on applying
+a gust factor of 1.49 to the sustained wind estimates in both wind data sources.}
 }
 \value{
 A \code{ggplot} object with a map of hurricane exposure in eastern

@@ -4,8 +4,9 @@
 \alias{map_counties}
 \title{Map counties}
 \usage{
-map_counties(storm, metric = "distance", days_included = c(-2, -1, 0, 1),
-  add_track = TRUE)
+map_counties(storm, metric = "distance", wind_var = "vmax_sust",
+  days_included = c(-2, -1, 0, 1), add_track = TRUE,
+  wind_source = "modeled")
 }
 \arguments{
 \item{storm}{Character string giving the name of the storm to plot (e.g.,
@@ -15,6 +16,13 @@ map_counties(storm, metric = "distance", days_included = c(-2, -1, 0, 1),
 \code{"distance"} (default) and \code{"rainfall"}. These options are used
 to customize the color palette and scale of the choropleth map produced
 by this function.}
+
+\item{wind_var}{A character string giving the wind variable to use. Choices
+are \code{"vmax_sust"} (maximum sustained winds; default), \code{"vmax_gust"}
+(maximum gust winds), \code{"sust_dur"} (minutes of sustained winds of 20 m / s
+or higher) and \code{"gust_dur"} (minutes of gust winds of 20 m / s or higher).
+If the Extended Best Tracks wind radii are used as the source of wind data,
+the \code{"gust_dur"} option cannot be selected.}
 
 \item{days_included}{A numeric vector listing the days to include when
 calculating total precipitation. Negative numbers are days before the
@@ -28,6 +36,15 @@ county).}
 
 \item{add_track}{TRUE / FALSE of whether to add the storm's track to the map. The
 default is TRUE.}
+
+\item{wind_source}{A character string specifying the source to use for the winds. Options
+are \code{"modeled"}, for estimates based on running a wind model from Best
+Tracks data inputs, and \code{"ext_tracks"}, for estimates based on
+the wind radii in the Extended Best Tracks data. See the help files for the
+datasets \code{storm_winds} and \code{ext_tracks_wind} in the
+\code{hurricaneexposuredata} package for more details on each of these sources
+for wind estimates. For the gust wind estimates, these are based on applying
+a gust factor of 1.49 to the sustained wind estimates in both wind data sources.}
 }
 \value{
 This function creates a choropleth map of counties in the eastern
@@ -43,11 +60,12 @@ Map counties
 # on installing the required data package.
 if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
 
-floyd_map <- map_counties("Floyd-1999", metric = "rainfall",
-                           days_included = c(-2, -1, 0, 1))
-floyd_map
+map_counties("Floyd-1999", metric = "rainfall", days_included = c(-2, -1, 0, 1))
 
-beryl_map <- map_counties("Beryl-1988", metric = "wind")
+map_counties("Katrina-2005", metric = "wind")
+map_counties("Katrina-2005", metric = "wind", wind_var = "vmax_gust")
+map_counties("Katrina-2005", metric = "wind", wind_var = "sust_dur")
+map_counties("Katrina-2005", metric = "wind", wind_source = "ext_tracks")
 }
 }
 
