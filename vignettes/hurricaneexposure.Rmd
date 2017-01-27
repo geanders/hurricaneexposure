@@ -172,6 +172,14 @@ map_wind_exposure(storm = "Katrina-2005",
                   wind_limit = convert_wind_speed(34, "knots", "mps"))
 ```
 
+You can map a few other variables of wind with this function. For example, you can map the duration of winds of 20 m / s or more by using the argument `wind_var = "sust_dur"`:
+
+```{r fig.width = 7, fig.height = 4}
+map_counties("Ike-2008", metric = "wind", wind_var = "sust_dur")
+```
+
+You can similarly map estimated gust winds using the argument `wind_var = "vmax_gust"`. 
+
 Finally, you can map which counties were exposed to specific types of events, as listed in the NOAA Storm Events Database, using the `map_event_exposure` function. For example, you can map counties for which a flood event was listed for Hurricane Floyd (1999) with the call: 
 
 ```{r fig.width = 7, fig.height = 4}

@@ -364,19 +364,24 @@ map_distance_exposure <- function(storm, dist_limit, add_track = TRUE){
 #' # on installing the required data package.
 #' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
 #'
-#' beryl_map <- map_wind_exposure(storm = "Beryl-1988", wind_limit = 15)
-#' beryl_map
-#' map_tracks("Beryl-1988", plot_points = FALSE, plot_object = beryl_map)
+#' map_wind_exposure(storm = "Beryl-1988", wind_limit = 15)
 #' }
 #' @importFrom dplyr %>%
 #'
 #' @export
-map_wind_exposure <- function(storm, wind_limit, add_track = TRUE){
+map_wind_exposure <- function(storm, wind_var = "vmax_sust", wind_limit,
+                              add_track = TRUE, wind_source = "modeled"){
 
-        map_data <- filter_wind_data(storm = storm,
-                                      output_vars = c("fips", "vmax_gust",
-                                                      "vmax_sust")) %>%
-                dplyr::mutate_(exposed = ~ vmax_sust >= wind_limit) %>%
+        if(wind_var %in% c("vmax_sust", "vmax_gust")){
+                wind_metric <- "m / s"
+        } else {
+                wind_metric <- "minutes"
+        }
+
+        map_data <- filter_wind_data(storm = storm, wind_source = wind_source,
+                                      output_vars = c("fips", wind_var)) %>%
+                `colnames<-`(c("fips", "wind_value")) %>%
+                dplyr::mutate_(exposed = ~ wind_value >= wind_limit) %>%
                 dplyr::mutate_(value = ~ factor(exposed,
                                                 levels = c("FALSE", "TRUE"))) %>%
                 dplyr::tbl_df()
@@ -401,7 +406,7 @@ map_wind_exposure <- function(storm, wind_limit, add_track = TRUE){
                                  colour = "black", fill = NA, size = 0.2, alpha = 0.5) +
                 ggplot2::theme_void() +
                 ggplot2::coord_map() +
-                ggplot2::scale_fill_manual(name = paste("Wind >", wind_limit, "m/s"),
+                ggplot2::scale_fill_manual(name = paste("Wind >", wind_limit, wind_metric),
                                            values = c("white", "darkorange"),
                                            labels = c("Unexposed", "Exposed"))
 
@@ -495,6 +500,7 @@ map_event_exposure <- function(storm_id, event_type, add_track = TRUE){
 #'    by this function.
 #' @inheritParams county_rain
 #' @inheritParams map_rain_exposure
+#' @inheritParams filter_wind_data
 #'
 #' @return This function creates a choropleth map of counties in the eastern
 #'    part of the United States, showing distance from a storm track or total
@@ -506,16 +512,16 @@ map_event_exposure <- function(storm_id, event_type, add_track = TRUE){
 #' # on installing the required data package.
 #' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
 #'
-#' floyd_map <- map_counties("Floyd-1999", metric = "rainfall",
-#'                            days_included = c(-2, -1, 0, 1))
-#' floyd_map
+#' map_counties("Floyd-1999", metric = "rainfall", days_included = c(-2, -1, 0, 1))
 #'
-#' beryl_map <- map_counties("Beryl-1988", metric = "wind")
+#' map_counties("Katrina-2005", metric = "wind")
+#' map_counties("Katrina-2005", metric = "wind", wind_var = "vmax_gust")
+#' map_counties("Katrina-2005", metric = "wind", wind_var = "sust_dur")
 #'}
 #' @export
 #'
 #' @importFrom dplyr %>%
-map_counties <- function(storm, metric = "distance",
+map_counties <- function(storm, metric = "distance", wind_var = "vmax_sust",
                         days_included = c(-2, -1, 0, 1), add_track = TRUE){
         if(metric == "distance"){
                 map_data <- filter_storm_data(storm = storm,
@@ -530,9 +536,9 @@ map_counties <- function(storm, metric = "distance",
                         dplyr::rename_(value = ~ tot_precip)
         } else if (metric == "wind") {
                 map_data <- filter_wind_data(storm = storm,
-                                             output_vars = c("fips",
-                                                             "vmax_sust")) %>%
-                        dplyr::rename_(value = ~ vmax_sust)
+                                             output_vars = c("fips", wind_var),
+                                             wind_var = wind_var) %>%
+                        `colnames<-`(c("fips", "value"))
         } else{
                 stop("`metric` must be either `distance`, `rainfall`, or `wind`")
         }
@@ -556,13 +562,16 @@ map_counties <- function(storm, metric = "distance",
 #'    class) for all counties in the eastern US (\code{region}) and the
 #'    exposure value (\code{value})
 #' @inheritParams map_counties
+#' @inheritParams filter_wind_data
 #'
 #' @return A \code{ggplot} object with a map of hurricane exposure in eastern
 #'    US counties
 #'
 #' @details The function only maps counties in states likely to be exposed
 #' to Atlantic basin tropical storms.
-hurr_choropleth <- function(map_data, metric = "distance"){
+#'
+#' @importFrom dplyr %>%
+hurr_choropleth <- function(map_data, metric = "distance", wind_var = "vmax_sust"){
 
         if(metric == "rainfall"){
                 breaks <- seq(0, 200, by = 25)
@@ -573,9 +582,15 @@ hurr_choropleth <- function(map_data, metric = "distance"){
                 palette_name <- "Greens"
                 exposure_legend <- "Distance (km)"
         } else if(metric == "wind"){
-                breaks <- c(0, seq(15, 45, by = 5))
                 palette_name <- "Reds"
-                exposure_legend <- "Wind speed (m / s)"
+                if(wind_var %in% c()){
+                        breaks <- c(0, seq(15, 45, by = 5))
+                        exposure_legend <- "Wind speed (m / s)"
+                } else {
+                        breaks <- seq(0, 600, by = 60)
+                        exposure_legend <- "Wind duration\n(minutes)"
+                }
+
         }
 
         exposure_palette <- RColorBrewer::brewer.pal(length(breaks) - 2,
