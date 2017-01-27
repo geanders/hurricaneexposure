@@ -37,7 +37,7 @@ If you use this package and the data in the associated data package (`hurricanee
 - Anderson B, Yan M, Ferreri J, Crosson W, Al-Hamdan M, Schumacher A and
  Eddelbuettel D (2017). _hurricaneexposure: Explore and Map County-Level
  Hurricane Exposure in the United States_. R package version 0.0.1, <URL:
- http://CRAN.R-project.org/package=hurricaneexposure>.
+ https://github.com/geanders/hurricaneexposure>.
 
 - Anderson B, Schumacher A, Crosson W, Al-Hamdan M, Yan M, Ferreri J, Chen Z,
  Quiring S and Guikema S (2017). _hurricaneexposuredata: Data Characterizing
@@ -127,7 +127,7 @@ You can also use the `map_counties` function to plot the maximum wind during the
 map_counties(storm = "Katrina-2005", metric = "wind")
 ```
 
-These county winds are determined based on a model of wind speeds, using as input data from the hurricane tracks data. See the documentation for the `storm_winds` dataset (`?storm_winds`) to find out more about this data; further details on the wind model are available in the vignettes for the [`stormwindmodel` package](https://cran.r-project.org/web/packages/stormwindmodel/index.html). 
+These county winds are determined based on a model of wind speeds, using as input data from the hurricane tracks data. See the documentation for the `storm_winds` dataset (`?storm_winds`) to find out more about this data; further details on the wind model are available in the vignettes for the [`stormwindmodel` package](https://cran.r-project.org/package=stormwindmodel). 
 
 You can map a few other variables of wind with this function. For example, you can map the duration of winds of 20 m / s or more by using the argument `wind_var = "sust_dur"`:
 
@@ -249,7 +249,7 @@ county_rain(counties = c("22071", "51700"), start_year = 1995, end_year = 2005,
 
 This function draws on the same dataset (`rain`) from the `hurricaneexposuredata` package as the functions for mapping rain exposure shown above. For this and other exposures, see the table earlier in this vignette to see which years of data are available (for rain, data is currently available for storms through 2011).
 
-In addition to giving the names and closest dates of each storm for each county (`closest_date`-- note, this is given based on local time for the county; see documentation for the [`countytimezones` package](https://cran.r-project.org/web/packages/countytimezones/index.html) to find out more about how local time was calculated from UTC for each county), this function also gives you the distance between the county and the storm's track at the time when the storm was closest to the county's population weighted center (`storm_dist`, in kilometers) and the total precipitation over the included days (`tot_precip`). The returned dataframe also gives the time of closest approach in both local time (`local_time`) and UTC (`closest_time_utc`), based on 15-minute intervals along the storm's track. 
+In addition to giving the names and closest dates of each storm for each county (`closest_date`-- note, this is given based on local time for the county; see documentation for the [`countytimezones` package](https://cran.r-project.org/package=countytimezones) to find out more about how local time was calculated from UTC for each county), this function also gives you the distance between the county and the storm's track at the time when the storm was closest to the county's population weighted center (`storm_dist`, in kilometers) and the total precipitation over the included days (`tot_precip`). The returned dataframe also gives the time of closest approach in both local time (`local_time`) and UTC (`closest_time_utc`), based on 15-minute intervals along the storm's track. 
 
 Similar functions are available in the package to create listings of county exposures to storms based on wind, distance to the storm track, and events listings from the NOAA Storm Events Database (flood and tornado events). For example, to get a listing of all storms between 1988 and 2015 for which Miami-Dade county (FIPS: ) has experienced sustained winds of 34 knots or more (17.5 m / s), you can run:
 
