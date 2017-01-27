@@ -517,12 +517,14 @@ map_event_exposure <- function(storm_id, event_type, add_track = TRUE){
 #' map_counties("Katrina-2005", metric = "wind")
 #' map_counties("Katrina-2005", metric = "wind", wind_var = "vmax_gust")
 #' map_counties("Katrina-2005", metric = "wind", wind_var = "sust_dur")
+#' map_counties("Katrina-2005", metric = "wind", wind_source = "ext_tracks")
 #'}
 #' @export
 #'
 #' @importFrom dplyr %>%
 map_counties <- function(storm, metric = "distance", wind_var = "vmax_sust",
-                        days_included = c(-2, -1, 0, 1), add_track = TRUE){
+                        days_included = c(-2, -1, 0, 1), add_track = TRUE,
+                        wind_source = "modeled"){
         if(metric == "distance"){
                 map_data <- filter_storm_data(storm = storm,
                                               output_vars = c("fips",
@@ -544,7 +546,8 @@ map_counties <- function(storm, metric = "distance", wind_var = "vmax_sust",
         }
         map_data <- map_data %>%
                 dplyr::tbl_df()
-        out <- hurr_choropleth(map_data, metric = metric)
+        out <- hurr_choropleth(map_data, metric = metric, wind_var = wind_var,
+                               wind_source = wind_source)
 
         if(add_track){
                 out <- map_tracks(storm, plot_object = out)
@@ -571,7 +574,8 @@ map_counties <- function(storm, metric = "distance", wind_var = "vmax_sust",
 #' to Atlantic basin tropical storms.
 #'
 #' @importFrom dplyr %>%
-hurr_choropleth <- function(map_data, metric = "distance", wind_var = "vmax_sust"){
+hurr_choropleth <- function(map_data, metric = "distance", wind_var = "vmax_sust",
+                            wind_source = "modeled"){
 
         if(metric == "rainfall"){
                 breaks <- seq(0, 200, by = 25)
@@ -583,9 +587,18 @@ hurr_choropleth <- function(map_data, metric = "distance", wind_var = "vmax_sust
                 exposure_legend <- "Distance (km)"
         } else if(metric == "wind"){
                 palette_name <- "Reds"
-                if(wind_var %in% c()){
-                        breaks <- c(0, seq(15, 45, by = 5))
+                if(wind_var %in% c("vmax_gust", "vmax_sust")){
                         exposure_legend <- "Wind speed (m / s)"
+                        if(wind_source == "modeled"){
+                                breaks <- c(0, seq(15, 45, by = 5))
+                                exposure_legend <- "Wind speed (m / s)"
+                        } else if (wind_source == "ext_tracks"){
+                                if(wind_var == "vmax_sust"){
+                                        breaks <- c(0, 17.4, 25.7, 32.9)
+                                } else if (wind_var == "vmax_gust"){
+                                        breaks <- c(0, 26.0, 38.3, 49.0)
+                                }
+                        }
                 } else {
                         breaks <- seq(0, 600, by = 60)
                         exposure_legend <- "Wind duration\n(minutes)"
@@ -593,8 +606,13 @@ hurr_choropleth <- function(map_data, metric = "distance", wind_var = "vmax_sust
 
         }
 
-        exposure_palette <- RColorBrewer::brewer.pal(length(breaks) - 2,
-                                                     name = palette_name)
+        if(wind_source == "ext_tracks"){
+                exposure_palette <- c("#feb24c", "#fc4e2a", "#b10026")
+        } else {
+                exposure_palette <- RColorBrewer::brewer.pal(length(breaks) - 2,
+                                                             name = palette_name)
+        }
+
         # Adjust for right outliers
         if(max(map_data$value) > max(breaks)){
                 breaks <- c(breaks, max(map_data$value))

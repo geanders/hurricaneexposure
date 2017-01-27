@@ -149,6 +149,11 @@ filter_wind_data <- function(counties = NULL, storm = NULL, year_range = NULL,
 
         hasData()
 
+        if(wind_source == "ext_tracks" & wind_var == "gust_dur"){
+                stop("When using Extended Best Tracks for the wind data source, ",
+                     "you cannot use the\ngust duration as the wind variable.")
+        }
+
         if(wind_source == "modeled"){
                 storm_winds <- data.table::data.table(hurricaneexposuredata::storm_winds)
         } else if (wind_source == "ext_tracks"){
