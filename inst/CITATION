@@ -12,4 +12,4 @@ bibentry(bibtype = "Manual",
                     person("Dirk", "Eddelbuettel")),
          year = year,
          note = note,
-         url = "https://github.com/geanders/hurricaneexposure")
+         url = "https://cran.r-project.org/package=hurricaneexposure")
