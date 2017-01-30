@@ -30,7 +30,7 @@ Description: Allows users to create time series of tropical storm
     Sciences Program/Public Health Program Grant (NNX09AV81G).
 URL: https://github.com/geanders/hurricaneexposure
 BugReports: https://github.com/geanders/hurricaneexposure/issues
-License: GPL-2
+License: GPL (>= 2)
 LazyData: TRUE
 Imports:
     data.table (>= 1.9.6),
