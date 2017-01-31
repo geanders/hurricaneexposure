@@ -50,7 +50,7 @@ RoxygenNote: 5.0.1
 Depends:
     R (>= 2.10)
 Suggests: 
-    hurricaneexposuredata (>= 0.0.1),
+    hurricaneexposuredata (>= 0.0.2),
     knitr,
     pander,
     rmarkdown,
