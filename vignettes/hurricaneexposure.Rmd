@@ -13,9 +13,12 @@ vignette: >
 hasData <- requireNamespace("hurricaneexposuredata", quietly=TRUE)
 if (!hasData) {
     knitr::opts_chunk$set(eval = FALSE)
-    print(paste("Note: Examples in this vignette require that the `hurricaneexposuredata` package",
-                "be installed. The system currently running this vignette does not have that package",
-                "installed, so code examples will not be evaluated."))
+    msg <- paste("Note: Examples in this vignette require that the", 
+                 "`hurricaneexposuredata` package be installed. The system",
+                 "currently running this vignette does not have that package",
+                 "installed, so code examples will not be evaluated.")
+    msg <- paste(strwrap(msg), collapse="\n")
+    message(msg)
 }
 ```
 
