@@ -386,12 +386,12 @@ Here are results for comparing our method to using ground-based monitors. First,
 plot_county_rain_compare <- function(ex_fips, ex_dir, ex_title, 
                                      get_data = FALSE){
         if(get_data){
-                daily_timeseries(ex_fips, coverage = 0,
-                                  date_min = "1988-01-01",
-                                  date_max = "2011-12-31",
-                                  var = "PRCP",
-                                  out_directory = ex_dir,
-                                  keep_map = FALSE)
+                write_daily_timeseries(ex_fips, coverage = 0,
+                                       date_min = "1988-01-01",
+                                       date_max = "2011-12-31",
+                                       var = "PRCP",
+                                       out_directory = ex_dir,
+                                       keep_map = FALSE)
         }
         
         check_dates <- closest_dist %>%
@@ -409,9 +409,8 @@ plot_county_rain_compare <- function(ex_fips, ex_dir, ex_title,
                 dplyr::rename(date = day)
         all_dates <- unique(check_dates$date)
         
-        ex_weather <- readRDS(paste0(ex_dir, ex_fips, ".rds"))
-        ex_weather <- as.data.frame(ex_weather$daily_data)
-        
+        ex_weather <- readRDS(paste0(ex_dir, "data/", ex_fips, ".rds"))
+
         ex_weather <- ex_weather %>%
                 dplyr::filter(date %in% all_dates) %>%
                 dplyr::right_join(check_dates, by = "date") %>%
@@ -500,11 +499,11 @@ date_range <- closest_dist %>%
         filter(storm_id == "Allison-2001") %>%
         summarize(earliest_date = min(ymd(closest_date)) - ddays(2),
                   latest_date = max(ymd(closest_date)) + ddays(2))
-daily_timeseries(allison_fips, coverage = 0,
-                  date_min = format(date_range[1, 1], "%Y-%m-%d"),
-                  date_max = format(date_range[1, 2], "%Y-%m-%d"),
-                  var = "PRCP", out_directory = "county_ave/allison/",
-                 keep_map = FALSE)
+write_daily_timeseries(allison_fips, coverage = 0,
+                       date_min = format(date_range[1, 1], "%Y-%m-%d"),
+                       date_max = format(date_range[1, 2], "%Y-%m-%d"),
+                       var = "PRCP", out_directory = "county_ave/allison/",
+                       keep_map = FALSE)
 
 load("MWR_gauge_rain_data/frances_gauge.RData")
 frances_fips <- sprintf("%05s", as.character(unique(frances_gauge$fips)))
@@ -513,11 +512,11 @@ date_range <- closest_dist %>%
         filter(storm_id == "Frances-2004") %>%
         summarize(earliest_date = min(ymd(closest_date)) - ddays(2),
                   latest_date = max(ymd(closest_date)) + ddays(2))
-daily_timeseries(frances_fips, coverage = 0,
-                  date_min = format(date_range[1, 1], "%Y-%m-%d"),
-                  date_max = format(date_range[1, 2], "%Y-%m-%d"),
-                  var = "PRCP", out_directory = "county_ave/frances/",
-                 keep_map = FALSE)
+write_daily_timeseries(frances_fips, coverage = 0,
+                       date_min = format(date_range[1, 1], "%Y-%m-%d"),
+                       date_max = format(date_range[1, 2], "%Y-%m-%d"),
+                       var = "PRCP", out_directory = "county_ave/frances/",
+                       keep_map = FALSE)
 
 load("MWR_gauge_rain_data/ike_gauge.RData")
 ike_fips <- sprintf("%05s", as.character(unique(ike_gauge$fips)))
@@ -526,11 +525,11 @@ date_range <- closest_dist %>%
         filter(storm_id == "Ike-2008") %>%
         summarize(earliest_date = min(ymd(closest_date)) - ddays(2),
                   latest_date = max(ymd(closest_date)) + ddays(2))
-daily_timeseries(ike_fips, coverage = 0,
-                  date_min = format(date_range[1, 1], "%Y-%m-%d"),
-                  date_max = format(date_range[1, 2], "%Y-%m-%d"),
-                  var = "PRCP", out_directory = "county_ave/ike/",
-                 keep_map = FALSE)
+write_daily_timeseries(ike_fips, coverage = 0,
+                       date_min = format(date_range[1, 1], "%Y-%m-%d"),
+                       date_max = format(date_range[1, 2], "%Y-%m-%d"),
+                       var = "PRCP", out_directory = "county_ave/ike/",
+                       keep_map = FALSE)
 
 load("MWR_gauge_rain_data/alex_gauge.RData")
 alex_fips <- sprintf("%05s", as.character(unique(alex_gauge$fips)))
@@ -539,11 +538,11 @@ date_range <- closest_dist %>%
         filter(storm_id == "Alex-2010") %>%
         summarize(earliest_date = min(ymd(closest_date)) - ddays(2),
                   latest_date = max(ymd(closest_date)) + ddays(2))
-daily_timeseries(alex_fips, coverage = 0,
-                  date_min = format(date_range[1, 1], "%Y-%m-%d"),
-                  date_max = format(date_range[1, 2], "%Y-%m-%d"),
-                  var = "PRCP", out_directory = "county_ave/alex/",
-                 keep_map = FALSE)
+write_daily_timeseries(alex_fips, coverage = 0,
+                       date_min = format(date_range[1, 1], "%Y-%m-%d"),
+                       date_max = format(date_range[1, 2], "%Y-%m-%d"),
+                       var = "PRCP", out_directory = "county_ave/alex/",
+                       keep_map = FALSE)
 ```
 
 ```{r county_ave_comparison, echo = FALSE, fig.width = 10, fig.height = 10, fig.align = "center", fig.cap = "Comparison of county-level average cumulative rainfall for the period from two days before to one day after the storm's closest approach to a county, using NLDAS-2 versus ground-based monitors, for counties with both estimates available for four example storms. The size of each point indicates the average number of monitors reporting from that county during the window (larger size indicates more monitors). The text over each point gives the FIPS county identifier."}
@@ -553,7 +552,7 @@ plot_county_ave_compare <- function(county_dir, storm_id){
                              collapse = " ("), ")")
         storm_year <- gsub(".+-", "", storm_id)
         counties <- gsub(".rds", "",
-                         list.files(paste0("county_ave/", county_dir)))
+                         list.files(paste0("county_ave/", county_dir, "/data")))
         if(county_dir == "frances"){
                 counties <- counties[counties != "51019"] # Missing all data
         }
@@ -562,9 +561,8 @@ plot_county_ave_compare <- function(county_dir, storm_id){
         names(storm_ave) <- counties
         
         for(x in counties){
-                county_weather <- readRDS(paste0("county_ave/", 
-                                                 county_dir, "/", x,
-                                                 ".rds"))$daily_data %>%
+                county_weather <- readRDS(paste0("county_ave/", county_dir, "/data/",
+                                                 x, ".rds")) %>%
                         dplyr::mutate(date = ymd(date),
                                       prcp = prcp / 10) %>%
                         dplyr::mutate(fips = x)
@@ -742,7 +740,7 @@ plot_mwr_compare_wind <- function(data){
                              start_year = storm_year, 
                              end_year = storm_year,
                              wind_limit = 0,
-                             wind_var = "max_sust") %>%
+                             wind_var = "vmax_sust") %>%
                 dplyr::filter(storm_id == data$storm_id[1]) %>%
                 dplyr::right_join(data, by = "fips") 
         
@@ -750,10 +748,10 @@ plot_mwr_compare_wind <- function(data){
                 group_by(fips) %>%
                 summarize(lowest_wind = min(wind_sust),
                   highest_wind = max(wind_sust),
-                  model_wind = mean(max_sust))
+                  model_wind = mean(vmax_sust))
         
         plot_mwr <- ggplot(compare_wind, 
-                   aes(x = max_sust, y = wind_sust)) + 
+                   aes(x = vmax_sust, y = wind_sust)) + 
         geom_hline(yintercept = 15, color = "lightgray") + 
         geom_vline(xintercept = 15, color = "lightgray") + 
                 geom_abline(aes(intercept = 0, slope = 1), color = "gray") + 
@@ -1405,15 +1403,15 @@ print(a, include.rownames = FALSE, floating = TRUE,
 
 ```{r top_wind, echo = FALSE, results = "asis"}
 a <- wind_exposure %>%
-        arrange(desc(max_sust)) %>% 
+        arrange(desc(vmax_sust)) %>% 
         slice(1:20) %>%
         left_join(county_centers, by = "fips") %>%
-        select(storm_id, name, max_sust) %>%
+        select(storm_id, name, vmax_sust) %>%
         mutate(storm_id = paste0(gsub("-", " (", storm_id), ")"),
-               max_sust = round(max_sust)) %>%
+               max_sust = round(vmax_sust)) %>%
         rename(Storm = storm_id,
                County = name,
-               "Maximum sustained wind (m / s)" = max_sust) %>%
+               "Maximum sustained wind (m / s)" = vmax_sust) %>%
         xtable(caption = "Top storm-county pairs in terms of most intense sustained winds.", 
                label = "tab:top_wind")
 print(a, include.rownames = FALSE, floating = TRUE,
@@ -1477,7 +1475,7 @@ plot_top_x(rain_exposure, exposure_var = "tot_precip",
 ```
 
 ```{r top_wind_map, echo = FALSE, fig.width = 8, fig.height = 6, fig.align = "center", fig.cap = "Number of storms for which each county experienced one of the top 2,000 intensities for distance"}
-plot_top_x(wind_exposure, exposure_var = "max_sust",
+plot_top_x(wind_exposure, exposure_var = "vmax_sust",
            eastern_states = eastern_states, my_fips = my_fips,
            title = "Hits for top 2,000 Storm-County Pairs\nfor Wind Metric")
 ```
