@@ -16,3 +16,4 @@ A dataframe with map data pulled using the \code{map_data} function in
 \description{
 Get map data for eastern US states
 }
+

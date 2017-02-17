@@ -53,3 +53,4 @@ allison_map <- map_rain_exposure(storm = "Allison-2001", rain_limit = 125,
 map_tracks("Allison-2001", plot_object = allison_map, plot_points = TRUE)
 }
 }
+

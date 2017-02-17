@@ -56,3 +56,4 @@ wind_df <- multi_county_wind(communities = communities,
                                      wind_limit = 20)
 }
 }
+

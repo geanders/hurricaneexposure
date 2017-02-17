@@ -70,3 +70,4 @@ map_counties("Katrina-2005", metric = "wind", wind_var = "sust_dur")
 map_counties("Katrina-2005", metric = "wind", wind_source = "ext_tracks")
 }
 }
+
