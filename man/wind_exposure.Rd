@@ -77,4 +77,3 @@ wind_exposure(locations = communities,
 }
 }
 }
-

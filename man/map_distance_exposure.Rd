@@ -41,4 +41,3 @@ allison_map <- map_distance_exposure(storm = "Allison-2001",
 map_tracks("Allison-2001", plot_points = FALSE, plot_object = allison_map)
 }
 }
-

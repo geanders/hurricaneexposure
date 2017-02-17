@@ -81,4 +81,3 @@ rain_exposure(locations = communities,
 }
 }
 }
-

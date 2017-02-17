@@ -42,4 +42,3 @@ map_event_exposure(storm_id = "Floyd-1999", event_type = "wind")
 map_event_exposure(storm_id = "Floyd-1999", event_type = "tropical_storm")
 }
 }
-

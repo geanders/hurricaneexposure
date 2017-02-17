@@ -46,4 +46,3 @@ mapping functions in the package.
 The function only maps counties in states likely to be exposed
 to Atlantic basin tropical storms.
 }
-
