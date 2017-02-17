@@ -57,3 +57,4 @@ if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
 map_wind_exposure(storm = "Beryl-1988", wind_limit = 15)
 }
 }
+

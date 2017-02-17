@@ -65,3 +65,4 @@ distance_exposure(locations = communities,
 }
 }
 }
+

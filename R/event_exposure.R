@@ -80,3 +80,133 @@ county_events <- function(counties, start_year, end_year, event_type){
         return(events)
 }
 
+#' Hurricane exposure by events for communities
+#'
+#' This function takes a dataframe with multi-county communities and returns a
+#' community-level dataframe of "exposed" storms, based on the type of the event.
+#'
+#' @inheritParams county_distance
+#' @inheritParams county_rain
+#' @inheritParams multi_county_rain
+#' @inheritParams county_events
+#'
+#' @return Returns the same type dataframe as \code{county_events},
+#'    but with storms listed by community instead of county.
+#'
+#' @export
+#'
+#' @examples
+#' # Ensure that data package is available before running the example.
+#' #  If it is not, see the `hurricaneexposure` package vignette for details
+#' # on installing the required data package.
+#' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
+#'
+#' communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
+#'                          fips = c("36005", "36047", "36061",
+#'                                   "36085", "36081", "36119",
+#'                                   "22071", "51700"))
+#' distance_df <- multi_county_events(communities = communities,
+#'                                      start_year = 1995, end_year = 2005,
+#'                                      event_type = "flood")
+#'}
+#' @importFrom dplyr %>%
+#'
+#' @export
+multi_county_events <- function(communities, start_year, end_year, event_type){
+
+        hasData()
+
+        communities <- dplyr::mutate_(communities, fips = ~ as.character(fips))
+
+        events <- hurricaneexposuredata::storm_events
+
+        event_years <- as.numeric(gsub(".+-", "", names(events)))
+        events <- events[event_years >= start_year & event_years <= end_year]
+        events <- events[lapply(events, nrow) > 0]
+        events <- purrr::map2(events, names(events), ~ cbind(.x, storm_id = .y))
+
+        events <- lapply(events, function(x) subset(x, x$fips %in% communities$fips))
+
+        events <- do.call("rbind", events) %>%
+                dplyr::mutate_(flood = ~ grepl("Flood", events),
+                               tornado = ~ grepl("Tornado", events),
+                               tropical_storm = ~ grepl("Hurricane", events) |
+                                       grepl("Tropical Storm", events) |
+                                       grepl("Tropical Depression", events),
+                               wind = ~ tropical_storm | grepl("Wind", events))
+
+        events <- events[events[ , event_type], c("fips", "storm_id")] %>%
+                dplyr::mutate_(storm_id = ~ as.character(storm_id)) %>%
+                dplyr::left_join(hurricaneexposuredata::closest_dist,
+                                 by = c("storm_id", "fips")) %>%
+                dplyr::left_join(communities, by = "fips") %>%
+                dplyr::group_by_(~ commun, ~ storm_id) %>%
+                dplyr::summarize_(closest_date = ~ dplyr::first(closest_date),
+                                  local_time = ~ dplyr::first(local_time),
+                                  closest_time_utc = ~ dplyr::first(closest_time_utc))
+        return(events)
+}
+
+#' Write storm events exposure files
+#'
+#' This function takes an input of locations (either a vector of county FIPS
+#' or a dataframe of multi-county FIPS, with all FIPS listed for each county)
+#' and creates a dataframe with storm listings and dates that can be merged with
+#' time series of health or other outcomes, giving the dates and exposures for all
+#' storms meeting the given storm events criteria.
+#'
+#' @return Writes out a directory with rain exposure files for each county or
+#'    community indicated. For more on the columns in this output, see the
+#'    documentation for \code{\link{county_rain}} and
+#'    \code{\link{multi_county_rain}}.
+#'
+#' @examples
+#' \dontrun{
+#' # Ensure that data package is available before running the example.
+#' #  If it is not, see the `hurricaneexposure` package vignette for details
+#' # on installing the required data package.
+#' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
+#'
+#' # By county
+#' events_exposure(locations = c("22071", "51700"),
+#'                 start_year = 1995, end_year = 2005,
+#'                 event_type = "flood",
+#'                 out_dir = "~/tmp/storms")
+#'                 }
+#'  }
+#' @export
+events_exposure <- function(locations, start_year, end_year,
+                            event_type, out_dir, out_type = "csv"){
+
+        if(!dir.exists(out_dir)){
+                dir.create(out_dir)
+        }
+
+        if("commun" %in% colnames(locations)){
+                df <- multi_county_events(communities = locations,
+                                          start_year = start_year,
+                                          end_year = end_year,
+                                          event_type = event_type) %>%
+                        dplyr::rename_(loc = ~ commun) %>%
+                        dplyr::ungroup()
+        } else {
+                df <- county_events(counties = locations,
+                                    start_year = start_year,
+                                    end_year = end_year,
+                                    event_type = event_type) %>%
+                        dplyr::rename_(loc = ~ fips)
+        }
+        locs <- as.character(unique(df$loc))
+
+        for(i in 1:length(locs)){
+                out_df <- dplyr::filter_(df, ~ loc == locs[i])
+                out_file <- paste0(out_dir, "/", locs[i], ".", out_type)
+                if(out_type == "rds"){
+                        saveRDS(out_df, file = out_file)
+                } else if (out_type == "csv"){
+                        utils::write.csv(out_df, file = out_file,
+                                         row.names = FALSE)
+                }
+
+        }
+}
