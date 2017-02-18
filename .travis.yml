@@ -18,7 +18,7 @@ before_install:
 
 install:
   ## install as binaries what we can get as binaries
-  - ./run.sh install_aptget r-cran-data.table r-cran-dplyr r-cran-ggmap r-cran-ggplot2 r-cran-lazyeval r-cran-lubridate r-cran-maps r-cran-purr r-cran-rcolorbrewer r-cran-stringr r-cran-tidyr r-cran-knitr r-cran-pander r-cran-rmarkdown
+  - ./run.sh install_aptget r-cran-data.table r-cran-dplyr r-cran-ggmap r-cran-ggplot2 r-cran-lazyeval r-cran-lubridate r-cran-maps r-cran-purrr r-cran-rcolorbrewer r-cran-stringr r-cran-tidyr r-cran-knitr r-cran-pander r-cran-rmarkdown
   ## install as R packages what we (currently) cannot get as binaries
   - ./run.sh install_r hurricaneexposuredata weathermetrics
 
