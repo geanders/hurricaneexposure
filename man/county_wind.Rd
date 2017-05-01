@@ -89,4 +89,3 @@ county_wind(counties = c("22071", "51700"),
             wind_limit = 20, wind_var = "vmax_sust")
 }
 }
-

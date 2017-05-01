@@ -66,4 +66,3 @@ filter_wind_data(counties = c("22071", "51700"), year_range = c(1988, 2011),
                  output_vars = c("fips", "storm_id", "vmax_sust"))
 }
 }
-

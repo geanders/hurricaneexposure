@@ -45,4 +45,3 @@ distance_df <- multi_county_distance(communities = communities,
                                      dist_limit = 75)
 }
 }
-

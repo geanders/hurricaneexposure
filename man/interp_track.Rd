@@ -24,4 +24,3 @@ date-time, and then predicts these splines to new intervals. These
 splines use degrees of freedom equal to the number of original observations
 divided by two.
 }
-
