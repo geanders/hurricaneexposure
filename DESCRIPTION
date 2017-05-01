@@ -46,7 +46,7 @@ Imports:
     stats,
     stringr (>= 1.1.0),
     tidyr (>= 0.6.0)
-RoxygenNote: 6.0.0
+RoxygenNote: 6.0.1
 Depends:
     R (>= 2.10)
 Suggests: 
