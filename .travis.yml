@@ -1,8 +1,37 @@
-# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+# Run Travis CI for R using https://eddelbuettel.github.io/r-travis/
 
-language: R
-warnings_are_errors: false
+language: c
 
-r_github_packages:
-  - cran/survival
-  - geanders/hurricaneexposuredata
+sudo: required
+
+## use 'trusty' which is old (14.04) but not as jurassic as the default of 'precise' (12.04)
+dist: trusty
+
+env:
+  global:
+    ## declare the 'geanders' drat repo
+    - DRAT_REPOS=geanders
+
+before_install:
+  - curl -OLs https://eddelbuettel.github.io/r-travis/run.sh && chmod 0755 run.sh
+  - ./run.sh bootstrap
+
+install:
+  ## install as binaries what we can get as binaries
+  - ./run.sh install_aptget r-cran-data.table r-cran-dplyr r-cran-ggmap r-cran-ggplot2 r-cran-lazyeval r-cran-lubridate r-cran-maps r-cran-purrr r-cran-rcolorbrewer r-cran-stringr r-cran-tidyr r-cran-knitr r-cran-pander r-cran-rmarkdown
+  ## install as R packages what we (currently) cannot get as binaries
+  - ./run.sh install_r hurricaneexposuredata weathermetrics
+
+script:
+  - ./run.sh run_tests
+
+after_failure:
+  - ./run.sh dump_logs
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
+
+    
+
