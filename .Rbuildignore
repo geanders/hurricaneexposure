@@ -2,6 +2,7 @@
 ^\.Rproj\.user$
 ^data-raw$
 ^writing$
+^papers$
 ^README\.Rmd$
 ^README-.*\.png$
 ^README\.md$

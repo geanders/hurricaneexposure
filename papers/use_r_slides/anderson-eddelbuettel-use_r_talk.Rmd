@@ -1,0 +1,275 @@
+---
+output:
+  beamer_presentation:
+    keep_tex : true
+    includes: 
+      in_header: anderson_header.txt
+      before_body: anderson_beforebody.txt
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Motivation
+
+\vspace{-0.5cm}
+\begin{center}
+\includegraphics[width = \textwidth]{images/rainexamples.pdf}
+\end{center} 
+\vspace{-0.8cm}
+\textbf{Goal:} Create a publicly-accessible package with historical data (1988--present) on county-level exposure to Atlantic basin tropical storms in the United States (with exposure based on distance to storm track, rain, wind, floods, or tornadoes).
+
+## Motivation
+
+\begin{columns}
+
+\begin{column}{0.45\textwidth}
+\begin{block}{``Data" package}
+\includegraphics[width = \textwidth]{images/hurrtracks.png} \\
+\texttt{hurricaneexposuredata}\\
+Hosted with \texttt{drat}. 
+\end{block}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\begin{block}{``Code" package}
+\includegraphics[width = \textwidth]{images/example_hurricane_map.png} \\
+\texttt{hurricaneexposure}\\
+Available through CRAN. 
+\end{block}
+\end{column}
+
+\end{columns}
+
+\pause
+\bigskip
+
+\begin{block}{Challenges}
+\begin{enumerate}
+\item \alert<3>{Host a package with \texttt{drat}.} 
+\item Connect a CRAN package with a data package hosted with \texttt{drat}.
+\end{enumerate}
+\end{block}
+
+## Hosting a package with `drat`
+
+\begin{columns}
+
+\begin{column}{0.49\textwidth}
+
+\begin{block}{R repositories and \texttt{drat}}
+An R package repository is a network-accessible directory structure, and \texttt{drat} helps you build and maintain your own.
+\end{block}
+
+\bigskip
+
+\small
+
+\begin{block}{Extensive resources}
+\vspace{-0.3cm}
+\begin{itemize}
+\item \href{https://cran.r-project.org/web/packages/drat/vignettes/DratForPackageUsers.html}{Drat Basics for Package Users}
+\item \href{https://cran.r-project.org/web/packages/drat/vignettes/DratForPackageAuthors.html}{Drat Basics for Package Authors}
+\item \href{https://cran.r-project.org/web/packages/drat/vignettes/DratFAQ.html}{Drat FAQs}
+\end{itemize}
+\end{block}
+
+\end{column}
+
+\begin{column}{0.49\textwidth}
+\includegraphics[width = \textwidth]{images/drat_repo_structure.pdf}
+\end{column}
+
+\end{columns}
+
+## Packages hosted on `drat` repositories
+
+### For package users, how is a `drat` package different?
+
+- "Not at all", really.
+- Tell R about the additional repository via
+    - repos argument directly in `install.packages()` et al.,
+    - setting another `repos` field in `options()`, or
+    - using `drat` helper functions `addRepo()` or `drat:::add()`
+- Full details about `repos` in `help(download.packages)`
+
+### For package maintainers, how is a `drat` package different?
+
+- Need to create a personal repository and make it available to users
+- Can use functions in the `drat` package to manage this repository 
+
+## Coding a CRAN package to use a `drat` package
+
+### How is GitHub involved?
+
+- Hosting on GitHub particularly easy because 
+    - Every GitHub repo has an (optional) web presence
+    - A GitHub username plus `drat` is a unique URL
+- So if we assume `drat` as the (GitHub) repository name, then we can reference it with just the username:  `addRepo("geanders")` 
+
+## Coding a CRAN package to use a `drat` package
+
+\begin{columns}
+
+\begin{column}{0.45\textwidth}
+\begin{block}{``Data" package}
+\includegraphics[width = \textwidth]{images/hurrtracks.png} \\
+\textit{`hurricaneexposuredata`}\\
+Host with \texttt{drat}. 
+\end{block}
+\end{column}
+
+\begin{column}{0.45\textwidth}
+\begin{block}{``Code" package}
+\includegraphics[width = \textwidth]{images/example_hurricane_map.png} \\
+\textit{`hurricaneexposure`}\\
+Available through CRAN. 
+\end{block}
+\end{column}
+
+\end{columns}
+
+\bigskip
+
+\begin{block}{Challenges}
+\begin{enumerate}
+\item Host a package with \texttt{drat}. 
+\item \alert{Connect a CRAN package with a data package hosted with \texttt{drat}.}
+\end{enumerate}
+\end{block}
+
+## Technical support experience, non-R
+
+\begin{quotation}
+``Unfortunately it is out of our area of expertise to do deep level troubleshooting on an individual's computer to find the cause of the issue. In this case I would recommend using a colleague's computer and see if that is successful in creating a submission."\\[0.5ex]
+-- Example of recent non-R technical support 
+\end{quotation}
+
+## Technical support experience, R
+
+\begin{center}
+\begin{enumerate}
+\item \begin{minipage}[t]{\linewidth}
+          \adjustbox{valign=t}{\includegraphics[width = 0.9\textwidth]{images/github_search.png}}
+          \end{minipage} \medskip \pause
+          
+\item \begin{minipage}[t]{\linewidth}
+          \adjustbox{valign=t}{\includegraphics[width = 0.9\textwidth]{images/the_initial_tweet.png}}
+          \end{minipage} \medskip \pause
+          
+\item \begin{minipage}[t]{\linewidth}
+          \adjustbox{valign=t}{\includegraphics[width = 0.9\textwidth]{images/r_journal_title.png}}
+          \end{minipage}
+          
+\end{enumerate}
+\end{center}
+
+## Coding a CRAN package to use a `drat` package
+
+### How hard is it to code a CRAN package to "depend" on a `drat` package?
+
+- Not very
+- The `DESCRIPTION` file has an `Additional_repositories` field
+     - Optional packages can reside on `Additional_repositories`
+     - Mandatory packages (`Imports:`, `Depends:`, `LinkingTo:`) cannot
+     - But `Suggests:` can point there -- feature we use
+- Repos created with `drat` are a good use case for `Additional_repositories`
+- \alert{But} also ensure you test for presence of optional package
+
+## Coding a CRAN package to use a `drat` package
+
+### How hard is it to code a CRAN package to "depend" on a `drat` package?
+
+- Need to add code in the CRAN package to do three jobs: 
+    + Add infrastructure in the DESCRIPTION file
+    + Customize behavior when the package is loaded 
+    + Condition code based on availability of `drat` package (functions, vignette, examples)
+  
+## Coding a CRAN package to use a `drat` data package
+
+\begin{block}{Add infrastructure in the DESCRIPTION file}
+\begin{itemize}
+\item Include the name of the data package in the ``Suggests" field.
+\item Give the address of the \texttt{drat} repository with the data package in the ``Additional\_repositories" field.
+\end{itemize}
+\end{block}
+
+\bigskip
+
+For example, the `hurricaneexposure` DESCRIPTION file includes: 
+\vspace{-1cm}
+
+```
+Suggests: hurricaneexposuredata (>= 0.0.2)
+Additional_repositories: https://geanders.github.io/drat
+```
+
+## Coding a CRAN package to use a `drat` data package
+
+\begin{block}{Customize behavior when the package is loaded }
+\begin{itemize}
+\item These steps can be included in ``zzz.R" (or similar) file, by writing \texttt{.onLoad} and \texttt{.onAttach} functions.
+\item Check if the user has the data package and create an environment that stores the result. 
+\item If the user does not have the data package, give a start-up message telling the user how to install it. 
+\end{itemize}
+\end{block}
+
+## Coding a CRAN package to use a `drat` data package
+
+\begin{block}{Condition code based on availability of data package}
+\begin{itemize}
+\item Condition code in functions that need access to the data package (e.g., helper function can be written in the package).
+\item Condition code in documentation examples to only run if the data package is available.
+\item Condition vignette to only evaluate code chunks if the data package is available.
+\end{itemize}
+\end{block}
+
+## Coding a CRAN package to use a `drat` data package
+
+### Example: Conditioning code in the vignette
+
+A code chunk like the following can be included at the start of the vignette to condition the evaluation of code chunks on having the data package available:
+
+\footnotesize
+
+```{r eval = FALSE, echo = TRUE}
+hasData <- requireNamespace("hurricaneexposuredata", quietly = TRUE)
+if (!hasData){
+  knitr::opts_chunk$set(eval = FALSE)
+  msg <- paste("Note: Examples in this vignette require that the",
+               "`hurricaneexposuredata` package be installed. The",
+               "system currently running this vignette does not",
+               "have that package installed, so code examples",
+               "will not be evaluated.")
+  msg <- paste(strwrap(msg), collapse = "\n")
+  message(msg)
+}
+```
+
+
+## Find out more
+
+\footnotesize
+
+\begin{block}{Article in The R Journal}
+ \href{https://journal.r-project.org/archive/2017/RJ-2017-026/index.html}{Anderson and Eddelbuettel. 2017. Hosting Data Packages via drat: A Case Study with Hurricane Exposure Data. \textit{The R Journal}. 9(1):486--497.}
+\end{block}
+
+\begin{block}{Example R packages}
+\begin{itemize}
+\item \texttt{hurricaneexposure}: \href{www.github.com/geanders/hurricaneexposure}{geanders/hurricaneexposure}
+\item \texttt{hurricaneexposuredata}: \href{www.github.com/geanders/hurricaneexposuredata}{geanders/hurricaneexposuredata}
+\end{itemize}
+\end{block}
+
+\begin{block}{\texttt{drat} documentation}
+\begin{itemize}
+\item \href{https://cran.r-project.org/web/packages/drat/vignettes/DratForPackageUsers.html}{Drat Basics for Package Users}
+\item \href{https://cran.r-project.org/web/packages/drat/vignettes/DratForPackageAuthors.html}{Drat Basics for Package Authors}
+\end{itemize}
+\end{block}
+
+\begin{block}{Acknowledgments}
+Thanks to Martin Morgan and Roger Peng for helpful suggestions. This work was supported in part by a grant from the National Institute of Environmental Health Sciences (R00ES022631)
+\end{block}
