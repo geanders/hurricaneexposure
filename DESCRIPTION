@@ -40,6 +40,7 @@ Imports:
     ggplot2 (>= 3.1.0),
     lazyeval (>= 0.2.2),
     lubridate (>= 1.7.4),
+    mapproj (>= 1.2.6),
     maps (>= 3.3.0),
     purrr (>= 0.3.2),
     RColorBrewer (>= 1.1.2),
