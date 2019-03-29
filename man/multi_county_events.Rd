@@ -43,4 +43,3 @@ distance_df <- multi_county_events(communities = communities,
                                      event_type = "flood")
 }
 }
-

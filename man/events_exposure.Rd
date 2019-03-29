@@ -7,6 +7,26 @@
 events_exposure(locations, start_year, end_year, event_type, out_dir,
   out_type = "csv")
 }
+\arguments{
+\item{locations}{Either a vector of FIPS county codes, for county-level
+output, or a dataframe with columns for community identifier (\code{commun})
+and associated FIPS codes (\code{fips}), for multi-county community output.
+See the examples for the proper format for this argument.}
+
+\item{start_year}{Four-digit integer with first year to consider.}
+
+\item{end_year}{Four-digit integer with last year to consider.}
+
+\item{event_type}{Character string with the type of event to use to identify
+county exposures. Options include \code{"flood"}, \code{"tornado"},
+\code{"wind"}, and \code{"tropical storm"}.}
+
+\item{out_dir}{Character string with the filepath to the directory where the
+data will be saved}
+
+\item{out_type}{Character string with the type of file to save to. Options are
+"csv" for a comma-separated file (default) and "rds" for an R object file.}
+}
 \value{
 Writes out a directory with rain exposure files for each county or
    community indicated. For more on the columns in this output, see the
@@ -35,4 +55,3 @@ events_exposure(locations = c("22071", "51700"),
                 }
  }
 }
-
