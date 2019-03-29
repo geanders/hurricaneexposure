@@ -47,7 +47,7 @@ Imports:
     tidyr (>= 0.8.3)
 RoxygenNote: 6.1.1
 Depends:
-    R (>= 3.5.3)
+    R (>= 3.5)
 Suggests:
     hurricaneexposuredata (>= 0.0.2),
     knitr,
