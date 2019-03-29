@@ -155,6 +155,14 @@ multi_county_events <- function(communities, start_year, end_year, event_type){
 #' time series of health or other outcomes, giving the dates and exposures for all
 #' storms meeting the given storm events criteria.
 #'
+#' @inheritParams county_events
+#' @inheritParams county_distance
+#' @inheritParams rain_exposure
+#' @param out_dir Character string with the filepath to the directory where the
+#'   data will be saved
+#' @param out_type Character string with the type of file to save to. Options are
+#'   "csv" for a comma-separated file (default) and "rds" for an R object file.
+#'
 #' @return Writes out a directory with rain exposure files for each county or
 #'    community indicated. For more on the columns in this output, see the
 #'    documentation for \code{\link{county_rain}} and
