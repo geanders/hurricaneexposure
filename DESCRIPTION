@@ -2,7 +2,7 @@ Package: hurricaneexposure
 Type: Package
 Title: Explore and Map County-Level Hurricane Exposure in the United States
 Version: 0.1.0.9
-Date: 2017-01-31
+Date: 2019-03-29
 Authors@R: c(person("Brooke", "Anderson",
     email = "brooke.anderson@colostate.edu", role = c("aut", "cre")),
     person("Meilin", "Yan",
@@ -34,20 +34,20 @@ BugReports: https://github.com/geanders/hurricaneexposure/issues
 License: GPL (>= 2)
 LazyData: TRUE
 Imports:
-    data.table (>= 1.9.6),
-    dplyr (>= 0.4.3),
-    ggmap (>= 2.6.1),
-    ggplot2 (>= 2.1.0),
-    lazyeval (>= 0.1.10),
-    lubridate (>= 1.5.6),
-    maps (>= 3.1.1),
-    purrr (>= 0.2.2),
+    data.table (>= 1.12.0),
+    dplyr (>= 0.8.0.1),
+    ggmap (>= 3.0.0),
+    ggplot2 (>= 3.1.0),
+    lazyeval (>= 0.2.2),
+    lubridate (>= 1.7.4),
+    maps (>= 3.3.0),
+    purrr (>= 0.3.2),
     RColorBrewer (>= 1.1.2),
-    stringr (>= 1.1.0),
-    tidyr (>= 0.6.0)
-RoxygenNote: 6.0.1
+    stringr (>= 1.4.0),
+    tidyr (>= 0.8.3)
+RoxygenNote: 6.1.1
 Depends:
-    R (>= 2.10)
+    R (>= 3.5.3)
 Suggests:
     hurricaneexposuredata (>= 0.0.2),
     knitr,
