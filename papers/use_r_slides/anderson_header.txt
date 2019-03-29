@@ -1,0 +1,23 @@
+\usepackage[british]{babel}
+\usepackage{graphicx,hyperref,url}
+\usepackage{fontawesome}
+\usepackage{hyperref}
+\usepackage{adjustbox}
+\hypersetup{colorlinks=true,allcolors=blue}
+
+\usetheme{metropolis}
+\title[Data packages with `drat`]{Hosting Data Packages via `drat`: A Case Study with Hurricane Exposure Data}
+\subtitle{Data reproducibility session, UseR! 2017}
+\date{July 6, 2017}
+
+\author[Anderson and Eddelbuettel]{
+  Brooke Anderson, Colorado State University \\
+  {\small \faEnvelope: \url{brooke.anderson@colostate.edu}} \\
+  {\small \faTwitter: \href{www.twitter.com/gbwanderson}{@gbwanderson}} \\
+  {\small \faGithub:  \url{github.com/geanders}} \\ \\
+  Dirk Eddelbuettel, Debian and R Projects, Ketchum Trading \\
+  {\small \faEnvelope: \url{edd@debian.org}} \\
+  {\small \faTwitter: \href{www.twitter.com/eddelbuettel}{@eddelbuettel}} \\
+  {\small \faGithub:  \url{github.com/eddelbuettel}}
+  }
+

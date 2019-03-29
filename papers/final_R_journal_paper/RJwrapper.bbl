@@ -1,0 +1,137 @@
+\begin{thebibliography}{18}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Almquist(2010)]{almquist2010us}
+Z.~W. Almquist.
+\newblock {US Census} spatial and demographic data in {R}: the {UScensus2000}
+  suite of packages.
+\newblock \emph{Journal of Statistical Software}, 37\penalty0 (6):\penalty0
+  1--31, 2010.
+\newblock \doi{10.18637/jss.v037.i06}.
+
+\bibitem[Anderson et~al.(2017{\natexlab{a}})Anderson, Schumacher, Crosson,
+  Al-Hamdan, Yan, Ferreri, Chen, Quiring, and Guikema]{hurricaneexposuredata}
+B.~Anderson, A.~Schumacher, W.~Crosson, M.~Al-Hamdan, M.~Yan, J.~Ferreri,
+  Z.~Chen, S.~Quiring, and S.~Guikema.
+\newblock \emph{{hurricaneexposuredata}: Data Characterizing Exposure to
+  Hurricanes in United States Counties}, 2017{\natexlab{a}}.
+\newblock URL \url{https://github.com/geanders/hurricaneexposuredata}.
+\newblock Github repository containing R package.
+
+\bibitem[Anderson et~al.(2017{\natexlab{b}})Anderson, Yan, Ferreri, Crosson,
+  Al-Hamdan, Schumacher, and Eddelbuettel]{hurricaneexposure}
+B.~Anderson, M.~Yan, J.~Ferreri, W.~Crosson, M.~Al-Hamdan, A.~Schumacher, and
+  D.~Eddelbuettel.
+\newblock \emph{{hurricaneexposure}: Explore and Map County-Level Hurricane
+  Exposure in the United States}, 2017{\natexlab{b}}.
+\newblock URL \url{https://CRAN.R-project.org/package=hurricaneexposure}.
+\newblock R package version 0.0.1.
+
+\bibitem[{Bioconductor Core Team}(2017)]{biocPkgGuide}
+{Bioconductor Core Team}.
+\newblock Bioconductor-- {P}ackage guidelines.
+\newblock \url{http://bioconductor.org/developers/package-guidelines/}, 2017.
+\newblock Accessed: 2017-01-31.
+
+\bibitem[Chamberlain et~al.(2016)Chamberlain, Anderson, Salmon, Erickson,
+  Potter, Stachelek, Simmons, Ram, and Edmund]{rnoaa}
+S.~Chamberlain, B.~Anderson, M.~Salmon, A.~Erickson, N.~Potter, J.~Stachelek,
+  A.~Simmons, K.~Ram, and H.~Edmund.
+\newblock \emph{rnoaa: 'NOAA' Weather Data from R}, 2016.
+\newblock URL \url{https://CRAN.R-project.org/package=rnoaa}.
+\newblock R package version 0.6.6.
+
+\bibitem[Csárdi(2016)]{rcmdcheck}
+G.~Csárdi.
+\newblock \emph{{rcmdcheck:} Run 'R CMD check' from 'R' and Capture Results},
+  2016.
+\newblock URL \url{https://CRAN.R-project.org/package=rcmdcheck}.
+\newblock R package version 1.2.1.
+
+\bibitem[Eckel and Peng(2012)]{stashR}
+S.~Eckel and R.~D. Peng.
+\newblock \emph{stashR: A Set of Tools for Administering SHared Repositories},
+  2012.
+\newblock URL \url{https://CRAN.R-project.org/package=stashR}.
+\newblock R package version 0.3.5.
+
+\bibitem[Eddelbuettel and Horner(2016)]{littler}
+D.~Eddelbuettel and J.~Horner.
+\newblock \emph{{littler}: R at the Command-Line via 'r'}, 2016.
+\newblock URL \url{https://CRAN.R-project.org/package=littler}.
+\newblock R package version 0.3.1.
+
+\bibitem[Eddelbuettel et~al.(2016)Eddelbuettel, Boettiger, Gibb, Gillespie,
+  Górecki, Jones, Leeper, Pav, and Schulz]{drat}
+D.~Eddelbuettel, C.~Boettiger, S.~Gibb, C.~Gillespie, J.~Górecki, M.~Jones,
+  T.~Leeper, S.~Pav, and J.~Schulz.
+\newblock \emph{{drat:} Drat R Archive Template}, 2016.
+\newblock URL \url{https://CRAN.R-project.org/package=drat}.
+\newblock R package version 0.1.2.
+
+\bibitem[Gentleman et~al.(2004)Gentleman, Carey, Bates, Bolstad, Dettling,
+  Dudoit, Ellis, Gautier, Ge, Gentry, et~al.]{gentleman2004bioconductor}
+R.~C. Gentleman, V.~J. Carey, D.~M. Bates, B.~Bolstad, M.~Dettling, S.~Dudoit,
+  B.~Ellis, L.~Gautier, Y.~Ge, J.~Gentry, et~al.
+\newblock Bioconductor: open software development for computational biology and
+  bioinformatics.
+\newblock \emph{Genome Biology}, 5\penalty0 (10):\penalty0 R80, 2004.
+\newblock \doi{10.1186/gb-2004-5-10-r80}.
+
+\bibitem[Parsonage et~al.(2017)Parsonage, Cameron, Coates, Young, and
+  Cherastidtham]{grattan}
+H.~Parsonage, T.~Cameron, B.~Coates, W.~Young, and I.~Cherastidtham.
+\newblock \emph{{grattan}: Perform Common Quantitative Tasks for Australian
+  Analysts and to Support Grattan Institute Analysis}, 2017.
+\newblock URL \url{https://CRAN.R-project.org/package=grattan}.
+\newblock R package version 1.3.0.
+
+\bibitem[Peng and Dominici(2008)]{peng2008statistical}
+R.~D. Peng and F.~Dominici.
+\newblock \emph{Statistical Methods for Environmental Epidemiology with R: A
+  Case Study in Air Pollution and Health}.
+\newblock Springer, New York, NY, USA, 2008.
+
+\bibitem[{R Core Team}(2017{\natexlab{a}})]{rcore:rbase}
+{R Core Team}.
+\newblock \emph{R: A Language and Environment for Statistical Computing}.
+\newblock R Foundation for Statistical Computing, Vienna, Austria,
+  2017{\natexlab{a}}.
+\newblock URL \url{https://www.R-project.org/}.
+
+\bibitem[{R Core Team}(2017{\natexlab{b}})]{rcore:wre}
+{R Core Team}.
+\newblock \emph{Writing R extensions}.
+\newblock R Foundation for Statistical Computing, Vienna, Austria,
+  2017{\natexlab{b}}.
+\newblock URL \url{http://CRAN.R-Project.org/doc/manuals/R-exts.html}.
+
+\bibitem[Walker and Rudis(2016)]{tigris}
+K.~Walker and B.~Rudis.
+\newblock \emph{tigris: Load Census TIGER/Line Shapefiles into R}, 2016.
+\newblock URL \url{https://CRAN.R-project.org/package=tigris}.
+\newblock R package version 0.3.3.
+
+\bibitem[Wickham(2015)]{wickham2015r}
+H.~Wickham.
+\newblock \emph{R Packages}.
+\newblock O'Reilly Media, Inc., Sebastopol, California, 2015.
+
+\bibitem[Wickham et~al.(2016)Wickham, Chang, and RCoreTeam]{devtools}
+H.~Wickham, W.~Chang, and RCoreTeam.
+\newblock \emph{{devtools:} Tools to Make Developing R Packages Easier}, 2016.
+\newblock URL \url{https://CRAN.R-project.org/package=devtools}.
+\newblock R package version 1.12.0.
+
+\bibitem[Xie(2016)]{knitr}
+Y.~Xie.
+\newblock \emph{{knitr}: A General-Purpose Package for Dynamic Report
+  Generation in R}, 2016.
+\newblock URL \url{https://CRAN.R-project.org/package=knitr}.
+\newblock R package version 1.15.1.
+
+\end{thebibliography}

@@ -72,4 +72,3 @@ if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
 
 }
 }
-

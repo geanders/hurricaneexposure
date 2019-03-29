@@ -8,3 +8,4 @@ writing/DraftExposurePaper/DraftExposurePaper_files
 *.tex
 writing/pnas_draft
 .DS_Store
+*Rapp.history

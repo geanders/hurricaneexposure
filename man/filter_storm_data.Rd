@@ -60,4 +60,3 @@ filter_storm_data(storm = "Floyd-1999", include_rain = TRUE,
                  output_vars = c("fips", "tot_precip"))
 }
 }
-

@@ -67,4 +67,3 @@ county_events(counties = c("37031", "37053", "37055"),
               event_type = "flood")
 }
 }
-
