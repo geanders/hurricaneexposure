@@ -96,7 +96,7 @@ county_distance <- function(counties, start_year, end_year, dist_limit){
 #' # on installing the required data package.
 #' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
 #'
-#' communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
+#' communities <- data.frame(community_name = c(rep("ny", 6), "no", "new"),
 #'                          fips = c("36005", "36047", "36061",
 #'                                   "36085", "36081", "36119",
 #'                                   "22071", "51700"))
@@ -121,7 +121,7 @@ multi_county_distance <- function(communities, start_year, end_year,
                                       lubridate::year(closest_date) <=
                                        end_year) %>%
                 dplyr::left_join(communities, by = "fips") %>%
-                dplyr::group_by_(~ commun, ~ storm_id) %>%
+                dplyr::group_by_(~ community_name, ~ storm_id) %>%
                 dplyr::mutate_(min_dist = ~ min(storm_dist)) %>%
                 dplyr::filter_(~ min_dist <= dist_limit) %>%
                 dplyr::summarize_(closest_date = ~ dplyr::first(closest_date),
@@ -163,7 +163,7 @@ multi_county_distance <- function(communities, start_year, end_year,
 #'               out_dir = "~/tmp/storms")
 #'
 #' # For multi-county communities
-#' communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
+#' communities <- data.frame(community_name = c(rep("ny", 6), "no", "new"),
 #'                           fips = c("36005", "36047", "36061",
 #'                           "36085", "36081", "36119",
 #'                           "22071", "51700"))
@@ -183,12 +183,12 @@ distance_exposure <- function(locations, start_year, end_year,
                 dir.create(out_dir)
         }
 
-        if("commun" %in% colnames(locations)){
+        if("community_name" %in% colnames(locations)){
                 df <- multi_county_distance(communities = locations,
                                   start_year = start_year,
                                   end_year = end_year,
                                   dist_limit = dist_limit) %>%
-                        dplyr::rename_(loc = ~ commun) %>%
+                        dplyr::rename_(loc = ~ community_name) %>%
                         dplyr::ungroup()
         } else {
                 df <- county_distance(counties = locations,
