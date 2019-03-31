@@ -146,8 +146,7 @@ map_tracks <- function(storms, plot_object = NULL, padding = 2, plot_points = FA
                                                         y = .data$latitude,
                                                         group = .data$storm_id),
                                            alpha = alpha,
-                                           color = color) +
-                ggplot2::coord_map()
+                                           color = color)
 
         if(plot_points){
                 out <- out + ggplot2::geom_point(data = tracks,
@@ -156,6 +155,12 @@ map_tracks <- function(storms, plot_object = NULL, padding = 2, plot_points = FA
                                                                  group = .data$storm_id),
                                                     alpha = alpha)
         }
+
+        if(!("CoordMap" %in% class(out$coordinates))){
+                out <- out +
+                        ggplot2::coord_map()
+        }
+
         return(out)
 }
 
@@ -243,8 +248,8 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
                                            include_rain = TRUE,
                                            output_vars = c("fips", "tot_precip",
                                                            "storm_dist")) %>%
-                dplyr::mutate(exposed = .data$tot_precip >= !!rain_limit &
-                                       .data$storm_dist <= !!dist_limit) %>%
+                dplyr::mutate(exposed = .data$tot_precip >= rain_limit &
+                                       .data$storm_dist <= dist_limit) %>%
                 dplyr::mutate(value = factor(.data$exposed,
                                                 levels = c("FALSE", "TRUE"))) %>%
                 dplyr::tbl_df()
@@ -268,13 +273,17 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
                                                       "illinois", "ohio", "wisconsin", "indiana"),
                                  colour = "black", fill = NA, size = 0.2, alpha = 0.5) +
                 ggplot2::theme_void() +
-                ggplot2::coord_map() +
                 ggplot2::scale_fill_manual(name = paste("Rain >", !!rain_limit, "mm"),
                                            values = c("white", "navy"),
                                            labels = c("Unexposed", "Exposed"))
 
         if(add_track){
                 out <- map_tracks(storm, plot_object = out)
+        }
+
+        if(!("CoordMap" %in% class(out$coordinates))){
+                out <- out +
+                        ggplot2::coord_map()
         }
 
         return(out)
@@ -340,13 +349,17 @@ map_distance_exposure <- function(storm, dist_limit, add_track = TRUE){
                                                       "illinois", "ohio", "wisconsin", "indiana"),
                                  colour = "black", fill = NA, size = 0.2, alpha = 0.5) +
                 ggplot2::theme_void() +
-                ggplot2::coord_map() +
                 ggplot2::scale_fill_manual(name = paste("Distance <", !!dist_limit, "km"),
                                            values = c("white", "forestgreen"),
                                            labels = c("Unexposed", "Exposed"))
 
         if(add_track){
                 out <- map_tracks(storm, plot_object = out)
+        }
+
+        if(!("CoordMap" %in% class(out$coordinates))){
+                out <- out +
+                        ggplot2::coord_map()
         }
 
         return(out)
@@ -413,13 +426,17 @@ map_wind_exposure <- function(storm, wind_var = "vmax_sust", wind_limit,
                                                       "illinois", "ohio", "wisconsin", "indiana"),
                                  colour = "black", fill = NA, size = 0.2, alpha = 0.5) +
                 ggplot2::theme_void() +
-                ggplot2::coord_map() +
                 ggplot2::scale_fill_manual(name = paste("Wind >", wind_limit, wind_metric),
                                            values = c("white", "darkorange"),
                                            labels = c("Unexposed", "Exposed"))
 
         if(add_track){
                 out <- map_tracks(storm, plot_object = out)
+        }
+
+        if(!("CoordMap" %in% class(out$coordinates))){
+                out <- out +
+                        ggplot2::coord_map()
         }
 
         return(out)
@@ -498,7 +515,6 @@ map_event_exposure <- function(storm_id, event_type, add_track = TRUE){
                                                       "illinois", "ohio", "wisconsin", "indiana"),
                                  colour = "black", fill = NA, size = 0.2, alpha = 0.5) +
                 ggplot2::theme_void() +
-                ggplot2::coord_map() +
                 ggplot2::scale_fill_manual(name = paste(stringr::str_to_title(event_type),
                                                         "event"),
                                            values = c("white", "red"),
@@ -506,6 +522,11 @@ map_event_exposure <- function(storm_id, event_type, add_track = TRUE){
 
         if(add_track){
                 out <- map_tracks(storm, plot_object = out)
+        }
+
+        if(!("CoordMap" %in% class(out$coordinates))){
+                out <- out +
+                        ggplot2::coord_map()
         }
 
         return(out)
@@ -682,9 +703,13 @@ hurr_choropleth <- function(map_data, metric = "distance", wind_var = "vmax_sust
                                                       "illinois", "ohio", "wisconsin", "indiana"),
                                  colour = "black", fill = NA, size = 0.2, alpha = 0.5) +
                 ggplot2::theme_void() +
-                ggplot2::coord_map() +
                 ggplot2::scale_fill_manual(name = exposure_legend,
                                            values = exposure_palette)
+
+        if(!("CoordMap" %in% class(out$coordinates))){
+                out <- out +
+                        ggplot2::coord_map()
+        }
 
         return(out)
 }
