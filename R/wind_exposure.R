@@ -95,7 +95,7 @@ county_wind <- function(counties, start_year, end_year, wind_limit,
 #' # on installing the required data package.
 #' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
 #'
-#' communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
+#' communities <- data.frame(community_name = c(rep("ny", 6), "no", "new"),
 #'                          fips = c("36005", "36047", "36061",
 #'                                   "36085", "36081", "36119",
 #'                                   "22071", "51700"))
@@ -104,32 +104,33 @@ county_wind <- function(counties, start_year, end_year, wind_limit,
 #'                                      wind_limit = 20)
 #' }
 #' @importFrom dplyr %>%
+#' @importFrom rlang .data
 multi_county_wind <- function(communities, start_year, end_year,
                               wind_limit){
 
         hasData()
 
-        communities <- dplyr::mutate_(communities, fips = ~ as.character(fips))
+        communities <- dplyr::mutate(communities, fips = as.character(.data$fips))
 
         wind_df <- hurricaneexposuredata::storm_winds %>%
-                dplyr::mutate_(year = ~ gsub("*.+-", "", storm_id)) %>%
-                dplyr::filter_(~ fips %in% communities$fips &
-                                       year >= start_year &
-                                       year <= end_year) %>%
+                dplyr::mutate(year = gsub("*.+-", "", .data$storm_id)) %>%
+                dplyr::filter(.data$fips %in% !!communities$fips &
+                                       .data$year >= !!start_year &
+                                       .data$year <= !!end_year) %>%
                 dplyr::left_join(communities, by = "fips") %>%
                 dplyr::left_join(hurricaneexposuredata::closest_dist,
                                  by = c("storm_id", "fips")) %>%
-                dplyr::group_by_(~ commun, ~ storm_id) %>%
-                dplyr::mutate_(max_wind = ~ max(vmax_sust),
-                               min_dist = ~ min(storm_dist)) %>%
-                dplyr::filter_(~ max_wind >= wind_limit) %>%
-                dplyr::summarize_(closest_date = ~ dplyr::first(closest_date),
-                                  local_time = ~ dplyr::first(local_time),
-                                  closest_time_utc = ~ dplyr::first(closest_time_utc),
-                                  mean_dist = ~ mean(storm_dist),
-                                  mean_wind = ~ mean(vmax_sust),
-                                  min_dist = ~ dplyr::first(min_dist),
-                                  max_wind = ~ dplyr::first(max_wind))
+                dplyr::group_by(.data$community_name, .data$storm_id) %>%
+                dplyr::mutate(max_wind = max(.data$vmax_sust),
+                              min_dist = min(.data$storm_dist)) %>%
+                dplyr::filter(.data$max_wind >= !!wind_limit) %>%
+                dplyr::summarize(closest_date = dplyr::first(.data$closest_date),
+                                 local_time = dplyr::first(.data$local_time),
+                                 closest_time_utc = dplyr::first(.data$closest_time_utc),
+                                 mean_dist = mean(.data$storm_dist),
+                                 mean_wind = mean(.data$vmax_sust),
+                                 min_dist = dplyr::first(.data$min_dist),
+                                 max_wind = dplyr::first(.data$max_wind))
         return(wind_df)
 }
 
@@ -164,6 +165,9 @@ multi_county_wind <- function(communities, start_year, end_year,
 #' # on installing the required data package.
 #' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
 #'
+#' # You will need a directory named "tmp" in your home directory to
+#' # run these examples.
+#'
 #' # By county
 #' wind_exposure(locations = c("22071", "51700"),
 #'               start_year = 1988, end_year = 2005,
@@ -171,7 +175,7 @@ multi_county_wind <- function(communities, start_year, end_year,
 #'               out_dir = "~/tmp/storms")
 #'
 #' # For multi-county communities
-#' communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
+#' communities <- data.frame(community_name = c(rep("ny", 6), "no", "new"),
 #'                           fips = c("36005", "36047", "36061",
 #'                           "36085", "36081", "36119",
 #'                           "22071", "51700"))
@@ -184,6 +188,7 @@ multi_county_wind <- function(communities, start_year, end_year,
 #' @export
 #'
 #' @importFrom dplyr %>%
+#' @importFrom rlang .data
 wind_exposure <- function(locations, start_year, end_year,
                               wind_limit, wind_var, out_dir, out_type = "csv"){
 
@@ -191,24 +196,24 @@ wind_exposure <- function(locations, start_year, end_year,
                 dir.create(out_dir)
         }
 
-        if("commun" %in% colnames(locations)){
+        if("community_name" %in% colnames(locations)){
                 df <- multi_county_wind(communities = locations,
                                         start_year = start_year,
                                         end_year = end_year,
                                         wind_limit = wind_limit) %>%
-                        dplyr::rename_(loc = ~ commun) %>%
+                        dplyr::rename(loc = .data$community_name) %>%
                         dplyr::ungroup()
         } else {
                 df <- county_wind(counties = locations,
                                   start_year = start_year,
                                   end_year = end_year,
                                   wind_limit = wind_limit) %>%
-                        dplyr::rename_(loc = ~ fips)
+                        dplyr::rename(loc = .data$fips)
         }
         locs <- as.character(unique(df$loc))
 
         for(i in 1:length(locs)){
-                out_df <- dplyr::filter_(df, ~ loc == locs[i])
+                out_df <- dplyr::filter(df, .data$loc == !!locs[i])
                 out_file <- paste0(out_dir, "/", locs[i], ".", out_type)
                 if(out_type == "rds"){
                         saveRDS(out_df, file = out_file)

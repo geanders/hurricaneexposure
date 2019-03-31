@@ -105,30 +105,33 @@ county_distance <- function(counties, start_year, end_year, dist_limit){
 #'                                      dist_limit = 75)
 #'}
 #' @importFrom dplyr %>%
+#' @importFrom rlang .data
 multi_county_distance <- function(communities, start_year, end_year,
                          dist_limit){
 
         hasData()
 
-        communities <- dplyr::mutate_(communities, fips = ~ as.character(fips))
+        communities <- dplyr::mutate(communities, fips = as.character(.data$fips))
 
         distance_df <- hurricaneexposuredata::closest_dist %>%
-                dplyr::mutate_(closest_date =
-                                       ~ lubridate::ymd(closest_date)) %>%
-                dplyr::filter_(~ fips %in% communities$fips &
-                                      lubridate::year(closest_date) >=
-                                       start_year &
-                                      lubridate::year(closest_date) <=
-                                       end_year) %>%
+                dplyr::mutate(closest_date =
+                                       lubridate::ymd(.data$closest_date)) %>%
+                dplyr::filter(.data$fips %in% communities$fips &
+                                    lubridate::year(.data$closest_date) >=
+                                     !!start_year &
+                                    lubridate::year(.data$closest_date) <=
+                                     !!end_year) %>%
                 dplyr::left_join(communities, by = "fips") %>%
-                dplyr::group_by_(~ community_name, ~ storm_id) %>%
-                dplyr::mutate_(min_dist = ~ min(storm_dist)) %>%
-                dplyr::filter_(~ min_dist <= dist_limit) %>%
-                dplyr::summarize_(closest_date = ~ dplyr::first(closest_date),
-                                  local_time = ~ dplyr::first(local_time),
-                                  closest_time_utc = ~ dplyr::first(closest_time_utc),
-                                 mean_dist = ~ mean(storm_dist),
-                                 min_dist = ~ dplyr::first(min_dist))
+                dplyr::group_by(.data$community_name, .data$storm_id) %>%
+                dplyr::mutate(min_dist = min(.data$storm_dist)) %>%
+                dplyr::filter(.data$min_dist <= !!dist_limit) %>%
+                dplyr::summarize(closest_date = dplyr::first(.data$closest_date),
+                                 local_time = dplyr::first(.data$local_time),
+                                 closest_time_utc = dplyr::first(.data$closest_time_utc),
+                                 mean_dist = mean(.data$storm_dist) #,
+                                 #min_dist = dplyr::first(.data$min_dist)
+                                 ) %>%
+                dplyr::ungroup()
         return(distance_df)
 
 }
@@ -156,6 +159,10 @@ multi_county_distance <- function(communities, start_year, end_year,
 #' # on installing the required data package.
 #' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
 #'
+#' # For these examples to work, you will need to have a directory called "tmp"
+#' # as a subdirectory of your home directory. These examples will create new
+#' # directories with exposure output to that "tmp" directory.
+#'
 #' # By county
 #' distance_exposure(locations = c("22071", "51700"),
 #'               start_year = 1995, end_year = 2005,
@@ -176,6 +183,7 @@ multi_county_distance <- function(communities, start_year, end_year,
 #' @export
 #'
 #' @importFrom dplyr %>%
+#' @importFrom rlang .data
 distance_exposure <- function(locations, start_year, end_year,
                           dist_limit, out_dir, out_type = "csv"){
 
@@ -188,19 +196,19 @@ distance_exposure <- function(locations, start_year, end_year,
                                   start_year = start_year,
                                   end_year = end_year,
                                   dist_limit = dist_limit) %>%
-                        dplyr::rename_(loc = ~ community_name) %>%
+                        dplyr::rename(loc = .data$community_name) %>%
                         dplyr::ungroup()
         } else {
                 df <- county_distance(counties = locations,
                                   start_year = start_year,
                                   end_year = end_year,
                                   dist_limit = dist_limit) %>%
-                        dplyr::rename_(loc = ~ fips)
+                        dplyr::rename(loc = .data$fips)
         }
         locs <- as.character(unique(df$loc))
 
         for(i in 1:length(locs)){
-                out_df <- dplyr::filter_(df, ~ loc == locs[i])
+                out_df <- dplyr::filter(df, .data$loc == !!locs[i])
                 out_file <- paste0(out_dir, "/", locs[i], ".", out_type)
                 if(out_type == "rds"){
                         saveRDS(out_df, file = out_file)

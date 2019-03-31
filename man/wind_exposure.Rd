@@ -59,6 +59,9 @@ This function allows you to use different wind variables (sustained winds, which
 # on installing the required data package.
 if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
 
+# You will need a directory named "tmp" in your home directory to
+# run these examples.
+
 # By county
 wind_exposure(locations = c("22071", "51700"),
               start_year = 1988, end_year = 2005,
@@ -66,7 +69,7 @@ wind_exposure(locations = c("22071", "51700"),
               out_dir = "~/tmp/storms")
 
 # For multi-county communities
-communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
+communities <- data.frame(community_name = c(rep("ny", 6), "no", "new"),
                           fips = c("36005", "36047", "36061",
                           "36085", "36081", "36119",
                           "22071", "51700"))

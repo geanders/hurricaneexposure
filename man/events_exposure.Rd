@@ -47,6 +47,9 @@ storms meeting the given storm events criteria.
 # on installing the required data package.
 if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
 
+# To run this example, you will need to have a directory named "tmp"
+# as a subdirectory of your home directory.
+
 # By county
 events_exposure(locations = c("22071", "51700"),
                 start_year = 1995, end_year = 2005,
@@ -54,4 +57,5 @@ events_exposure(locations = c("22071", "51700"),
                 out_dir = "~/tmp/storms")
                 }
  }
+
 }

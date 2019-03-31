@@ -63,6 +63,9 @@ community-specific daily counts of health outcomes).
 # on installing the required data package.
 if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
 
+# For these examples, you need to have a directory in your home
+# directory called "tmp".
+
 # By county
 rain_exposure(locations = c("22071", "51700"),
               start_year = 1995, end_year = 2005,
@@ -70,7 +73,7 @@ rain_exposure(locations = c("22071", "51700"),
               out_dir = "~/tmp/storms")
 
 # For multi-county communities
-communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
+communities <- data.frame(community_name = c(rep("ny", 6), "no", "new"),
                           fips = c("36005", "36047", "36061",
                           "36085", "36081", "36119",
                           "22071", "51700"))

@@ -51,6 +51,7 @@
 #'               event_type = "flood")
 #' }
 #' @importFrom dplyr %>%
+#' @importFrom rlang .data
 #'
 #' @export
 county_events <- function(counties, start_year, end_year, event_type){
@@ -67,14 +68,14 @@ county_events <- function(counties, start_year, end_year, event_type){
         events <- lapply(events, function(x) subset(x, x$fips %in% counties))
 
         events <- do.call("rbind", events) %>%
-                dplyr::mutate_(flood = ~ grepl("Flood", events),
-                               tornado = ~ grepl("Tornado", events),
-                               tropical_storm = ~ grepl("Hurricane", events) |
-                                      grepl("Tropical Storm", events) |
-                                      grepl("Tropical Depression", events),
-                               wind = ~ tropical_storm | grepl("Wind", events))
+                dplyr::mutate(flood = grepl("Flood", .data$events),
+                               tornado = grepl("Tornado", .data$events),
+                               tropical_storm = grepl("Hurricane", .data$events) |
+                                      grepl("Tropical Storm", .data$events) |
+                                      grepl("Tropical Depression", .data$events),
+                               wind = .data$tropical_storm | grepl("Wind", .data$events))
         events <- events[events[ , event_type], c("fips", "storm_id")] %>%
-                dplyr::mutate_(storm_id = ~ as.character(storm_id)) %>%
+                dplyr::mutate(storm_id = as.character(.data$storm_id)) %>%
                 dplyr::left_join(hurricaneexposuredata::closest_dist,
                                  by = c("storm_id", "fips"))
         return(events)
@@ -101,7 +102,7 @@ county_events <- function(counties, start_year, end_year, event_type){
 #' # on installing the required data package.
 #' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
 #'
-#' communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
+#' communities <- data.frame(community_name = c(rep("ny", 6), "no", "new"),
 #'                          fips = c("36005", "36047", "36061",
 #'                                   "36085", "36081", "36119",
 #'                                   "22071", "51700"))
@@ -110,13 +111,14 @@ county_events <- function(counties, start_year, end_year, event_type){
 #'                                      event_type = "flood")
 #'}
 #' @importFrom dplyr %>%
+#' @importFrom rlang .data
 #'
 #' @export
 multi_county_events <- function(communities, start_year, end_year, event_type){
 
         hasData()
 
-        communities <- dplyr::mutate_(communities, fips = ~ as.character(fips))
+        communities <- dplyr::mutate(communities, fips = as.character(.data$fips))
 
         events <- hurricaneexposuredata::storm_events
 
@@ -128,22 +130,22 @@ multi_county_events <- function(communities, start_year, end_year, event_type){
         events <- lapply(events, function(x) subset(x, x$fips %in% communities$fips))
 
         events <- do.call("rbind", events) %>%
-                dplyr::mutate_(flood = ~ grepl("Flood", events),
-                               tornado = ~ grepl("Tornado", events),
-                               tropical_storm = ~ grepl("Hurricane", events) |
-                                       grepl("Tropical Storm", events) |
-                                       grepl("Tropical Depression", events),
-                               wind = ~ tropical_storm | grepl("Wind", events))
+                dplyr::mutate(flood = grepl("Flood", .data$events),
+                               tornado = grepl("Tornado", .data$events),
+                               tropical_storm = grepl("Hurricane", .data$events) |
+                                       grepl("Tropical Storm", .data$events) |
+                                       grepl("Tropical Depression", .data$events),
+                               wind = .data$tropical_storm | grepl("Wind", .data$events))
 
         events <- events[events[ , event_type], c("fips", "storm_id")] %>%
-                dplyr::mutate_(storm_id = ~ as.character(storm_id)) %>%
+                dplyr::mutate(storm_id = as.character(.data$storm_id)) %>%
                 dplyr::left_join(hurricaneexposuredata::closest_dist,
                                  by = c("storm_id", "fips")) %>%
                 dplyr::left_join(communities, by = "fips") %>%
-                dplyr::group_by_(~ commun, ~ storm_id) %>%
-                dplyr::summarize_(closest_date = ~ dplyr::first(closest_date),
-                                  local_time = ~ dplyr::first(local_time),
-                                  closest_time_utc = ~ dplyr::first(closest_time_utc))
+                dplyr::group_by(.data$community_name, .data$storm_id) %>%
+                dplyr::summarize(closest_date = dplyr::first(.data$closest_date),
+                                 local_time = dplyr::first(.data$local_time),
+                                 closest_time_utc = dplyr::first(.data$closest_time_utc))
         return(events)
 }
 
@@ -175,6 +177,9 @@ multi_county_events <- function(communities, start_year, end_year, event_type){
 #' # on installing the required data package.
 #' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
 #'
+#' # To run this example, you will need to have a directory named "tmp"
+#' # as a subdirectory of your home directory.
+#'
 #' # By county
 #' events_exposure(locations = c("22071", "51700"),
 #'                 start_year = 1995, end_year = 2005,
@@ -182,6 +187,10 @@ multi_county_events <- function(communities, start_year, end_year, event_type){
 #'                 out_dir = "~/tmp/storms")
 #'                 }
 #'  }
+#'
+#' @importFrom dplyr %>%
+#' @importFrom rlang .data
+#'
 #' @export
 events_exposure <- function(locations, start_year, end_year,
                             event_type, out_dir, out_type = "csv"){
@@ -190,19 +199,19 @@ events_exposure <- function(locations, start_year, end_year,
                 dir.create(out_dir)
         }
 
-        if("commun" %in% colnames(locations)){
+        if("community_name" %in% colnames(locations)){
                 df <- multi_county_events(communities = locations,
                                           start_year = start_year,
                                           end_year = end_year,
                                           event_type = event_type) %>%
-                        dplyr::rename_(loc = ~ commun) %>%
+                        dplyr::rename(loc = .data$community_name) %>%
                         dplyr::ungroup()
         } else {
                 df <- county_events(counties = locations,
                                     start_year = start_year,
                                     end_year = end_year,
                                     event_type = event_type) %>%
-                        dplyr::rename_(loc = ~ fips)
+                        dplyr::rename(loc = .data$fips)
         }
         locs <- as.character(unique(df$loc))
 

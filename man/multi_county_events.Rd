@@ -34,7 +34,7 @@ community-level dataframe of "exposed" storms, based on the type of the event.
 # on installing the required data package.
 if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
 
-communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
+communities <- data.frame(community_name = c(rep("ny", 6), "no", "new"),
                          fips = c("36005", "36047", "36061",
                                   "36085", "36081", "36119",
                                   "22071", "51700"))

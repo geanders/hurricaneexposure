@@ -15,13 +15,15 @@
 #'
 #' @examples
 #' default_map()
+#'
+#' @importFrom rlang .data
 default_map <- function(){
 
         map_data <- get_eastern_map("state")
 
         out <- ggplot2::ggplot(map_data,
-                               ggplot2::aes_(x = ~ long, y = ~ lat,
-                                             group = ~ group)) +
+                               ggplot2::aes(x = .data$long, y = .data$lat,
+                                             group = .data$group)) +
                 ggplot2::geom_polygon(fill = "lightgray", color = "white") +
                 ggmap::theme_nothing(legend = TRUE) +
                 ggplot2::coord_map()
@@ -36,6 +38,7 @@ default_map <- function(){
 #'    \code{ggplot2}, filtered to states in the eastern half of the United States.
 #'
 #' @importFrom dplyr %>%
+#' @importFrom rlang .data
 get_eastern_map <- function(map  = "county"){
 
         eastern_states <- c("alabama", "arkansas", "connecticut", "delaware",
@@ -49,18 +52,18 @@ get_eastern_map <- function(map  = "county"){
                             "west virginia", "wisconsin")
 
         map_data <- ggplot2::map_data(map = map) %>%
-                dplyr::filter_(~ region %in% eastern_states)
+                dplyr::filter(.data$region %in% eastern_states)
 
         if(map == "county"){
                 county.fips <- maps::county.fips %>%
-                        dplyr::mutate_(polyname = ~ as.character(polyname)) %>%
-                        dplyr::mutate_(polyname = ~ stringr::str_replace(polyname,
+                        dplyr::mutate(polyname = as.character(.data$polyname)) %>%
+                        dplyr::mutate(polyname = stringr::str_replace(.data$polyname,
                                                                          ":.+", ""))
                 map_data <- map_data %>%
-                        tidyr::unite_(col = "polyname", from = c("region", "subregion"),
+                        tidyr::unite(col = "polyname", from = c("region", "subregion"),
                                       sep = ",") %>%
                         dplyr::left_join(county.fips, by = "polyname") %>%
-                        dplyr::mutate_(fips = ~ stringr::str_pad(fips, 5,
+                        dplyr::mutate(fips = stringr::str_pad(.data$fips, 5,
                                                                  side = "left", pad = "0"))
         }
 
@@ -107,6 +110,7 @@ get_eastern_map <- function(map  = "county"){
 #' b
 #' }
 #' @importFrom dplyr %>%
+#' @importFrom rlang .data
 #'
 #' @export
 map_tracks <- function(storms, plot_object = NULL, padding = 2, plot_points = FALSE,
@@ -123,14 +127,14 @@ map_tracks <- function(storms, plot_object = NULL, padding = 2, plot_points = FA
                          MARGIN = 2,
                          function(x) range(x) + c(-1, 1) * padding)
         tracks <- hurricaneexposuredata::hurr_tracks %>%
-                dplyr::select_(~ latitude, ~ longitude, ~ storm_id,
-                               ~ date) %>%
-                dplyr::filter_(~ as.character(storm_id) %in% storms &
-                              longitude > map_dim[1, 1] &
-                              longitude < map_dim[2, 1] &
-                              latitude > map_dim[1, 2] &
-                              latitude < map_dim[2, 2]) %>%
-                dplyr::mutate_(date = ~ lubridate::ymd_hm(date))
+                dplyr::select(.data$latitude, .data$longitude, .data$storm_id,
+                              .data$date) %>%
+                dplyr::filter(as.character(.data$storm_id) %in% storms &
+                              .data$longitude > !!map_dim[1, 1] &
+                              .data$longitude < !!map_dim[2, 1] &
+                              .data$latitude > !!map_dim[1, 2] &
+                              .data$latitude < !!map_dim[2, 2]) %>%
+                dplyr::mutate(date = lubridate::ymd_hm(.data$date))
 
         splt_tracks <- split(tracks, tracks$storm_id)
         full_tracks <- lapply(splt_tracks, interp_track)
@@ -138,18 +142,18 @@ map_tracks <- function(storms, plot_object = NULL, padding = 2, plot_points = FA
 
         out <- plot_object +
                         ggplot2::geom_path(data = full_tracks,
-                                           ggplot2::aes_(x = ~ longitude,
-                                                        y = ~ latitude,
-                                                        group = ~ storm_id),
+                                           ggplot2::aes(x = .data$longitude,
+                                                        y = .data$latitude,
+                                                        group = .data$storm_id),
                                            alpha = alpha,
                                            color = color) +
                 ggplot2::coord_map()
 
         if(plot_points){
                 out <- out + ggplot2::geom_point(data = tracks,
-                                                    ggplot2::aes_(x = ~ longitude,
-                                                                 y = ~ latitude,
-                                                                 group = ~ storm_id),
+                                                    ggplot2::aes(x = .data$longitude,
+                                                                 y = .data$latitude,
+                                                                 group = .data$storm_id),
                                                     alpha = alpha)
         }
         return(out)
@@ -228,6 +232,7 @@ interp_track <- function(track, tint = 0.25){
 #' map_tracks("Allison-2001", plot_object = allison_map, plot_points = TRUE)
 #'}
 #' @importFrom dplyr %>%
+#' @importFrame rlang .data
 #'
 #' @export
 map_rain_exposure <- function(storm, rain_limit, dist_limit,
@@ -238,9 +243,9 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
                                            include_rain = TRUE,
                                            output_vars = c("fips", "tot_precip",
                                                            "storm_dist")) %>%
-                dplyr::mutate_(exposed = ~ tot_precip >= rain_limit &
-                                       storm_dist <= dist_limit) %>%
-                dplyr::mutate_(value = ~ factor(exposed,
+                dplyr::mutate(exposed = .data$tot_precip >= !!rain_limit &
+                                       .data$storm_dist <= !!dist_limit) %>%
+                dplyr::mutate(value = factor(.data$exposed,
                                                 levels = c("FALSE", "TRUE"))) %>%
                 dplyr::tbl_df()
 
@@ -248,8 +253,8 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
                 dplyr::left_join(map_data, by = "fips")
         out <- ggplot2::ggplot() +
                 ggplot2::geom_polygon(data = out_data,
-                                      ggplot2::aes_(x = ~ long, y = ~ lat, group = ~ group,
-                                                    fill = ~ value),
+                                      ggplot2::aes(x = .data$long, y = .data$lat, group = .data$group,
+                                                    fill = .data$value),
                                       color = "lightgray", size = 0.2) +
                 ggplot2::borders("state", regions = c("virginia", "north carolina", "south carolina",
                                                       "georgia", "florida", "alabama", "kentucky",
@@ -264,7 +269,7 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
                                  colour = "black", fill = NA, size = 0.2, alpha = 0.5) +
                 ggplot2::theme_void() +
                 ggplot2::coord_map() +
-                ggplot2::scale_fill_manual(name = paste("Rain >", rain_limit, "mm"),
+                ggplot2::scale_fill_manual(name = paste("Rain >", !!rain_limit, "mm"),
                                            values = c("white", "navy"),
                                            labels = c("Unexposed", "Exposed"))
 
@@ -304,14 +309,15 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
 #' map_tracks("Allison-2001", plot_points = FALSE, plot_object = allison_map)
 #' }
 #' @importFrom dplyr %>%
+#' @importFrom rlang .data
 #'
 #' @export
 map_distance_exposure <- function(storm, dist_limit, add_track = TRUE){
 
         map_data <- filter_storm_data(storm = storm,
                                       output_vars = c("fips", "storm_dist")) %>%
-                dplyr::mutate_(exposed = ~ storm_dist <= dist_limit) %>%
-                dplyr::mutate_(value = ~ factor(exposed,
+                dplyr::mutate(exposed = .data$storm_dist <= !!dist_limit) %>%
+                dplyr::mutate(value = factor(.data$exposed,
                                                 levels = c("FALSE", "TRUE"))) %>%
                 dplyr::tbl_df()
 
@@ -319,8 +325,8 @@ map_distance_exposure <- function(storm, dist_limit, add_track = TRUE){
                 dplyr::left_join(map_data, by = "fips")
         out <- ggplot2::ggplot() +
                 ggplot2::geom_polygon(data = out_data,
-                                      ggplot2::aes_(x = ~ long, y = ~ lat, group = ~ group,
-                                                    fill = ~ value),
+                                      ggplot2::aes(x = .data$long, y = .data$lat, group = .data$group,
+                                                    fill = .data$value),
                                       color = "lightgray", size = 0.2) +
                 ggplot2::borders("state", regions = c("virginia", "north carolina", "south carolina",
                                                       "georgia", "florida", "alabama", "kentucky",
@@ -335,7 +341,7 @@ map_distance_exposure <- function(storm, dist_limit, add_track = TRUE){
                                  colour = "black", fill = NA, size = 0.2, alpha = 0.5) +
                 ggplot2::theme_void() +
                 ggplot2::coord_map() +
-                ggplot2::scale_fill_manual(name = paste("Distance <", dist_limit, "km"),
+                ggplot2::scale_fill_manual(name = paste("Distance <", !!dist_limit, "km"),
                                            values = c("white", "forestgreen"),
                                            labels = c("Unexposed", "Exposed"))
 
@@ -368,6 +374,7 @@ map_distance_exposure <- function(storm, dist_limit, add_track = TRUE){
 #' map_wind_exposure(storm = "Beryl-1988", wind_limit = 15)
 #' }
 #' @importFrom dplyr %>%
+#' @importFrom rlang .data
 #'
 #' @export
 map_wind_exposure <- function(storm, wind_var = "vmax_sust", wind_limit,
@@ -382,8 +389,8 @@ map_wind_exposure <- function(storm, wind_var = "vmax_sust", wind_limit,
         map_data <- filter_wind_data(storm = storm, wind_source = wind_source,
                                       output_vars = c("fips", wind_var)) %>%
                 `colnames<-`(c("fips", "wind_value")) %>%
-                dplyr::mutate_(exposed = ~ wind_value >= wind_limit) %>%
-                dplyr::mutate_(value = ~ factor(exposed,
+                dplyr::mutate(exposed = .data$wind_value >= !!wind_limit) %>%
+                dplyr::mutate(value = factor(.data$exposed,
                                                 levels = c("FALSE", "TRUE"))) %>%
                 dplyr::tbl_df()
 
@@ -391,8 +398,8 @@ map_wind_exposure <- function(storm, wind_var = "vmax_sust", wind_limit,
                 dplyr::left_join(map_data, by = "fips")
         out <- ggplot2::ggplot() +
                 ggplot2::geom_polygon(data = out_data,
-                                      ggplot2::aes_(x = ~ long, y = ~ lat, group = ~ group,
-                                                    fill = ~ value),
+                                      ggplot2::aes(x = .data$long, y = .data$lat, group = .data$group,
+                                                    fill = .data$value),
                                       color = "lightgray", size = 0.2) +
                 ggplot2::borders("state", regions = c("virginia", "north carolina", "south carolina",
                                                       "georgia", "florida", "alabama", "kentucky",
@@ -448,6 +455,9 @@ map_wind_exposure <- function(storm, wind_var = "vmax_sust", wind_limit,
 #' map_event_exposure(storm_id = "Floyd-1999", event_type = "tropical_storm")
 #' }
 #' @export
+#'
+#' @importFrom dplyr %>%
+#' @importFrom rlang .data
 map_event_exposure <- function(storm_id, event_type, add_track = TRUE){
 
         hasData()
@@ -455,26 +465,26 @@ map_event_exposure <- function(storm_id, event_type, add_track = TRUE){
         storm <- storm_id
         storm_year <- gsub("*.+-", "", storm_id)
         counties <- hurricaneexposuredata::closest_dist %>%
-                dplyr::filter_(~ storm_id == storm) %>%
-                dplyr::select_(quote(fips), quote(storm_dist))
+                dplyr::filter(.data$storm_id == storm) %>%
+                dplyr::select(.data$fips, .data$storm_dist)
         map_data <- county_events(counties = counties$fips,
                                   start_year = storm_year,
                                   end_year = storm_year,
                                   event_type = event_type) %>%
-                dplyr::filter_(~ storm_id == storm) %>%
-                dplyr::select_(quote(fips)) %>%
-                dplyr::mutate_(event = ~ 1) %>%
+                dplyr::filter(.data$storm_id == storm) %>%
+                dplyr::select(.data$fips) %>%
+                dplyr::mutate(event = 1) %>%
                 dplyr::right_join(counties, by = "fips") %>%
-                dplyr::mutate_(event = ~ !is.na(event)) %>%
-                dplyr::rename_(value = ~ event) %>%
-                dplyr::select_(quote(-storm_dist))
+                dplyr::mutate(event = !is.na(.data$event)) %>%
+                dplyr::rename(value = .data$event) %>%
+                dplyr::select(-.data$storm_dist)
 
         out_data <- get_eastern_map() %>%
                 dplyr::left_join(map_data, by = "fips")
         out <- ggplot2::ggplot() +
                 ggplot2::geom_polygon(data = out_data,
-                                      ggplot2::aes_(x = ~ long, y = ~ lat, group = ~ group,
-                                                    fill = ~ value),
+                                      ggplot2::aes(x = .data$long, y = .data$lat, group = .data$group,
+                                                    fill = .data$value),
                                       color = "lightgray", size = 0.2) +
                 ggplot2::borders("state", regions = c("virginia", "north carolina", "south carolina",
                                                       "georgia", "florida", "alabama", "kentucky",
@@ -535,6 +545,7 @@ map_event_exposure <- function(storm_id, event_type, add_track = TRUE){
 #' @export
 #'
 #' @importFrom dplyr %>%
+#' @importFrom rlang .data
 map_counties <- function(storm, metric = "distance", wind_var = "vmax_sust",
                         days_included = c(-2, -1, 0, 1), add_track = TRUE,
                         wind_source = "modeled"){
@@ -542,13 +553,13 @@ map_counties <- function(storm, metric = "distance", wind_var = "vmax_sust",
                 map_data <- filter_storm_data(storm = storm,
                                               output_vars = c("fips",
                                                               "storm_dist")) %>%
-                        dplyr::rename_(value = ~ storm_dist)
+                        dplyr::rename(value = .data$storm_dist)
         } else if(metric == "rainfall"){
                 map_data <- filter_storm_data(storm = storm, include_rain = TRUE,
                                               days_included = days_included,
                                               output_vars = c("fips",
                                                               "tot_precip")) %>%
-                        dplyr::rename_(value = ~ tot_precip)
+                        dplyr::rename(value = .data$tot_precip)
         } else if (metric == "wind") {
                 map_data <- filter_wind_data(storm = storm,
                                              output_vars = c("fips", wind_var),
@@ -588,6 +599,7 @@ map_counties <- function(storm, metric = "distance", wind_var = "vmax_sust",
 #' to Atlantic basin tropical storms.
 #'
 #' @importFrom dplyr %>%
+#' @importFrom rlang .data
 hurr_choropleth <- function(map_data, metric = "distance", wind_var = "vmax_sust",
                             wind_source = "modeled"){
 
@@ -655,8 +667,8 @@ hurr_choropleth <- function(map_data, metric = "distance", wind_var = "vmax_sust
                 dplyr::left_join(map_data, by = "fips")
         out <- ggplot2::ggplot() +
                 ggplot2::geom_polygon(data = out_data,
-                                      ggplot2::aes_(x = ~ long, y = ~ lat, group = ~ group,
-                                                    fill = ~ value),
+                                      ggplot2::aes(x = .data$long, y = .data$lat, group = .data$group,
+                                                    fill = .data$value),
                                       color = "lightgray", size = 0.2) +
                 ggplot2::borders("state", regions = c("virginia", "north carolina", "south carolina",
                                                       "georgia", "florida", "alabama", "kentucky",
