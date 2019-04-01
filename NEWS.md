@@ -1,4 +1,4 @@
-# hurricaneexposure 0.0.1.9
+# hurricaneexposure 0.1.0
 
 * Added functions for generating exposure datasets for multi-county 
 communities
