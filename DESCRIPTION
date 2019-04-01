@@ -59,3 +59,4 @@ Suggests:
     weathermetrics
 VignetteBuilder: knitr
 Additional_repositories: https://geanders.github.io/drat
+Language: en-US
