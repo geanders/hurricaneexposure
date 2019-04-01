@@ -243,6 +243,8 @@ interp_track <- function(track, tint = 0.25){
 map_rain_exposure <- function(storm, rain_limit, dist_limit,
                               days_included = c(-2, -1, 0, 1), add_track = TRUE){
 
+        # rain_limit <- enquo(rain_limit)
+
         map_data <- filter_storm_data(storm = storm,
                                            days_included = days_included,
                                            include_rain = TRUE,
@@ -273,7 +275,7 @@ map_rain_exposure <- function(storm, rain_limit, dist_limit,
                                                       "illinois", "ohio", "wisconsin", "indiana"),
                                  colour = "black", fill = NA, size = 0.2, alpha = 0.5) +
                 ggplot2::theme_void() +
-                ggplot2::scale_fill_manual(name = paste("Rain >", !!rain_limit, "mm"),
+                ggplot2::scale_fill_manual(name = paste("Rain >", rain_limit, "mm"),
                                            values = c("white", "navy"),
                                            labels = c("Unexposed", "Exposed"))
 
@@ -349,7 +351,7 @@ map_distance_exposure <- function(storm, dist_limit, add_track = TRUE){
                                                       "illinois", "ohio", "wisconsin", "indiana"),
                                  colour = "black", fill = NA, size = 0.2, alpha = 0.5) +
                 ggplot2::theme_void() +
-                ggplot2::scale_fill_manual(name = paste("Distance <", !!dist_limit, "km"),
+                ggplot2::scale_fill_manual(name = paste("Distance <", dist_limit, "km"),
                                            values = c("white", "forestgreen"),
                                            labels = c("Unexposed", "Exposed"))
 
@@ -402,7 +404,7 @@ map_wind_exposure <- function(storm, wind_var = "vmax_sust", wind_limit,
         map_data <- filter_wind_data(storm = storm, wind_source = wind_source,
                                       output_vars = c("fips", wind_var)) %>%
                 `colnames<-`(c("fips", "wind_value")) %>%
-                dplyr::mutate(exposed = .data$wind_value >= !!wind_limit) %>%
+                dplyr::mutate(exposed = .data$wind_value >= wind_limit) %>%
                 dplyr::mutate(value = factor(.data$exposed,
                                                 levels = c("FALSE", "TRUE"))) %>%
                 dplyr::tbl_df()
