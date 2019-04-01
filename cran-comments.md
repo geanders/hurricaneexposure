@@ -1,6 +1,6 @@
 ## Test environments
-* local OS X install, R 3.3.2
-* ubuntu 12.04 (on travis-ci), R 3.3.2
+* local Mac OS install, R 3.5.3
+* ubuntu 14.04 (on travis-ci), R 3.5.3
 * win-builder (devel and release)
 
 ## R CMD check results
@@ -16,4 +16,5 @@ CRAN release, which resulted from updates to a package dependency.
 
 ## Reverse dependencies
 
-This is a new release, so there are no reverse dependencies.
+The only reverse dependency is the `noaastormevents` package, which I also maintain. I will 
+ensure that package is updated to accomodate the new version of this package (`hurricaneexposure`).
