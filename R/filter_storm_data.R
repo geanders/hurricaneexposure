@@ -8,7 +8,7 @@
 #' @param storm A character string giving the storm ID (e.g., "Floyd-1999")
 #' @param year_range A numeric vector of length two with the starting and
 #'    ending year to subset to.
-#' @param distance_limit A numeric vector of length one giving the maxmimum
+#' @param distance_limit A numeric vector of length one giving the maximum
 #'    distance (in kilometers) to use in the filter
 #' @param rain_limit A numeric vector of length one giving the minimum
 #'    rain (in millimeters) to use in the filter
