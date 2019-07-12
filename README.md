@@ -385,6 +385,24 @@ one U.S. county.
 <td style="text-align: center;">x</td>
 <td style="text-align: center;">x</td>
 </tr>
+<tr class="odd">
+<td style="text-align: center;">2016</td>
+<td style="text-align: left;">Bonnie, Colin, Td08, Hermine, Julia, Matthew</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2017</td>
+<td style="text-align: left;">Cindy, Emily, Harvey, Ptc10, Irma, Jose, Nate, Philippe</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">x</td>
+<td style="text-align: center;">x</td>
+</tr>
 </tbody>
 </table>
 
@@ -394,9 +412,9 @@ is identified as “Floyd-1999”). Note that a few storms satisfied the
 criteria to be included in the data but were unnamed (e.g., “Notnamed”
 in 1991, “Subtrop” in 1997, etc.). These storms are identified in
 functions in the `hurricaneexposure` package based on the identifying
-name listed in the above table (e.g., “Notnamed-1991”), although for
-some research projects you may want to consider excluding these unnamed
-storms from the analysis.
+name listed in the above table (e.g., “Notnamed-1991”, “Td08-2016”),
+although for some research projects you may want to consider excluding
+these unnamed storms from the analysis.
 
 Mapping hurricane exposure
 --------------------------
@@ -417,7 +435,6 @@ using the following call:
 
 ``` r
 map_counties(storm = "Floyd-1999", metric = "rainfall")
-#> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](README-unnamed-chunk-7-1.png)
@@ -438,7 +455,6 @@ five days before to three days after the storm’s closest approach
 ``` r
 map_counties(storm = "Allison-2001", metric = "rainfall", days_included = -1:0) + 
         ggplot2::ggtitle("Rain during Allison (2001) for day before and day of closest approach")
-#> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](README-unnamed-chunk-8-1.png)
@@ -446,7 +462,6 @@ map_counties(storm = "Allison-2001", metric = "rainfall", days_included = -1:0) 
 ``` r
 map_counties(storm = "Allison-2001", metric = "rainfall", days_included = -5:3) + 
         ggplot2::ggtitle("Rain during Allison (2001) for five days before to three days\nafter the day of closest approach")
-#> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](README-unnamed-chunk-9-1.png)
@@ -458,7 +473,6 @@ during Hurricane Katrina (2005) with the call:
 
 ``` r
 map_counties(storm = "Katrina-2005", metric = "wind")
-#> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](README-unnamed-chunk-10-1.png)
@@ -476,7 +490,6 @@ the argument `wind_var = "sust_dur"`:
 
 ``` r
 map_counties("Katrina-2005", metric = "wind", wind_var = "sust_dur")
-#> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](README-unnamed-chunk-11-1.png)
@@ -487,7 +500,7 @@ included a second source of estimated winds in the data available in
 `hurricaneexposuredata`. These wind estimates are based on the wind
 radii in the Extended Best Tracks dataset (you can find out more about
 this data in the helpfile for the `ext_tracks_wind` dataset). These data
-provide estimates of which counties were exposured during a storm to
+provide estimates of which counties were exposed during a storm to
 sustained winds in four categories: 0–34 knots; 34–50 knots; 50–64
 knots; and 64 knots or higher. Therefore, these data provide a
 categorical rather than continuous estimate of county wind speeds.
@@ -503,7 +516,6 @@ the Extended Best Tracks wind radii, you can run:
 
 ``` r
 map_counties("Katrina-2005", metric = "wind", wind_source = "ext_tracks")
-#> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](README-unnamed-chunk-12-1.png)
@@ -515,7 +527,6 @@ plots county-level distances from the track of Hurricane Sandy (2012):
 
 ``` r
 map_counties(storm = "Sandy-2012", metric = "distance")
-#> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](README-unnamed-chunk-13-1.png)
@@ -542,7 +553,6 @@ km of Hurricane Sandy’s storm track with the call:
 
 ``` r
 map_distance_exposure(storm = "Sandy-2012", dist_limit = 75)
-#> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](README-unnamed-chunk-14-1.png)
@@ -562,7 +572,6 @@ storm’s track:
 ``` r
 map_rain_exposure(storm = "Allison-2001", rain_limit = 175, dist_limit = 500,
                   days_included = -5:3)
-#> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](README-unnamed-chunk-15-1.png)
@@ -579,7 +588,6 @@ Katrina, you can run:
 
 ``` r
 map_wind_exposure(storm = "Katrina-2005", wind_limit = 20)
-#> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](README-unnamed-chunk-16-1.png)
@@ -593,7 +601,6 @@ knots or higher during the storm, you can run:
 library(weathermetrics)
 map_wind_exposure(storm = "Katrina-2005", 
                   wind_limit = convert_wind_speed(34, "knots", "mps"))
-#> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](README-unnamed-chunk-17-1.png)
@@ -605,7 +612,6 @@ which a flood event was listed for Hurricane Floyd (1999) with the call:
 
 ``` r
 map_event_exposure(storm = "Floyd-1999", event_type = "flood")
-#> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](README-unnamed-chunk-18-1.png)
@@ -615,7 +621,6 @@ during Hurricane Ivan (2004) with:
 
 ``` r
 map_event_exposure(storm = "Ivan-2004", event_type = "tornado")
-#> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](README-unnamed-chunk-19-1.png)
@@ -652,7 +657,6 @@ of Hurricane Floyd in 1999, you can run:
 
 ``` r
 map_tracks(storms = "Floyd-1999")
-#> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](README-unnamed-chunk-20-1.png)
@@ -666,7 +670,6 @@ show the tracks in blue, you can run:
 ``` r
 map_tracks(storms = c("Andrew-1992", "Katrina-2005", "Rita-2005"),
            alpha = 0.5, plot_points = TRUE, color = "blue")
-#> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](README-unnamed-chunk-21-1.png)
@@ -682,7 +685,6 @@ storms_2005 <- hurr_tracks %>%
         separate(storm_id, c("name", "year"), sep = "-", remove = FALSE) %>%
         filter(year == "2005")
 map_tracks(storms = storms_2005$storm_id) 
-#> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](README-unnamed-chunk-22-1.png)
@@ -699,10 +701,8 @@ storm in the Best Tracks hurricane tracking data, you can run:
 
 ``` r
 floyd_map <- map_event_exposure(storm = "Floyd-1999", event_type = "flood")
-#> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 map_tracks(storms = "Floyd-1999", plot_object = floyd_map, plot_points = TRUE, 
            color = "darkgray")
-#> Coordinate system already present. Adding new coordinate system, which will replace the existing one.
 ```
 
 ![](README-unnamed-chunk-23-1.png)
@@ -733,13 +733,13 @@ or more, you can run:
 county_rain(counties = c("22071", "51700"), start_year = 1995, end_year = 2005,
             rain_limit = 100, dist_limit = 100, days_included = c(-1, 0, 1))
 #>        storm_id  fips closest_date storm_dist tot_precip       local_time
-#> 1:    Bill-2003 22071   2003-06-30   38.78412      141.1 2003-06-30 18:00
-#> 2: Charley-2004 51700   2004-08-14   43.01152      136.2 2004-08-14 19:45
-#> 3:   Cindy-2005 22071   2005-07-06   32.21758      113.2 2005-07-06 02:15
-#> 4:   Floyd-1999 51700   1999-09-16   46.50729      207.5 1999-09-16 11:15
-#> 5: Isidore-2002 22071   2002-09-26    6.37844      249.0 2002-09-26 05:45
-#> 6: Katrina-2005 22071   2005-08-29   36.88933      196.2 2005-08-29 08:45
-#> 7: Matthew-2004 22071   2004-10-10   71.76937      123.2 2004-10-10 11:00
+#> 1:    Bill-2003 22071   2003-06-30  38.798751      141.1 2003-06-30 18:00
+#> 2: Charley-2004 51700   2004-08-14  43.028152      136.2 2004-08-14 19:45
+#> 3:   Cindy-2005 22071   2005-07-06  32.226688      113.2 2005-07-06 02:15
+#> 4:   Floyd-1999 51700   1999-09-16  46.514476      207.5 1999-09-16 11:15
+#> 5: Isidore-2002 22071   2002-09-26   6.379359      249.0 2002-09-26 05:45
+#> 6: Katrina-2005 22071   2005-08-29  36.889346      196.2 2005-08-29 08:45
+#> 7: Matthew-2004 22071   2004-10-10  71.770774      123.2 2004-10-10 11:00
 #>    closest_time_utc
 #> 1: 2003-06-30 23:00
 #> 2: 2004-08-14 23:45
@@ -790,16 +790,16 @@ county_wind(counties = "12086", start_year = 1988, end_year = 2015, wind_limit =
 #> 9  Ernesto-2006 12086  18.02619  26.85902        0      795
 #> 10     Fay-2008 12086  19.54363  29.12001        0     1290
 #>    closest_time_utc storm_dist       local_time closest_date
-#> 1  1992-08-24 09:15   31.27000 1992-08-24 05:15   1992-08-24
-#> 2  1998-11-05 12:45  101.92795 1998-11-05 07:45   1998-11-05
-#> 3  1999-09-21 19:45   57.04194 1999-09-21 15:45   1999-09-21
-#> 4  1999-10-15 23:15   43.55490 1999-10-15 19:15   1999-10-15
-#> 5  2004-09-05 03:00  151.14075 2004-09-04 23:00   2004-09-04
-#> 6  2004-09-26 02:45  162.22857 2004-09-25 22:45   2004-09-25
-#> 7  2005-08-25 23:45   10.78081 2005-08-25 19:45   2005-08-25
-#> 8  2005-10-24 12:45   92.31401 2005-10-24 08:45   2005-10-24
-#> 9  2006-08-30 09:00   62.72792 2006-08-30 05:00   2006-08-30
-#> 10 2008-08-19 11:45  123.92053 2008-08-19 07:45   2008-08-19
+#> 1  1992-08-24 09:15   31.31286 1992-08-24 05:15   1992-08-24
+#> 2  1998-11-05 12:45  102.04444 1998-11-05 07:45   1998-11-05
+#> 3  1999-09-21 19:45   57.10720 1999-09-21 15:45   1999-09-21
+#> 4  1999-10-15 23:15   43.56651 1999-10-15 19:15   1999-10-15
+#> 5  2004-09-05 03:00  151.32475 2004-09-04 23:00   2004-09-04
+#> 6  2004-09-26 02:45  162.43780 2004-09-25 22:45   2004-09-25
+#> 7  2005-08-25 23:45   10.79344 2005-08-25 19:45   2005-08-25
+#> 8  2005-10-24 12:45   92.39233 2005-10-24 08:45   2005-10-24
+#> 9  2006-08-30 09:00   62.72953 2006-08-30 05:00   2006-08-30
+#> 10 2008-08-19 11:45  123.94933 2008-08-19 07:45   2008-08-19
 ```
 
 The returned dataframe includes the estimated maximum values during the
@@ -835,13 +835,13 @@ county_wind(counties = "12086", start_year = 1988, end_year = 2015,
 #> 6 Katrina-2005 12086  32.34194  48.18949      495     1710
 #> 7   Wilma-2005 12086  30.97431  46.15172      345      630
 #>   closest_time_utc storm_dist       local_time closest_date
-#> 1 1992-08-24 09:15   31.27000 1992-08-24 05:15   1992-08-24
-#> 2 1998-11-05 12:45  101.92795 1998-11-05 07:45   1998-11-05
-#> 3 1999-09-21 19:45   57.04194 1999-09-21 15:45   1999-09-21
-#> 4 1999-10-15 23:15   43.55490 1999-10-15 19:15   1999-10-15
-#> 5 2004-09-05 03:00  151.14075 2004-09-04 23:00   2004-09-04
-#> 6 2005-08-25 23:45   10.78081 2005-08-25 19:45   2005-08-25
-#> 7 2005-10-24 12:45   92.31401 2005-10-24 08:45   2005-10-24
+#> 1 1992-08-24 09:15   31.31286 1992-08-24 05:15   1992-08-24
+#> 2 1998-11-05 12:45  102.04444 1998-11-05 07:45   1998-11-05
+#> 3 1999-09-21 19:45   57.10720 1999-09-21 15:45   1999-09-21
+#> 4 1999-10-15 23:15   43.56651 1999-10-15 19:15   1999-10-15
+#> 5 2004-09-05 03:00  151.32475 2004-09-04 23:00   2004-09-04
+#> 6 2005-08-25 23:45   10.79344 2005-08-25 19:45   2005-08-25
+#> 7 2005-10-24 12:45   92.39233 2005-10-24 08:45   2005-10-24
 ```
 
 Further, the `county_wind` function allows you to pull wind estimates
@@ -888,14 +888,14 @@ county_wind(counties = "12086", start_year = 1988, end_year = 2015,
 #> 7 Katrina-2005 12086   32.9216  49.05318      375 2005-08-25 23:45
 #> 8   Wilma-2005 12086   32.9216  49.05318      405 2005-10-24 12:45
 #>   storm_dist       local_time closest_date
-#> 1   43.86288 2010-07-23 11:45   2010-07-23
-#> 2  151.14075 2004-09-04 23:00   2004-09-04
-#> 3   62.72792 2006-08-30 05:00   2006-08-30
-#> 4  123.92053 2008-08-19 07:45   2008-08-19
-#> 5  252.46928 2012-08-26 12:15   2012-08-26
-#> 6  162.22857 2004-09-25 22:45   2004-09-25
-#> 7   10.78081 2005-08-25 19:45   2005-08-25
-#> 8   92.31401 2005-10-24 08:45   2005-10-24
+#> 1   43.90767 2010-07-23 11:45   2010-07-23
+#> 2  151.32475 2004-09-04 23:00   2004-09-04
+#> 3   62.72953 2006-08-30 05:00   2006-08-30
+#> 4  123.94933 2008-08-19 07:45   2008-08-19
+#> 5  252.79370 2012-08-26 12:15   2012-08-26
+#> 6  162.43780 2004-09-25 22:45   2004-09-25
+#> 7   10.79344 2005-08-25 19:45   2005-08-25
+#> 8   92.39233 2005-10-24 08:45   2005-10-24
 ```
 
 The `county_distance` function can similarly be used to generate a
@@ -907,16 +907,16 @@ km of Orleans Parish (FIPS 22071) between 1988 and 2015, you can run:
 county_distance(counties = "22071", start_year = 1988, end_year = 2015,
                 dist_limit = 50)
 #>          storm_id  fips closest_date storm_dist       local_time
-#>  1:    Beryl-1988 22071   1988-08-09   6.545623 1988-08-09 05:30
-#>  2: Florence-1988 22071   1988-09-10   9.341379 1988-09-10 02:30
-#>  3:  Hermine-1998 22071   1998-09-20  48.178162 1998-09-20 06:45
-#>  4:  Allison-2001 22071   2001-06-11  31.417675 2001-06-11 02:45
-#>  5:   Bertha-2002 22071   2002-08-05  13.771178 2002-08-05 04:00
-#>  6:  Isidore-2002 22071   2002-09-26   6.378440 2002-09-26 05:45
-#>  7:     Bill-2003 22071   2003-06-30  38.784122 2003-06-30 18:00
-#>  8:    Cindy-2005 22071   2005-07-06  32.217580 2005-07-06 02:15
-#>  9:  Katrina-2005 22071   2005-08-29  36.889327 2005-08-29 08:45
-#> 10:   Bonnie-2010 22071   2010-07-25  42.509405 2010-07-25 06:30
+#>  1:    Beryl-1988 22071   1988-08-09   6.552771 1988-08-09 05:30
+#>  2: Florence-1988 22071   1988-09-10   9.345350 1988-09-10 02:30
+#>  3:  Hermine-1998 22071   1998-09-20  48.187242 1998-09-20 06:45
+#>  4:  Allison-2001 22071   2001-06-11  31.441595 2001-06-11 02:45
+#>  5:   Bertha-2002 22071   2002-08-05  13.776331 2002-08-05 04:00
+#>  6:  Isidore-2002 22071   2002-09-26   6.379359 2002-09-26 05:45
+#>  7:     Bill-2003 22071   2003-06-30  38.798751 2003-06-30 18:00
+#>  8:    Cindy-2005 22071   2005-07-06  32.226688 2005-07-06 02:15
+#>  9:  Katrina-2005 22071   2005-08-29  36.889346 2005-08-29 08:45
+#> 10:   Bonnie-2010 22071   2010-07-25  42.545866 2010-07-25 06:30
 #>     closest_time_utc
 #>  1: 1988-08-09 10:30
 #>  2: 1988-09-10 07:30
@@ -939,18 +939,18 @@ Virginia, (FIPS: 51710) had a flood event listing, you can run:
 county_events(counties = "51710", start_year = 1996, end_year = 2015, 
               event_type = "flood")
 #>     fips       storm_id closest_time_utc storm_dist       local_time
-#> 1  51710    Arthur-1996 1996-06-20 07:45  167.00098 1996-06-20 03:45
-#> 2  51710   Subtrop-1997 1997-06-01 18:45  254.48542 1997-06-01 14:45
-#> 3  51710    Dennis-1999 1999-09-05 04:15  191.43034 1999-09-05 00:15
-#> 4  51710     Floyd-1999 1999-09-16 15:00   17.92387 1999-09-16 11:00
-#> 5  51710     Irene-1999 1999-10-18 06:30  255.20296 1999-10-18 02:30
-#> 6  51710      Kyle-2002 2002-10-12 08:15  140.32547 2002-10-12 04:15
-#> 7  51710      Alex-2004 2004-08-03 19:30  202.94091 2004-08-03 15:30
-#> 8  51710   Alberto-2006 2006-06-14 20:30   87.87372 2006-06-14 16:30
-#> 9  51710   Ernesto-2006 2006-09-01 23:15   72.95581 2006-09-01 19:15
-#> 10 51710     Irene-2011 2011-08-28 00:45   54.82468 2011-08-27 20:45
-#> 11 51710     Sandy-2012 2012-10-29 23:15  315.58866 2012-10-29 19:15
-#> 12 51710 Claudette-2015 2015-07-12 00:00  180.39928 2015-07-11 20:00
+#> 1  51710    Arthur-1996 1996-06-20 07:45  167.10308 1996-06-20 03:45
+#> 2  51710   Subtrop-1997 1997-06-01 19:00  254.54878 1997-06-01 15:00
+#> 3  51710    Dennis-1999 1999-09-05 04:15  191.57300 1999-09-05 00:15
+#> 4  51710     Floyd-1999 1999-09-16 15:00   17.92660 1999-09-16 11:00
+#> 5  51710     Irene-1999 1999-10-18 06:30  255.38520 1999-10-18 02:30
+#> 6  51710      Kyle-2002 2002-10-12 08:15  140.41756 2002-10-12 04:15
+#> 7  51710      Alex-2004 2004-08-03 19:30  203.07359 2004-08-03 15:30
+#> 8  51710   Alberto-2006 2006-06-14 20:30   87.95466 2006-06-14 16:30
+#> 9  51710   Ernesto-2006 2006-09-01 23:15   72.96420 2006-09-01 19:15
+#> 10 51710     Irene-2011 2011-08-28 00:45   54.83126 2011-08-27 20:45
+#> 11 51710     Sandy-2012 2012-10-29 23:15  315.83172 2012-10-29 19:15
+#> 12 51710 Claudette-2015 2015-07-12 00:00  180.56643 2015-07-11 20:00
 #>    closest_date
 #> 1    1996-06-20
 #> 2    1997-06-01
@@ -977,27 +977,28 @@ listings in the case where one of the communities (New York, NY) is
 comprised of multiple counties, you can run:
 
 ``` r
-communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
+communities <- data.frame(community_name = c(rep("ny", 6), "no", "new"),
                          fips = c("36005", "36047", "36061",
                                   "36085", "36081", "36119",
                                   "22071", "51700"))
 multi_county_rain(communities = communities, start_year = 1995, end_year = 2005,
                    rain_limit = 100, dist_limit = 100)
 #> # A tibble: 10 x 9
-#> # Groups:   commun [3]
-#>    commun storm_id closest_date local_time closest_time_utc mean_dist
-#>    <fct>  <chr>    <date>       <chr>      <chr>                <dbl>
-#>  1 new    Charley… 2004-08-14   2004-08-1… 2004-08-14 23:45     43.0 
-#>  2 new    Danny-1… 1997-07-24   1997-07-2… 1997-07-24 19:00     83.9 
-#>  3 new    Floyd-1… 1999-09-16   1999-09-1… 1999-09-16 15:15     46.5 
-#>  4 no     Allison… 2001-06-11   2001-06-1… 2001-06-11 07:45     31.4 
-#>  5 no     Bill-20… 2003-06-30   2003-06-3… 2003-06-30 23:00     38.8 
-#>  6 no     Cindy-2… 2005-07-06   2005-07-0… 2005-07-06 07:15     32.2 
-#>  7 no     Isidore… 2002-09-26   2002-09-2… 2002-09-26 10:45      6.38
-#>  8 no     Katrina… 2005-08-29   2005-08-2… 2005-08-29 13:45     36.9 
-#>  9 no     Matthew… 2004-10-10   2004-10-1… 2004-10-10 16:00     71.8 
-#> 10 ny     Floyd-1… 1999-09-16   1999-09-1… 1999-09-17 00:30     42.4 
-#> # … with 3 more variables: mean_rain <dbl>, max_rain <dbl>, min_dist <dbl>
+#> # Groups:   community_name [3]
+#>    community_name storm_id closest_date local_time closest_time_utc
+#>    <fct>          <chr>    <chr>        <chr>      <chr>           
+#>  1 new            Charley… 2004-08-14   2004-08-1… 2004-08-14 23:45
+#>  2 new            Danny-1… 1997-07-24   1997-07-2… 1997-07-24 19:00
+#>  3 new            Floyd-1… 1999-09-16   1999-09-1… 1999-09-16 15:15
+#>  4 no             Allison… 2001-06-11   2001-06-1… 2001-06-11 07:45
+#>  5 no             Bill-20… 2003-06-30   2003-06-3… 2003-06-30 23:00
+#>  6 no             Cindy-2… 2005-07-06   2005-07-0… 2005-07-06 07:15
+#>  7 no             Isidore… 2002-09-26   2002-09-2… 2002-09-26 10:45
+#>  8 no             Katrina… 2005-08-29   2005-08-2… 2005-08-29 13:45
+#>  9 no             Matthew… 2004-10-10   2004-10-1… 2004-10-10 16:00
+#> 10 ny             Floyd-1… 1999-09-16   1999-09-1… 1999-09-17 00:30
+#> # … with 4 more variables: mean_dist <dbl>, mean_rain <dbl>,
+#> #   max_rain <dbl>, min_dist <dbl>
 ```
 
 The output from this function includes columns for the average closest
