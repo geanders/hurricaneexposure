@@ -52,6 +52,11 @@ addRepo("geanders")
 install.packages("hurricaneexposuredata")
 ```
 
+You will want to have the latest version of the `hurricaneexposuredata`
+package. If you have previously installed `hurricaneexposuredata`, you
+may need to re-run the above code if you update the `hurricaneexposure`
+package, to update to the latest data.
+
 The `hurricaneexposuredata` data package includes data that
 characterizes county-level exposure to tropical storms in counties in
 the eastern half of the United States between 1988 and 2015 (for some
