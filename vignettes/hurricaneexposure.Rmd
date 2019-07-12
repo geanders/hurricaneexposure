@@ -98,7 +98,7 @@ hurr_tracks %>%
         pander::pander(justify = "clccccc")
 ```
 
-In functions throughout the `hurricaneexposure` package, storms are identified based on their name and year (e.g., Hurricane Floyd in 1999 is identified as "Floyd-1999"). Note that a few storms satisfied the criteria to be included in the data but were unnamed (e.g., "Notnamed" in 1991, "Subtrop" in 1997, etc.). These storms are identified in functions in the `hurricaneexposure` package based on the identifying name listed in the above table (e.g., "Notnamed-1991"), although for some research projects you may want to consider excluding these unnamed storms from the analysis.
+In functions throughout the `hurricaneexposure` package, storms are identified based on their name and year (e.g., Hurricane Floyd in 1999 is identified as "Floyd-1999"). Note that a few storms satisfied the criteria to be included in the data but were unnamed (e.g., "Notnamed" in 1991, "Subtrop" in 1997, etc.). These storms are identified in functions in the `hurricaneexposure` package based on the identifying name listed in the above table (e.g., "Notnamed-1991", "Td08-2016"), although for some research projects you may want to consider excluding these unnamed storms from the analysis.
 
 ## Mapping hurricane exposure
 
