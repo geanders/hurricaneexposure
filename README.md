@@ -1,7 +1,6 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-Package overview
-----------------
+## Package overview
 
 This package allows users to explore and map data of county-level
 exposures to Atlantic-basin tropical storms between 1988 and 2015 for a
@@ -21,23 +20,22 @@ data will likely be updated as we get further years of data and find
 improved ways to measure tropical storm exposure. The two packages can
 be cited as:
 
--   Anderson B, Yan M, Ferreri J, Crosson W, Al-Hamdan M, Schumacher A
+  - Anderson B, Yan M, Ferreri J, Crosson W, Al-Hamdan M, Schumacher A
     and Eddelbuettel D (2017). *hurricaneexposure: Explore and Map
     County-Level Hurricane Exposure in the United States*. R package
-    version 0.0.1, &lt;URL:
-    <a href="http://CRAN.R-project.org/package=hurricaneexposure" class="uri">http://CRAN.R-project.org/package=hurricaneexposure</a>&gt;.
+    version 0.0.1, \<URL:
+    <http://CRAN.R-project.org/package=hurricaneexposure>\>.
 
--   Anderson B, Schumacher A, Crosson W, Al-Hamdan M, Yan M, Ferreri J,
+  - Anderson B, Schumacher A, Crosson W, Al-Hamdan M, Yan M, Ferreri J,
     Chen Z, Quiring S and Guikema S (2017). *hurricaneexposuredata: Data
     Characterizing Exposure to Hurricanes in United States Counties*. R
-    package version 0.0.1, &lt;URL:
-    <a href="https://github.com/geanders/hurricaneexposuredata" class="uri">https://github.com/geanders/hurricaneexposuredata</a>&gt;.
+    package version 0.0.1, \<URL:
+    <https://github.com/geanders/hurricaneexposuredata>\>.
 
 To generate BibTex entries for the packages, you can use the `citation`
 function in R.
 
-Required set-up to use this package
------------------------------------
+## Required set-up to use this package
 
 This package depends on data in a data package (`hurricaneexposuredata`)
 that is available through a `drat` repository on GitHub. To use the
@@ -62,22 +60,22 @@ Tropical storms that did not pass within at least 250 km of at least one
 US county were excluded from these datasets. The following datasets are
 included with the `hurricaneexposuredata` data package:
 
--   `county_centers`: Location of United States county centers of
+  - `county_centers`: Location of United States county centers of
     population
--   `hurr_tracks`: Storm tracks for Atlantic-basin storms, 1988-2015
--   `closest_dist`: Closest distances between counties and a storm
+  - `hurr_tracks`: Storm tracks for Atlantic-basin storms, 1988-2015
+  - `closest_dist`: Closest distances between counties and a storm
     track, for Atlantic-basin storms, 1988-2015
--   `rain`: Rainfall for US counties during Atlantic basin tropical
+  - `rain`: Rainfall for US counties during Atlantic basin tropical
     storms, 1988-2011; daily rainfall is given from five days before to
     three days after the storm’s closest approach to the county
--   `storm_winds`: Modeled county wind speeds for Atlantic-basin storms,
+  - `storm_winds`: Modeled county wind speeds for Atlantic-basin storms,
     1988-2015
--   `storm_events`: Listings from the [NOAA Storm Events
+  - `storm_events`: Listings from the [NOAA Storm Events
     database](https://www.ncdc.noaa.gov/stormevents/) that occurred near
     in time and location to tropical storms, 1988-2015. This database
     changed the types of events it reported in 1996, which should be
     considered when using the data.
--   `ext_tracks_wind`: Estimated county wind speeds for Atlantic-basin
+  - `ext_tracks_wind`: Estimated county wind speeds for Atlantic-basin
     storms, 1988-2015, based on the wind radii listed in the [Extended
     Best Tracks
     dataset](http://rammb.cira.colostate.edu/research/tropical_cyclones/tc_extended_best_track_dataset/)
@@ -109,302 +107,41 @@ of data included.
 The following table shows the storms covered by the
 `hurricaneexposuredata` data package, as well as which hazard metrics
 are available for each year. All storms passed within 250 km of at least
-one U.S. county.
+one U.S.
+county.
 
-<table>
-<colgroup>
-<col style="width: 8%" />
-<col style="width: 39%" />
-<col style="width: 13%" />
-<col style="width: 8%" />
-<col style="width: 8%" />
-<col style="width: 9%" />
-<col style="width: 12%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: center;">Year</th>
-<th style="text-align: left;">Storms</th>
-<th style="text-align: center;">Distance</th>
-<th style="text-align: center;">Wind</th>
-<th style="text-align: center;">Rain</th>
-<th style="text-align: center;">Flood</th>
-<th style="text-align: center;">Tornado</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">1988</td>
-<td style="text-align: left;">Alberto, Beryl, Chris, Florence, Gilbert, Keith</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">1989</td>
-<td style="text-align: left;">Allison, Chantal, Hugo, Jerry</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">1990</td>
-<td style="text-align: left;">Bertha, Marco</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">1991</td>
-<td style="text-align: left;">Ana, Bob, Fabian, Notnamed</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">1992</td>
-<td style="text-align: left;">Andrew, Danielle, Earl</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">1993</td>
-<td style="text-align: left;">Arlene, Emily</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">1994</td>
-<td style="text-align: left;">Alberto, Beryl, Gordon</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">1995</td>
-<td style="text-align: left;">Allison, Dean, Erin, Gabrielle, Jerry, Opal</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">1996</td>
-<td style="text-align: left;">Arthur, Bertha, Edouard, Fran, Josephine</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">1997</td>
-<td style="text-align: left;">Subtrop, Ana, Danny</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">1998</td>
-<td style="text-align: left;">Bonnie, Charley, Earl, Frances, Georges, Hermine, Mitch</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">1999</td>
-<td style="text-align: left;">Bret, Dennis, Floyd, Harvey, Irene</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">2000</td>
-<td style="text-align: left;">Beryl, Gordon, Helene, Leslie</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">2001</td>
-<td style="text-align: left;">Allison, Barry, Gabrielle, Michelle</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">2002</td>
-<td style="text-align: left;">Arthur, Bertha, Cristobal, Edouard, Fay, Gustav, Hanna, Isidore, Kyle, Lili</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">2003</td>
-<td style="text-align: left;">Bill, Claudette, Erika, Grace, Henri, Isabel</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">2004</td>
-<td style="text-align: left;">Alex, Bonnie, Charley, Frances, Gaston, Hermine, Ivan, Jeanne, Matthew</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">2005</td>
-<td style="text-align: left;">Arlene, Cindy, Dennis, Emily, Katrina, Ophelia, Rita, Tammy, Wilma</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">2006</td>
-<td style="text-align: left;">Alberto, Beryl, Chris, Ernesto</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">2007</td>
-<td style="text-align: left;">Andrea, Barry, Erin, Gabrielle, Humberto, Noel</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">2008</td>
-<td style="text-align: left;">Cristobal, Dolly, Edouard, Fay, Gustav, Hanna, Ike, Kyle, Paloma</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">2009</td>
-<td style="text-align: left;">Claudette, Ida</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">2010</td>
-<td style="text-align: left;">Alex, Bonnie, Earl, Hermine, Nicole, Paula</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">2011</td>
-<td style="text-align: left;">Bret, Don, Emily, Irene, Lee</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">2012</td>
-<td style="text-align: left;">Alberto, Beryl, Debby, Isaac, Sandy</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">2013</td>
-<td style="text-align: left;">Andrea, Dorian, Karen</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">2014</td>
-<td style="text-align: left;">Arthur</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">2015</td>
-<td style="text-align: left;">Ana, Bill, Claudette</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">2016</td>
-<td style="text-align: left;">Bonnie, Colin, Td08, Hermine, Julia, Matthew</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">2017</td>
-<td style="text-align: left;">Cindy, Emily, Harvey, Ptc10, Irma, Jose, Nate, Philippe</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;"></td>
-<td style="text-align: center;">x</td>
-<td style="text-align: center;">x</td>
-</tr>
-</tbody>
-</table>
+| Year | Storms                                                                      | Distance | Wind | Rain | Flood | Tornado |
+| :--: | :-------------------------------------------------------------------------- | :------: | :--: | :--: | :---: | :-----: |
+| 1988 | Alberto, Beryl, Chris, Florence, Gilbert, Keith                             |    x     |  x   |  x   |       |    x    |
+| 1989 | Allison, Chantal, Hugo, Jerry                                               |    x     |  x   |  x   |       |    x    |
+| 1990 | Bertha, Marco                                                               |    x     |  x   |  x   |       |    x    |
+| 1991 | Ana, Bob, Fabian, Notnamed                                                  |    x     |  x   |  x   |       |    x    |
+| 1992 | Andrew, Danielle, Earl                                                      |    x     |  x   |  x   |       |    x    |
+| 1993 | Arlene, Emily                                                               |    x     |  x   |  x   |       |    x    |
+| 1994 | Alberto, Beryl, Gordon                                                      |    x     |  x   |  x   |       |    x    |
+| 1995 | Allison, Dean, Erin, Gabrielle, Jerry, Opal                                 |    x     |  x   |  x   |       |    x    |
+| 1996 | Arthur, Bertha, Edouard, Fran, Josephine                                    |    x     |  x   |  x   |   x   |    x    |
+| 1997 | Subtrop, Ana, Danny                                                         |    x     |  x   |  x   |   x   |    x    |
+| 1998 | Bonnie, Charley, Earl, Frances, Georges, Hermine, Mitch                     |    x     |  x   |  x   |   x   |    x    |
+| 1999 | Bret, Dennis, Floyd, Harvey, Irene                                          |    x     |  x   |  x   |   x   |    x    |
+| 2000 | Beryl, Gordon, Helene, Leslie                                               |    x     |  x   |  x   |   x   |    x    |
+| 2001 | Allison, Barry, Gabrielle, Michelle                                         |    x     |  x   |  x   |   x   |    x    |
+| 2002 | Arthur, Bertha, Cristobal, Edouard, Fay, Gustav, Hanna, Isidore, Kyle, Lili |    x     |  x   |  x   |   x   |    x    |
+| 2003 | Bill, Claudette, Erika, Grace, Henri, Isabel                                |    x     |  x   |  x   |   x   |    x    |
+| 2004 | Alex, Bonnie, Charley, Frances, Gaston, Hermine, Ivan, Jeanne, Matthew      |    x     |  x   |  x   |   x   |    x    |
+| 2005 | Arlene, Cindy, Dennis, Emily, Katrina, Ophelia, Rita, Tammy, Wilma          |    x     |  x   |  x   |   x   |    x    |
+| 2006 | Alberto, Beryl, Chris, Ernesto                                              |    x     |  x   |  x   |   x   |    x    |
+| 2007 | Andrea, Barry, Erin, Gabrielle, Humberto, Noel                              |    x     |  x   |  x   |   x   |    x    |
+| 2008 | Cristobal, Dolly, Edouard, Fay, Gustav, Hanna, Ike, Kyle, Paloma            |    x     |  x   |  x   |   x   |    x    |
+| 2009 | Claudette, Ida                                                              |    x     |  x   |  x   |   x   |    x    |
+| 2010 | Alex, Bonnie, Earl, Hermine, Nicole, Paula                                  |    x     |  x   |  x   |   x   |    x    |
+| 2011 | Bret, Don, Emily, Irene, Lee                                                |    x     |  x   |  x   |   x   |    x    |
+| 2012 | Alberto, Beryl, Debby, Isaac, Sandy                                         |    x     |  x   |      |   x   |    x    |
+| 2013 | Andrea, Dorian, Karen                                                       |    x     |  x   |      |   x   |    x    |
+| 2014 | Arthur                                                                      |    x     |  x   |      |   x   |    x    |
+| 2015 | Ana, Bill, Claudette                                                        |    x     |  x   |      |   x   |    x    |
+| 2016 | Bonnie, Colin, Td08, Hermine, Julia, Matthew                                |    x     |  x   |      |   x   |    x    |
+| 2017 | Cindy, Emily, Harvey, Ptc10, Irma, Jose, Nate, Philippe                     |    x     |  x   |      |   x   |    x    |
 
 In functions throughout the `hurricaneexposure` package, storms are
 identified based on their name and year (e.g., Hurricane Floyd in 1999
@@ -416,8 +153,7 @@ name listed in the above table (e.g., “Notnamed-1991”, “Td08-2016”),
 although for some research projects you may want to consider excluding
 these unnamed storms from the analysis.
 
-Mapping hurricane exposure
---------------------------
+## Mapping hurricane exposure
 
 The `hurricaneexposure` package has functions to interact with the data
 in the `hurricaneexposuredata` package. First, there are functions that
@@ -437,7 +173,7 @@ using the following call:
 map_counties(storm = "Floyd-1999", metric = "rainfall")
 ```
 
-![](README-unnamed-chunk-7-1.png)
+![](README-unnamed-chunk-7-1.png)<!-- -->
 
 By default, this map shows the cumulative rain in each county for two
 days before to one day after the date that the storm passed closest to
@@ -450,32 +186,33 @@ following examples show the difference in rain maps for Tropical Storm
 Allison (2001) when using rain only from the day before and the day the
 storm was closest to each county (`days_included = -1:0`) versus from
 five days before to three days after the storm’s closest approach
-(`days_included = -5:3`):
+(`days_included =
+-5:3`):
 
 ``` r
 map_counties(storm = "Allison-2001", metric = "rainfall", days_included = -1:0) + 
         ggplot2::ggtitle("Rain during Allison (2001) for day before and day of closest approach")
 ```
 
-![](README-unnamed-chunk-8-1.png)
+![](README-unnamed-chunk-8-1.png)<!-- -->
 
 ``` r
 map_counties(storm = "Allison-2001", metric = "rainfall", days_included = -5:3) + 
         ggplot2::ggtitle("Rain during Allison (2001) for five days before to three days\nafter the day of closest approach")
 ```
 
-![](README-unnamed-chunk-9-1.png)
+![](README-unnamed-chunk-9-1.png)<!-- -->
 
 You can also use the `map_counties` function to plot the maximum wind
-during the storm for each county. For this, you use the argument
-`metric = "wind"`. For example, you can plot county-specific storm winds
-during Hurricane Katrina (2005) with the call:
+during the storm for each county. For this, you use the argument `metric
+= "wind"`. For example, you can plot county-specific storm winds during
+Hurricane Katrina (2005) with the call:
 
 ``` r
 map_counties(storm = "Katrina-2005", metric = "wind")
 ```
 
-![](README-unnamed-chunk-10-1.png)
+![](README-unnamed-chunk-10-1.png)<!-- -->
 
 These county winds are determined based on a model of wind speeds, using
 as input data from the hurricane tracks data. See the documentation for
@@ -492,7 +229,7 @@ the argument `wind_var = "sust_dur"`:
 map_counties("Katrina-2005", metric = "wind", wind_var = "sust_dur")
 ```
 
-![](README-unnamed-chunk-11-1.png)
+![](README-unnamed-chunk-11-1.png)<!-- -->
 
 You can map estimated gust winds, rather than sustained winds (the
 default), using the argument `wind_var = "vmax_gust"`. Further, we have
@@ -509,16 +246,17 @@ storms, especially storms in extra-tropical transition. Further, you may
 find it interesting to use these data in a sensitivity analysis, to
 compare if impact study results are sensitive to whether these wind data
 or the modeled wind data are used for exposure classification. You can
-create a wind map based on this data using the
-`wind_source = "ext_tracks"` argument in the `map_counties` function.
-For example, to map estimated winds during Hurricane Katrina based on
-the Extended Best Tracks wind radii, you can run:
+create a wind map based on this data using the `wind_source =
+"ext_tracks"` argument in the `map_counties` function. For example, to
+map estimated winds during Hurricane Katrina based on the Extended Best
+Tracks wind radii, you can
+run:
 
 ``` r
 map_counties("Katrina-2005", metric = "wind", wind_source = "ext_tracks")
 ```
 
-![](README-unnamed-chunk-12-1.png)
+![](README-unnamed-chunk-12-1.png)<!-- -->
 
 Finally, you can also use the `map_counties` function to plot the
 closest distance between the storm and each county. For this, you use
@@ -529,7 +267,7 @@ plots county-level distances from the track of Hurricane Sandy (2012):
 map_counties(storm = "Sandy-2012", metric = "distance")
 ```
 
-![](README-unnamed-chunk-13-1.png)
+![](README-unnamed-chunk-13-1.png)<!-- -->
 
 See the documentation for the `closest_dist` dataset (`?closest_dist`)
 for more details on how distances from the storm track were calculated
@@ -555,7 +293,7 @@ km of Hurricane Sandy’s storm track with the call:
 map_distance_exposure(storm = "Sandy-2012", dist_limit = 75)
 ```
 
-![](README-unnamed-chunk-14-1.png)
+![](README-unnamed-chunk-14-1.png)<!-- -->
 
 Similarly, you can map binary county exposure based on rain using
 `map_rain_exposure`. In the case of rain, you must define exposure
@@ -567,14 +305,15 @@ the following call to map rain exposure to Tropical Storm Allison
 (2001), where a county is defined as exposed to the storm if cumulative
 rainfall from five days before to three days after the storm’s closest
 approach was 175 mm or more and the county was within 500 km of the
-storm’s track:
+storm’s
+track:
 
 ``` r
 map_rain_exposure(storm = "Allison-2001", rain_limit = 175, dist_limit = 500,
                   days_included = -5:3)
 ```
 
-![](README-unnamed-chunk-15-1.png)
+![](README-unnamed-chunk-15-1.png)<!-- -->
 
 As with the continuous maps of rain exposure, the number of days
 included to calculate cumulative rain can be adjusted with the
@@ -590,7 +329,7 @@ Katrina, you can run:
 map_wind_exposure(storm = "Katrina-2005", wind_limit = 20)
 ```
 
-![](README-unnamed-chunk-16-1.png)
+![](README-unnamed-chunk-16-1.png)<!-- -->
 
 If you would like to base a wind threshold on knots rather than m / s,
 you can use the `convert_wind_speed` function from the `weathermetrics`
@@ -603,7 +342,7 @@ map_wind_exposure(storm = "Katrina-2005",
                   wind_limit = convert_wind_speed(34, "knots", "mps"))
 ```
 
-![](README-unnamed-chunk-17-1.png)
+![](README-unnamed-chunk-17-1.png)<!-- -->
 
 Finally, you can map which counties were exposed to specific types of
 events, as listed in the NOAA Storm Events Database, using the
@@ -614,7 +353,7 @@ which a flood event was listed for Hurricane Floyd (1999) with the call:
 map_event_exposure(storm = "Floyd-1999", event_type = "flood")
 ```
 
-![](README-unnamed-chunk-18-1.png)
+![](README-unnamed-chunk-18-1.png)<!-- -->
 
 Similarly, you can map which counties were exposed to tornado events
 during Hurricane Ivan (2004) with:
@@ -623,7 +362,7 @@ during Hurricane Ivan (2004) with:
 map_event_exposure(storm = "Ivan-2004", event_type = "tornado")
 ```
 
-![](README-unnamed-chunk-19-1.png)
+![](README-unnamed-chunk-19-1.png)<!-- -->
 
 When using this function, note that the types of events reported in the
 NOAA Storm Events Database changed in 1996, so for many event types
@@ -659,7 +398,7 @@ of Hurricane Floyd in 1999, you can run:
 map_tracks(storms = "Floyd-1999")
 ```
 
-![](README-unnamed-chunk-20-1.png)
+![](README-unnamed-chunk-20-1.png)<!-- -->
 
 There are some different options you can use for the tracks’ appearance.
 For example, if you wanted to plot the tracks of several storms, and
@@ -672,7 +411,7 @@ map_tracks(storms = c("Andrew-1992", "Katrina-2005", "Rita-2005"),
            alpha = 0.5, plot_points = TRUE, color = "blue")
 ```
 
-![](README-unnamed-chunk-21-1.png)
+![](README-unnamed-chunk-21-1.png)<!-- -->
 
 As another example, to map all tracks for storms in 2005, you can run:
 
@@ -687,7 +426,7 @@ storms_2005 <- hurr_tracks %>%
 map_tracks(storms = storms_2005$storm_id) 
 ```
 
-![](README-unnamed-chunk-22-1.png)
+![](README-unnamed-chunk-22-1.png)<!-- -->
 
 The `map_tracks` function is used in all the mapping functions described
 in the previous section, to add the storm’s track to the exposure maps.
@@ -697,7 +436,8 @@ storm track (`add_track = FALSE`) and then adding the track yourself
 with the `map_tracks` function. For example, to change the color of the
 storm track in a map of flood event exposure during Hurricane Floyd
 (1999) and to add points showing the available observations for the
-storm in the Best Tracks hurricane tracking data, you can run:
+storm in the Best Tracks hurricane tracking data, you can
+run:
 
 ``` r
 floyd_map <- map_event_exposure(storm = "Floyd-1999", event_type = "flood")
@@ -705,10 +445,9 @@ map_tracks(storms = "Floyd-1999", plot_object = floyd_map, plot_points = TRUE,
            color = "darkgray")
 ```
 
-![](README-unnamed-chunk-23-1.png)
+![](README-unnamed-chunk-23-1.png)<!-- -->
 
-Creating time series datasets of exposure
------------------------------------------
+## Creating time series datasets of exposure
 
 The `hurricaneexposure` package also has several functions that can
 input a list of counties and output a list of all of the storms to which
@@ -727,7 +466,8 @@ Orleans Parish (FIPS 22071), and Newport News, Virginia (FIPS 51700),
 were exposed between 1995 and 2005, where “exposed” means that the storm
 passed within 100 kilometers of the county center and the rainfall over
 a three-day window of the date of closest approach was 100 millimeters
-or more, you can run:
+or more, you can
+run:
 
 ``` r
 county_rain(counties = c("22071", "51700"), start_year = 1995, end_year = 2005,
@@ -774,7 +514,8 @@ county exposures to storms based on wind, distance to the storm track,
 and events listings from the NOAA Storm Events Database (flood and
 tornado events). For example, to get a listing of all storms between
 1988 and 2015 for which Miami-Dade county (FIPS: ) has experienced
-sustained winds of 34 knots or more (17.5 m / s), you can run:
+sustained winds of 34 knots or more (17.5 m / s), you can
+run:
 
 ``` r
 county_wind(counties = "12086", start_year = 1988, end_year = 2015, wind_limit = 17.5)
@@ -849,21 +590,20 @@ from an alternate source. By default, this function uses wind estimates
 for each county from a wind model (see the vignettes for the
 `stormwindmodel` package for much more detail on this modeling process).
 However, you can also pull estimates based on the wind radii from the
-Extended Best Tracks dataset by using the option
-`wind_source = "ext_tracks"`. See the help file for the
-`ext_tracks_wind` dataset that comes with `hurricaneexposuredata` for
-more details on this data source and how the county-specific exposures
-were determined from the data source for use in the `county_wind`
-function. It is important to note that this data results in wind
-estimates with breaks at 34 knots, 50 knots, and 64 knots, rather than
-continuous estimates. This means that a sustained wind estimate from
-this data source of 17.4896 m / s (34 knots) is estimating that the
-county had maximum wind speeds of 34 knots or higher during the storm,
-but not as high as 50 knots. Further, the `dur_sust` value when using
-this data source is based on number of minutes with winds at or above 34
-knots (rather than the 20 m / s value used for durations for the modeled
-wind data). Gust durations can not be determined using this Extended
-Best Tracks dataset.
+Extended Best Tracks dataset by using the option `wind_source =
+"ext_tracks"`. See the help file for the `ext_tracks_wind` dataset that
+comes with `hurricaneexposuredata` for more details on this data source
+and how the county-specific exposures were determined from the data
+source for use in the `county_wind` function. It is important to note
+that this data results in wind estimates with breaks at 34 knots, 50
+knots, and 64 knots, rather than continuous estimates. This means that a
+sustained wind estimate from this data source of 17.4896 m / s (34
+knots) is estimating that the county had maximum wind speeds of 34 knots
+or higher during the storm, but not as high as 50 knots. Further, the
+`dur_sust` value when using this data source is based on number of
+minutes with winds at or above 34 knots (rather than the 20 m / s value
+used for durations for the modeled wind data). Gust durations can not be
+determined using this Extended Best Tracks dataset.
 
 The Extended Best Tracks wind radii dataset is more tied to observations
 during a specific storm than the modeled data. In certain cases,
