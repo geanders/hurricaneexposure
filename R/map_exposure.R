@@ -60,7 +60,7 @@ get_eastern_map <- function(map  = "county"){
                         dplyr::mutate(polyname = stringr::str_replace(.data$polyname,
                                                                          ":.+", ""))
                 map_data <- map_data %>%
-                        tidyr::unite(col = "polyname", from = c("region", "subregion"),
+                        tidyr::unite(col = "polyname", .data$region:.data$subregion,
                                       sep = ",") %>%
                         dplyr::left_join(county.fips, by = "polyname") %>%
                         dplyr::mutate(fips = stringr::str_pad(.data$fips, 5,
