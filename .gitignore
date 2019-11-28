@@ -9,3 +9,5 @@ writing/DraftExposurePaper/DraftExposurePaper_files
 writing/pnas_draft
 .DS_Store
 *Rapp.history
+*.html
+*.R
