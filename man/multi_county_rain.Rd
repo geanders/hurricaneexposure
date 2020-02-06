@@ -4,8 +4,14 @@
 \alias{multi_county_rain}
 \title{Hurricane exposure by rain for communities}
 \usage{
-multi_county_rain(communities, start_year, end_year, rain_limit,
-  dist_limit, days_included = c(-2, -1, 0, 1))
+multi_county_rain(
+  communities,
+  start_year,
+  end_year,
+  rain_limit,
+  dist_limit,
+  days_included = c(-2, -1, 0, 1)
+)
 }
 \arguments{
 \item{communities}{A dataframe with the FIPS codes for all counties within

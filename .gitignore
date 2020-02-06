@@ -2,7 +2,6 @@
 .Rhistory
 .RData
 inst/doc
-data-raw/nasa_precip_export_2.txt
 writing/DraftExposurePaper/DraftExposurePaper_files
 *.pdf
 *.tex

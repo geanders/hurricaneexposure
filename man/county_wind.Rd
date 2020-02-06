@@ -4,8 +4,14 @@
 \alias{county_wind}
 \title{Hurricane exposure by wind for counties}
 \usage{
-county_wind(counties, start_year, end_year, wind_limit,
-  wind_var = "vmax_sust", wind_source = "modeled")
+county_wind(
+  counties,
+  start_year,
+  end_year,
+  wind_limit,
+  wind_var = "vmax_sust",
+  wind_source = "modeled"
+)
 }
 \arguments{
 \item{counties}{Character vector of the five-digit Federal Information

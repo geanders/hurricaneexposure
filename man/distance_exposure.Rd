@@ -4,8 +4,14 @@
 \alias{distance_exposure}
 \title{Write storm distance exposure files}
 \usage{
-distance_exposure(locations, start_year, end_year, dist_limit, out_dir,
-  out_type = "csv")
+distance_exposure(
+  locations,
+  start_year,
+  end_year,
+  dist_limit,
+  out_dir,
+  out_type = "csv"
+)
 }
 \arguments{
 \item{locations}{Either a vector of FIPS county codes, for county-level

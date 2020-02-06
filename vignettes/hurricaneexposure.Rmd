@@ -38,13 +38,13 @@ This package allows users to explore and map data of county-level exposures to A
 If you use this package and the data in the associated data package (`hurricaneexposuredata`) for research, please cite both packages. In particular, be sure to include the version of the packages that you used, as this will make your research project more reproducible, and the data will likely be updated as we get further years of data and find improved ways to measure tropical storm exposure. The two packages can be cited as: 
 
 - Anderson B, Yan M, Ferreri J, Crosson W, Al-Hamdan M, Schumacher A and
- Eddelbuettel D (2017). _hurricaneexposure: Explore and Map County-Level
- Hurricane Exposure in the United States_. R package version 0.0.1, <URL:
+ Eddelbuettel D (2020). _hurricaneexposure: Explore and Map County-Level
+ Hurricane Exposure in the United States_. R package version 0.1.1, <URL:
  https://github.com/geanders/hurricaneexposure>.
 
 - Anderson B, Schumacher A, Crosson W, Al-Hamdan M, Yan M, Ferreri J, Chen Z,
- Quiring S and Guikema S (2017). _hurricaneexposuredata: Data Characterizing
- Exposure to Hurricanes in United States Counties_. R package version 0.0.1,
+ Quiring S and Guikema S (2020). _hurricaneexposuredata: Data Characterizing
+ Exposure to Hurricanes in United States Counties_. R package version 0.1.0,
  <URL: https://github.com/geanders/hurricaneexposuredata>.
   
 To generate BibTex entries for the packages, you can use the `citation` function in R.
@@ -86,10 +86,13 @@ The following table shows the storms covered by the `hurricaneexposuredata` data
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
 library(dplyr)
 library(tidyr)
+library(stringr)
 hurr_tracks %>%
         select(storm_id) %>%
         distinct() %>%
-        separate(storm_id, into = c("storm_name", "Year"), sep = "-") %>%
+        mutate(Year = str_extract(storm_id, "-[0-9].+"),
+               Year = str_remove(Year, "-"),
+               storm_name = str_remove(storm_id, "-[0-9].+")) %>% 
         group_by(Year) %>%
         summarize(Storms = paste(storm_name, collapse = ", ")) %>%
         mutate(Distance = "x",
@@ -220,17 +223,17 @@ map_tracks(storms = c("Andrew-1992", "Katrina-2005", "Rita-2005"),
            alpha = 0.5, plot_points = TRUE, color = "blue")
 ```
 
-As another example, to map all tracks for storms in 2005, you can run:
+As another example, to map all tracks for storms in 2018, you can run:
 
 ```{r fig.width = 5.5, fig.height = 4}
 library(dplyr)
 library(tidyr)
-storms_2005 <- hurr_tracks %>%
+storms_2018 <- hurr_tracks %>%
         select(storm_id) %>%
         distinct() %>%
         separate(storm_id, c("name", "year"), sep = "-", remove = FALSE) %>%
-        filter(year == "2005")
-map_tracks(storms = storms_2005$storm_id) 
+        filter(year == "2018")
+map_tracks(storms = storms_2018$storm_id) 
 ```
 
 The `map_tracks` function is used in all the mapping functions described in the previous section, to add the storm's track to the exposure maps. However, if you would like to customize the appearance of the storm's track on the map, you can do so by plotting the exposure map without the storm track (`add_track = FALSE`) and then adding the track yourself with the `map_tracks` function. For example, to change the color of the storm track in a map of flood event exposure during Hurricane Floyd (1999) and to add points showing the available observations for the storm in the Best Tracks hurricane tracking data, you can run:

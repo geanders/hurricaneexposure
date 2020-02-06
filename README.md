@@ -21,15 +21,15 @@ improved ways to measure tropical storm exposure. The two packages can
 be cited as:
 
   - Anderson B, Yan M, Ferreri J, Crosson W, Al-Hamdan M, Schumacher A
-    and Eddelbuettel D (2017). *hurricaneexposure: Explore and Map
+    and Eddelbuettel D (2020). *hurricaneexposure: Explore and Map
     County-Level Hurricane Exposure in the United States*. R package
-    version 0.0.1, \<URL:
+    version 0.1.1, \<URL:
     <http://CRAN.R-project.org/package=hurricaneexposure>\>.
 
   - Anderson B, Schumacher A, Crosson W, Al-Hamdan M, Yan M, Ferreri J,
-    Chen Z, Quiring S and Guikema S (2017). *hurricaneexposuredata: Data
+    Chen Z, Quiring S and Guikema S (2020). *hurricaneexposuredata: Data
     Characterizing Exposure to Hurricanes in United States Counties*. R
-    package version 0.0.1, \<URL:
+    package version 0.1.0, \<URL:
     <https://github.com/geanders/hurricaneexposuredata>\>.
 
 To generate BibTex entries for the packages, you can use the `citation`
@@ -93,13 +93,15 @@ the data on hurricane tracks (`hurr_tracks`) using:
 library(hurricaneexposuredata)
 data("hurr_tracks")
 head(hurr_tracks)
-#>       storm_id         date latitude longitude wind
-#> 1 Alberto-1988 198808051800     32.0     -77.5   20
-#> 2 Alberto-1988 198808060000     32.8     -76.2   20
-#> 3 Alberto-1988 198808060600     34.0     -75.2   20
-#> 4 Alberto-1988 198808061200     35.2     -74.6   25
-#> 5 Alberto-1988 198808061800     37.0     -73.5   25
-#> 6 Alberto-1988 198808070000     38.7     -72.4   25
+#> # A tibble: 6 x 6
+#>   storm_id     usa_atcf_id date         latitude longitude  wind
+#>   <chr>        <chr>       <chr>           <dbl>     <dbl> <dbl>
+#> 1 Alberto-1988 AL011988    198808051800     32       -77.5    20
+#> 2 Alberto-1988 AL011988    198808060000     32.8     -76.2    20
+#> 3 Alberto-1988 AL011988    198808060600     34       -75.2    20
+#> 4 Alberto-1988 AL011988    198808061200     35.2     -74.6    25
+#> 5 Alberto-1988 AL011988    198808061800     37       -73.5    25
+#> 6 Alberto-1988 AL011988    198808070000     38.7     -72.4    25
 ```
 
 For each dataset included in `hurricaneexposuredata`, you can see the
@@ -115,38 +117,39 @@ are available for each year. All storms passed within 250 km of at least
 one U.S.
 county.
 
-| Year | Storms                                                                      | Distance | Wind | Rain | Flood | Tornado |
-| :--: | :-------------------------------------------------------------------------- | :------: | :--: | :--: | :---: | :-----: |
-| 1988 | Alberto, Beryl, Chris, Florence, Gilbert, Keith                             |    x     |  x   |  x   |       |    x    |
-| 1989 | Allison, Chantal, Hugo, Jerry                                               |    x     |  x   |  x   |       |    x    |
-| 1990 | Bertha, Marco                                                               |    x     |  x   |  x   |       |    x    |
-| 1991 | Ana, Bob, Fabian, Notnamed                                                  |    x     |  x   |  x   |       |    x    |
-| 1992 | Andrew, Danielle, Earl                                                      |    x     |  x   |  x   |       |    x    |
-| 1993 | Arlene, Emily                                                               |    x     |  x   |  x   |       |    x    |
-| 1994 | Alberto, Beryl, Gordon                                                      |    x     |  x   |  x   |       |    x    |
-| 1995 | Allison, Dean, Erin, Gabrielle, Jerry, Opal                                 |    x     |  x   |  x   |       |    x    |
-| 1996 | Arthur, Bertha, Edouard, Fran, Josephine                                    |    x     |  x   |  x   |   x   |    x    |
-| 1997 | Subtrop, Ana, Danny                                                         |    x     |  x   |  x   |   x   |    x    |
-| 1998 | Bonnie, Charley, Earl, Frances, Georges, Hermine, Mitch                     |    x     |  x   |  x   |   x   |    x    |
-| 1999 | Bret, Dennis, Floyd, Harvey, Irene                                          |    x     |  x   |  x   |   x   |    x    |
-| 2000 | Beryl, Gordon, Helene, Leslie                                               |    x     |  x   |  x   |   x   |    x    |
-| 2001 | Allison, Barry, Gabrielle, Michelle                                         |    x     |  x   |  x   |   x   |    x    |
-| 2002 | Arthur, Bertha, Cristobal, Edouard, Fay, Gustav, Hanna, Isidore, Kyle, Lili |    x     |  x   |  x   |   x   |    x    |
-| 2003 | Bill, Claudette, Erika, Grace, Henri, Isabel                                |    x     |  x   |  x   |   x   |    x    |
-| 2004 | Alex, Bonnie, Charley, Frances, Gaston, Hermine, Ivan, Jeanne, Matthew      |    x     |  x   |  x   |   x   |    x    |
-| 2005 | Arlene, Cindy, Dennis, Emily, Katrina, Ophelia, Rita, Tammy, Wilma          |    x     |  x   |  x   |   x   |    x    |
-| 2006 | Alberto, Beryl, Chris, Ernesto                                              |    x     |  x   |  x   |   x   |    x    |
-| 2007 | Andrea, Barry, Erin, Gabrielle, Humberto, Noel                              |    x     |  x   |  x   |   x   |    x    |
-| 2008 | Cristobal, Dolly, Edouard, Fay, Gustav, Hanna, Ike, Kyle, Paloma            |    x     |  x   |  x   |   x   |    x    |
-| 2009 | Claudette, Ida                                                              |    x     |  x   |  x   |   x   |    x    |
-| 2010 | Alex, Bonnie, Earl, Hermine, Nicole, Paula                                  |    x     |  x   |  x   |   x   |    x    |
-| 2011 | Bret, Don, Emily, Irene, Lee                                                |    x     |  x   |  x   |   x   |    x    |
-| 2012 | Alberto, Beryl, Debby, Isaac, Sandy                                         |    x     |  x   |      |   x   |    x    |
-| 2013 | Andrea, Dorian, Karen                                                       |    x     |  x   |      |   x   |    x    |
-| 2014 | Arthur                                                                      |    x     |  x   |      |   x   |    x    |
-| 2015 | Ana, Bill, Claudette                                                        |    x     |  x   |      |   x   |    x    |
-| 2016 | Bonnie, Colin, Td08, Hermine, Julia, Matthew                                |    x     |  x   |      |   x   |    x    |
-| 2017 | Cindy, Emily, Harvey, Ptc10, Irma, Jose, Nate, Philippe                     |    x     |  x   |      |   x   |    x    |
+| Year | Storms                                                                         | Distance | Wind | Rain | Flood | Tornado |
+| :--: | :----------------------------------------------------------------------------- | :------: | :--: | :--: | :---: | :-----: |
+| 1988 | Alberto, Beryl, Chris, Florence, Gilbert, Keith, AL13, AL14, AL17              |    x     |  x   |  x   |       |    x    |
+| 1989 | Allison, Chantal, Hugo, Jerry                                                  |    x     |  x   |  x   |       |    x    |
+| 1990 | AL01, Bertha, Marco                                                            |    x     |  x   |  x   |       |    x    |
+| 1991 | Ana, Bob, Fabian, AL12                                                         |    x     |  x   |  x   |       |    x    |
+| 1992 | AL02, Andrew, Danielle, Earl                                                   |    x     |  x   |  x   |       |    x    |
+| 1993 | AL01, Arlene, Emily                                                            |    x     |  x   |  x   |       |    x    |
+| 1994 | Alberto, AL02, Beryl, Gordon                                                   |    x     |  x   |  x   |       |    x    |
+| 1995 | Allison, Dean, Erin, Gabrielle, Jerry, Opal                                    |    x     |  x   |  x   |       |    x    |
+| 1996 | Arthur, Bertha, Edouard, Fran, Josephine                                       |    x     |  x   |  x   |   x   |    x    |
+| 1997 | AL01, Ana, Danny                                                               |    x     |  x   |  x   |   x   |    x    |
+| 1998 | Bonnie, Charley, Earl, Frances, Georges, Hermine, Mitch                        |    x     |  x   |  x   |   x   |    x    |
+| 1999 | Bret, Dennis, AL07, Floyd, Harvey, Irene                                       |    x     |  x   |  x   |   x   |    x    |
+| 2000 | AL04, Beryl, AL09, Gordon, Helene, Leslie                                      |    x     |  x   |  x   |   x   |    x    |
+| 2001 | Allison, Barry, Gabrielle, Karen, Michelle                                     |    x     |  x   |  x   |   x   |    x    |
+| 2002 | Arthur, Bertha, Cristobal, Edouard, Fay, Gustav, Hanna, Isidore, Kyle, Lili    |    x     |  x   |  x   |   x   |    x    |
+| 2003 | Bill, Claudette, AL07, Erika, Grace, Henri, Isabel                             |    x     |  x   |  x   |   x   |    x    |
+| 2004 | Alex, Bonnie, Charley, Frances, Gaston, Hermine, Ivan, Jeanne, Matthew         |    x     |  x   |  x   |   x   |    x    |
+| 2005 | Arlene, Cindy, Dennis, Emily, Katrina, Ophelia, Rita, Tammy, Twenty-Two, Wilma |    x     |  x   |  x   |   x   |    x    |
+| 2006 | Alberto, Beryl, Chris, Ernesto                                                 |    x     |  x   |  x   |   x   |    x    |
+| 2007 | Andrea, Barry, Erin, Gabrielle, Humberto, Ten, Noel                            |    x     |  x   |  x   |   x   |    x    |
+| 2008 | Cristobal, Dolly, Edouard, Fay, Gustav, Hanna, Ike, Kyle, Paloma               |    x     |  x   |  x   |   x   |    x    |
+| 2009 | One, Claudette, Ida                                                            |    x     |  x   |  x   |   x   |    x    |
+| 2010 | Alex, Two, Bonnie, Five, Earl, Hermine, Nicole, Paula                          |    x     |  x   |  x   |   x   |    x    |
+| 2011 | Bret, Don, Emily, Irene, Lee                                                   |    x     |  x   |  x   |   x   |    x    |
+| 2012 | Alberto, Beryl, Debby, Isaac, Sandy                                            |    x     |  x   |      |   x   |    x    |
+| 2013 | Andrea, Dorian, Karen                                                          |    x     |  x   |      |   x   |    x    |
+| 2014 | Arthur                                                                         |    x     |  x   |      |   x   |    x    |
+| 2015 | Ana, Bill, Claudette                                                           |    x     |  x   |      |   x   |    x    |
+| 2016 | Bonnie, Colin, Eight, Hermine, Julia, Matthew                                  |    x     |  x   |      |   x   |    x    |
+| 2017 | Cindy, Emily, Harvey, Irma, Jose, Nate, Philippe                               |    x     |  x   |      |   x   |    x    |
+| 2018 | Alberto, Chris, Florence, Gordon, Michael                                      |    x     |  x   |      |   x   |    x    |
 
 In functions throughout the `hurricaneexposure` package, storms are
 identified based on their name and year (e.g., Hurricane Floyd in 1999
@@ -178,7 +181,7 @@ using the following call:
 map_counties(storm = "Floyd-1999", metric = "rainfall")
 ```
 
-![](README-unnamed-chunk-7-1.png)<!-- -->
+![](README-unnamed-chunk-6-1.png)<!-- -->
 
 By default, this map shows the cumulative rain in each county for two
 days before to one day after the date that the storm passed closest to
@@ -199,14 +202,14 @@ map_counties(storm = "Allison-2001", metric = "rainfall", days_included = -1:0) 
         ggplot2::ggtitle("Rain during Allison (2001) for day before and day of closest approach")
 ```
 
-![](README-unnamed-chunk-8-1.png)<!-- -->
+![](README-unnamed-chunk-7-1.png)<!-- -->
 
 ``` r
 map_counties(storm = "Allison-2001", metric = "rainfall", days_included = -5:3) + 
         ggplot2::ggtitle("Rain during Allison (2001) for five days before to three days\nafter the day of closest approach")
 ```
 
-![](README-unnamed-chunk-9-1.png)<!-- -->
+![](README-unnamed-chunk-8-1.png)<!-- -->
 
 You can also use the `map_counties` function to plot the maximum wind
 during the storm for each county. For this, you use the argument `metric
@@ -217,7 +220,7 @@ Hurricane Katrina (2005) with the call:
 map_counties(storm = "Katrina-2005", metric = "wind")
 ```
 
-![](README-unnamed-chunk-10-1.png)<!-- -->
+![](README-unnamed-chunk-9-1.png)<!-- -->
 
 These county winds are determined based on a model of wind speeds, using
 as input data from the hurricane tracks data. See the documentation for
@@ -234,7 +237,7 @@ the argument `wind_var = "sust_dur"`:
 map_counties("Katrina-2005", metric = "wind", wind_var = "sust_dur")
 ```
 
-![](README-unnamed-chunk-11-1.png)<!-- -->
+![](README-unnamed-chunk-10-1.png)<!-- -->
 
 You can map estimated gust winds, rather than sustained winds (the
 default), using the argument `wind_var = "vmax_gust"`. Further, we have
@@ -261,7 +264,7 @@ run:
 map_counties("Katrina-2005", metric = "wind", wind_source = "ext_tracks")
 ```
 
-![](README-unnamed-chunk-12-1.png)<!-- -->
+![](README-unnamed-chunk-11-1.png)<!-- -->
 
 Finally, you can also use the `map_counties` function to plot the
 closest distance between the storm and each county. For this, you use
@@ -272,7 +275,7 @@ plots county-level distances from the track of Hurricane Sandy (2012):
 map_counties(storm = "Sandy-2012", metric = "distance")
 ```
 
-![](README-unnamed-chunk-13-1.png)<!-- -->
+![](README-unnamed-chunk-12-1.png)<!-- -->
 
 See the documentation for the `closest_dist` dataset (`?closest_dist`)
 for more details on how distances from the storm track were calculated
@@ -298,7 +301,7 @@ km of Hurricane Sandy’s storm track with the call:
 map_distance_exposure(storm = "Sandy-2012", dist_limit = 75)
 ```
 
-![](README-unnamed-chunk-14-1.png)<!-- -->
+![](README-unnamed-chunk-13-1.png)<!-- -->
 
 Similarly, you can map binary county exposure based on rain using
 `map_rain_exposure`. In the case of rain, you must define exposure
@@ -318,7 +321,7 @@ map_rain_exposure(storm = "Allison-2001", rain_limit = 175, dist_limit = 500,
                   days_included = -5:3)
 ```
 
-![](README-unnamed-chunk-15-1.png)<!-- -->
+![](README-unnamed-chunk-14-1.png)<!-- -->
 
 As with the continuous maps of rain exposure, the number of days
 included to calculate cumulative rain can be adjusted with the
@@ -334,7 +337,7 @@ Katrina, you can run:
 map_wind_exposure(storm = "Katrina-2005", wind_limit = 20)
 ```
 
-![](README-unnamed-chunk-16-1.png)<!-- -->
+![](README-unnamed-chunk-15-1.png)<!-- -->
 
 If you would like to base a wind threshold on knots rather than m / s,
 you can use the `convert_wind_speed` function from the `weathermetrics`
@@ -347,7 +350,7 @@ map_wind_exposure(storm = "Katrina-2005",
                   wind_limit = convert_wind_speed(34, "knots", "mps"))
 ```
 
-![](README-unnamed-chunk-17-1.png)<!-- -->
+![](README-unnamed-chunk-16-1.png)<!-- -->
 
 Finally, you can map which counties were exposed to specific types of
 events, as listed in the NOAA Storm Events Database, using the
@@ -358,7 +361,7 @@ which a flood event was listed for Hurricane Floyd (1999) with the call:
 map_event_exposure(storm = "Floyd-1999", event_type = "flood")
 ```
 
-![](README-unnamed-chunk-18-1.png)<!-- -->
+![](README-unnamed-chunk-17-1.png)<!-- -->
 
 Similarly, you can map which counties were exposed to tornado events
 during Hurricane Ivan (2004) with:
@@ -367,7 +370,7 @@ during Hurricane Ivan (2004) with:
 map_event_exposure(storm = "Ivan-2004", event_type = "tornado")
 ```
 
-![](README-unnamed-chunk-19-1.png)<!-- -->
+![](README-unnamed-chunk-18-1.png)<!-- -->
 
 When using this function, note that the types of events reported in the
 NOAA Storm Events Database changed in 1996, so for many event types
@@ -403,7 +406,7 @@ of Hurricane Floyd in 1999, you can run:
 map_tracks(storms = "Floyd-1999")
 ```
 
-![](README-unnamed-chunk-20-1.png)<!-- -->
+![](README-unnamed-chunk-19-1.png)<!-- -->
 
 There are some different options you can use for the tracks’ appearance.
 For example, if you wanted to plot the tracks of several storms, and
@@ -416,7 +419,7 @@ map_tracks(storms = c("Andrew-1992", "Katrina-2005", "Rita-2005"),
            alpha = 0.5, plot_points = TRUE, color = "blue")
 ```
 
-![](README-unnamed-chunk-21-1.png)<!-- -->
+![](README-unnamed-chunk-20-1.png)<!-- -->
 
 As another example, to map all tracks for storms in 2005, you can run:
 
@@ -428,10 +431,11 @@ storms_2005 <- hurr_tracks %>%
         distinct() %>%
         separate(storm_id, c("name", "year"), sep = "-", remove = FALSE) %>%
         filter(year == "2005")
+#> Warning: Expected 2 pieces. Additional pieces discarded in 1 rows [104].
 map_tracks(storms = storms_2005$storm_id) 
 ```
 
-![](README-unnamed-chunk-22-1.png)<!-- -->
+![](README-unnamed-chunk-21-1.png)<!-- -->
 
 The `map_tracks` function is used in all the mapping functions described
 in the previous section, to add the storm’s track to the exposure maps.
@@ -450,7 +454,7 @@ map_tracks(storms = "Floyd-1999", plot_object = floyd_map, plot_points = TRUE,
            color = "darkgray")
 ```
 
-![](README-unnamed-chunk-23-1.png)<!-- -->
+![](README-unnamed-chunk-22-1.png)<!-- -->
 
 ## Creating time series datasets of exposure
 
@@ -478,21 +482,21 @@ run:
 county_rain(counties = c("22071", "51700"), start_year = 1995, end_year = 2005,
             rain_limit = 100, dist_limit = 100, days_included = c(-1, 0, 1))
 #>        storm_id  fips closest_date storm_dist tot_precip       local_time
-#> 1:    Bill-2003 22071   2003-06-30  38.798751      141.1 2003-06-30 18:00
-#> 2: Charley-2004 51700   2004-08-14  43.028152      136.2 2004-08-14 19:45
-#> 3:   Cindy-2005 22071   2005-07-06  32.226688      113.2 2005-07-06 02:15
-#> 4:   Floyd-1999 51700   1999-09-16  46.514476      207.5 1999-09-16 11:15
-#> 5: Isidore-2002 22071   2002-09-26   6.379359      249.0 2002-09-26 05:45
-#> 6: Katrina-2005 22071   2005-08-29  36.889346      196.2 2005-08-29 08:45
-#> 7: Matthew-2004 22071   2004-10-10  71.770774      123.2 2004-10-10 11:00
+#> 1:    Bill-2003 22071   2003-06-30   47.74045      141.1 2003-06-30 18:15
+#> 2: Charley-2004 51700   2004-08-14   55.58752      136.2 2004-08-14 19:45
+#> 3:   Cindy-2005 22071   2005-07-06   26.62602      113.2 2005-07-06 02:15
+#> 4:   Floyd-1999 51700   1999-09-16   49.43163      207.5 1999-09-16 11:15
+#> 5: Isidore-2002 22071   2002-09-26   14.27431      249.0 2002-09-26 06:45
+#> 6: Katrina-2005 22071   2005-08-29   44.07046      196.2 2005-08-29 09:00
+#> 7: Matthew-2004 22071   2004-10-10   74.88275      123.2 2004-10-10 10:00
 #>    closest_time_utc
-#> 1: 2003-06-30 23:00
+#> 1: 2003-06-30 23:15
 #> 2: 2004-08-14 23:45
 #> 3: 2005-07-06 07:15
 #> 4: 1999-09-16 15:15
-#> 5: 2002-09-26 10:45
-#> 6: 2005-08-29 13:45
-#> 7: 2004-10-10 16:00
+#> 5: 2002-09-26 11:45
+#> 6: 2005-08-29 14:00
+#> 7: 2004-10-10 15:00
 ```
 
 This function draws on the same dataset (`rain`) from the
@@ -524,28 +528,28 @@ run:
 
 ``` r
 county_wind(counties = "12086", start_year = 1988, end_year = 2015, wind_limit = 17.5)
-#>        storm_id  fips vmax_sust vmax_gust sust_dur gust_dur
-#> 1   Andrew-1992 12086  52.09217  77.61733      615      945
-#> 2    Mitch-1998 12086  20.59866  30.69200       90      360
-#> 3   Harvey-1999 12086  21.99725  32.77590       90      345
-#> 4    Irene-1999 12086  31.25318  46.56723      690     1230
-#> 5  Frances-2004 12086  20.65824  30.78078      105     1935
-#> 6   Jeanne-2004 12086  19.91442  29.67249        0     1080
-#> 7  Katrina-2005 12086  32.34194  48.18949      495     1710
-#> 8    Wilma-2005 12086  30.97431  46.15172      345      630
-#> 9  Ernesto-2006 12086  18.02619  26.85902        0      795
-#> 10     Fay-2008 12086  19.54363  29.12001        0     1290
+#>        storm_id  fips vmax_sust vmax_gust sust_dur gust_dur usa_atcf_id
+#> 1   Andrew-1992 12086  56.60869  84.34695      615      960    AL041992
+#> 2    Mitch-1998 12086  18.79781  28.00873        0      285    AL131998
+#> 3   Harvey-1999 12086  23.01816  34.29706       75      285    AL101999
+#> 4    Irene-1999 12086  31.88419  47.50744      615     1290    AL131999
+#> 5  Frances-2004 12086  20.77793  30.95911      285     1830    AL062004
+#> 6   Jeanne-2004 12086  20.53852  30.60239       90     1065    AL112004
+#> 7  Katrina-2005 12086  33.14848  49.39124      525     1740    AL122005
+#> 8    Wilma-2005 12086  33.32450  49.65351      315      600    AL252005
+#> 9  Ernesto-2006 12086  18.02811  26.86188        0      765    AL062006
+#> 10     Fay-2008 12086  18.85232  28.08996        0     1305    AL062008
 #>    closest_time_utc storm_dist       local_time closest_date
-#> 1  1992-08-24 09:15   31.31286 1992-08-24 05:15   1992-08-24
-#> 2  1998-11-05 12:45  102.04444 1998-11-05 07:45   1998-11-05
-#> 3  1999-09-21 19:45   57.10720 1999-09-21 15:45   1999-09-21
-#> 4  1999-10-15 23:15   43.56651 1999-10-15 19:15   1999-10-15
-#> 5  2004-09-05 03:00  151.32475 2004-09-04 23:00   2004-09-04
-#> 6  2004-09-26 02:45  162.43780 2004-09-25 22:45   2004-09-25
-#> 7  2005-08-25 23:45   10.79344 2005-08-25 19:45   2005-08-25
-#> 8  2005-10-24 12:45   92.39233 2005-10-24 08:45   2005-10-24
-#> 9  2006-08-30 09:00   62.72953 2006-08-30 05:00   2006-08-30
-#> 10 2008-08-19 11:45  123.94933 2008-08-19 07:45   2008-08-19
+#> 1  1992-08-24 09:00   30.48032 1992-08-24 05:00   1992-08-24
+#> 2  1998-11-05 12:45  130.19217 1998-11-05 07:45   1998-11-05
+#> 3  1999-09-21 20:45   48.90460 1999-09-21 16:45   1999-09-21
+#> 4  1999-10-15 23:15   43.07201 1999-10-15 19:15   1999-10-15
+#> 5  2004-09-05 02:30  156.03624 2004-09-04 22:30   2004-09-04
+#> 6  2004-09-26 03:15  156.99903 2004-09-25 23:15   2004-09-25
+#> 7  2005-08-26 00:30   12.33865 2005-08-25 20:30   2005-08-25
+#> 8  2005-10-24 12:45   76.55817 2005-10-24 08:45   2005-10-24
+#> 9  2006-08-30 09:15   69.47981 2006-08-30 05:15   2006-08-30
+#> 10 2008-08-19 10:15  127.08899 2008-08-19 06:15   2008-08-19
 ```
 
 The returned dataframe includes the estimated maximum values during the
@@ -572,22 +576,22 @@ specified in minutes), you can run:
 ``` r
 county_wind(counties = "12086", start_year = 1988, end_year = 2015, 
             wind_var = "sust_dur", wind_limit = 60)
-#>       storm_id  fips vmax_sust vmax_gust sust_dur gust_dur
-#> 1  Andrew-1992 12086  52.09217  77.61733      615      945
-#> 2   Mitch-1998 12086  20.59866  30.69200       90      360
-#> 3  Harvey-1999 12086  21.99725  32.77590       90      345
-#> 4   Irene-1999 12086  31.25318  46.56723      690     1230
-#> 5 Frances-2004 12086  20.65824  30.78078      105     1935
-#> 6 Katrina-2005 12086  32.34194  48.18949      495     1710
-#> 7   Wilma-2005 12086  30.97431  46.15172      345      630
+#>       storm_id  fips vmax_sust vmax_gust sust_dur gust_dur usa_atcf_id
+#> 1  Andrew-1992 12086  56.60869  84.34695      615      960    AL041992
+#> 2  Harvey-1999 12086  23.01816  34.29706       75      285    AL101999
+#> 3   Irene-1999 12086  31.88419  47.50744      615     1290    AL131999
+#> 4 Frances-2004 12086  20.77793  30.95911      285     1830    AL062004
+#> 5  Jeanne-2004 12086  20.53852  30.60239       90     1065    AL112004
+#> 6 Katrina-2005 12086  33.14848  49.39124      525     1740    AL122005
+#> 7   Wilma-2005 12086  33.32450  49.65351      315      600    AL252005
 #>   closest_time_utc storm_dist       local_time closest_date
-#> 1 1992-08-24 09:15   31.31286 1992-08-24 05:15   1992-08-24
-#> 2 1998-11-05 12:45  102.04444 1998-11-05 07:45   1998-11-05
-#> 3 1999-09-21 19:45   57.10720 1999-09-21 15:45   1999-09-21
-#> 4 1999-10-15 23:15   43.56651 1999-10-15 19:15   1999-10-15
-#> 5 2004-09-05 03:00  151.32475 2004-09-04 23:00   2004-09-04
-#> 6 2005-08-25 23:45   10.79344 2005-08-25 19:45   2005-08-25
-#> 7 2005-10-24 12:45   92.39233 2005-10-24 08:45   2005-10-24
+#> 1 1992-08-24 09:00   30.48032 1992-08-24 05:00   1992-08-24
+#> 2 1999-09-21 20:45   48.90460 1999-09-21 16:45   1999-09-21
+#> 3 1999-10-15 23:15   43.07201 1999-10-15 19:15   1999-10-15
+#> 4 2004-09-05 02:30  156.03624 2004-09-04 22:30   2004-09-04
+#> 5 2004-09-26 03:15  156.99903 2004-09-25 23:15   2004-09-25
+#> 6 2005-08-26 00:30   12.33865 2005-08-25 20:30   2005-08-25
+#> 7 2005-10-24 12:45   76.55817 2005-10-24 08:45   2005-10-24
 ```
 
 Further, the `county_wind` function allows you to pull wind estimates
@@ -623,24 +627,24 @@ you can run:
 ``` r
 county_wind(counties = "12086", start_year = 1988, end_year = 2015, 
             wind_var = "vmax_sust", wind_limit = 17.4, wind_source = "ext_tracks")
-#>       storm_id  fips vmax_sust vmax_gust sust_dur closest_time_utc
-#> 1  Bonnie-2010 12086   17.4896  26.05950        0 2010-07-23 15:45
-#> 2 Frances-2004 12086   17.4896  26.05950        0 2004-09-05 03:00
-#> 3 Ernesto-2006 12086   17.4896  26.05950        0 2006-08-30 09:00
-#> 4     Fay-2008 12086   17.4896  26.05950        0 2008-08-19 11:45
-#> 5   Isaac-2012 12086   17.4896  26.05950        0 2012-08-26 16:15
-#> 6  Jeanne-2004 12086   17.4896  26.05950        0 2004-09-26 02:45
-#> 7 Katrina-2005 12086   32.9216  49.05318      375 2005-08-25 23:45
-#> 8   Wilma-2005 12086   32.9216  49.05318      405 2005-10-24 12:45
+#>       storm_id  fips vmax_sust vmax_gust sust_dur usa_atcf_id closest_time_utc
+#> 1  Bonnie-2010 12086   17.4896  26.05950      180    AL032010 2010-07-23 15:30
+#> 2 Ernesto-2006 12086   17.4896  26.05950      855    AL062006 2006-08-30 09:15
+#> 3     Fay-2008 12086   17.4896  26.05950     1230    AL062008 2008-08-19 10:15
+#> 4 Frances-2004 12086   17.4896  26.05950     1455    AL062004 2004-09-05 02:30
+#> 5   Isaac-2012 12086   17.4896  26.05950      720    AL092012 2012-08-26 15:15
+#> 6  Jeanne-2004 12086   17.4896  26.05950      570    AL112004 2004-09-26 03:15
+#> 7 Katrina-2005 12086   32.9216  49.05318      720    AL122005 2005-08-26 00:30
+#> 8   Wilma-2005 12086   32.9216  49.05318      795    AL252005 2005-10-24 12:45
 #>   storm_dist       local_time closest_date
-#> 1   43.90767 2010-07-23 11:45   2010-07-23
-#> 2  151.32475 2004-09-04 23:00   2004-09-04
-#> 3   62.72953 2006-08-30 05:00   2006-08-30
-#> 4  123.94933 2008-08-19 07:45   2008-08-19
-#> 5  252.79370 2012-08-26 12:15   2012-08-26
-#> 6  162.43780 2004-09-25 22:45   2004-09-25
-#> 7   10.79344 2005-08-25 19:45   2005-08-25
-#> 8   92.39233 2005-10-24 08:45   2005-10-24
+#> 1   27.25331 2010-07-23 11:30   2010-07-23
+#> 2   69.47981 2006-08-30 05:15   2006-08-30
+#> 3  127.08899 2008-08-19 06:15   2008-08-19
+#> 4  156.03624 2004-09-04 22:30   2004-09-04
+#> 5  248.34174 2012-08-26 11:15   2012-08-26
+#> 6  156.99903 2004-09-25 23:15   2004-09-25
+#> 7   12.33865 2005-08-25 20:30   2005-08-25
+#> 8   76.55817 2005-10-24 08:45   2005-10-24
 ```
 
 The `county_distance` function can similarly be used to generate a
@@ -651,28 +655,26 @@ km of Orleans Parish (FIPS 22071) between 1988 and 2015, you can run:
 ``` r
 county_distance(counties = "22071", start_year = 1988, end_year = 2015,
                 dist_limit = 50)
-#>          storm_id  fips closest_date storm_dist       local_time
-#>  1:    Beryl-1988 22071   1988-08-09   6.552771 1988-08-09 05:30
-#>  2: Florence-1988 22071   1988-09-10   9.345350 1988-09-10 02:30
-#>  3:  Hermine-1998 22071   1998-09-20  48.187242 1998-09-20 06:45
-#>  4:  Allison-2001 22071   2001-06-11  31.441595 2001-06-11 02:45
-#>  5:   Bertha-2002 22071   2002-08-05  13.776331 2002-08-05 04:00
-#>  6:  Isidore-2002 22071   2002-09-26   6.379359 2002-09-26 05:45
-#>  7:     Bill-2003 22071   2003-06-30  38.798751 2003-06-30 18:00
-#>  8:    Cindy-2005 22071   2005-07-06  32.226688 2005-07-06 02:15
-#>  9:  Katrina-2005 22071   2005-08-29  36.889346 2005-08-29 08:45
-#> 10:   Bonnie-2010 22071   2010-07-25  42.545866 2010-07-25 06:30
-#>     closest_time_utc
-#>  1: 1988-08-09 10:30
-#>  2: 1988-09-10 07:30
-#>  3: 1998-09-20 11:45
-#>  4: 2001-06-11 07:45
-#>  5: 2002-08-05 09:00
-#>  6: 2002-09-26 10:45
-#>  7: 2003-06-30 23:00
-#>  8: 2005-07-06 07:15
-#>  9: 2005-08-29 13:45
-#> 10: 2010-07-25 11:30
+#>         storm_id  fips closest_date storm_dist       local_time
+#> 1:    Beryl-1988 22071   1988-08-09   3.379783 1988-08-09 04:45
+#> 2: Florence-1988 22071   1988-09-10   4.217016 1988-09-10 03:00
+#> 3:  Allison-2001 22071   2001-06-11  23.289781 2001-06-11 02:30
+#> 4:   Bertha-2002 22071   2002-08-05  16.190337 2002-08-05 03:45
+#> 5:  Isidore-2002 22071   2002-09-26  14.274314 2002-09-26 06:45
+#> 6:     Bill-2003 22071   2003-06-30  47.740448 2003-06-30 18:15
+#> 7:    Cindy-2005 22071   2005-07-06  26.626022 2005-07-06 02:15
+#> 8:  Katrina-2005 22071   2005-08-29  44.070459 2005-08-29 09:00
+#> 9:   Bonnie-2010 22071   2010-07-25  40.631881 2010-07-25 05:30
+#>    closest_time_utc
+#> 1: 1988-08-09 09:45
+#> 2: 1988-09-10 08:00
+#> 3: 2001-06-11 07:30
+#> 4: 2002-08-05 08:45
+#> 5: 2002-09-26 11:45
+#> 6: 2003-06-30 23:15
+#> 7: 2005-07-06 07:15
+#> 8: 2005-08-29 14:00
+#> 9: 2010-07-25 10:30
 ```
 
 Finally, you can use the `county_events` function to get a listing of
@@ -683,32 +685,32 @@ Virginia, (FIPS: 51710) had a flood event listing, you can run:
 ``` r
 county_events(counties = "51710", start_year = 1996, end_year = 2015, 
               event_type = "flood")
-#>     fips       storm_id closest_time_utc storm_dist       local_time
-#> 1  51710    Arthur-1996 1996-06-20 07:45  167.10308 1996-06-20 03:45
-#> 2  51710   Subtrop-1997 1997-06-01 19:00  254.54878 1997-06-01 15:00
-#> 3  51710    Dennis-1999 1999-09-05 04:15  191.57300 1999-09-05 00:15
-#> 4  51710     Floyd-1999 1999-09-16 15:00   17.92660 1999-09-16 11:00
-#> 5  51710     Irene-1999 1999-10-18 06:30  255.38520 1999-10-18 02:30
-#> 6  51710      Kyle-2002 2002-10-12 08:15  140.41756 2002-10-12 04:15
-#> 7  51710      Alex-2004 2004-08-03 19:30  203.07359 2004-08-03 15:30
-#> 8  51710   Alberto-2006 2006-06-14 20:30   87.95466 2006-06-14 16:30
-#> 9  51710   Ernesto-2006 2006-09-01 23:15   72.96420 2006-09-01 19:15
-#> 10 51710     Irene-2011 2011-08-28 00:45   54.83126 2011-08-27 20:45
-#> 11 51710     Sandy-2012 2012-10-29 23:15  315.83172 2012-10-29 19:15
-#> 12 51710 Claudette-2015 2015-07-12 00:00  180.56643 2015-07-11 20:00
-#>    closest_date
-#> 1    1996-06-20
-#> 2    1997-06-01
-#> 3    1999-09-05
-#> 4    1999-09-16
-#> 5    1999-10-18
-#> 6    2002-10-12
-#> 7    2004-08-03
-#> 8    2006-06-14
-#> 9    2006-09-01
-#> 10   2011-08-27
-#> 11   2012-10-29
-#> 12   2015-07-11
+#>     fips       storm_id usa_atcf_id closest_time_utc storm_dist
+#> 1  51710    Arthur-1996    AL011996 1996-06-20 08:00  164.49133
+#> 2  51710      AL01-1997    AL011997 1997-06-01 18:30  246.23488
+#> 3  51710    Dennis-1999    AL051999 1999-09-05 05:00  200.44453
+#> 4  51710     Floyd-1999    AL081999 1999-09-16 15:00   20.91885
+#> 5  51710     Irene-1999    AL131999 1999-10-18 07:30  234.49601
+#> 6  51710      Kyle-2002    AL122002 2002-10-12 08:15  149.04476
+#> 7  51710      Alex-2004    AL012004 2004-08-03 18:45  199.38999
+#> 8  51710   Alberto-2006    AL012006 2006-06-14 20:15  105.73478
+#> 9  51710   Ernesto-2006    AL062006 2006-09-01 23:45   69.60457
+#> 10 51710     Irene-2011    AL092011 2011-08-28 00:00   54.49080
+#> 11 51710     Sandy-2012    AL182012 2012-10-29 20:30  289.06525
+#> 12 51710 Claudette-2015    AL032015 2015-07-12 00:00  182.77412
+#>          local_time closest_date
+#> 1  1996-06-20 04:00   1996-06-20
+#> 2  1997-06-01 14:30   1997-06-01
+#> 3  1999-09-05 01:00   1999-09-05
+#> 4  1999-09-16 11:00   1999-09-16
+#> 5  1999-10-18 03:30   1999-10-18
+#> 6  2002-10-12 04:15   2002-10-12
+#> 7  2004-08-03 14:45   2004-08-03
+#> 8  2006-06-14 16:15   2006-06-14
+#> 9  2006-09-01 19:45   2006-09-01
+#> 10 2011-08-27 20:00   2011-08-27
+#> 11 2012-10-29 16:30   2012-10-29
+#> 12 2015-07-11 20:00   2015-07-11
 ```
 
 ### Handling multi-county communities
@@ -730,20 +732,19 @@ multi_county_rain(communities = communities, start_year = 1995, end_year = 2005,
                    rain_limit = 100, dist_limit = 100)
 #> # A tibble: 10 x 9
 #> # Groups:   community_name [3]
-#>    community_name storm_id closest_date local_time closest_time_utc
-#>    <fct>          <chr>    <chr>        <chr>      <chr>           
-#>  1 new            Charley… 2004-08-14   2004-08-1… 2004-08-14 23:45
-#>  2 new            Danny-1… 1997-07-24   1997-07-2… 1997-07-24 19:00
-#>  3 new            Floyd-1… 1999-09-16   1999-09-1… 1999-09-16 15:15
-#>  4 no             Allison… 2001-06-11   2001-06-1… 2001-06-11 07:45
-#>  5 no             Bill-20… 2003-06-30   2003-06-3… 2003-06-30 23:00
-#>  6 no             Cindy-2… 2005-07-06   2005-07-0… 2005-07-06 07:15
-#>  7 no             Isidore… 2002-09-26   2002-09-2… 2002-09-26 10:45
-#>  8 no             Katrina… 2005-08-29   2005-08-2… 2005-08-29 13:45
-#>  9 no             Matthew… 2004-10-10   2004-10-1… 2004-10-10 16:00
-#> 10 ny             Floyd-1… 1999-09-16   1999-09-1… 1999-09-17 00:30
-#> # … with 4 more variables: mean_dist <dbl>, mean_rain <dbl>,
-#> #   max_rain <dbl>, min_dist <dbl>
+#>    community_name storm_id closest_date local_time closest_time_utc mean_dist
+#>    <fct>          <chr>    <chr>        <chr>      <chr>                <dbl>
+#>  1 new            Charley… 2004-08-14   2004-08-1… 2004-08-14 23:45      55.6
+#>  2 new            Danny-1… 1997-07-24   1997-07-2… 1997-07-24 19:00      61.9
+#>  3 new            Floyd-1… 1999-09-16   1999-09-1… 1999-09-16 15:15      49.4
+#>  4 no             Allison… 2001-06-11   2001-06-1… 2001-06-11 07:30      23.3
+#>  5 no             Bill-20… 2003-06-30   2003-06-3… 2003-06-30 23:15      47.7
+#>  6 no             Cindy-2… 2005-07-06   2005-07-0… 2005-07-06 07:15      26.6
+#>  7 no             Isidore… 2002-09-26   2002-09-2… 2002-09-26 11:45      14.3
+#>  8 no             Katrina… 2005-08-29   2005-08-2… 2005-08-29 14:00      44.1
+#>  9 no             Matthew… 2004-10-10   2004-10-1… 2004-10-10 15:00      74.9
+#> 10 ny             Floyd-1… 1999-09-16   1999-09-1… 1999-09-17 00:15      41.2
+#> # … with 3 more variables: mean_rain <dbl>, max_rain <dbl>, min_dist <dbl>
 ```
 
 The output from this function includes columns for the average closest

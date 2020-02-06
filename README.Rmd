@@ -6,10 +6,6 @@ output:
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r eval = FALSE, echo = FALSE}
-[![Travis-CI Build Status](https://travis-ci.org/geanders/hurricaneexposure.svg?branch=master)](https://travis-ci.org/geanders/hurricaneexposure)
-```
-
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -34,13 +30,13 @@ This package allows users to explore and map data of county-level exposures to A
 If you use this package and the data in the associated data package (`hurricaneexposuredata`) for research, please cite both packages. In particular, be sure to include the version of the packages that you used, as this will make your research project more reproducible, and the data will likely be updated as we get further years of data and find improved ways to measure tropical storm exposure. The two packages can be cited as: 
 
 - Anderson B, Yan M, Ferreri J, Crosson W, Al-Hamdan M, Schumacher A and
- Eddelbuettel D (2017). _hurricaneexposure: Explore and Map County-Level
- Hurricane Exposure in the United States_. R package version 0.0.1, <URL:
+ Eddelbuettel D (2020). _hurricaneexposure: Explore and Map County-Level
+ Hurricane Exposure in the United States_. R package version 0.1.1, <URL:
  http://CRAN.R-project.org/package=hurricaneexposure>.
 
 - Anderson B, Schumacher A, Crosson W, Al-Hamdan M, Yan M, Ferreri J, Chen Z,
- Quiring S and Guikema S (2017). _hurricaneexposuredata: Data Characterizing
- Exposure to Hurricanes in United States Counties_. R package version 0.0.1,
+ Quiring S and Guikema S (2020). _hurricaneexposuredata: Data Characterizing
+ Exposure to Hurricanes in United States Counties_. R package version 0.1.0,
  <URL: https://github.com/geanders/hurricaneexposuredata>.
   
 To generate BibTex entries for the packages, you can use the `citation` function in R.
@@ -82,10 +78,13 @@ The following table shows the storms covered by the `hurricaneexposuredata` data
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
 library(dplyr)
 library(tidyr)
+library(stringr)
 hurr_tracks %>%
         select(storm_id) %>%
         distinct() %>%
-        separate(storm_id, into = c("storm_name", "Year"), sep = "-") %>%
+        mutate(Year = str_extract(storm_id, "-[0-9].+"),
+               Year = str_remove(Year, "-"),
+               storm_name = str_remove(storm_id, "-[0-9].+")) %>% 
         group_by(Year) %>%
         summarize(Storms = paste(storm_name, collapse = ", ")) %>%
         mutate(Distance = "x",

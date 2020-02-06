@@ -4,8 +4,12 @@
 \alias{hurr_choropleth}
 \title{Create a map customized for this package}
 \usage{
-hurr_choropleth(map_data, metric = "distance", wind_var = "vmax_sust",
-  wind_source = "modeled")
+hurr_choropleth(
+  map_data,
+  metric = "distance",
+  wind_var = "vmax_sust",
+  wind_source = "modeled"
+)
 }
 \arguments{
 \item{map_data}{A dataframe with columns with FIPS numbers (in numeric

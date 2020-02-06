@@ -1,8 +1,8 @@
 Package: hurricaneexposure
 Type: Package
 Title: Explore and Map County-Level Hurricane Exposure in the United States
-Version: 0.1.0.9
-Date: 2019-07-11
+Version: 0.1.1
+Date: 2020-02-06
 Authors@R: c(person("Brooke", "Anderson",
     email = "brooke.anderson@colostate.edu", role = c("aut", "cre")),
     person("Meilin", "Yan",
@@ -25,7 +25,7 @@ Description: Allows users to create time series of tropical storm
     is available in a 'drat' repository. To access this data package, see the 
     instructions at <https://github.com/geanders/hurricaneexposure>. 
     The size of the 'hurricaneexposuredata' package is
-    approximately 25 MB. This work was supported in part by grants from the National
+    approximately 20 MB. This work was supported in part by grants from the National
     Institute of Environmental Health Sciences (R00ES022631), the National Science
     Foundation (1331399), and a NASA Applied Sciences Program/Public Health Program
     Grant (NNX09AV81G).
@@ -34,29 +34,29 @@ BugReports: https://github.com/geanders/hurricaneexposure/issues
 License: GPL (>= 2)
 LazyData: TRUE
 Imports:
-    data.table (>= 1.12.0),
-    dplyr (>= 0.8.0.1),
+    data.table (>= 1.12.8),
+    dplyr (>= 0.8.3),
     ggmap (>= 3.0.0),
-    ggplot2 (>= 3.1.0),
+    ggplot2 (>= 3.2.1),
     lazyeval (>= 0.2.2),
     lubridate (>= 1.7.4),
     mapproj (>= 1.2.6),
     maps (>= 3.3.0),
-    purrr (>= 0.3.2),
+    purrr (>= 0.3.3),
     RColorBrewer (>= 1.1.2),
-    rlang (>= 0.3.3),
+    rlang (>= 0.4.2),
     stringr (>= 1.4.0),
-    tidyr (>= 0.8.3)
-RoxygenNote: 6.1.1
+    tidyr (>= 1.0.0)
+RoxygenNote: 7.0.2
 Encoding: UTF-8
 Depends:
-    R (>= 3.5)
+    R (>= 3.6)
 Suggests:
     hurricaneexposuredata (>= 0.1.0),
-    knitr,
-    pander,
-    rmarkdown,
-    weathermetrics
+    knitr (>= 1.26.0),
+    pander (>= 0.6.3),
+    rmarkdown (>= 2.0.0),
+    weathermetrics (>= 1.2.2)
 VignetteBuilder: knitr
 Additional_repositories: https://geanders.github.io/drat
 Language: en-US

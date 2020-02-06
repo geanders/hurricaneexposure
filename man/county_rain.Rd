@@ -4,8 +4,14 @@
 \alias{county_rain}
 \title{Hurricane exposure by rain for counties}
 \usage{
-county_rain(counties, start_year, end_year, rain_limit, dist_limit,
-  days_included = c(-2, -1, 0, 1))
+county_rain(
+  counties,
+  start_year,
+  end_year,
+  rain_limit,
+  dist_limit,
+  days_included = c(-2, -1, 0, 1)
+)
 }
 \arguments{
 \item{counties}{Character vector of the five-digit Federal Information

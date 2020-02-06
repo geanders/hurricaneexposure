@@ -4,9 +4,14 @@
 \alias{map_counties}
 \title{Map counties}
 \usage{
-map_counties(storm, metric = "distance", wind_var = "vmax_sust",
-  days_included = c(-2, -1, 0, 1), add_track = TRUE,
-  wind_source = "modeled")
+map_counties(
+  storm,
+  metric = "distance",
+  wind_var = "vmax_sust",
+  days_included = c(-2, -1, 0, 1),
+  add_track = TRUE,
+  wind_source = "modeled"
+)
 }
 \arguments{
 \item{storm}{Character string giving the name of the storm to plot (e.g.,

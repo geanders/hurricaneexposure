@@ -4,8 +4,14 @@
 \alias{map_tracks}
 \title{Plot Atlantic basin hurricane tracks}
 \usage{
-map_tracks(storms, plot_object = NULL, padding = 2,
-  plot_points = FALSE, alpha = 1, color = "firebrick")
+map_tracks(
+  storms,
+  plot_object = NULL,
+  padding = 2,
+  plot_points = FALSE,
+  alpha = 1,
+  color = "firebrick"
+)
 }
 \arguments{
 \item{storms}{Character vector with the names of all storms to plot.

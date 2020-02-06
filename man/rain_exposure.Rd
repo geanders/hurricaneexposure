@@ -4,8 +4,16 @@
 \alias{rain_exposure}
 \title{Write storm rain exposure files}
 \usage{
-rain_exposure(locations, start_year, end_year, rain_limit, dist_limit,
-  days_included = c(-2, -1, 0, 1), out_dir, out_type = "csv")
+rain_exposure(
+  locations,
+  start_year,
+  end_year,
+  rain_limit,
+  dist_limit,
+  days_included = c(-2, -1, 0, 1),
+  out_dir,
+  out_type = "csv"
+)
 }
 \arguments{
 \item{locations}{Either a vector of FIPS county codes, for county-level
