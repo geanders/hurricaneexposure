@@ -1,3 +1,4 @@
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ## Package overview
@@ -154,12 +155,12 @@ county.
 In functions throughout the `hurricaneexposure` package, storms are
 identified based on their name and year (e.g., Hurricane Floyd in 1999
 is identified as “Floyd-1999”). Note that a few storms satisfied the
-criteria to be included in the data but were unnamed (e.g., “Notnamed”
-in 1991, “Subtrop” in 1997, etc.). These storms are identified in
-functions in the `hurricaneexposure` package based on the identifying
-name listed in the above table (e.g., “Notnamed-1991”, “Td08-2016”),
-although for some research projects you may want to consider excluding
-these unnamed storms from the analysis.
+criteria to be included in the data but were unnamed (e.g., “AL13” in
+1988). These storms are identified in functions in the
+`hurricaneexposure` package based on the identifying name listed in the
+above table, which is based on the first four characters of the storm’s
+US ATCF code for the storm. For some research projects, however, you may
+want to consider excluding these unnamed storms from the analysis.
 
 ## Mapping hurricane exposure
 
