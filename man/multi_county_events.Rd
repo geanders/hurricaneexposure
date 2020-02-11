@@ -18,7 +18,7 @@ community (\code{fips}). See the example code.}
 
 \item{event_type}{Character string with the type of event to use to identify
 county exposures. Options include \code{"flood"}, \code{"tornado"},
-\code{"wind"}, and \code{"tropical storm"}.}
+\code{"wind"}, and \code{"tropical_storm"}.}
 }
 \value{
 Returns the same type dataframe as \code{county_events},

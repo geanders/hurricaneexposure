@@ -12,7 +12,7 @@ map_event_exposure(storm_id, event_type, add_track = TRUE)
 
 \item{event_type}{Character string with the type of event to use to identify
 county exposures. Options include \code{"flood"}, \code{"tornado"},
-\code{"wind"}, and \code{"tropical storm"}.}
+\code{"wind"}, and \code{"tropical_storm"}.}
 
 \item{add_track}{TRUE / FALSE of whether to add the storm's track to the map. The
 default is TRUE.}
@@ -40,5 +40,11 @@ map_event_exposure(storm_id = "Floyd-1999", event_type = "flood")
 map_event_exposure(storm_id = "Floyd-1999", event_type = "tornado")
 map_event_exposure(storm_id = "Floyd-1999", event_type = "wind")
 map_event_exposure(storm_id = "Floyd-1999", event_type = "tropical_storm")
+
+map_event_exposure(storm_id = "Florence-2018", event_type = "flood")
+map_event_exposure(storm_id = "Florence-2018", event_type = "tropical_storm")
+
+map_event_exposure(storm_id = "Michael-2018", event_type = "wind")
+map_event_exposure(storm_id = "Michael-2018", event_type = "tropical_storm")
 }
 }

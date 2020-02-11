@@ -25,6 +25,20 @@
 #'      \item{\code{sust_dur}: }{Minutes sustained wind speed was 20 m / s or higher}
 #'      \item{\code{gust_dur}: }{Minutes gust wind speed was 20 m / s or higher (only
 #'          returned if the modeled winds are requested using \code{wind_source})}
+#'      \item{\code{usa_atcf_id}: }{United States Automated Tropical Cyclone Forecasting
+#'                             storm identifier}
+#'      \item{\code{closest_time_utc}: }{Time, in UTC, of the closest approach of the
+#'                             storm to the county's population mean center,
+#'                             based on storm tracks linearly interpolated to
+#'                             15-minute increments.}
+#'      \item{\code{storm_dist}: }{Minimum distance (in kilometers) between the storm's
+#'                     track and the county's population mean center.}
+#'      \item{\code{local_time}: }{Local time of the closest approach of the storm to the
+#'                        county's population mean center, based on storm tracks
+#'                        linearly interpolated to 15-minute increments.}
+#'      \item{\code{closest_date}: }{Date (based on local time) of the closest
+#'                          approach of the storm to the county's population
+#'                          mean center.}
 #'    }
 #'
 #' @details For more information on how wind speeds are modeled in this data,

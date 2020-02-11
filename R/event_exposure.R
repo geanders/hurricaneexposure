@@ -9,7 +9,7 @@
 #'
 #' @param event_type Character string with the type of event to use to identify
 #'    county exposures. Options include \code{"flood"}, \code{"tornado"},
-#'    \code{"wind"}, and \code{"tropical storm"}.
+#'    \code{"wind"}, and \code{"tropical_storm"}.
 #' @inheritParams county_distance
 #'
 #' @note Of the event types that this function can pull, only "tornado" and
@@ -18,14 +18,16 @@
 #'    event type, you should not use a start year prior to 1996, as events of
 #'    other types were not recorded in the database before 1996.
 #'
-#' #' @return Returns a dataframe with a row for each county-storm pair and with
+#' @return Returns a dataframe with a row for each county-storm pair and with
 #'    columns for:
 #'    \itemize{
 #'      \item{\code{fips}: }{County's 5-digit Federal Information Processing Standard
 #'                  (FIPS) code}
 #'      \item{\code{storm_id}: }{Unique storm identifier with the storm name and year,
-#'                  separated by a hyphen(e.g., "Alberto-1988",
+#'                  separated by a hyphen (e.g., "Alberto-1988",
 #'                  "Katrina-2005")}
+#'     \item{\code{usa_atcf_id}: }{United States Automated Tropical Cyclone Forecasting
+#'                             storm identifier}
 #'     \item{\code{closest_time_utc}: }{Time, in UTC, of the closest approach of the
 #'                             storm to the county's population mean center,
 #'                             based on storm tracks linearly interpolated to
@@ -47,8 +49,12 @@
 #' if (requireNamespace("hurricaneexposuredata", quietly = TRUE)) {
 #'
 #' county_events(counties = c("37031", "37053", "37055"),
-#'               start_year = 1996, end_year = 2015,
+#'               start_year = 1996, end_year = 2018,
 #'               event_type = "flood")
+#'
+#' county_events(counties = c("37055"),
+#'               start_year = 1996, end_year = 2018,
+#'               event_type = "tropical_storm")
 #' }
 #' @importFrom dplyr %>%
 #' @importFrom rlang .data

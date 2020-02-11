@@ -4,7 +4,7 @@
 ## Package overview
 
 This package allows users to explore and map data of county-level
-exposures to Atlantic-basin tropical storms between 1988 and 2015 for a
+exposures to Atlantic-basin tropical storms between 1988 and 2018 for a
 number of storm hazards (e.g., wind, rain, flood events, distance from
 the storm track) for counties in the eastern half of the United States.
 Users can map exposures by county for a selected storm and can also
@@ -68,23 +68,22 @@ included with the `hurricaneexposuredata` data package:
 
   - `county_centers`: Location of United States county centers of
     population
-  - `hurr_tracks`: Storm tracks for Atlantic-basin storms, 1988-2015
+  - `hurr_tracks`: Storm tracks for Atlantic-basin storms, 1988-2018
   - `closest_dist`: Closest distances between counties and a storm
-    track, for Atlantic-basin storms, 1988-2015
+    track, for Atlantic-basin storms, 1988-2018
   - `rain`: Rainfall for US counties during Atlantic basin tropical
     storms, 1988-2011; daily rainfall is given from five days before to
     three days after the storm’s closest approach to the county
   - `storm_winds`: Modeled county wind speeds for Atlantic-basin storms,
-    1988-2015
+    1988-2018
   - `storm_events`: Listings from the [NOAA Storm Events
     database](https://www.ncdc.noaa.gov/stormevents/) that occurred near
-    in time and location to tropical storms, 1988-2015. This database
+    in time and location to tropical storms, 1988-2018. This database
     changed the types of events it reported in 1996, which should be
     considered when using the data.
   - `ext_tracks_wind`: Estimated county wind speeds for Atlantic-basin
-    storms, 1988-2015, based on the wind radii listed in the [Extended
-    Best Tracks
-    dataset](http://rammb.cira.colostate.edu/research/tropical_cyclones/tc_extended_best_track_dataset/)
+    storms, 1988-2018, based on the wind radii listed in
+    [HURDAT2](https://www.nhc.noaa.gov/data/)
 
 Once you’ve installed and loaded `hurricaneexposuredata`, you can load
 the included data using the `data` function. For example, you can access
@@ -244,21 +243,20 @@ You can map estimated gust winds, rather than sustained winds (the
 default), using the argument `wind_var = "vmax_gust"`. Further, we have
 included a second source of estimated winds in the data available in
 `hurricaneexposuredata`. These wind estimates are based on the wind
-radii in the Extended Best Tracks dataset (you can find out more about
-this data in the helpfile for the `ext_tracks_wind` dataset). These data
-provide estimates of which counties were exposed during a storm to
-sustained winds in four categories: 0–34 knots; 34–50 knots; 50–64
-knots; and 64 knots or higher. Therefore, these data provide a
-categorical rather than continuous estimate of county wind speeds.
-However, they may be preferable to the model wind speeds for some
-storms, especially storms in extra-tropical transition. Further, you may
-find it interesting to use these data in a sensitivity analysis, to
-compare if impact study results are sensitive to whether these wind data
-or the modeled wind data are used for exposure classification. You can
-create a wind map based on this data using the `wind_source =
-"ext_tracks"` argument in the `map_counties` function. For example, to
-map estimated winds during Hurricane Katrina based on the Extended Best
-Tracks wind radii, you can
+radii in the HURDAT2 dataset (you can find out more about this data in
+the helpfile for the `ext_tracks_wind` dataset). These data provide
+estimates of which counties were exposed during a storm to sustained
+winds in four categories: 0–34 knots; 34–50 knots; 50–64 knots; and 64
+knots or higher. Therefore, these data provide a categorical rather than
+continuous estimate of county wind speeds. However, they may be
+preferable to the model wind speeds for some storms, especially storms
+in extra-tropical transition. Further, you may find it interesting to
+use these data in a sensitivity analysis, to compare if impact study
+results are sensitive to whether these wind data or the modeled wind
+data are used for exposure classification. You can create a wind map
+based on this data using the `wind_source = "ext_tracks"` argument in
+the `map_counties` function. For example, to map estimated winds during
+Hurricane Katrina based on the HURDAT2 wind radii, you can
 run:
 
 ``` r
@@ -422,18 +420,17 @@ map_tracks(storms = c("Andrew-1992", "Katrina-2005", "Rita-2005"),
 
 ![](README-unnamed-chunk-20-1.png)<!-- -->
 
-As another example, to map all tracks for storms in 2005, you can run:
+As another example, to map all tracks for storms in 2018, you can run:
 
 ``` r
 library(dplyr)
 library(tidyr)
-storms_2005 <- hurr_tracks %>%
+storms_2018 <- hurr_tracks %>%
         select(storm_id) %>%
         distinct() %>%
-        separate(storm_id, c("name", "year"), sep = "-", remove = FALSE) %>%
-        filter(year == "2005")
-#> Warning: Expected 2 pieces. Additional pieces discarded in 1 rows [104].
-map_tracks(storms = storms_2005$storm_id) 
+        mutate(year = stringr::str_extract(storm_id, "-[0-9].+")) %>%
+        filter(year == "-2018")
+map_tracks(storms = storms_2018$storm_id)  
 ```
 
 ![](README-unnamed-chunk-21-1.png)<!-- -->
@@ -599,31 +596,30 @@ Further, the `county_wind` function allows you to pull wind estimates
 from an alternate source. By default, this function uses wind estimates
 for each county from a wind model (see the vignettes for the
 `stormwindmodel` package for much more detail on this modeling process).
-However, you can also pull estimates based on the wind radii from the
-Extended Best Tracks dataset by using the option `wind_source =
-"ext_tracks"`. See the help file for the `ext_tracks_wind` dataset that
-comes with `hurricaneexposuredata` for more details on this data source
-and how the county-specific exposures were determined from the data
-source for use in the `county_wind` function. It is important to note
-that this data results in wind estimates with breaks at 34 knots, 50
-knots, and 64 knots, rather than continuous estimates. This means that a
-sustained wind estimate from this data source of 17.4896 m / s (34
-knots) is estimating that the county had maximum wind speeds of 34 knots
-or higher during the storm, but not as high as 50 knots. Further, the
-`dur_sust` value when using this data source is based on number of
-minutes with winds at or above 34 knots (rather than the 20 m / s value
-used for durations for the modeled wind data). Gust durations can not be
-determined using this Extended Best Tracks dataset.
+However, you can also pull estimates based on the wind radii from
+HURDAT2 by using the option `wind_source = "ext_tracks"`. See the help
+file for the `ext_tracks_wind` dataset that comes with
+`hurricaneexposuredata` for more details on this data source and how the
+county-specific exposures were determined from the data source for use
+in the `county_wind` function. It is important to note that this data
+results in wind estimates with breaks at 34 knots, 50 knots, and 64
+knots, rather than continuous estimates. This means that a sustained
+wind estimate from this data source of 17.4896 m / s (34 knots) is
+estimating that the county had maximum wind speeds of 34 knots or higher
+during the storm, but not as high as 50 knots. Further, the `dur_sust`
+value when using this data source is based on number of minutes with
+winds at or above 34 knots (rather than the 20 m / s value used for
+durations for the modeled wind data). Gust durations can not be
+determined using the HURDAT2 wind radii.
 
-The Extended Best Tracks wind radii dataset is more tied to observations
-during a specific storm than the modeled data. In certain cases,
-especially storms in extratropical transition, this dataset might be
-preferable to the modeled wind speeds, even though it provides less
-continuous estimates. This source of wind data can be specified using
-the `wind_source` option in the `county_wind` function. For example, to
-generate a list of all storms in Orleans Parish with maximum sustained
-winds of 34 knots or more based on the Extended Best Tracks wind radii,
-you can run:
+The HURDAT2 wind radii are to observations during a specific storm than
+the modeled data. In certain cases, especially storms in extratropical
+transition, this dataset might be preferable to the modeled wind speeds,
+even though it provides less continuous estimates. This source of wind
+data can be specified using the `wind_source` option in the
+`county_wind` function. For example, to generate a list of all storms in
+Orleans Parish with maximum sustained winds of 34 knots or more based on
+the HURDAT2 wind radii, you can run:
 
 ``` r
 county_wind(counties = "12086", start_year = 1988, end_year = 2015, 

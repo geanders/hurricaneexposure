@@ -73,5 +73,9 @@ map_counties("Katrina-2005", metric = "wind")
 map_counties("Katrina-2005", metric = "wind", wind_var = "vmax_gust")
 map_counties("Katrina-2005", metric = "wind", wind_var = "sust_dur")
 map_counties("Katrina-2005", metric = "wind", wind_source = "ext_tracks")
+
+#' map_counties("Michael-2018", metric = "wind")
+map_counties("Michael-2018", metric = "wind", wind_var = "vmax_gust")
+map_counties("Michael-2018", metric = "wind", wind_source = "ext_tracks")
 }
 }

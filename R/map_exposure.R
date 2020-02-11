@@ -237,7 +237,7 @@ interp_track <- function(track, tint = 0.25){
 #' map_tracks("Allison-2001", plot_object = allison_map, plot_points = TRUE)
 #'}
 #' @importFrom dplyr %>%
-#' @importFrame rlang .data
+#' @importFrom rlang .data
 #'
 #' @export
 map_rain_exposure <- function(storm, rain_limit, dist_limit,
@@ -472,6 +472,12 @@ map_wind_exposure <- function(storm, wind_var = "vmax_sust", wind_limit,
 #' map_event_exposure(storm_id = "Floyd-1999", event_type = "tornado")
 #' map_event_exposure(storm_id = "Floyd-1999", event_type = "wind")
 #' map_event_exposure(storm_id = "Floyd-1999", event_type = "tropical_storm")
+#'
+#' map_event_exposure(storm_id = "Florence-2018", event_type = "flood")
+#' map_event_exposure(storm_id = "Florence-2018", event_type = "tropical_storm")
+#'
+#' map_event_exposure(storm_id = "Michael-2018", event_type = "wind")
+#' map_event_exposure(storm_id = "Michael-2018", event_type = "tropical_storm")
 #' }
 #' @export
 #'
@@ -564,6 +570,10 @@ map_event_exposure <- function(storm_id, event_type, add_track = TRUE){
 #' map_counties("Katrina-2005", metric = "wind", wind_var = "vmax_gust")
 #' map_counties("Katrina-2005", metric = "wind", wind_var = "sust_dur")
 #' map_counties("Katrina-2005", metric = "wind", wind_source = "ext_tracks")
+#'
+#' #' map_counties("Michael-2018", metric = "wind")
+#' map_counties("Michael-2018", metric = "wind", wind_var = "vmax_gust")
+#' map_counties("Michael-2018", metric = "wind", wind_source = "ext_tracks")
 #'}
 #' @export
 #'

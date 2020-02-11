@@ -25,7 +25,7 @@ See the examples for the proper format for this argument.}
 
 \item{event_type}{Character string with the type of event to use to identify
 county exposures. Options include \code{"flood"}, \code{"tornado"},
-\code{"wind"}, and \code{"tropical storm"}.}
+\code{"wind"}, and \code{"tropical_storm"}.}
 
 \item{out_dir}{Character string with the filepath to the directory where the
 data will be saved}
