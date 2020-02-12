@@ -167,39 +167,31 @@ map_tracks <- function(storms, plot_object = NULL, padding = 2, plot_points = FA
 #' Interpolate a storm track
 #'
 #' This function takes a wider-spaced storm track (e.g., every 6 hours) and
-#' interpolates to a finer interval (e.g., every 15 minutes). To do this, it
+#' interpolates to every 15 minutes. To do this, it
 #' fits GLMs of latitude and longitude regressed on natural cubic splines of
 #' date-time, and then predicts these splines to new intervals. These
 #' splines use degrees of freedom equal to the number of original observations
 #' divided by two.
 #'
 #' @param track A dataframe with hurricane track data for a single storm
-#' @param tint A numeric vector giving the time interval to impute to, in units
-#'    of hours (e.g., 0.25, the default, interpolates to 15 minute-intervals).
 #'
 #' @return A dataframe with hurricane track data for a single storm,
-#'    interpolated to the interval specified by \code{tint}.
-interp_track <- function(track, tint = 0.25){
+#'    interpolated to 15-minute intervals.
+interp_track <- function(track){
 
         if(nrow(track) < 3){
                 return(track)
         } else {
-                interp_df <- floor(nrow(track) / 2)
                 interp_date <- seq(from = min(track$date),
                                 to = max(track$date),
-                                by = 900) # interpolate to 15 minutes
-                interp_date <- data.frame(date = interp_date)
+                                by = 900) # interpolate to every 15 minutes
 
-                lat_spline <- stats::glm(latitude ~ splines::ns(date,
-                                                                df = interp_df),
-                                        data = track)
-                interp_lat <- stats::predict.glm(lat_spline,
-                                         newdata = as.data.frame(interp_date))
-                lon_spline <- stats::glm(longitude ~ splines::ns(date,
-                                                                 df = interp_df),
-                                        data = track)
-                interp_lon <- stats::predict.glm(lon_spline,
-                                                 newdata = interp_date)
+                interp_lat <- stats::spline(x = track$date,
+                                            y = track$latitude,
+                                            xout = interp_date)$y
+                interp_lon <- stats::spline(x = track$date,
+                                            y = track$longitude,
+                                            xout = interp_date)$y
 
                 full_track <- data.frame(storm_id = track$storm_id[1],
                                         date = interp_date,
