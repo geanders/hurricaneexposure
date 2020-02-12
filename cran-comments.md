@@ -6,8 +6,10 @@
 
 0 errors | 0 warnings | 2 notes
 
-* This package suggests a package in a non-mainstream repository (a drat repository). On the Windows build, this results in the NOTE "Package suggested but not available for checking" 
-as well as a note for "Suggests or Enhances not in mainstream repositories".
+* This package suggests a package in a non-mainstream repository (a drat
+repository). On the Windows build, this results in two NOTES, the NOTE "Package
+suggested but not available for checking" as well as a note for "Suggests or
+Enhances not in mainstream repositories".
 
 ## Reverse dependencies
 
