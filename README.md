@@ -467,7 +467,7 @@ The `county_rain` function takes a list of county FIPS codes, bounds on
 the starting and ending years of the analysis, and thresholds to define
 rain-based exposure (cumulative rainfall and distance from the storm’s
 track, as explained for the binary rain maps shown in an earlier
-section) and creates a list of all storms that met these thesholds for
+section) and creates a list of all storms that met these thresholds for
 the counties. For example, to get a dataset of all the storms to which
 Orleans Parish (FIPS 22071), and Newport News, Virginia (FIPS 51700),
 were exposed between 1995 and 2005, where “exposed” means that the storm

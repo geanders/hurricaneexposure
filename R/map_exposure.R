@@ -167,11 +167,11 @@ map_tracks <- function(storms, plot_object = NULL, padding = 2, plot_points = FA
 #' Interpolate a storm track
 #'
 #' This function takes a wider-spaced storm track (e.g., every 6 hours) and
-#' interpolates to every 15 minutes. To do this, it
-#' fits GLMs of latitude and longitude regressed on natural cubic splines of
-#' date-time, and then predicts these splines to new intervals. These
-#' splines use degrees of freedom equal to the number of original observations
-#' divided by two.
+#' interpolates to every 15 minutes. To do this, it uses natural cubic
+#' spline interpolation using the `spline` function from the `stats` package.
+#' The track is only interpolated if there are three or more observations
+#' on the central location of the storm (this is almost always the case
+#' for storms tracked in the HURDAT2 dataset).
 #'
 #' @param track A dataframe with hurricane track data for a single storm
 #'
@@ -188,10 +188,12 @@ interp_track <- function(track){
 
                 interp_lat <- stats::spline(x = track$date,
                                             y = track$latitude,
-                                            xout = interp_date)$y
+                                            xout = interp_date,
+                                            method = "natural")$y
                 interp_lon <- stats::spline(x = track$date,
                                             y = track$longitude,
-                                            xout = interp_date)$y
+                                            xout = interp_date,
+                                            method = "natural")$y
 
                 full_track <- data.frame(storm_id = track$storm_id[1],
                                         date = interp_date,
