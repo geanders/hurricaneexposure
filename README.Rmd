@@ -23,7 +23,7 @@ library(hurricaneexposure)
 
 ## Package overview
 
-This package allows users to explore and map data of county-level exposures to Atlantic-basin tropical storms between 1988 and 2018 for a number of storm hazards (e.g., wind, rain, flood events, distance from the storm track) for counties in the eastern half of the United States. Users can map exposures by county for a selected storm and can also identify all storms to which selected counties were exposed, based on user-specified thresholds (for example, the package allows the user to identify all storms that brought wind of 34 knots or higher to Miami-Dade County in Florida).
+This package allows users to explore and map data of county-level exposures to Atlantic-basin tropical storms between 1988 and 2018 for several storm hazards (e.g., wind, rain, flood events, distance from the storm track) for counties in the eastern half of the United States. Users can map exposures by county for a selected storm and can also identify all storms to which selected counties were exposed, based on user-specified thresholds (for example, the package allows the user to identify all storms that brought wind of 34 knots or higher to Miami-Dade County in Florida).
 
 If you use this package and the data in the associated data package (`hurricaneexposuredata`) for research, please cite both packages. In particular, be sure to include the version of the packages that you used, as this will make your research project more reproducible, and the data will likely be updated as we get further years of data and find improved ways to measure tropical storm exposure. The two packages can be cited as: 
 
