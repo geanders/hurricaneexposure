@@ -453,7 +453,7 @@ map_rain_exposure(storm = "Allison-2001", rain_limit = 175, dist_limit = 500,
 
 As with the continuous maps of rain exposure, the number of days included to calculate cumulative rain can be adjusted with the `days_included` option in `map_rain_exposure` (see the help file for `map_rain_exposure` for more details).
 
-You can use the `map_wind_exposure` function to map counties exposed to a certain winds during a storm. For example, to identify all counties exposed to sustained winds of 20 m / s or higher during Hurricane Katrina, you can run:
+You can use the `map_wind_exposure` function to map counties exposed to a certain wind speed during a storm. For example, to identify all counties exposed to sustained winds of 20 m / s or higher during Hurricane Katrina, you can run:
 
 ``` r
 map_wind_exposure(storm = "Katrina-2005", wind_limit = 20)
@@ -530,7 +530,7 @@ map_tracks(storms = storms_2018$storm_id)
 The `map_tracks` function is used in all the mapping functions described in the previous section, to add the storm's track to the exposure maps. However, if you would like to customize the appearance of the storm's track on the map, you can do so by plotting the exposure map without the storm track (`add_track = FALSE`) and then adding the track yourself with the `map_tracks` function. For example, to change the color of the storm track in a map of flood event exposure during Hurricane Floyd (1999) and to add points showing the available observations for the storm in the Best Tracks hurricane tracking data, you can run:
 
 ``` r
-floyd_map <- map_event_exposure(storm = "Floyd-1999", event_type = "flood")
+floyd_map <- map_event_exposure(storm = "Floyd-1999", event_type = "flood", add_track = FALSE)
 map_tracks(storms = "Floyd-1999", plot_object = floyd_map, plot_points = TRUE, 
            color = "darkgray")
 ```
