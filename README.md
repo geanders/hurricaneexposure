@@ -676,7 +676,7 @@ county_distance(counties = "22071", start_year = 1988, end_year = 2015,
 #> 9: 2010-07-25 10:30
 ```
 
-Finally, you can use the `county_events` function to get a listing of all storms for which a county had a certain type of NOAA Storm Events listing. For example, to get a list of all storms for which Norfolk, Virginia, (FIPS: 51710) had a flood event listing, you can run:
+Finally, you can use the `county_events` function to get a listing of all storms for which a county had a certain type of NOAA Storm Events listing. For example, to get a list of all storms for which Norfolk, Virginia, (FIPS 51710) had a flood event listing, you can run:
 
 ``` r
 county_events(counties = "51710", start_year = 1996, end_year = 2015, 
