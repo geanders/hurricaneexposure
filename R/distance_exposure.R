@@ -1,6 +1,6 @@
 #' Hurricane exposure by distance for counties
 #'
-#' This function takes a list of US counties,based on their 5-digit Federal
+#' This function takes a list of US counties, based on their 5-digit Federal
 #' Information Processing Standard (FIPS) codes, boundaries on
 #' the range of years to be considered, and thresholds for distance between each
 #' county and the storm track for the county to be considered "exposed" to the
