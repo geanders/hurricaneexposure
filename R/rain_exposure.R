@@ -112,10 +112,10 @@ county_rain <- function(counties, start_year, end_year,
 #' @return Returns a dataframe with a row for each county-storm pair and with
 #'    columns for:
 #'    \itemize{
-#'      \item{\code{commun}: }{Each community's unique id}
+#'      \item{\code{commun}: }{Each community's unique id.}
 #'      \item{\code{storm_id}: }{Unique storm identifier with the storm name and year,
 #'                  separated by a hyphen(e.g., "Alberto-1988",
-#'                  "Katrina-2005")}
+#'                  "Katrina-2005").}
 #'      \item{\code{closest_date}: }{Date (based on local time) of the closest
 #'                          approach of the storm to the county's population
 #'                          mean center.}
