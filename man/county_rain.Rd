@@ -22,7 +22,7 @@ determine storm exposure.}
 
 \item{end_year}{Four-digit integer with last year to consider.}
 
-\item{rain_limit}{Minimum of rainfall, in millimeters, summed across the days
+\item{rain_limit}{Minimum amount of rainfall, in millimeters, summed across the days
 selected to be included (\code{days_included}), that must fall in a
 county for the county to be classified as "exposed" to the storm.}
 

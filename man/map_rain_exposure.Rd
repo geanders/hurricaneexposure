@@ -16,7 +16,7 @@ map_rain_exposure(
 \item{storm}{Character string giving the name of the storm to plot (e.g.,
 "Floyd-1999")}
 
-\item{rain_limit}{Minimum of rainfall, in millimeters, summed across the days
+\item{rain_limit}{Minimum amount of rainfall, in millimeters, summed across the days
 selected to be included (\code{days_included}), that must fall in a
 county for the county to be classified as "exposed" to the storm.}
 
