@@ -15,7 +15,7 @@ map_counties(
 }
 \arguments{
 \item{storm}{Character string giving the name of the storm to plot (e.g.,
-"Floyd-1999")}
+"Floyd-1999").}
 
 \item{metric}{Character string giving the metric to plot. Current options are
 \code{"distance"}, \code{"wind"}, and \code{"rainfall"}. These options are used

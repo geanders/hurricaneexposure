@@ -14,7 +14,7 @@ map_rain_exposure(
 }
 \arguments{
 \item{storm}{Character string giving the name of the storm to plot (e.g.,
-"Floyd-1999")}
+"Floyd-1999").}
 
 \item{rain_limit}{Minimum amount of rainfall, in millimeters, summed across the days
 selected to be included (\code{days_included}), that must fall in a

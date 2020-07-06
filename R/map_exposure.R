@@ -446,7 +446,7 @@ map_wind_exposure <- function(storm, wind_var = "vmax_sust", wind_limit,
 #' \code{storm_events} dataset.
 #'
 #' @param storm_id Character vector with the storm for which to map events
-#'    (e.g., \code{"Katrina-2005"})
+#'    (e.g., \code{"Katrina-2005"}.)
 #' @inheritParams county_distance
 #' @inheritParams county_events
 #' @inheritParams map_rain_exposure
