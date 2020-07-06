@@ -4,23 +4,20 @@
 \alias{interp_track}
 \title{Interpolate a storm track}
 \usage{
-interp_track(track, tint = 0.25)
+interp_track(track)
 }
 \arguments{
 \item{track}{A dataframe with hurricane track data for a single storm}
-
-\item{tint}{A numeric vector giving the time interval to impute to, in units
-of hours (e.g., 0.25, the default, interpolates to 15 minute-intervals).}
 }
 \value{
 A dataframe with hurricane track data for a single storm,
-   interpolated to the interval specified by \code{tint}.
+   interpolated to 15-minute intervals.
 }
 \description{
 This function takes a wider-spaced storm track (e.g., every 6 hours) and
-interpolates to a finer interval (e.g., every 15 minutes). To do this, it
-fits GLMs of latitude and longitude regressed on natural cubic splines of
-date-time, and then predicts these splines to new intervals. These
-splines use degrees of freedom equal to the number of original observations
-divided by two.
+interpolates to every 15 minutes. To do this, it uses natural cubic
+spline interpolation using the `spline` function from the `stats` package.
+The track is only interpolated if there are three or more observations
+on the central location of the storm (this is almost always the case
+for storms tracked in the HURDAT2 dataset).
 }

@@ -4,11 +4,16 @@
 \alias{map_wind_exposure}
 \title{Map counties with wind exposure}
 \usage{
-map_wind_exposure(storm, wind_var = "vmax_sust", wind_limit,
-  add_track = TRUE, wind_source = "modeled")
+map_wind_exposure(
+  storm,
+  wind_var = "vmax_sust",
+  wind_limit,
+  add_track = TRUE,
+  wind_source = "modeled"
+)
 }
 \arguments{
-\item{storm}{A character string giving the storm ID (e.g., "Floyd-1999")}
+\item{storm}{A character string giving the storm ID (e.g., "Floyd-1999").}
 
 \item{wind_var}{A character string giving the wind variable to use. Choices
 are \code{"vmax_sust"} (maximum sustained winds; default), \code{"vmax_gust"}

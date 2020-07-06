@@ -4,14 +4,19 @@
 \alias{map_rain_exposure}
 \title{Map counties with rain exposure}
 \usage{
-map_rain_exposure(storm, rain_limit, dist_limit, days_included = c(-2,
-  -1, 0, 1), add_track = TRUE)
+map_rain_exposure(
+  storm,
+  rain_limit,
+  dist_limit,
+  days_included = c(-2, -1, 0, 1),
+  add_track = TRUE
+)
 }
 \arguments{
 \item{storm}{Character string giving the name of the storm to plot (e.g.,
-"Floyd-1999")}
+"Floyd-1999").}
 
-\item{rain_limit}{Minimum of rainfall, in millimeters, summed across the days
+\item{rain_limit}{Minimum amount of rainfall, in millimeters, summed across the days
 selected to be included (\code{days_included}), that must fall in a
 county for the county to be classified as "exposed" to the storm.}
 

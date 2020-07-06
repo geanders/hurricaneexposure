@@ -2,10 +2,13 @@
 .Rhistory
 .RData
 inst/doc
-data-raw/nasa_precip_export_2.txt
 writing/DraftExposurePaper/DraftExposurePaper_files
 *.pdf
 *.tex
 writing/pnas_draft
 .DS_Store
 *Rapp.history
+*.html
+*.R
+doc
+Meta

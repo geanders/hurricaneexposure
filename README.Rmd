@@ -1,14 +1,8 @@
 ---
-output:
-  md_document:
-    variant: markdown_github
+output: github_document
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
-```{r eval = FALSE, echo = FALSE}
-[![Travis-CI Build Status](https://travis-ci.org/geanders/hurricaneexposure.svg?branch=master)](https://travis-ci.org/geanders/hurricaneexposure)
-```
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
@@ -29,18 +23,18 @@ library(hurricaneexposure)
 
 ## Package overview
 
-This package allows users to explore and map data of county-level exposures to Atlantic-basin tropical storms between 1988 and 2015 for a number of storm hazards (e.g., wind, rain, flood events, distance from the storm track) for counties in the eastern half of the United States. Users can map exposures by county for a selected storm and can also identify all storms to which selected counties were exposed, based on user-specified thresholds (for example, the package allows the user to identify all storms that brought wind of 34 knots or higher to Miami-Dade County in Florida).
+This package allows users to explore and map data of county-level exposures to Atlantic-basin tropical storms between 1988 and 2018 for several storm hazards (e.g., wind, rain, flood events, distance from the storm track) for counties in the eastern half of the United States. Users can map exposures by county for a selected storm and can also identify all storms to which selected counties were exposed, based on user-specified thresholds (for example, the package allows the user to identify all storms that brought wind of 34 knots or higher to Miami-Dade County in Florida).
 
 If you use this package and the data in the associated data package (`hurricaneexposuredata`) for research, please cite both packages. In particular, be sure to include the version of the packages that you used, as this will make your research project more reproducible, and the data will likely be updated as we get further years of data and find improved ways to measure tropical storm exposure. The two packages can be cited as: 
 
 - Anderson B, Yan M, Ferreri J, Crosson W, Al-Hamdan M, Schumacher A and
- Eddelbuettel D (2017). _hurricaneexposure: Explore and Map County-Level
- Hurricane Exposure in the United States_. R package version 0.0.1, <URL:
+ Eddelbuettel D (2020). _hurricaneexposure: Explore and Map County-Level
+ Hurricane Exposure in the United States_. R package version 0.1.1, <URL:
  http://CRAN.R-project.org/package=hurricaneexposure>.
 
 - Anderson B, Schumacher A, Crosson W, Al-Hamdan M, Yan M, Ferreri J, Chen Z,
- Quiring S and Guikema S (2017). _hurricaneexposuredata: Data Characterizing
- Exposure to Hurricanes in United States Counties_. R package version 0.0.1,
+ Quiring S and Guikema S (2020). _hurricaneexposuredata: Data Characterizing
+ Exposure to Hurricanes in United States Counties_. R package version 0.1.0,
  <URL: https://github.com/geanders/hurricaneexposuredata>.
   
 To generate BibTex entries for the packages, you can use the `citation` function in R.
@@ -55,15 +49,17 @@ addRepo("geanders")
 install.packages("hurricaneexposuredata")
 ```
 
+You will want to have the latest version of the `hurricaneexposuredata` package. If you have previously installed `hurricaneexposuredata`, you may need to re-run the above code if you update the `hurricaneexposure` package, to update to the latest data. 
+
 The `hurricaneexposuredata` data package includes data that characterizes county-level exposure to tropical storms in counties in the eastern half of the United States between 1988 and 2015 (for some hazards, exposure data is only included for a subset of these years). Tropical storms that did not pass within at least 250 km of at least one US county were excluded from these datasets. The following datasets are included with the `hurricaneexposuredata` data package: 
 
 - `county_centers`: Location of United States county centers of population
-- `hurr_tracks`: Storm tracks for Atlantic-basin storms, 1988-2015
-- `closest_dist`: Closest distances between counties and a storm track, for Atlantic-basin storms, 1988-2015
+- `hurr_tracks`: Storm tracks for Atlantic-basin storms, 1988-2018
+- `closest_dist`: Closest distances between counties and a storm track, for Atlantic-basin storms, 1988-2018
 - `rain`: Rainfall for US counties during Atlantic basin tropical storms, 1988-2011; daily rainfall is given from five days before to three days after the storm's closest approach to the county
-- `storm_winds`: Modeled county wind speeds for Atlantic-basin storms, 1988-2015
-- `storm_events`: Listings from the [NOAA Storm Events database](https://www.ncdc.noaa.gov/stormevents/) that occurred near in time and location to tropical storms, 1988-2015. This database changed the types of events it reported in 1996, which should be considered when using the data. 
-- `ext_tracks_wind`: Estimated county wind speeds for Atlantic-basin storms, 1988-2015, based on the wind radii listed in the [Extended Best Tracks dataset](http://rammb.cira.colostate.edu/research/tropical_cyclones/tc_extended_best_track_dataset/)
+- `storm_winds`: Modeled county wind speeds for Atlantic-basin storms, 1988-2018
+- `storm_events`: Listings from the [NOAA Storm Events database](https://www.ncdc.noaa.gov/stormevents/) that occurred near in time and location to tropical storms, 1988-2018. This database changed the types of events it reported in 1996, which should be considered when using the data. 
+- `ext_tracks_wind`: Estimated county wind speeds for Atlantic-basin storms, 1988-2018, based on the wind radii listed in [HURDAT2](https://www.nhc.noaa.gov/data/)
 
 Once you've installed and loaded `hurricaneexposuredata`, you can load the included data using the `data` function. For example, you can access the data on hurricane tracks (`hurr_tracks`) using:
 
@@ -80,10 +76,13 @@ The following table shows the storms covered by the `hurricaneexposuredata` data
 ```{r echo = FALSE, message = FALSE, warning = FALSE}
 library(dplyr)
 library(tidyr)
+library(stringr)
 hurr_tracks %>%
         select(storm_id) %>%
         distinct() %>%
-        separate(storm_id, into = c("storm_name", "Year"), sep = "-") %>%
+        mutate(Year = str_extract(storm_id, "-[0-9].+"),
+               Year = str_remove(Year, "-"),
+               storm_name = str_remove(storm_id, "-[0-9].+")) %>% 
         group_by(Year) %>%
         summarize(Storms = paste(storm_name, collapse = ", ")) %>%
         mutate(Distance = "x",
@@ -94,7 +93,7 @@ hurr_tracks %>%
         pander::pander(justify = "clccccc")
 ```
 
-In functions throughout the `hurricaneexposure` package, storms are identified based on their name and year (e.g., Hurricane Floyd in 1999 is identified as "Floyd-1999"). Note that a few storms satisfied the criteria to be included in the data but were unnamed (e.g., "Notnamed" in 1991, "Subtrop" in 1997, etc.). These storms are identified in functions in the `hurricaneexposure` package based on the identifying name listed in the above table (e.g., "Notnamed-1991"), although for some research projects you may want to consider excluding these unnamed storms from the analysis.
+In functions throughout the `hurricaneexposure` package, storms are identified based on their name and year (e.g., Hurricane Floyd in 1999 is identified as "Floyd-1999"). Note that a few storms satisfied the criteria to be included in the data but were unnamed (e.g., "AL13" in 1988). These storms are identified in functions in the `hurricaneexposure` package based on the identifying name listed in the above table, which is based on the first four characters of the storm's US ATCF code for the storm. For some research projects, however, you may want to consider excluding these unnamed storms from the analysis.
 
 ## Mapping hurricane exposure
 
@@ -134,7 +133,7 @@ You can map a few other variables of wind with this function. For example, you c
 map_counties("Katrina-2005", metric = "wind", wind_var = "sust_dur")
 ```
 
-You can map estimated gust winds, rather than sustained winds (the default), using the argument `wind_var = "vmax_gust"`. Further, we have included a second source of estimated winds in the data available in `hurricaneexposuredata`. These wind estimates are based on the wind radii in the Extended Best Tracks dataset (you can find out more about this data in the helpfile for the `ext_tracks_wind` dataset). These data provide estimates of which counties were exposured during a storm to sustained winds in four categories: 0--34 knots; 34--50 knots;  50--64 knots; and 64 knots or higher. Therefore, these data provide a categorical rather than continuous estimate of county wind speeds. However, they may be preferable to the model wind speeds for some storms, especially storms in extra-tropical transition. Further, you may find it interesting to use these data in a sensitivity analysis, to compare if impact study results are sensitive to whether these wind data or the modeled wind data are used for exposure classification. You can create a wind map based on this data using the `wind_source = "ext_tracks"` argument in the `map_counties` function. For example, to map estimated winds during Hurricane Katrina based on the Extended Best Tracks wind radii, you can run: 
+You can map estimated gust winds, rather than sustained winds (the default), using the argument `wind_var = "vmax_gust"`. Further, we have included a second source of estimated winds in the data available in `hurricaneexposuredata`. These wind estimates are based on the wind radii in the HURDAT2 dataset (you can find out more about this data in the helpfile for the `ext_tracks_wind` dataset). These data provide estimates of which counties were exposed during a storm to sustained winds in four categories: 0--34 knots; 34--50 knots;  50--64 knots; and 64 knots or higher. Therefore, these data provide a categorical rather than continuous estimate of county wind speeds. However, they may be preferable to the model wind speeds for some storms, especially storms in extra-tropical transition. Further, you may find it interesting to use these data in a sensitivity analysis, to compare if impact study results are sensitive to whether these wind data or the modeled wind data are used for exposure classification. You can create a wind map based on this data using the `wind_source = "ext_tracks"` argument in the `map_counties` function. For example, to map estimated winds during Hurricane Katrina based on the HURDAT2 wind radii, you can run: 
 
 ```{r fig.width = 7, fig.height = 4}
 map_counties("Katrina-2005", metric = "wind", wind_source = "ext_tracks")
@@ -167,7 +166,7 @@ map_rain_exposure(storm = "Allison-2001", rain_limit = 175, dist_limit = 500,
 
 As with the continuous maps of rain exposure, the number of days included to calculate cumulative rain can be adjusted with the `days_included` option in `map_rain_exposure` (see the help file for `map_rain_exposure` for more details).
 
-You can use the `map_wind_exposure` function to map counties exposed to a certain winds during a storm. For example, to identify all counties exposed to sustained winds of 20 m / s or higher during Hurricane Katrina, you can run:
+You can use the `map_wind_exposure` function to map counties exposed to a certain wind speed during a storm. For example, to identify all counties exposed to sustained winds of 20 m / s or higher during Hurricane Katrina, you can run:
 
 ```{r fig.width = 7, fig.height = 4}
 map_wind_exposure(storm = "Katrina-2005", wind_limit = 20)
@@ -214,23 +213,23 @@ map_tracks(storms = c("Andrew-1992", "Katrina-2005", "Rita-2005"),
            alpha = 0.5, plot_points = TRUE, color = "blue")
 ```
 
-As another example, to map all tracks for storms in 2005, you can run:
+As another example, to map all tracks for storms in 2018, you can run:
 
 ```{r fig.width = 5.5, fig.height = 4}
 library(dplyr)
 library(tidyr)
-storms_2005 <- hurr_tracks %>%
+storms_2018 <- hurr_tracks %>%
         select(storm_id) %>%
         distinct() %>%
-        separate(storm_id, c("name", "year"), sep = "-", remove = FALSE) %>%
-        filter(year == "2005")
-map_tracks(storms = storms_2005$storm_id) 
+        mutate(year = stringr::str_extract(storm_id, "-[0-9].+")) %>%
+        filter(year == "-2018")
+map_tracks(storms = storms_2018$storm_id)  
 ```
 
 The `map_tracks` function is used in all the mapping functions described in the previous section, to add the storm's track to the exposure maps. However, if you would like to customize the appearance of the storm's track on the map, you can do so by plotting the exposure map without the storm track (`add_track = FALSE`) and then adding the track yourself with the `map_tracks` function. For example, to change the color of the storm track in a map of flood event exposure during Hurricane Floyd (1999) and to add points showing the available observations for the storm in the Best Tracks hurricane tracking data, you can run:
 
 ```{r fig.width = 7, fig.height = 4}
-floyd_map <- map_event_exposure(storm = "Floyd-1999", event_type = "flood")
+floyd_map <- map_event_exposure(storm = "Floyd-1999", event_type = "flood", add_track = FALSE)
 map_tracks(storms = "Floyd-1999", plot_object = floyd_map, plot_points = TRUE, 
            color = "darkgray")
 ```
@@ -239,7 +238,7 @@ map_tracks(storms = "Floyd-1999", plot_object = floyd_map, plot_points = TRUE,
 
 The `hurricaneexposure` package also has several functions that can input a list of counties and output a list of all of the storms to which each county was exposed over a certain period, based on one of the hazard metrics. These exposure listings include the storm dates, making them easy to integrate into time series datasets of health or other impact data. 
 
-The `county_rain` function takes a list of county FIPS codes, bounds on the starting and ending years of the analysis, and thresholds to define rain-based exposure (cumulative rainfall and distance from the storm's track, as explained for the binary rain maps shown in an earlier section) and creates a list of all storms that met these thesholds for the counties. For example, to get a dataset of all the storms to which Orleans Parish (FIPS 22071), and Newport News, Virginia (FIPS 51700), were exposed between 1995 and 2005, where "exposed" means that the storm passed within 100 kilometers of the county center and the rainfall over a three-day window of the date of closest approach was 100 millimeters or more, you can run:
+The `county_rain` function takes a list of county FIPS codes, bounds on the starting and ending years of the analysis, and thresholds to define rain-based exposure (cumulative rainfall and distance from the storm's track, as explained for the binary rain maps shown in an earlier section) and creates a list of all storms that met these thresholds for the counties. For example, to get a dataset of all the storms to which Orleans Parish (FIPS 22071), and Newport News, Virginia (FIPS 51700), were exposed between 1995 and 2005, where "exposed" means that the storm passed within 100 kilometers of the county center and the rainfall over a three-day window of the date of closest approach was 100 millimeters or more, you can run:
 
 ```{r}
 county_rain(counties = c("22071", "51700"), start_year = 1995, end_year = 2005,
@@ -250,7 +249,7 @@ This function draws on the same dataset (`rain`) from the `hurricaneexposuredata
 
 In addition to giving the names and closest dates of each storm for each county (`closest_date`-- note, this is given based on local time for the county; see documentation for the [`countytimezones` package](https://cran.r-project.org/web/packages/countytimezones/index.html) to find out more about how local time was calculated from UTC for each county), this function also gives you the distance between the county and the storm's track at the time when the storm was closest to the county's population weighted center (`storm_dist`, in kilometers) and the total precipitation over the included days (`tot_precip`). The returned dataframe also gives the time of closest approach in both local time (`local_time`) and UTC (`closest_time_utc`), based on 15-minute intervals along the storm's track. 
 
-Similar functions are available in the package to create listings of county exposures to storms based on wind, distance to the storm track, and events listings from the NOAA Storm Events Database (flood and tornado events). For example, to get a listing of all storms between 1988 and 2015 for which Miami-Dade county (FIPS: ) has experienced sustained winds of 34 knots or more (17.5 m / s), you can run:
+Similar functions are available in the package to create listings of county exposures to storms based on wind, distance to the storm track, and events listings from the NOAA Storm Events Database (flood and tornado events). For example, to get a listing of all storms between 1988 and 2015 for which Miami-Dade county (FIPS 12086) has experienced sustained winds of 34 knots or more (17.5 m / s), you can run:
 
 ```{r}
 county_wind(counties = "12086", start_year = 1988, end_year = 2015, wind_limit = 17.5)
@@ -265,9 +264,9 @@ county_wind(counties = "12086", start_year = 1988, end_year = 2015,
             wind_var = "sust_dur", wind_limit = 60)
 ```
 
-Further, the `county_wind` function allows you to pull wind estimates from an alternate source. By default, this function uses wind estimates for each county from a wind model (see the vignettes for the `stormwindmodel` package for much more detail on this modeling process). However, you can also pull estimates based on the wind radii from the Extended Best Tracks dataset by using the option `wind_source = "ext_tracks"`. See the help file for the `ext_tracks_wind` dataset that comes with `hurricaneexposuredata` for more details on this data source and how the county-specific exposures were determined from the data source for use in the `county_wind` function. It is important to note that this data results in wind estimates with breaks at 34 knots, 50 knots, and 64 knots, rather than continuous estimates. This means that a sustained wind estimate from this data source of 17.4896 m / s (34 knots) is estimating that the county had maximum wind speeds of 34 knots or higher during the storm, but not as high as 50 knots. Further, the `dur_sust` value when using this data source is based on number of minutes with winds at or above 34 knots (rather than the 20 m / s value used for durations for the modeled wind data). Gust durations can not be determined using this Extended Best Tracks dataset. 
+Further, the `county_wind` function allows you to pull wind estimates from an alternate source. By default, this function uses wind estimates for each county from a wind model (see the vignettes for the `stormwindmodel` package for much more detail on this modeling process). However, you can also pull estimates based on the wind radii from HURDAT2 by using the option `wind_source = "ext_tracks"`. See the help file for the `ext_tracks_wind` dataset that comes with `hurricaneexposuredata` for more details on this data source and how the county-specific exposures were determined from the data source for use in the `county_wind` function. It is important to note that this data results in wind estimates with breaks at 34 knots, 50 knots, and 64 knots, rather than continuous estimates. This means that a sustained wind estimate from this data source of 17.4896 m / s (34 knots) is estimating that the county had maximum wind speeds of 34 knots or higher during the storm, but not as high as 50 knots. Further, the `dur_sust` value when using this data source is based on number of minutes with winds at or above 34 knots (rather than the 20 m / s value used for durations for the modeled wind data). Gust durations can not be determined using the HURDAT2 wind radii. 
 
-The Extended Best Tracks wind radii dataset is more tied to observations during a specific storm than the modeled data. In certain cases, especially storms in extratropical transition, this dataset might be preferable to the modeled wind speeds, even though it provides less continuous estimates. This source of wind data can be specified using the `wind_source` option in the `county_wind` function. For example, to generate a list of all storms in Orleans Parish with maximum sustained winds of 34 knots or more based on the Extended Best Tracks wind radii, you can run:
+The HURDAT2 wind radii are more closely aligned to observations during a specific storm than the modeled data. In certain cases, especially storms in extratropical transition, this dataset might be preferable to the modeled wind speeds, even though it provides less continuous estimates. This source of wind data can be specified using the `wind_source` option in the `county_wind` function. For example, to generate a list of all storms in Orleans Parish with maximum sustained winds of 34 knots or more based on the HURDAT2 wind radii, you can run:
 
 ```{r}
 county_wind(counties = "12086", start_year = 1988, end_year = 2015, 
@@ -281,7 +280,7 @@ county_distance(counties = "22071", start_year = 1988, end_year = 2015,
                 dist_limit = 50)
 ```
 
-Finally, you can use the `county_events` function to get a listing of all storms for which a county had a certain type of NOAA Storm Events listing. For example, to get a list of all storms for which Norfolk, Virginia, (FIPS: 51710) had a flood event listing, you can run:
+Finally, you can use the `county_events` function to get a listing of all storms for which a county had a certain type of NOAA Storm Events listing. For example, to get a list of all storms for which Norfolk, Virginia, (FIPS 51710) had a flood event listing, you can run:
 
 ```{r}
 county_events(counties = "51710", start_year = 1996, end_year = 2015, 
@@ -293,7 +292,7 @@ county_events(counties = "51710", start_year = 1996, end_year = 2015,
 Some datasets covering storm impacts might have communities composed of multiple counties rather than county-specific listings. To get a dataframe listing the relevant storms for multi-county communities, you can use the `multi_county_*` family of functions in a similar way to the `county_*` family of functions. For example, to get rain exposure listings in the case where one of the communities (New York, NY) is comprised of multiple counties, you can run:
 
 ```{r warning = FALSE}
-communities <- data.frame(commun = c(rep("ny", 6), "no", "new"),
+communities <- data.frame(community_name = c(rep("ny", 6), "no", "new"),
                          fips = c("36005", "36047", "36061",
                                   "36085", "36081", "36119",
                                   "22071", "51700"))

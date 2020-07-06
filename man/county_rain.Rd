@@ -4,8 +4,14 @@
 \alias{county_rain}
 \title{Hurricane exposure by rain for counties}
 \usage{
-county_rain(counties, start_year, end_year, rain_limit, dist_limit,
-  days_included = c(-2, -1, 0, 1))
+county_rain(
+  counties,
+  start_year,
+  end_year,
+  rain_limit,
+  dist_limit,
+  days_included = c(-2, -1, 0, 1)
+)
 }
 \arguments{
 \item{counties}{Character vector of the five-digit Federal Information
@@ -16,7 +22,7 @@ determine storm exposure.}
 
 \item{end_year}{Four-digit integer with last year to consider.}
 
-\item{rain_limit}{Minimum of rainfall, in millimeters, summed across the days
+\item{rain_limit}{Minimum amount of rainfall, in millimeters, summed across the days
 selected to be included (\code{days_included}), that must fall in a
 county for the county to be classified as "exposed" to the storm.}
 
@@ -39,10 +45,10 @@ Returns a dataframe with a row for each county-storm pair and with
    columns for:
    \itemize{
      \item{\code{storm_id}: }{Unique storm identifier with the storm name and year,
-                 separated by a hyphen(e.g., "Alberto-1988",
-                 "Katrina-2005")}
+                 separated by a hyphen (e.g., "Alberto-1988",
+                 "Katrina-2005").}
      \item{\code{fips}: }{County's 5-digit Federal Information Processing Standard
-                 (FIPS) code}
+                 (FIPS) code.}
      \item{\code{closest_date}: }{Date (based on local time) of the closest
                          approach of the storm to the county's population
                          mean center.}

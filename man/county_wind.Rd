@@ -4,8 +4,14 @@
 \alias{county_wind}
 \title{Hurricane exposure by wind for counties}
 \usage{
-county_wind(counties, start_year, end_year, wind_limit,
-  wind_var = "vmax_sust", wind_source = "modeled")
+county_wind(
+  counties,
+  start_year,
+  end_year,
+  wind_limit,
+  wind_var = "vmax_sust",
+  wind_source = "modeled"
+)
 }
 \arguments{
 \item{counties}{Character vector of the five-digit Federal Information
@@ -47,22 +53,36 @@ Returns a dataframe with a row for each county-storm
    pair and with columns for:
    \itemize{
      \item{\code{storm_id}: }{Unique storm identifier with the storm name and year,
-                 separated by a hyphen(e.g., "Alberto-1988",
+                 separated by a hyphen (e.g., "Alberto-1988",
                  "Katrina-2005")}
      \item{\code{fips}: }{County's 5-digit Federal Information Processing Standard
-                 (FIPS) code}
-     \item{\code{max_sust}: }{Maximum sustained wind speed (in m / s)}
-     \item{\code{max_gust}: }{Maximum gust wind speed (in m / s)}
-     \item{\code{sust_dur}: }{Minutes sustained wind speed was 20 m / s or higher}
+                 (FIPS) code.}
+     \item{\code{max_sust}: }{Maximum sustained wind speed (in m / s).}
+     \item{\code{max_gust}: }{Maximum gust wind speed (in m / s).}
+     \item{\code{sust_dur}: }{Minutes sustained wind speed was 20 m / s or higher.}
      \item{\code{gust_dur}: }{Minutes gust wind speed was 20 m / s or higher (only
-         returned if the modeled winds are requested using \code{wind_source})}
+         returned if the modeled winds are requested using \code{wind_source}).}
+     \item{\code{usa_atcf_id}: }{United States Automated Tropical Cyclone Forecasting
+                            storm identifier.}
+     \item{\code{closest_time_utc}: }{Time, in UTC, of the closest approach of the
+                            storm to the county's population mean center,
+                            based on storm tracks linearly interpolated to
+                            15-minute increments.}
+     \item{\code{storm_dist}: }{Minimum distance (in kilometers) between the storm's
+                    track and the county's population mean center.}
+     \item{\code{local_time}: }{Local time of the closest approach of the storm to the
+                       county's population mean center, based on storm tracks
+                       linearly interpolated to 15-minute increments.}
+     \item{\code{closest_date}: }{Date (based on local time) of the closest
+                         approach of the storm to the county's population
+                         mean center.}
    }
 }
 \description{
 This function takes a list of US counties, based on their 5-digit Federal
 Information Processing Standard (FIPS) codes, boundaries on
 the range of years to be considered, and thresholds for wind speed (in meters
-per second) (or, alternatively, duration of winds at or above 20 m / s in minutes)
+per second), (or, alternatively, duration of winds at or above 20 m / s in minutes)
 for each  county to be considered "exposed" to the
 storm. Based on these inputs, the function returns a dataframe with the
 subset of Atlantic basin storms meeting those criteria for each of the listed

@@ -4,15 +4,21 @@
 \alias{filter_wind_data}
 \title{Filter hurricane wind dataset}
 \usage{
-filter_wind_data(counties = NULL, storm = NULL, year_range = NULL,
-  wind_limit = NULL, output_vars = "fips", wind_var = "vmax_sust",
-  wind_source = "modeled")
+filter_wind_data(
+  counties = NULL,
+  storm = NULL,
+  year_range = NULL,
+  wind_limit = NULL,
+  output_vars = "fips",
+  wind_var = "vmax_sust",
+  wind_source = "modeled"
+)
 }
 \arguments{
 \item{counties}{A character vector listing all 5-digit county FIPS codes
 for a subset of counties.}
 
-\item{storm}{A character string giving the storm ID (e.g., "Floyd-1999")}
+\item{storm}{A character string giving the storm ID (e.g., "Floyd-1999").}
 
 \item{year_range}{A numeric vector of length two with the starting and
 ending year to subset to.}

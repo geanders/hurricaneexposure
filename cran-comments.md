@@ -1,19 +1,19 @@
 ## Test environments
-* local OS X install, R 3.3.2
-* ubuntu 12.04 (on travis-ci), R 3.3.2
+* local Mac OS install, R 3.6.2
 * win-builder (devel and release)
 
 ## R CMD check results
 
 0 errors | 0 warnings | 2 notes
 
-* This package was removed from CRAN on ... for ... . I apologize for this---my email system 
-sent the warning messages from CRAN to a Junk folder. I have fixed my email settings to 
-prevent this in the future. I have resolved all ... that caused ... in the previous 
-CRAN release, which resulted from updates to a package dependency.
-* This package suggests a package in a non-mainstream repository (a drat repository). On the Windows build, this results in the NOTE "Package suggested but not available for checking".
-* The Windows build lists some possibly mis-spelled words in DESCRIPTION. We have confirmed that these words are spelled correctly. 
+* This package suggests a package in a non-mainstream repository (a drat
+repository). On the Windows build, this results in two NOTES, the NOTE "Package
+suggested but not available for checking" as well as a note for "Suggests or
+Enhances not in mainstream repositories".
 
 ## Reverse dependencies
 
-This is a new release, so there are no reverse dependencies.
+The only reverse dependencies are the `noaastormevents` and `countyfloods`
+packages, which I also maintain or am a coauthor of. I will ensure those
+packages are updated to accomodate the new version of this package
+(`hurricaneexposure`).

@@ -4,27 +4,34 @@
 \alias{filter_storm_data}
 \title{Filter hurricane datasets}
 \usage{
-filter_storm_data(counties = NULL, storm = NULL, year_range = NULL,
-  distance_limit = NULL, rain_limit = NULL, include_rain = FALSE,
-  days_included = NULL, output_vars = c("fips"))
+filter_storm_data(
+  counties = NULL,
+  storm = NULL,
+  year_range = NULL,
+  distance_limit = NULL,
+  rain_limit = NULL,
+  include_rain = FALSE,
+  days_included = NULL,
+  output_vars = c("fips")
+)
 }
 \arguments{
 \item{counties}{A character vector listing all 5-digit county FIPS codes
 for a subset of counties.}
 
-\item{storm}{A character string giving the storm ID (e.g., "Floyd-1999")}
+\item{storm}{A character string giving the storm ID (e.g., "Floyd-1999").}
 
 \item{year_range}{A numeric vector of length two with the starting and
 ending year to subset to.}
 
-\item{distance_limit}{A numeric vector of length one giving the maxmimum
-distance (in kilometers) to use in the filter}
+\item{distance_limit}{A numeric vector of length one giving the maximum
+distance (in kilometers) to use in the filter.}
 
 \item{rain_limit}{A numeric vector of length one giving the minimum
-rain (in millimeters) to use in the filter}
+rain (in millimeters) to use in the filter.}
 
 \item{include_rain}{A logical specifying whether to pull in rain data to use
-in the filter or give as output (default is FALSE)}
+in the filter or give as output (default is FALSE).}
 
 \item{days_included}{A numeric vector giving the lag numbers for days to
 include when calculating the total rain over the storm period (e.g.,

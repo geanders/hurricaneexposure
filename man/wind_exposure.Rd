@@ -4,8 +4,15 @@
 \alias{wind_exposure}
 \title{Write storm wind exposure files}
 \usage{
-wind_exposure(locations, start_year, end_year, wind_limit, wind_var,
-  out_dir, out_type = "csv")
+wind_exposure(
+  locations,
+  start_year,
+  end_year,
+  wind_limit,
+  wind_var,
+  out_dir,
+  out_type = "csv"
+)
 }
 \arguments{
 \item{locations}{Either a vector of FIPS county codes, for county-level

@@ -4,13 +4,18 @@
 \alias{map_counties}
 \title{Map counties}
 \usage{
-map_counties(storm, metric = "distance", wind_var = "vmax_sust",
-  days_included = c(-2, -1, 0, 1), add_track = TRUE,
-  wind_source = "modeled")
+map_counties(
+  storm,
+  metric = "distance",
+  wind_var = "vmax_sust",
+  days_included = c(-2, -1, 0, 1),
+  add_track = TRUE,
+  wind_source = "modeled"
+)
 }
 \arguments{
 \item{storm}{Character string giving the name of the storm to plot (e.g.,
-"Floyd-1999")}
+"Floyd-1999").}
 
 \item{metric}{Character string giving the metric to plot. Current options are
 \code{"distance"}, \code{"wind"}, and \code{"rainfall"}. These options are used
@@ -68,5 +73,9 @@ map_counties("Katrina-2005", metric = "wind")
 map_counties("Katrina-2005", metric = "wind", wind_var = "vmax_gust")
 map_counties("Katrina-2005", metric = "wind", wind_var = "sust_dur")
 map_counties("Katrina-2005", metric = "wind", wind_source = "ext_tracks")
+
+#' map_counties("Michael-2018", metric = "wind")
+map_counties("Michael-2018", metric = "wind", wind_var = "vmax_gust")
+map_counties("Michael-2018", metric = "wind", wind_source = "ext_tracks")
 }
 }

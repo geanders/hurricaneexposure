@@ -1,4 +1,4 @@
-^NEWS\.md$
+^CRAN-RELEASE$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^data-raw$
@@ -9,3 +9,5 @@
 ^README\.md$
 ^\.travis\.yml$
 ^cran-comments\.md$
+^doc$
+^Meta$

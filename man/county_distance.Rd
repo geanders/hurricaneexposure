@@ -24,8 +24,8 @@ Returns a dataframe with a row for each county-storm
    pair and with columns for:
    \itemize{
      \item{\code{storm_id}: }{Unique storm identifier with the storm name and year,
-                 separated by a hyphen(e.g., "Alberto-1988",
-                 "Katrina-2005")}
+                 separated by a hyphen (e.g., "Alberto-1988",
+                 "Katrina-2005").}
      \item{\code{fips}: }{County's 5-digit Federal Information Processing Standard
                  (FIPS) code}
      \item{\code{closest_date}: }{Date (based on local time) of the closest
@@ -43,7 +43,7 @@ Returns a dataframe with a row for each county-storm
    }
 }
 \description{
-This function takes a list of US counties,based on their 5-digit Federal
+This function takes a list of US counties, based on their 5-digit Federal
 Information Processing Standard (FIPS) codes, boundaries on
 the range of years to be considered, and thresholds for distance between each
 county and the storm track for the county to be considered "exposed" to the

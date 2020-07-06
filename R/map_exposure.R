@@ -2,7 +2,7 @@
 #'
 #' Creates a \code{ggplot} object with the underlying map of all states in the
 #' eastern section of the US that might be prone to hurricane-related
-#' exposure. Other lines and points can be added to the output using
+#' exposures. Other lines and points can be added to the output using
 #' \code{ggplot2} plotting functions.
 #'
 #' @details Only states in the eastern half of the United States (i.e., ones
@@ -60,7 +60,7 @@ get_eastern_map <- function(map  = "county"){
                         dplyr::mutate(polyname = stringr::str_replace(.data$polyname,
                                                                          ":.+", ""))
                 map_data <- map_data %>%
-                        tidyr::unite(col = "polyname", from = c("region", "subregion"),
+                        tidyr::unite(col = "polyname", .data$region:.data$subregion,
                                       sep = ",") %>%
                         dplyr::left_join(county.fips, by = "polyname") %>%
                         dplyr::mutate(fips = stringr::str_pad(.data$fips, 5,
@@ -167,39 +167,33 @@ map_tracks <- function(storms, plot_object = NULL, padding = 2, plot_points = FA
 #' Interpolate a storm track
 #'
 #' This function takes a wider-spaced storm track (e.g., every 6 hours) and
-#' interpolates to a finer interval (e.g., every 15 minutes). To do this, it
-#' fits GLMs of latitude and longitude regressed on natural cubic splines of
-#' date-time, and then predicts these splines to new intervals. These
-#' splines use degrees of freedom equal to the number of original observations
-#' divided by two.
+#' interpolates to every 15 minutes. To do this, it uses natural cubic
+#' spline interpolation using the `spline` function from the `stats` package.
+#' The track is only interpolated if there are three or more observations
+#' on the central location of the storm (this is almost always the case
+#' for storms tracked in the HURDAT2 dataset).
 #'
 #' @param track A dataframe with hurricane track data for a single storm
-#' @param tint A numeric vector giving the time interval to impute to, in units
-#'    of hours (e.g., 0.25, the default, interpolates to 15 minute-intervals).
 #'
 #' @return A dataframe with hurricane track data for a single storm,
-#'    interpolated to the interval specified by \code{tint}.
-interp_track <- function(track, tint = 0.25){
+#'    interpolated to 15-minute intervals.
+interp_track <- function(track){
 
         if(nrow(track) < 3){
                 return(track)
         } else {
-                interp_df <- floor(nrow(track) / 2)
                 interp_date <- seq(from = min(track$date),
                                 to = max(track$date),
-                                by = 900) # interpolate to 15 minutes
-                interp_date <- data.frame(date = interp_date)
+                                by = 900) # interpolate to every 15 minutes
 
-                lat_spline <- stats::glm(latitude ~ splines::ns(date,
-                                                                df = interp_df),
-                                        data = track)
-                interp_lat <- stats::predict.glm(lat_spline,
-                                         newdata = as.data.frame(interp_date))
-                lon_spline <- stats::glm(longitude ~ splines::ns(date,
-                                                                 df = interp_df),
-                                        data = track)
-                interp_lon <- stats::predict.glm(lon_spline,
-                                                 newdata = interp_date)
+                interp_lat <- stats::spline(x = track$date,
+                                            y = track$latitude,
+                                            xout = interp_date,
+                                            method = "natural")$y
+                interp_lon <- stats::spline(x = track$date,
+                                            y = track$longitude,
+                                            xout = interp_date,
+                                            method = "natural")$y
 
                 full_track <- data.frame(storm_id = track$storm_id[1],
                                         date = interp_date,
@@ -237,7 +231,7 @@ interp_track <- function(track, tint = 0.25){
 #' map_tracks("Allison-2001", plot_object = allison_map, plot_points = TRUE)
 #'}
 #' @importFrom dplyr %>%
-#' @importFrame rlang .data
+#' @importFrom rlang .data
 #'
 #' @export
 map_rain_exposure <- function(storm, rain_limit, dist_limit,
@@ -452,7 +446,7 @@ map_wind_exposure <- function(storm, wind_var = "vmax_sust", wind_limit,
 #' \code{storm_events} dataset.
 #'
 #' @param storm_id Character vector with the storm for which to map events
-#'    (e.g., \code{"Katrina-2005"})
+#'    (e.g., \code{"Katrina-2005"}.)
 #' @inheritParams county_distance
 #' @inheritParams county_events
 #' @inheritParams map_rain_exposure
@@ -472,6 +466,12 @@ map_wind_exposure <- function(storm, wind_var = "vmax_sust", wind_limit,
 #' map_event_exposure(storm_id = "Floyd-1999", event_type = "tornado")
 #' map_event_exposure(storm_id = "Floyd-1999", event_type = "wind")
 #' map_event_exposure(storm_id = "Floyd-1999", event_type = "tropical_storm")
+#'
+#' map_event_exposure(storm_id = "Florence-2018", event_type = "flood")
+#' map_event_exposure(storm_id = "Florence-2018", event_type = "tropical_storm")
+#'
+#' map_event_exposure(storm_id = "Michael-2018", event_type = "wind")
+#' map_event_exposure(storm_id = "Michael-2018", event_type = "tropical_storm")
 #' }
 #' @export
 #'
@@ -537,7 +537,7 @@ map_event_exposure <- function(storm_id, event_type, add_track = TRUE){
 #' Map counties
 #'
 #' @param storm Character string giving the name of the storm to plot (e.g.,
-#'    "Floyd-1999")
+#'    "Floyd-1999").
 #' @param metric Character string giving the metric to plot. Current options are
 #'    \code{"distance"}, \code{"wind"}, and \code{"rainfall"}. These options are used
 #'    to customize the color palette and scale of the choropleth map produced
@@ -564,6 +564,10 @@ map_event_exposure <- function(storm_id, event_type, add_track = TRUE){
 #' map_counties("Katrina-2005", metric = "wind", wind_var = "vmax_gust")
 #' map_counties("Katrina-2005", metric = "wind", wind_var = "sust_dur")
 #' map_counties("Katrina-2005", metric = "wind", wind_source = "ext_tracks")
+#'
+#' #' map_counties("Michael-2018", metric = "wind")
+#' map_counties("Michael-2018", metric = "wind", wind_var = "vmax_gust")
+#' map_counties("Michael-2018", metric = "wind", wind_source = "ext_tracks")
 #'}
 #' @export
 #'
