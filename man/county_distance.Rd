@@ -24,7 +24,7 @@ Returns a dataframe with a row for each county-storm
    pair and with columns for:
    \itemize{
      \item{\code{storm_id}: }{Unique storm identifier with the storm name and year,
-                 separated by a hyphen(e.g., "Alberto-1988",
+                 separated by a hyphen (e.g., "Alberto-1988",
                  "Katrina-2005")}
      \item{\code{fips}: }{County's 5-digit Federal Information Processing Standard
                  (FIPS) code}
