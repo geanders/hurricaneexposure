@@ -28,7 +28,7 @@ county exposures. Options include \code{"flood"}, \code{"tornado"},
 \code{"wind"}, and \code{"tropical_storm"}.}
 
 \item{out_dir}{Character string with the filepath to the directory where the
-data will be saved}
+data will be saved.}
 
 \item{out_type}{Character string with the type of file to save to. Options are
 "csv" for a comma-separated file (default) and "rds" for an R object file.}

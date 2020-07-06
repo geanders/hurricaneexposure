@@ -5,15 +5,15 @@
 #'
 #' @param counties A character vector listing all 5-digit county FIPS codes
 #'    for a subset of counties.
-#' @param storm A character string giving the storm ID (e.g., "Floyd-1999")
+#' @param storm A character string giving the storm ID (e.g., "Floyd-1999").
 #' @param year_range A numeric vector of length two with the starting and
 #'    ending year to subset to.
 #' @param distance_limit A numeric vector of length one giving the maximum
-#'    distance (in kilometers) to use in the filter
+#'    distance (in kilometers) to use in the filter.
 #' @param rain_limit A numeric vector of length one giving the minimum
-#'    rain (in millimeters) to use in the filter
+#'    rain (in millimeters) to use in the filter.
 #' @param include_rain A logical specifying whether to pull in rain data to use
-#'    in the filter or give as output (default is FALSE)
+#'    in the filter or give as output (default is FALSE).
 #' @param days_included A numeric vector giving the lag numbers for days to
 #'    include when calculating the total rain over the storm period (e.g.,
 #'    \code{c(-1, 0, 1, 2)} would calculate the rain from the day before the
