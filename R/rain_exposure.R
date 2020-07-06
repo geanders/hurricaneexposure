@@ -9,7 +9,7 @@
 #' subset of Atlantic basin storms meeting those criteria for each of the listed
 #' counties.
 #'
-#' @param rain_limit Minimum of rainfall, in millimeters, summed across the days
+#' @param rain_limit Minimum amount of rainfall, in millimeters, summed across the days
 #'    selected to be included (\code{days_included}), that must fall in a
 #'    county for the county to be classified as "exposed" to the storm.
 #' @param days_included A numeric vector listing the days to include when

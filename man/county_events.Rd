@@ -27,7 +27,7 @@ Returns a dataframe with a row for each county-storm pair and with
                  (FIPS) code}
      \item{\code{storm_id}: }{Unique storm identifier with the storm name and year,
                  separated by a hyphen (e.g., "Alberto-1988",
-                 "Katrina-2005")}
+                 "Katrina-2005").}
     \item{\code{usa_atcf_id}: }{United States Automated Tropical Cyclone Forecasting
                             storm identifier}
     \item{\code{closest_time_utc}: }{Time, in UTC, of the closest approach of the
