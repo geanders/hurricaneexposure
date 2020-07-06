@@ -167,7 +167,7 @@ multi_county_events <- function(communities, start_year, end_year, event_type){
 #' @inheritParams county_distance
 #' @inheritParams rain_exposure
 #' @param out_dir Character string with the filepath to the directory where the
-#'   data will be saved
+#'   data will be saved.
 #' @param out_type Character string with the type of file to save to. Options are
 #'   "csv" for a comma-separated file (default) and "rds" for an R object file.
 #'
