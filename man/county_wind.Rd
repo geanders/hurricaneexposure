@@ -53,17 +53,17 @@ Returns a dataframe with a row for each county-storm
    pair and with columns for:
    \itemize{
      \item{\code{storm_id}: }{Unique storm identifier with the storm name and year,
-                 separated by a hyphen(e.g., "Alberto-1988",
+                 separated by a hyphen (e.g., "Alberto-1988",
                  "Katrina-2005")}
      \item{\code{fips}: }{County's 5-digit Federal Information Processing Standard
-                 (FIPS) code}
-     \item{\code{max_sust}: }{Maximum sustained wind speed (in m / s)}
-     \item{\code{max_gust}: }{Maximum gust wind speed (in m / s)}
-     \item{\code{sust_dur}: }{Minutes sustained wind speed was 20 m / s or higher}
+                 (FIPS) code.}
+     \item{\code{max_sust}: }{Maximum sustained wind speed (in m / s).}
+     \item{\code{max_gust}: }{Maximum gust wind speed (in m / s).}
+     \item{\code{sust_dur}: }{Minutes sustained wind speed was 20 m / s or higher.}
      \item{\code{gust_dur}: }{Minutes gust wind speed was 20 m / s or higher (only
-         returned if the modeled winds are requested using \code{wind_source})}
+         returned if the modeled winds are requested using \code{wind_source}).}
      \item{\code{usa_atcf_id}: }{United States Automated Tropical Cyclone Forecasting
-                            storm identifier}
+                            storm identifier.}
      \item{\code{closest_time_utc}: }{Time, in UTC, of the closest approach of the
                             storm to the county's population mean center,
                             based on storm tracks linearly interpolated to

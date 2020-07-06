@@ -2,7 +2,7 @@
 #'
 #' Creates a \code{ggplot} object with the underlying map of all states in the
 #' eastern section of the US that might be prone to hurricane-related
-#' exposure. Other lines and points can be added to the output using
+#' exposures. Other lines and points can be added to the output using
 #' \code{ggplot2} plotting functions.
 #'
 #' @details Only states in the eastern half of the United States (i.e., ones
