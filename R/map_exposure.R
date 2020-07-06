@@ -537,7 +537,7 @@ map_event_exposure <- function(storm_id, event_type, add_track = TRUE){
 #' Map counties
 #'
 #' @param storm Character string giving the name of the storm to plot (e.g.,
-#'    "Floyd-1999")
+#'    "Floyd-1999").
 #' @param metric Character string giving the metric to plot. Current options are
 #'    \code{"distance"}, \code{"wind"}, and \code{"rainfall"}. These options are used
 #'    to customize the color palette and scale of the choropleth map produced

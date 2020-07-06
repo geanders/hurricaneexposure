@@ -13,7 +13,7 @@ map_wind_exposure(
 )
 }
 \arguments{
-\item{storm}{A character string giving the storm ID (e.g., "Floyd-1999")}
+\item{storm}{A character string giving the storm ID (e.g., "Floyd-1999").}
 
 \item{wind_var}{A character string giving the wind variable to use. Choices
 are \code{"vmax_sust"} (maximum sustained winds; default), \code{"vmax_gust"}
